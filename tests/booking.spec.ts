@@ -6,13 +6,13 @@ test.describe('Booking Flow', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
 
         await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
         await page.goto('/book');
 
         // Ensure page is ready
-        await expect(page.getByRole('heading', { name: 'Online Appointment Booking' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Online Booking' })).toBeVisible();
 
         // Select Specialized Consultation
         await page.getByRole('button', { name: /Specialized Consultation/ }).click();

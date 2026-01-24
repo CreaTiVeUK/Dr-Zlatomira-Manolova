@@ -1,53 +1,48 @@
+"use client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+
 export default function Conditions() {
+    const { dict } = useLanguage();
+
     return (
         <div className="section-padding">
             <div className="container">
                 <div className="text-center" style={{ marginBottom: '4rem' }}>
-                    <h1 className="section-title">Лекувани състояния</h1>
+                    <h1 className="section-title">{dict.conditions.title}</h1>
                     <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--text-muted)' }}>
-                        Д-р Манолова предоставя експертна оценка и управление на широк спектър от педиатрични състояния - от обичайни детски болести до комплексни хронични заболявания.
+                        {dict.conditions.subtitle}
                     </p>
                 </div>
 
                 <div className="card-grid">
                     <div className="premium-card">
-                        <h3>Респираторни</h3>
+                        <h3>{dict.conditions.respiratory.title}</h3>
                         <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
-                            <li>• Астма и хрипове</li>
-                            <li>• Хронична кашлица</li>
-                            <li>• Гръдни инфекции</li>
+                            {dict.conditions.respiratory.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>
                     <div className="premium-card">
-                        <h3>Гастроинтестинални</h3>
+                        <h3>{dict.conditions.gastro.title}</h3>
                         <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
-                            <li>• Рефлукс и повръщане</li>
-                            <li>• Коремна болка</li>
-                            <li>• Запек</li>
+                            {dict.conditions.gastro.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>
                     <div className="premium-card">
-                        <h3>Алергични</h3>
+                        <h3>{dict.conditions.allergy.title}</h3>
                         <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
-                            <li>• Хранителни алергии</li>
-                            <li>• Екзема</li>
-                            <li>• Сенна хрема</li>
+                            {dict.conditions.allergy.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>
                     <div className="premium-card">
-                        <h3>Неонатални</h3>
+                        <h3>{dict.conditions.neonatal.title}</h3>
                         <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
-                            <li>• Колики и подкрепа при хранене</li>
-                            <li>• Мониторинг на жълтеница</li>
-                            <li>• Растеж на новороденото</li>
+                            {dict.conditions.neonatal.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>
                     <div className="premium-card">
-                        <h3>Общо здраве</h3>
+                        <h3>{dict.conditions.general.title}</h3>
                         <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
-                            <li>• Висока температура</li>
-                            <li>• Проблеми с растежа</li>
-                            <li>• Нощно напикаване</li>
+                            {dict.conditions.general.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>
                 </div>

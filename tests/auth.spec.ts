@@ -5,7 +5,7 @@ test.describe('Authentication & Access Control', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'admin@sunnypediatrics.com');
         await page.fill('input[name="password"]', 'password123');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
 
         // Wait for potential redirect
         await page.waitForURL(/admin\/dashboard/);
@@ -16,7 +16,7 @@ test.describe('Authentication & Access Control', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
 
         await page.waitForURL(url => url.pathname === '/', { timeout: 15000 });
 
@@ -29,7 +29,7 @@ test.describe('Authentication & Access Control', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'wrong@example.com');
         await page.fill('input[name="password"]', 'wrongpass');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
 
         const errorLoc = page.getByText(/Invalid credentials|Security verification failed/);
         await expect(errorLoc.first()).toBeVisible({ timeout: 15000 });

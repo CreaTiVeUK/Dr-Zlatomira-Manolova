@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface UserMenuProps {
     user: {
@@ -15,6 +16,8 @@ interface UserMenuProps {
 export default function UserMenu({ user }: UserMenuProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
+
+    const { dict } = useLanguage();
 
     const handleLogout = async () => {
         try {
@@ -31,7 +34,7 @@ export default function UserMenu({ user }: UserMenuProps) {
     if (!user) {
         return (
             <Link href="/login" className="btn btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.8rem' }}>
-                ВХОД
+                {dict.userMenu.login}
             </Link>
         );
     }
@@ -40,12 +43,12 @@ export default function UserMenu({ user }: UserMenuProps) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
             {user.role === 'ADMIN' && (
                 <Link href="/admin/dashboard" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                    Табло
+                    {dict.userMenu.dashboard}
                 </Link>
             )}
             {user.role === 'PATIENT' && (
                 <Link href="/my-appointments" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                    Часове
+                    {dict.userMenu.appointments}
                 </Link>
             )}
             <span style={{ fontWeight: '700', color: 'var(--text-charcoal)', fontSize: '0.9rem' }}>
@@ -64,7 +67,7 @@ export default function UserMenu({ user }: UserMenuProps) {
                     fontWeight: '600'
                 }}
             >
-                {isPending ? '...' : 'ИЗХОД'}
+                {isPending ? '...' : dict.userMenu.logout}
             </button>
         </div>
     );

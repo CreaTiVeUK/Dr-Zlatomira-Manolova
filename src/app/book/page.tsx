@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { format, addDays, startOfDay } from "date-fns";
-
-const SERVICES = [
-    { name: "Стандартен преглед", duration: 30, price: 25 },
-    { name: "Специализирана консултация", duration: 60, price: 50 },
-];
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function BookPage() {
-    // ... state declarations ...
+    const { dict } = useLanguage();
+
+    const SERVICES = [
+        { name: dict.booking.services.standard, duration: 30, price: 25 },
+        { name: dict.booking.services.specialized, duration: 60, price: 50 },
+    ];
+
     const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
     const [selectedService, setSelectedService] = useState(SERVICES[0]);
     const [slots, setSlots] = useState<Date[]>([]);
@@ -21,6 +23,14 @@ export default function BookPage() {
     // Prepare next 7 days
     const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
 
+    // Update selected service when language changes if needed (optional but good for consistency)
+    useEffect(() => {
+        // Reset or re-find service based on index if names change, but simplistic re-init is fine.
+        // Ideally we track by ID, but index 0 default is okay for now.
+        setSelectedService(SERVICES[0]);
+    }, [dict]);
+
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -30,7 +40,7 @@ export default function BookPage() {
                     setBookedSlots(data.takenSlots);
                 }
             } catch (err) {
-                console.error("Грешка при извличане на наличността:", err);
+                console.error("Error fetching availability:", err);
             }
         }
         fetchData();
@@ -63,20 +73,20 @@ export default function BookPage() {
                     dateTime: slot.toISOString(),
                     duration: selectedService.duration,
                     price: selectedService.price,
-                    notes: `Услуга: ${selectedService.name}`
+                    notes: `Service: ${selectedService.name}` // Internal note in EN mostly distinct
                 }),
             });
 
             const data = await res.json();
 
             if (res.ok) {
-                // Direct redirect to success, skipping payment
+                // Direct redirect to success
                 window.location.href = `/book/success`;
             } else {
-                setMessage(data.error || "Резервацията не бе успешна.");
+                setMessage(data.error || dict.booking.error);
             }
         } catch (err) {
-            setMessage("Възникна грешка.");
+            setMessage("Error occurred.");
         } finally {
             setLoading(false);
         }
@@ -98,15 +108,15 @@ export default function BookPage() {
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
             <div className="container">
                 <div className="text-center" style={{ marginBottom: '3rem' }}>
-                    <h1 className="section-title">Онлайн записване на час</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Запазете вашата консултация с д-р Манолова в няколко лесни стъпки.</p>
+                    <h1 className="section-title">{dict.booking.title}</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{dict.booking.subtitle}</p>
                 </div>
 
                 <div className="booking-card">
 
                     {/* 1. SELECT SERVICE */}
                     <div style={{ marginBottom: '3.5rem' }}>
-                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>1. Изберете услуга</h3>
+                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step1}</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                             {SERVICES.map(s => (
                                 <button
@@ -130,7 +140,7 @@ export default function BookPage() {
                                 >
                                     <div>
                                         <div style={{ fontWeight: '700', fontSize: '1.1rem', color: selectedService.name === s.name ? 'var(--primary-teal)' : 'var(--text-charcoal)' }}>{s.name}</div>
-                                        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{s.duration} мин</div>
+                                        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{s.duration} min</div>
                                     </div>
                                     <div style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>{s.price} €</div>
                                 </button>
@@ -140,7 +150,7 @@ export default function BookPage() {
 
                     {/* 2. SELECT DATE */}
                     <div style={{ marginBottom: '3.5rem' }}>
-                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>2. Изберете дата</h3>
+                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step2}</h3>
                         <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '1rem' }}>
                             {days.map((day) => (
                                 <button
@@ -167,7 +177,7 @@ export default function BookPage() {
 
                     {/* 3. SELECT TIME SLOT */}
                     <div>
-                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>3. Свободни часове</h3>
+                        <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step3}</h3>
                         {message && <div style={{ padding: '1rem', background: '#fff9c4', color: '#827717', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{message}</div>}
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
@@ -193,7 +203,7 @@ export default function BookPage() {
                                         }}
                                     >
                                         {format(slot, "HH:mm")}
-                                        {isTaken && <div style={{ fontSize: '0.65rem', textTransform: 'uppercase' }}>Заето</div>}
+                                        {isTaken && <div style={{ fontSize: '0.65rem', textTransform: 'uppercase' }}>{dict.booking.taken}</div>}
                                     </button>
                                 );
                             })}
@@ -208,7 +218,7 @@ export default function BookPage() {
                                 border: '1px solid #ddd'
                             }}>
                                 <p style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>
-                                    Потвърдете <strong>{selectedService.name}</strong> за <strong>{format(tempSelectedSlot, "PPP 'в' HH:mm")}</strong>?
+                                    {dict.booking.confirm.text.replace('%s', selectedService.name).replace('%s', format(tempSelectedSlot, "PPP 'at' HH:mm"))}
                                 </p>
                                 <button
                                     onClick={() => handleBooking(tempSelectedSlot!)}
@@ -216,13 +226,13 @@ export default function BookPage() {
                                     className="btn btn-primary"
                                     style={{ width: '100%', maxWidth: '300px' }}
                                 >
-                                    {loading ? 'ЗАПАЗВАНЕ...' : 'ПОТВЪРДИ ЧАС'}
+                                    {loading ? dict.booking.confirm.loading : dict.booking.confirm.btn}
                                 </button>
                             </div>
                         )}
                     </div>
 
-                    {loading && <div style={{ marginTop: '2rem', textAlign: 'center', color: 'var(--primary-teal)', fontWeight: 'bold' }}>Запазване на вашия час...</div>}
+                    {loading && <div style={{ marginTop: '2rem', textAlign: 'center', color: 'var(--primary-teal)', fontWeight: 'bold' }}>{dict.booking.confirm.loading}</div>}
                 </div>
             </div>
         </div>

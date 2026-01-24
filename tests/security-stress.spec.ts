@@ -6,7 +6,7 @@ test.describe('Security & Stress Testing', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
         await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
 
         const result = await page.evaluate(async () => {
@@ -30,7 +30,7 @@ test.describe('Security & Stress Testing', () => {
         await page.goto('/login');
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
-        await page.click('button:has-text("Sign In")');
+        await page.click('button:has-text("Login")');
         await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
 
         const attackResult = await page.evaluate(async () => {
@@ -63,7 +63,7 @@ test.describe('Security & Stress Testing', () => {
             await p.goto('/login');
             await p.fill('input[name="email"]', email);
             await p.fill('input[name="password"]', 'password123');
-            await p.click('button:has-text("Sign In")');
+            await p.click('button:has-text("Login")');
             await p.waitForURL((u: URL) => u.pathname === '/', { timeout: 15000 });
         }
 

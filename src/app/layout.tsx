@@ -11,13 +11,13 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
-  title: "Д-р Златомира Манолова | Педиатрия Манолова",
-  description: "Експерт педиатър. Цялостни медицински грижи, изследвания за алергии и подкрепа за новородени.",
-  keywords: ["педиатър", "детски специалист", "тестове за алергии", "д-р манолова", "неонатална грижа"],
+  title: "Dr. Zlatomira Manolova | Manolova Pediatrics",
+  description: "Expert Pediatrician. Comprehensive medical care, allergy testing and newborn support.",
+  keywords: ["pediatrician", "child specialist", "allergy testing", "dr manolova", "newborn care"],
   openGraph: {
-    title: "Д-р Златомира Манолова | Педиатрия Манолова",
-    description: "Експертна медицинска грижа за вашето дете.",
-    siteName: "Педиатрия Манолова",
+    title: "Dr. Zlatomira Manolova | Manolova Pediatrics",
+    description: "Expert medical care for your child.",
+    siteName: "Manolova Pediatrics",
     images: [
       {
         url: "/logo.jpg",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         height: 600,
       },
     ],
-    locale: "bg_BG",
+    locale: "en_GB",
     type: "website",
   },
 };
@@ -44,7 +44,7 @@ export default async function RootLayout({
   const user = session?.user || null;
 
   return (
-    <html lang="bg">
+    <html lang="en">
       <body className={outfit.className}>
         <LanguageProvider>
           <Header user={user} />

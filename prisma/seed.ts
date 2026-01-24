@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
-import { prisma as singletonPrisma } from '../src/lib/prisma'
-const prisma = singletonPrisma as any
+const prisma = new PrismaClient()
 
 async function main() {
     const hashedPassword = await bcrypt.hash('password123', 10)
@@ -11,12 +10,24 @@ async function main() {
         where: { email: 'zlatomira.manolova@gmail.com' },
         update: {
             password: hashedPassword,
-            failedAttempts: 0,
-            lockedUntil: null
         } as any,
         create: {
             email: 'zlatomira.manolova@gmail.com',
             name: 'Dr. Zlatomira Manolova',
+            password: hashedPassword,
+            role: 'ADMIN',
+        },
+    })
+
+    // Test Admin
+    await prisma.user.upsert({
+        where: { email: 'admin@sunnypediatrics.com' },
+        update: {
+            password: hashedPassword,
+        } as any,
+        create: {
+            email: 'admin@sunnypediatrics.com',
+            name: 'Test Admin',
             password: hashedPassword,
             role: 'ADMIN',
         },

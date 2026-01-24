@@ -40,7 +40,7 @@ export default function Header({ user }: { user: any }) {
                                 alignItems: 'center',
                                 gap: '0.25rem'
                             }}
-                            title={language === 'en' ? "Switch to Bulgarian" : "Switch to English"}
+                            title={dict.header.switchTitle}
                         >
                             {language === 'en' ? '🇧🇬' : '🇬🇧'}
                         </button>

@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function RegisterPage() {
+    const { dict } = useLanguage();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -31,10 +33,10 @@ export default function RegisterPage() {
                 // Redirect to login on success
                 router.push("/login?registered=true");
             } else {
-                setError(data.error || "Регистрацията не бе успешна");
+                setError(data.error || "Registration failed");
             }
         } catch (err) {
-            setError("Възникна грешка при свързване със сървъра.");
+            setError("Error connecting to server.");
         } finally {
             setLoading(false);
         }
@@ -44,24 +46,24 @@ export default function RegisterPage() {
         <div className="section-padding bg-soft" style={{ minHeight: '80vh' }}>
             <div className="container" style={{ maxWidth: '450px' }}>
                 <div style={{ background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
-                    <h2 style={{ textAlign: 'center', color: 'var(--primary-teal)', marginBottom: '2.5rem', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>Регистрация</h2>
+                    <h2 style={{ textAlign: 'center', color: 'var(--primary-teal)', marginBottom: '2.5rem', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.auth.register.title}</h2>
 
                     {error && <div style={{ padding: '0.75rem', background: '#ffebee', color: '#c62828', borderRadius: '4px', textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>ПЪЛНО ИМЕ</label>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.auth.register.name}</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
                                 style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                                placeholder="Иван Иванов"
+                                placeholder="John Doe"
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>ИМЕЙЛ АДРЕС</label>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.auth.register.email}</label>
                             <input
                                 type="email"
                                 value={email}
@@ -72,17 +74,17 @@ export default function RegisterPage() {
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>ТЕЛЕФОН (ОПЦИОНАЛНО)</label>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.auth.register.phone}</label>
                             <input
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                                placeholder="+359 88..."
+                                placeholder="+44 77..."
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>ПАРОЛА</label>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.auth.register.password}</label>
                             <input
                                 type="password"
                                 value={password}
@@ -90,17 +92,17 @@ export default function RegisterPage() {
                                 required
                                 minLength={8}
                                 style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
-                                placeholder="Минимум 8 символа"
+                                placeholder="Min 8 chars"
                             />
                         </div>
 
                         <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
-                            {loading ? "Регистриране..." : "Създай профил"}
+                            {loading ? dict.auth.register.loading : dict.auth.register.btn}
                         </button>
                     </form>
 
                     <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                        Вече имате профил? <Link href="/login" style={{ color: 'var(--primary-teal)', fontWeight: '600' }}>Влезте тук</Link>
+                        {dict.auth.register.hasAccount} <Link href="/login" style={{ color: 'var(--primary-teal)', fontWeight: '600' }}>{dict.auth.register.loginLink}</Link>
                     </div>
                 </div>
             </div>

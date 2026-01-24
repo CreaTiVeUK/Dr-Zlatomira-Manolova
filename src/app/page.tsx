@@ -26,7 +26,7 @@ export default function Home() {
       <section className="hero-section">
         <Image
           src="/hero_premium.png"
-          alt="Клинична консултация с д-р Манолова"
+          alt={dict.home.heroImageAlt}
           fill
           style={{ objectFit: 'cover', opacity: 0.55 }}
           priority
@@ -84,7 +84,7 @@ export default function Home() {
           <div className="trust-content">
             <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '2px' }}>{dict.home.trust.partners}</div>
             <div className="partner-logo-grid">
-              <Image src="/partner_logos.png" alt="Лога на партньорски болници" width={450} height={60} style={{ objectFit: 'contain' }} />
+              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={450} height={60} style={{ objectFit: 'contain' }} />
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function Home() {
           <div className="about-image">
             <Image
               src="/logo.jpg"
-              alt="Д-р Манолова Специалист"
+              alt={dict.home.about.imageAlt}
               fill
               style={{ objectFit: 'cover' }}
             />
@@ -181,19 +181,17 @@ export default function Home() {
               <div>
                 <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.qualifications}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <li><strong>• MBBS</strong> Медицинска степен</li>
-                  <li><strong>• DCH</strong> Диплома по детско здраве</li>
-                  <li><strong>• MRCPCH</strong> Член на RCPCH</li>
-                  <li><strong>• FRCPCH</strong> Член на RCPCH</li>
+                  {dict.home.about.qualList.map((q, i) => (
+                    <li key={i}><strong>{q.split(' ')[0]} {q.split(' ')[1]}</strong> {q.split(' ').slice(2).join(' ')}</li>
+                  ))}
                 </ul>
               </div>
               <div>
                 <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.specialties}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <li>• Педиатрична алергология</li>
-                  <li>• Ранно детско развитие</li>
-                  <li>• Спешни състояния</li>
-                  <li>• Неонатологични консултации</li>
+                  {dict.home.about.specList.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
                 </ul>
               </div>
             </div>
