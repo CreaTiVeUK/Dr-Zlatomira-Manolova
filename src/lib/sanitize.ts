@@ -1,16 +1,14 @@
-import DOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
-
-const window = new JSDOM("").window;
-const purify = DOMPurify(window as any);
+// Removed JSDOM dependency to fix Vercel deployment (ESM/CJS interop issues)
+// import DOMPurify from "dompurify";
+// import { JSDOM } from "jsdom";
 
 /**
  * Strips all HTML tags and script elements from a string.
  */
 export function sanitizeString(input: string): string {
     if (!input) return input;
-    // PURIFY removes scripts/tags. We also use ALLOWED_TAGS as empty to strip everything.
-    return purify.sanitize(input, { ALLOWED_TAGS: [] }).trim();
+    // Simple regex to strip HTML tags. Efficient and sufficient for this use case (stripping all tags).
+    return input.replace(/<[^>]*>/g, '').trim();
 }
 
 /**
