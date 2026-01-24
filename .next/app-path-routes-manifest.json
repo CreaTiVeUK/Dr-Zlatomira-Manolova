@@ -1,0 +1,22 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/api/appointments/route": "/api/appointments",
+  "/api/availability/route": "/api/availability",
+  "/api/checkout/route": "/api/checkout",
+  "/api/login/route": "/api/login",
+  "/api/logout/route": "/api/logout",
+  "/api/webhooks/stripe/route": "/api/webhooks/stripe",
+  "/book/page": "/book",
+  "/book/success/page": "/book/success",
+  "/conditions/page": "/conditions",
+  "/contact/page": "/contact",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/my-appointments/page": "/my-appointments",
+  "/page": "/",
+  "/resources/page": "/resources",
+  "/services/page": "/services",
+  "/sitemap.xml/route": "/sitemap.xml"
+}
