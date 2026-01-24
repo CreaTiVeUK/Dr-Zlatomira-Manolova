@@ -22,15 +22,7 @@ export default function Home() {
   return (
     <div>
       {/* HERO SECTION */}
-      <section style={{
-        position: 'relative',
-        height: '80vh',
-        minHeight: '700px',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-        background: '#001a1e' // Dark clinical base
-      }}>
+      <section className="hero-section">
         <Image
           src="/hero_premium.png"
           alt="Клинична консултация с д-р Злати"
@@ -39,7 +31,7 @@ export default function Home() {
           priority
         />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="reveal" style={{ maxWidth: '800px' }}>
+          <div className="reveal hero-content">
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -58,16 +50,16 @@ export default function Home() {
               <div style={{ width: '40px', height: '1px', background: 'var(--accent-bluish)', opacity: 0.8 }}></div>
             </div>
 
-            <h1 className="hero-title" style={{ color: 'white', fontSize: '4.5rem', lineHeight: '1.1', marginBottom: '2rem', textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+            <h1 className="hero-title">
               Елитна медицинска помощ<br />
               <span style={{ color: 'var(--primary-teal)' }}>Посветена на децата.</span>
             </h1>
 
-            <p style={{ fontSize: '1.4rem', color: 'white', marginBottom: '3.5rem', maxWidth: '650px', fontWeight: '500', textShadow: '0 2px 5px rgba(0,0,0,0.5)' }}>
+            <p className="hero-subtitle">
               Осигуряване на най-високия стандарт на педиатричен опит в сърцето на Пловдив, съчетаващ клинични постижения с дълбока състрадателна грижа.
             </p>
 
-            <div style={{ display: 'flex', gap: '1.5rem' }}>
+            <div className="btn-group">
               <Link href="/book" className="btn btn-primary" style={{ padding: '1.25rem 3.5rem', fontSize: '1rem' }}>Запазете консултация</Link>
               <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white', padding: '1.25rem 3.5rem' }}>Вижте услугите</Link>
             </div>
@@ -77,7 +69,7 @@ export default function Home() {
 
       {/* TRUST & PARTNERS BAR */}
       <section className="trust-bar reveal">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="container trust-bar-container">
           <div className="review-badge">
             <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary-teal)' }}>4.9/5</div>
             <div>
@@ -88,7 +80,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ flex: 1, paddingLeft: '3rem' }}>
+          <div className="trust-content">
             <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '2px' }}>ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ</div>
             <div className="partner-logo-grid">
               <Image src="/partner_logos.png" alt="Лога на партньорски болници" width={450} height={60} style={{ objectFit: 'contain' }} />
@@ -156,8 +148,8 @@ export default function Home() {
 
       {/* ABOUT SECTION (REFINED) */}
       <section className="bg-soft section-padding reveal">
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 450px) 1fr', gap: '6rem', alignItems: 'center' }}>
-          <div style={{ position: 'relative', height: '600px', borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
+        <div className="container about-grid">
+          <div className="about-image">
             <Image
               src="/logo.jpg"
               alt="Д-р Злати Специалист"

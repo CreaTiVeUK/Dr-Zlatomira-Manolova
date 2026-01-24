@@ -1,14 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import UserMenu from "@/components/UserMenu";
+import { useState } from "react";
 
 export default function Header({ user }: { user: any }) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <>
             {/* Utility Bar */}
-            <div style={{ background: 'var(--bg-soft)', padding: '0.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <div className="header-utility-bar">
+                <div className="container utility-content">
+                    <div className="contact-info">
                         <span>📞 +359 88 5557110</span>
                         <span>✉️ zlatomira.manolova@gmail.com</span>
                         <div className="clinical-badge">
@@ -22,9 +27,9 @@ export default function Header({ user }: { user: any }) {
             </div>
 
             {/* Main Header */}
-            <header style={{ padding: '1.5rem 0', background: 'white', borderBottom: '1px solid #eee' }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            <header className="header-main">
+                <div className="container header-container">
+                    <Link href="/" className="logo-section">
                         <Image
                             src="/logo.jpg"
                             alt="Лого"
@@ -33,15 +38,7 @@ export default function Header({ user }: { user: any }) {
                             style={{ borderRadius: '50%' }}
                         />
                         <div>
-                            <div style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: '1.5rem',
-                                fontWeight: '700',
-                                color: 'var(--primary-teal)',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                lineHeight: '1'
-                            }}>
+                            <div className="logo-text">
                                 Д-р Златомира Манолова
                             </div>
                             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '500' }}>
@@ -50,7 +47,8 @@ export default function Header({ user }: { user: any }) {
                         </div>
                     </Link>
 
-                    <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center', fontFamily: 'var(--font-heading)', fontWeight: '600', fontSize: '0.9rem' }}>
+                    {/* Desktop Navigation */}
+                    <nav className="nav-desktop">
                         <Link href="/" style={{ color: 'var(--text-charcoal)' }}>НАЧАЛО</Link>
                         <Link href="/services" style={{ color: 'var(--text-charcoal)' }}>УСЛУГИ</Link>
                         <Link href="/conditions" style={{ color: 'var(--text-charcoal)' }}>ЗАБОЛЯВАНИЯ</Link>
@@ -58,6 +56,23 @@ export default function Header({ user }: { user: any }) {
                         <Link href="/book" style={{ color: 'var(--text-charcoal)', whiteSpace: 'nowrap' }}>ЗАПАЗЕТЕ ЧАС</Link>
                         <Link href="/contact" style={{ color: 'var(--text-charcoal)' }}>КОНТАКТИ</Link>
                         <div style={{ width: '1px', height: '20px', background: '#ddd', margin: '0 0.5rem' }}></div>
+                        <UserMenu user={user} />
+                    </nav>
+
+                    {/* Mobile Menu Button */}
+                    <button className="mobile-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        {isMenuOpen ? '✕' : '☰'}
+                    </button>
+
+                    {/* Mobile Navigation */}
+                    <nav className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+                        <Link href="/" onClick={() => setIsMenuOpen(false)}>НАЧАЛО</Link>
+                        <Link href="/services" onClick={() => setIsMenuOpen(false)}>УСЛУГИ</Link>
+                        <Link href="/conditions" onClick={() => setIsMenuOpen(false)}>ЗАБОЛЯВАНИЯ</Link>
+                        <Link href="/resources" onClick={() => setIsMenuOpen(false)}>РЕСУРСИ</Link>
+                        <Link href="/book" onClick={() => setIsMenuOpen(false)}>ЗАПАЗЕТЕ ЧАС</Link>
+                        <Link href="/contact" onClick={() => setIsMenuOpen(false)}>КОНТАКТИ</Link>
+                        <div style={{ borderTop: '1px solid #eee', width: '100%' }}></div>
                         <UserMenu user={user} />
                     </nav>
                 </div>

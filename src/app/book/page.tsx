@@ -102,7 +102,7 @@ export default function BookPage() {
                     <p style={{ color: 'var(--text-muted)' }}>Запазете вашата консултация с д-р Злати в няколко лесни стъпки.</p>
                 </div>
 
-                <div style={{ maxWidth: '900px', margin: '0 auto', background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
+                <div className="booking-card">
 
                     {/* 1. SELECT SERVICE */}
                     <div style={{ marginBottom: '3.5rem' }}>
