@@ -17,7 +17,7 @@ export function generateICS(appointment: {
     const icsContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Zlati Pediatrics//EN',
+        'PRODID:-//Manolova Pediatrics//EN',
         'BEGIN:VEVENT',
         `UID:${appointment.id}`,
         `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}`,
@@ -25,7 +25,7 @@ export function generateICS(appointment: {
         `DTEND:${end}`,
         `SUMMARY:${appointment.summary}`,
         `DESCRIPTION:${appointment.description || ''}`,
-        'LOCATION:Dr. Zlati Pediatrics London',
+        'LOCATION:Dr. Manolova Pediatrics London',
         'END:VEVENT',
         'END:VCALENDAR'
     ].join('\r\n');

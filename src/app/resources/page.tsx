@@ -52,7 +52,7 @@ export default function ResourcesPage() {
                 <div className="text-center" style={{ marginBottom: '5rem' }}>
                     <h1 className="section-title">База знания</h1>
                     <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--text-muted)' }}>
-                        Експертни медицински прозрения и практически съвети за родители, подготвени от д-р Злати.
+                        Експертни медицински прозрения и практически съвети за родители, подготвени от д-р Манолова.
                     </p>
                 </div>
 

@@ -27,11 +27,11 @@ export async function sendEmail(to: string, template: EmailTemplate) {
 
 export const EMAIL_TEMPLATES = {
     CONFIRMATION: (patientName: string, date: string, time: string) => ({
-        subject: `Appointment Confirmed: Dr. Zlati Pediatrics`,
-        body: `Dear ${patientName},\n\nYour appointment with Dr. Zlatomira Manolova has been successfully scheduled.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot.\n\nWarm regards,\nDr. Zlati Pediatrics Team`
+        subject: `Appointment Confirmed: Dr. Manolova Pediatrics`,
+        body: `Dear ${patientName},\n\nYour appointment with Dr. Zlatomira Manolova has been successfully scheduled.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
     }),
     CANCELLATION: (patientName: string, date: string) => ({
-        subject: `Appointment Cancelled: Dr. Zlati Pediatrics`,
-        body: `Dear ${patientName},\n\nThis is to confirm that your appointment on ${date} has been cancelled.\n\nIf you did not request this, please contact us immediately.\n\nDr. Zlati Pediatrics Team`
+        subject: `Appointment Cancelled: Dr. Manolova Pediatrics`,
+        body: `Dear ${patientName},\n\nThis is to confirm that your appointment on ${date} has been cancelled.\n\nIf you did not request this, please contact us immediately.\n\nDr. Manolova Pediatrics Team`
     })
 };

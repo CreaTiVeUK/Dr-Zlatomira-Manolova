@@ -1,10 +1,11 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function Home() {
+  const { dict } = useLanguage();
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -51,17 +52,17 @@ export default function Home() {
             </div>
 
             <h1 className="hero-title">
-              Елитна медицинска помощ<br />
-              <span style={{ color: 'var(--primary-teal)' }}>Посветена на децата.</span>
+              {dict.home.hero.title}<br />
+              <span style={{ color: 'var(--primary-teal)' }}>{dict.home.hero.titleHighlight}</span>
             </h1>
 
             <p className="hero-subtitle">
-              Осигуряване на най-високия стандарт на педиатричен опит в сърцето на Пловдив, съчетаващ клинични постижения с дълбока състрадателна грижа.
+              {dict.home.hero.subtitle}
             </p>
 
             <div className="btn-group">
-              <Link href="/book" className="btn btn-primary" style={{ padding: '1.25rem 3.5rem', fontSize: '1rem' }}>Запазете консултация</Link>
-              <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white', padding: '1.25rem 3.5rem' }}>Вижте услугите</Link>
+              <Link href="/book" className="btn btn-primary" style={{ padding: '1.25rem 3.5rem', fontSize: '1rem' }}>{dict.home.hero.bookBtn}</Link>
+              <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white', padding: '1.25rem 3.5rem' }}>{dict.home.hero.servicesBtn}</Link>
             </div>
           </div>
         </div>
@@ -76,12 +77,12 @@ export default function Home() {
               <div style={{ display: 'flex', color: 'var(--accent-bluish)', fontSize: '1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>280+ ПРОВЕРЕНИ ОТЗИВА</div>
+              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>{dict.home.trust.reviews}</div>
             </div>
           </div>
 
           <div className="trust-content">
-            <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '2px' }}>ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '2px' }}>{dict.home.trust.partners}</div>
             <div className="partner-logo-grid">
               <Image src="/partner_logos.png" alt="Лога на партньорски болници" width={450} height={60} style={{ objectFit: 'contain' }} />
             </div>
@@ -93,9 +94,9 @@ export default function Home() {
       <section className="section-padding" style={{ background: '#fcfdfd' }}>
         <div className="container">
           <div className="text-center reveal">
-            <h2 className="section-title">Клиничен опит</h2>
+            <h2 className="section-title">{dict.home.services.title}</h2>
             <p style={{ maxWidth: '700px', margin: '-1rem auto 4rem', color: 'var(--text-muted)', fontSize: '1.1rem' }}>
-              От рутинни прегледи до специализирани диагностични клиники, ние предоставяме пълен спектър от педиатрични грижи.
+              {dict.home.services.subtitle}
             </p>
           </div>
 
@@ -104,43 +105,43 @@ export default function Home() {
               <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
                 <Image
                   src="/service_general_paediatrics_1769272814052.png"
-                  alt="Обща педиатрия"
+                  alt={dict.home.services.general.title}
                   fill
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              <h3>Обща педиатрия</h3>
+              <h3>{dict.home.services.general.title}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                Експертно управление на остри детски заболявания, рутинни здравни прегледи и клинични ваксинации.
+                {dict.home.services.general.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>ВИЖТЕ УСЛУГАТА →</Link>
+              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.general.btn}</Link>
             </div>
 
             <div className="premium-card reveal delay-2">
               <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
                 <Image
                   src="/service_allergy_consultation_1769272828650.png"
-                  alt="Алергологични услуги"
+                  alt={dict.home.services.allergy.title}
                   fill
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              <h3>Алергия и астма</h3>
+              <h3>{dict.home.services.allergy.title}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                Специализирано диагностично тестване и дългосрочни планове за лечение на комплексни детски алергии.
+                {dict.home.services.allergy.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>ВИЖТЕ УСЛУГАТА →</Link>
+              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.allergy.btn}</Link>
             </div>
 
             <div className="premium-card reveal delay-3" style={{ borderTop: '4px solid var(--accent-bluish)' }}>
               <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{ background: '#f4f6f8', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>👶</div>
               </div>
-              <h3>Грижа за новородени</h3>
+              <h3>{dict.home.services.newborn.title}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                Специализирана подкрепа за здравето на новородените, проблеми с храненето и ранен преглед на развитието.
+                {dict.home.services.newborn.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--accent-bluish)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>ВИЖТЕ УСЛУГАТА →</Link>
+              <Link href="/services" style={{ color: 'var(--accent-bluish)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.newborn.btn}</Link>
             </div>
           </div>
         </div>
@@ -158,27 +159,27 @@ export default function Home() {
             />
           </div>
           <div>
-            <div className="clinical-badge" style={{ marginBottom: '1.5rem' }}>УТВЪРДЕН ПЕДИАТЪР</div>
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>Д-р Златомира Манолова-Пенева</h2>
+            <div className="clinical-badge" style={{ marginBottom: '1.5rem' }}>{dict.home.about.badge}</div>
+            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>{dict.home.about.name}</h2>
             <p style={{ fontSize: '1.2rem', marginBottom: '2rem', fontWeight: '600', color: 'var(--text-charcoal)' }}>
-              Началник на Второ педиатрично отделение
+              {dict.home.about.role}
             </p>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              Д-р Златомира Манолова-Пенева завършва Медицински университет – Пловдив през 2018 г., а през 2023 г. придобива специалност по педиатрия. Още в началото на професионалния си път тя насочва интересите си към детското здравеопазване, като се стреми към задълбочено практическо и теоретично обучение.
+              {dict.home.about.bio1}
             </p>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              Специализацията си започва във Второ педиатрично отделение с интензивен сектор към МБАЛ – Пазарджик, където натрупва ценен клиничен опит. В рамките на обучението си преминава и през Клиниката по педиатрия на УМБАЛ „Св. Георги“ – Пловдив, което допринася за разширяване на професионалната ѝ подготовка и клиничен поглед.
+              {dict.home.about.bio2}
             </p>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              След успешно завършване на специализацията д-р Манолова-Пенева продължава професионалното си развитие като лекар-специалист в МБАЛ – Пазарджик, като паралелно с това става част от екипа на Денонощна детска поликлиника „Пловдимед“ в Пловдив. Работата ѝ е насочена към осигуряване на качествена и навременна медицинска грижа за деца от различни възрастови групи.
+              {dict.home.about.bio3}
             </p>
             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              През 2025 г. тя заема ръководна позиция като началник на отделение – първоначално като временно изпълняващ длъжността, а впоследствие, след успешно проведен конкурс, и като титулярен началник. Професионализмът, отговорността и отдадеността ѝ към пациентите и екипа са високо оценени, като през 2023 г. е номинирана от Българския лекарски съюз в категорията „Ти си нашето бъдеще“.
+              {dict.home.about.bio4}
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', borderTop: '1px solid #ddd', paddingTop: '2.5rem' }}>
               <div>
-                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>КВАЛИФИКАЦИИ</h4>
+                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.qualifications}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <li><strong>• MBBS</strong> Медицинска степен</li>
                   <li><strong>• DCH</strong> Диплома по детско здраве</li>
@@ -187,7 +188,7 @@ export default function Home() {
                 </ul>
               </div>
               <div>
-                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>СПЕЦИАЛНОСТИ</h4>
+                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.specialties}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <li>• Педиатрична алергология</li>
                   <li>• Ранно детско развитие</li>
@@ -197,7 +198,7 @@ export default function Home() {
               </div>
             </div>
 
-            <Link href="/contact" className="btn btn-primary" style={{ marginTop: '3rem' }}>Поискайте пълна биография</Link>
+            <Link href="/contact" className="btn btn-primary" style={{ marginTop: '3rem' }}>{dict.home.about.bioBtn}</Link>
           </div>
         </div>
       </section>

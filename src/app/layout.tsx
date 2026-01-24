@@ -33,6 +33,7 @@ export const metadata: Metadata = {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getSession } from "@/lib/auth";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 export default async function RootLayout({
   children,
@@ -45,9 +46,11 @@ export default async function RootLayout({
   return (
     <html lang="bg">
       <body className={outfit.className}>
-        <Header user={user} />
-        <main style={{ minHeight: '80vh' }}>{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <Header user={user} />
+          <main style={{ minHeight: '80vh' }}>{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

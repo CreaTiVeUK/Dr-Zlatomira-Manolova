@@ -63,7 +63,7 @@ export default function MyAppointments() {
             id: appt.id,
             dateTime: new Date(appt.dateTime),
             duration: appt.duration,
-            summary: "Педиатричен преглед: Д-р Злати",
+            summary: "Педиатричен преглед: Д-р Манолова",
             description: `Сесия: ${appt.notes || "Клинична консултация"}`
         });
 
