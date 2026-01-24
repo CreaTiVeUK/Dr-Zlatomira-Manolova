@@ -7,12 +7,12 @@ export default function Footer() {
     const { dict } = useLanguage();
 
     return (
-        <footer style={{ background: 'var(--text-charcoal)', color: 'white', padding: '5rem 0 2rem' }}>
+        <footer style={{ background: '#0F172A', color: 'white', padding: '6rem 0 3rem' }}>
             <div className="container">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', marginBottom: '4rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '5rem', marginBottom: '5rem' }}>
                     <div>
-                        <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem', textTransform: 'uppercase' }}>{dict.footer.title}</h4>
-                        <p style={{ color: '#bbb', fontSize: '0.95rem' }}>
+                        <h4 style={{ color: 'white', marginBottom: '1.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '1rem' }}>{dict.footer.title}</h4>
+                        <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: '1.8' }}>
                             {dict.footer.desc}
                         </p>
                     </div>
