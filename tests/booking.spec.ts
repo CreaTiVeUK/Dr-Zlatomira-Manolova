@@ -29,7 +29,7 @@ test.describe('Booking Flow', () => {
         await page.getByRole('button', { name: 'CONFIRM APPOINTMENT' }).click();
 
         // Wait for results
-        const response = page.waitForURL(/checkout\.stripe\.com|book\/success/, { timeout: 15000 }).catch(() => null);
+        const response = page.waitForURL(/\/book\/success/, { timeout: 15000 }).catch(() => null);
         const error = page.getByText(/payment could not be initiated|Invalid data format|Database operation failed/).first();
 
         await Promise.race([

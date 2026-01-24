@@ -86,12 +86,6 @@
       "namedRegex": "^/api/availability(?:/)?$"
     },
     {
-      "page": "/api/checkout",
-      "regex": "^/api/checkout(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/api/checkout(?:/)?$"
-    },
-    {
       "page": "/api/login",
       "regex": "^/api/login(?:/)?$",
       "routeKeys": {},
@@ -102,12 +96,6 @@
       "regex": "^/api/logout(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/logout(?:/)?$"
-    },
-    {
-      "page": "/api/webhooks/stripe",
-      "regex": "^/api/webhooks/stripe(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/api/webhooks/stripe(?:/)?$"
     },
     {
       "page": "/book",

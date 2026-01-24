@@ -70,23 +70,8 @@ export default function BookPage() {
             const data = await res.json();
 
             if (res.ok) {
-                // Redirect to payment
-                const checkoutRes = await fetch("/api/checkout", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        appointmentId: data.appointment.id,
-                        price: selectedService.price,
-                        serviceName: selectedService.name
-                    }),
-                });
-
-                const checkoutData = await checkoutRes.json();
-                if (checkoutData.url) {
-                    window.location.href = checkoutData.url;
-                } else {
-                    setMessage("Резервацията е потвърдена, но плащането не можа да бъде инициирано.");
-                }
+                // Direct redirect to success, skipping payment
+                window.location.href = `/book/success`;
             } else {
                 setMessage(data.error || "Резервацията не бе успешна.");
             }
