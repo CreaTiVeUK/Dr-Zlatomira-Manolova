@@ -25,7 +25,7 @@ export default function Home() {
       <section className="hero-section">
         <Image
           src="/hero_premium.png"
-          alt="Клинична консултация с д-р Злати"
+          alt="Клинична консултация с д-р Манолова"
           fill
           style={{ objectFit: 'cover', opacity: 0.55 }}
           priority
@@ -152,7 +152,7 @@ export default function Home() {
           <div className="about-image">
             <Image
               src="/logo.jpg"
-              alt="Д-р Злати Специалист"
+              alt="Д-р Манолова Специалист"
               fill
               style={{ objectFit: 'cover' }}
             />

@@ -4,7 +4,7 @@ export default function ContactPage() {
             <div className="container">
                 <div className="text-center" style={{ marginBottom: '4rem' }}>
                     <h1 className="section-title">Запишете час</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Свържете се с д-р Злати за експертна педиатрична грижа и клинична диагностика.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Свържете се с д-р Манолова за експертна педиатрична грижа и клинична диагностика.</p>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '5rem' }}>

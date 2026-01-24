@@ -76,6 +76,11 @@ export default function LoginPage() {
                         </button>
                     </form>
 
+
+                    <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                        Нямате профил? <Link href="/register" style={{ color: 'var(--primary-teal)', fontWeight: '600' }}>Регистрирайте се</Link>
+                    </div>
+
                     <div style={{ marginTop: '2.5rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                         <p style={{ fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-charcoal)' }}>ДЕМО ДОСТЪП:</p>
                         <p>zlatomira.manolova@gmail.com / password123</p>

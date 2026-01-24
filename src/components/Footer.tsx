@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="container">
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', marginBottom: '4rem' }}>
                     <div>
-                        <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem', textTransform: 'uppercase' }}>Педиатрия Злати</h4>
+                        <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem', textTransform: 'uppercase' }}>Педиатрия Манолова</h4>
                         <p style={{ color: '#bbb', fontSize: '0.95rem' }}>
                             Предоставяне на експертна и състрадателна педиатрична помощ за деца от всички възрасти. Базирана в сърцето на Лондон.
                         </p>

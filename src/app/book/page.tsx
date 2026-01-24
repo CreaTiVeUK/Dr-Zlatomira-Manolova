@@ -99,7 +99,7 @@ export default function BookPage() {
             <div className="container">
                 <div className="text-center" style={{ marginBottom: '3rem' }}>
                     <h1 className="section-title">Онлайн записване на час</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Запазете вашата консултация с д-р Злати в няколко лесни стъпки.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Запазете вашата консултация с д-р Манолова в няколко лесни стъпки.</p>
                 </div>
 
                 <div className="booking-card">
