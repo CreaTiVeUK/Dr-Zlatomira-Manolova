@@ -1,0 +1,8 @@
+// Note: This script mocks the fetch call behavior logic but cannot run strictly without valid session cookie.
+// Real verification relies on User testing or integration test with Puppeteer/Browser tool.
+console.log("To verify booking manually:");
+console.log("1. Login as patient@example.com");
+console.log("2. Open Browser DevTools -> Network tab");
+console.log("3. Click a slot in /book");
+console.log("4. Check the POST request to /api/appointments");
+console.log("5. If it fails (401), cookie is not being sent.");
