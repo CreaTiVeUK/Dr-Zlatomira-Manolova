@@ -34,7 +34,7 @@ model Appointment {
   price         Float
   status        String   @default("BOOKED")
   paymentStatus String   @default("UNPAID")
-  paymentMethod String?  // STRIPE, CASH
+  paymentMethod String?  // CASH
   notes         String?
 
   user   User   @relation(fields: [userId], references: [id])
