@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import EmergencyBanner from "@/components/EmergencyBanner";
 import { getSession } from "@/lib/auth";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={outfit.className}>
         <LanguageProvider>
+          <EmergencyBanner />
           <Header user={user} />
           <main style={{ minHeight: '80vh' }}>{children}</main>
           <Footer />

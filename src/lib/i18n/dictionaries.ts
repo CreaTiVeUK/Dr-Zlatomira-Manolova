@@ -14,7 +14,11 @@ export const en = {
             book: "BOOK NOW",
             contact: "CONTACT",
         },
-        switchTitle: "Switch to Bulgarian"
+        switchTitle: "Switch to Bulgarian",
+        emergency: {
+            text: "FOR EMERGENCIES CALL 112",
+            sub: "This service is for specialized pediatric care and checkups only."
+        }
     },
     footer: {
         title: "Manolova Pediatrics",
@@ -237,7 +241,22 @@ export const en = {
         cancelConfirm: "Are you sure you want to cancel this appointment?",
         cancelSuccess: "Appointment cancelled successfully.",
         cancelError: "Cancellation failed.",
-        cancelRestriction: "Appointments can only be cancelled at least 24 hours in advance."
+        cancelRestriction: "Appointments can only be cancelled at least 24 hours in advance.",
+        upcoming: "Upcoming Sessions",
+        past: "Past Consultations"
+    },
+    admin: {
+        practiceControl: "Practice Control Center",
+        clinicalOps: "Managed clinical operations and security audits.",
+        upcoming: "UPCOMING APPOINTMENTS",
+        historical: "HISTORICAL RECORDS",
+        status: "STATUS",
+        patient: "PATIENT",
+        dateTime: "DATE & TIME",
+        fee: "FEE",
+        totalBookings: "TOTAL BOOKINGS",
+        securityEvents: "SECURITY EVENTS",
+        auditTrail: "SYSTEM AUDIT TRAIL"
     },
     userMenu: {
         login: "LOGIN",
@@ -267,7 +286,11 @@ export const bg: Dictionary = {
             book: "ЗАПАЗЕТЕ ЧАС",
             contact: "КОНТАКТИ",
         },
-        switchTitle: "Switch to English"
+        switchTitle: "Switch to English",
+        emergency: {
+            text: "ЗА СПЕШНИ СЛУЧАИ ЗВЪНЕТЕ НА 112",
+            sub: "Тази услуга е само за специализирана педиатрична помощ и прегледи."
+        }
     },
     footer: {
         title: "Педиатрия Манолова",
@@ -487,7 +510,22 @@ export const bg: Dictionary = {
         cancelConfirm: "Сигурни ли сте, че искате да отмените този час?",
         cancelSuccess: "Часът бе отменен успешно.",
         cancelError: "Отмяната не бе успешна.",
-        cancelRestriction: "Часовете могат да бъдат отменяни най-малко 24 часа предварително."
+        cancelRestriction: "Часовете могат да бъдат отменяни най-малко 24 часа предварително.",
+        upcoming: "Предстоящи посещения",
+        past: "Минали консултации"
+    },
+    admin: {
+        practiceControl: "Център за управление на практиката",
+        clinicalOps: "Управление на клинични операции и одити на сигурността.",
+        upcoming: "ПРЕДСТОЯЩИ ЧАСОВЕ",
+        historical: "ИСТОРИЯ НА ПРЕГЛЕДИТЕ",
+        status: "СТАТУС",
+        patient: "ПАЦИЕНТ",
+        dateTime: "ДАТА И ЧАС",
+        fee: "ТАКСА",
+        totalBookings: "ОБЩО РЕЗЕРВАЦИИ",
+        securityEvents: "СЪБИТИЯ ПО СИГУРНОСТТА",
+        auditTrail: "СИСТЕМЕН ОДИТ"
     },
     userMenu: {
         login: "ВХОД",
