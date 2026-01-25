@@ -134,10 +134,10 @@ export default function Home() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
               <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
-                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={110} height={45} style={{ objectFit: 'contain' }} />
+                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={140} height={60} style={{ objectFit: 'contain' }} />
               </a>
               <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
-                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={110} height={45} style={{ objectFit: 'contain' }} />
+                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={140} height={60} style={{ objectFit: 'contain' }} />
               </a>
             </div>
           </div>
