@@ -48,6 +48,8 @@ export const en = {
         trust: {
             reviews: "VERIFIED REVIEWS",
             partners: "PARTNERSHIP WITH LEADING CLINICS",
+            superdocTitle: "View all reviews on Superdoc",
+            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova"
         },
         services: {
             title: "Clinical Experience",
@@ -320,6 +322,8 @@ export const bg: Dictionary = {
         trust: {
             reviews: "ПРОВЕРЕНИ ОТЗИВА",
             partners: "ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ",
+            superdocTitle: "Вижте всички отзиви в Superdoc",
+            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova"
         },
         services: {
             title: "Клиничен опит",

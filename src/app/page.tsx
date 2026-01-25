@@ -70,7 +70,14 @@ export default function Home() {
       {/* TRUST & PARTNERS BAR */}
       <section className="trust-bar reveal">
         <div className="container trust-bar-container">
-          <div className="review-badge">
+          <a
+            href={dict.home.trust.superdocLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="review-badge"
+            style={{ textDecoration: 'none', transition: 'var(--transition-fast)' }}
+            title={dict.home.trust.superdocTitle}
+          >
             <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary-teal)' }}>4.9/5</div>
             <div>
               <div style={{ display: 'flex', color: 'var(--accent-bluish)', fontSize: '1rem', gap: '2px' }}>
@@ -78,7 +85,7 @@ export default function Home() {
               </div>
               <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>{dict.home.trust.reviews}</div>
             </div>
-          </div>
+          </a>
 
           <div style={{ height: '40px', width: '1px', background: '#eee', margin: '0 2rem' }} className="desktop-only"></div>
 
@@ -136,7 +143,7 @@ export default function Home() {
               <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.allergy.btn}</Link>
             </div>
 
-            <div className="premium-card reveal delay-3" style={{ borderTop: '4px solid var(--accent-bluish)' }}>
+            <div className="premium-card reveal delay-3">
               <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{ background: '#f4f6f8', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>👶</div>
               </div>
