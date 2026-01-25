@@ -64,9 +64,22 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
 }
 
 export default function Home() {
-  const { dict } = useLanguage();
+  const { dict, language } = useLanguage();
+  const [trustStats, setTrustStats] = useState<{ rating: string, reviewsCount: string, testimonials: any[] } | null>(null);
 
   useEffect(() => {
+    fetch('/api/trust-stats')
+      .then(res => res.json())
+      .then(data => {
+        // Map data to localized testimonials
+        const testimonials = data.testimonials.map((t: any) => ({
+          text: language === 'en' ? t.textEn : t.textBg,
+          author: language === 'en' ? t.authorEn : t.authorBg
+        }));
+        setTrustStats({ ...data, testimonials });
+      })
+      .catch(err => console.error("Stats fetch error:", err));
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -77,7 +90,13 @@ export default function Home() {
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [language]);
+
+  const stats = trustStats || {
+    rating: dict.home.trust.rating,
+    reviewsCount: dict.home.trust.reviewsCount,
+    testimonials: dict.home.trust.testimonials
+  };
 
   return (
     <div style={{ overflowX: 'hidden' }}>
@@ -136,20 +155,20 @@ export default function Home() {
             style={{ textDecoration: 'none', transition: 'var(--transition-fast)', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}
             title={dict.home.trust.superdocTitle}
           >
-            <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{dict.home.trust.rating}</div>
+            <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{stats.rating}</div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ display: 'flex', color: '#f4b400', fontSize: '1.1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
               <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                {dict.home.trust.reviewsCount} {dict.home.trust.reviewsLabel}
+                {stats.reviewsCount} {dict.home.trust.reviewsLabel}
               </div>
             </div>
           </a>
 
           <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
 
-          <ReviewCarousel testimonials={dict.home.trust.testimonials} />
+          <ReviewCarousel testimonials={stats.testimonials} />
 
           <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
 
@@ -271,7 +290,7 @@ export default function Home() {
               {dict.home.about.bio4}
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', borderTop: '1px solid #ddd', paddingTop: '2.5rem' }}>
+            <div className="qual-grid">
               <div>
                 <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.qualifications}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

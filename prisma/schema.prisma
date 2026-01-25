@@ -68,3 +68,25 @@ model AuditLog {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
 }
+
+model SuperdocStat {
+  id           String   @id @default("singleton")
+  rating       String   // e.g. "5.0/5"
+  reviewsCount String   // e.g. "14"
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model SuperdocReview {
+  id           String   @id @default(uuid())
+  textEn       String
+  textBg       String
+  authorEn     String
+  authorBg     String
+  sourceUrl    String?
+  sourceDate   DateTime?
+  rating       Int?     // 1 to 5
+  isPublished  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  
+  @@unique([textBg]) // Avoid duplicates
+}
