@@ -48,7 +48,6 @@ export default function Home() {
               }}>
                 MBBS, DCH, MRCPCH, FRCP
               </div>
-              <div style={{ width: '40px', height: '1px', background: 'var(--accent-bluish)', opacity: 0.8 }}></div>
             </div>
 
             <h1 className="hero-title">
@@ -81,10 +80,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="trust-content">
-            <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '2px' }}>{dict.home.trust.partners}</div>
-            <div className="partner-logo-grid">
-              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={450} height={60} style={{ objectFit: 'contain' }} />
+          <div style={{ height: '40px', width: '1px', background: '#eee', margin: '0 2rem' }} className="desktop-only"></div>
+
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
+              {dict.home.trust.partners}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={380} height={50} style={{ objectFit: 'contain', opacity: 0.8 }} />
             </div>
           </div>
         </div>
