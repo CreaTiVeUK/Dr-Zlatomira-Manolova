@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { format, isAfter } from "date-fns";
-import { en } from "@/lib/i18n/dictionaries";
+import { en, bg } from "@/lib/i18n/dictionaries";
+import { cookies } from "next/headers";
 
 export default async function AdminDashboard() {
     const session = await getSession();
@@ -10,6 +11,10 @@ export default async function AdminDashboard() {
     if (!session || session.user.role !== "ADMIN") {
         redirect("/");
     }
+
+    const cookieStore = await cookies();
+    const lang = cookieStore.get("language")?.value || "en";
+    const d = lang === "bg" ? bg.admin : en.admin;
 
     const appointments = await prisma.appointment.findMany({
         orderBy: { dateTime: "asc" },
@@ -27,11 +32,6 @@ export default async function AdminDashboard() {
     const now = new Date();
     const upcoming = appointments.filter(a => isAfter(new Date(a.dateTime), now) && a.status !== 'CANCELLED');
     const historical = appointments.filter(a => !isAfter(new Date(a.dateTime), now) || a.status === 'CANCELLED');
-
-    // Simple dictionary access for Server Component (assuming default EN for now or passing lang)
-    // Actually, Admin Dashboard is currently hardcoded in EN. I will use the dictionaries to make it multi-lang capable.
-    // For now, I'll use the 'en' dictionary to match the previous hardcoded state but make it robust.
-    const d = en.admin;
 
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>

@@ -3,7 +3,7 @@ export type Dictionary = typeof en;
 export const en = {
     header: {
         utility: "Specialized pediatric care in Plovdiv",
-        ageGroup: "Ageless 0-18 years",
+        ageGroup: "Ages 0-18 years",
         title: "Dr. Zlatomira Manolova",
         subtitle: "PEDIATRIC SPECIALIST",
         nav: {

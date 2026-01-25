@@ -30,11 +30,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         const newLang = language === "en" ? "bg" : "en";
         setLanguageState(newLang);
         localStorage.setItem("language", newLang);
+        document.cookie = `language=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
     };
 
     const setLanguage = (lang: Language) => {
         setLanguageState(lang);
         localStorage.setItem("language", lang);
+        document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
     };
 
     const dict = language === "en" ? en : bg;
