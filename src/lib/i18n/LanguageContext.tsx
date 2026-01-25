@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Dictionary, en, bg } from "./dictionaries";
 
+import { useRouter } from "next/navigation";
+
 type Language = "en" | "bg";
 
 interface LanguageContextType {
@@ -17,6 +19,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>("en");
     const [mounted, setMounted] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         setMounted(true);
@@ -31,12 +34,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLanguageState(newLang);
         localStorage.setItem("language", newLang);
         document.cookie = `language=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
+        router.refresh();
     };
 
     const setLanguage = (lang: Language) => {
         setLanguageState(lang);
         localStorage.setItem("language", lang);
         document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+        router.refresh();
     };
 
     const dict = language === "en" ? en : bg;
