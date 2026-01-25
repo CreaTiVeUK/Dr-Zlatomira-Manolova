@@ -38,7 +38,7 @@ function SocialLoginButton({ provider, label, dict }: { provider: string, label:
 
     return (
         <button
-            onClick={() => signIn(provider)}
+            onClick={() => signIn(provider, { callbackUrl: "/book" })}
             style={{
                 width: '100%',
                 padding: '0.65rem 1rem',
@@ -87,7 +87,7 @@ export default function LoginPage() {
                 if (data.role === 'ADMIN') {
                     router.push("/admin/dashboard");
                 } else {
-                    router.push("/");
+                    router.push("/book");
                 }
                 router.refresh();
             } else {
