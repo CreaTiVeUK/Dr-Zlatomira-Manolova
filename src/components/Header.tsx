@@ -53,28 +53,27 @@ export default function Header({ user }: { user: any }) {
             {/* Main Header */}
             <header className="header-main">
                 <div className="container header-container">
-                    <Link href="/" className="logo-section">
-                        <div>
-                            <div className="logo-text">
-                                {dict.header.title}
-                            </div>
+                    <div className="header-logo">
+                        <Link href="/" className="logo-section">
+                            <div className="logo-text">{dict.header.title}</div>
                             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '500' }}>
                                 {dict.header.subtitle}
                             </div>
-                        </div>
-                    </Link>
+                        </Link>
+                    </div>
 
-                    {/* Desktop Navigation */}
-                    <nav className="nav-desktop">
-                        <Link href="/" style={{ color: 'var(--text-charcoal)' }}>{dict.header.nav.home}</Link>
-                        <Link href="/services" style={{ color: 'var(--text-charcoal)' }}>{dict.header.nav.services}</Link>
-                        <Link href="/conditions" style={{ color: 'var(--text-charcoal)' }}>{dict.header.nav.conditions}</Link>
-                        <Link href="/resources" style={{ color: 'var(--text-charcoal)' }}>{dict.header.nav.resources}</Link>
-                        <Link href="/book" style={{ color: 'var(--text-charcoal)', whiteSpace: 'nowrap' }}>{dict.header.nav.book}</Link>
-                        <Link href="/contact" style={{ color: 'var(--text-charcoal)' }}>{dict.header.nav.contact}</Link>
-                        <div style={{ width: '1px', height: '20px', background: '#ddd', margin: '0 0.5rem' }}></div>
-                        <UserMenu user={user} />
+                    <nav className="nav-center">
+                        <Link href="/">{dict.header.nav.home}</Link>
+                        <Link href="/services">{dict.header.nav.services}</Link>
+                        <Link href="/conditions">{dict.header.nav.conditions}</Link>
+                        <Link href="/resources">{dict.header.nav.resources}</Link>
+                        <Link href="/book" style={{ whiteSpace: 'nowrap' }}>{dict.header.nav.book}</Link>
+                        <Link href="/contact">{dict.header.nav.contact}</Link>
                     </nav>
+
+                    <div className="header-actions">
+                        <UserMenu user={user} />
+                    </div>
 
                     {/* Mobile Menu Button */}
                     <button
