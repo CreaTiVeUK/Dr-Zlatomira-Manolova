@@ -61,17 +61,24 @@ import { auth as authjs } from "@/auth";
 
 export async function getSession() {
     // 1. Try Auth.js session first (Social Login)
-    const authjsSession = await authjs();
-    if (authjsSession?.user) {
-        return {
-            user: {
-                id: (authjsSession.user as any).id,
-                email: authjsSession.user.email,
-                name: authjsSession.user.name,
-                role: (authjsSession.user as any).role || "PATIENT",
-                image: authjsSession.user.image
+    // Only attempt if secret is present to avoid premature initialization crashes
+    if (process.env.AUTH_SECRET) {
+        try {
+            const authjsSession = await authjs();
+            if (authjsSession?.user) {
+                return {
+                    user: {
+                        id: (authjsSession.user as any).id,
+                        email: authjsSession.user.email,
+                        name: authjsSession.user.name,
+                        role: (authjsSession.user as any).role || "PATIENT",
+                        image: authjsSession.user.image
+                    }
+                };
             }
-        };
+        } catch (error) {
+            console.error("Auth.js session check failed (likely config issue):", error);
+        }
     }
 
     // 2. Fallback to Legacy JWT session (Credentials Login)
