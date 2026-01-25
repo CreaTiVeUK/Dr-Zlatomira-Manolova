@@ -46,10 +46,20 @@ export const en = {
             servicesBtn: "View Services",
         },
         trust: {
-            reviews: "VERIFIED REVIEWS",
+            rating: "5.0/5",
+            reviewsCount: "14",
+            reviewsLabel: "VERIFIED REVIEWS",
             partners: "PARTNERSHIP WITH LEADING CLINICS",
             superdocTitle: "View all reviews on Superdoc",
-            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova"
+            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
+            testimonials: [
+                { text: "Wonderful attitude and professionalism! The examination proceeded with attention and ended with adequate advice.", author: "Verified Patient" },
+                { text: "Great specialist! Dr. Manolova answered all our questions in detail and gave us valuable advice with great warmth.", author: "Verified Patient" },
+                { text: "A great professional! She always manages to approach my daughter so she doesn't experience unnecessary stress.", author: "Verified Patient" },
+                { text: "Wonderful attitude, competence and professionalism! I am always calm when I turn to Dr. Manolova.", author: "Verified Patient" },
+                { text: "Great attitude and high professionalism! We are very grateful for the attention.", author: "Verified Patient" },
+                { text: "Wonderful attitude. Competence and adequate treatment. I highly recommend her!", author: "Verified Patient" }
+            ]
         },
         services: {
             title: "Clinical Experience",
@@ -320,10 +330,20 @@ export const bg: Dictionary = {
             servicesBtn: "Вижте услугите",
         },
         trust: {
-            reviews: "ПРОВЕРЕНИ ОТЗИВА",
+            rating: "5.0/5",
+            reviewsCount: "14",
+            reviewsLabel: "ПРОВЕРЕНИ ОТЗИВА",
             partners: "ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ",
             superdocTitle: "Вижте всички отзиви в Superdoc",
-            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova"
+            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
+            testimonials: [
+                { text: "Прекрасно отношение и професионализъм! Прегледът протече с внимание и завърши с адекватни съвети и лечение.", author: "Потвърден пациент" },
+                { text: "Страхотен специалист! Д-р Манолова отговори подробно на всичките ни въпроси и ни даде ценни съвети!", author: "Потвърден пациент" },
+                { text: "Благодарна съм, че открихме д-р Манолова! Страхотен професионалист, винаги подхожда с голямо внимание.", author: "Потвърден пациент" },
+                { text: "Прекрасно отношение, компетентност и професионализъм! Винаги съм спокойна, когато се обръщам към нея.", author: "Потвърден пациент" },
+                { text: "Страхотно отношение и висок професионализъм! Изключително сме благодарни за вниманието.", author: "Потвърден пациент" },
+                { text: "Прекрасно отношение. Компетентност и адекватно лечение. Горещо я препоръчвам!", author: "Потвърден пациент" }
+            ]
         },
         services: {
             title: "Клиничен опит",

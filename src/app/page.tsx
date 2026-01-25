@@ -1,8 +1,42 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+
+function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((current) => (current + 2 >= testimonials.length ? 0 : current + 2));
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [testimonials.length]);
+
+  const visibleReviews = [testimonials[index], testimonials[(index + 1) % testimonials.length]];
+
+  return (
+    <div style={{ display: 'flex', gap: '2rem', flex: 1, overflow: 'hidden', minHeight: '80px', alignItems: 'center' }}>
+      {visibleReviews.map((rev, i) => (
+        <div key={`rev-${index}-${i}`} className="reveal active" style={{ flex: 1, animation: 'fadeInScale 0.8s ease-out' }}>
+          <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: 'var(--text-charcoal)', marginBottom: '0.4rem', lineHeight: '1.4' }}>
+            "{rev.text}"
+          </p>
+          <div style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
+            — {rev.author}
+          </div>
+        </div>
+      ))}
+      <style jsx>{`
+@keyframes fadeInScale {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+}
+`}</style>
+    </div>
+  );
+}
 
 export default function Home() {
   const { dict } = useLanguage();
@@ -74,27 +108,32 @@ export default function Home() {
             href={dict.home.trust.superdocLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="review-badge"
-            style={{ textDecoration: 'none', transition: 'var(--transition-fast)' }}
+            style={{ textDecoration: 'none', transition: 'var(--transition-fast)', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}
             title={dict.home.trust.superdocTitle}
           >
-            <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>4.9/5</div>
+            <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{dict.home.trust.rating}</div>
             <div>
               <div style={{ display: 'flex', color: '#f4b400', fontSize: '1.1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
-              <div style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.home.trust.reviews}</div>
+              <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                {dict.home.trust.reviewsCount} {dict.home.trust.reviewsLabel}
+              </div>
             </div>
           </a>
 
-          <div style={{ height: '45px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
+          <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
+          <ReviewCarousel testimonials={dict.home.trust.testimonials} />
+
+          <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+            <div style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               {dict.home.trust.partners}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={450} height={60} style={{ objectFit: 'contain' }} />
+              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={380} height={50} style={{ objectFit: 'contain' }} />
             </div>
           </div>
         </div>
