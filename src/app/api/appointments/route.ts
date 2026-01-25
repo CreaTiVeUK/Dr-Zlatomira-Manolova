@@ -117,6 +117,14 @@ export async function POST(request: NextRequest) {
                     notes,
                     userId: targetUserId,
                     status: 'BOOKED'
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true
+                        }
+                    }
                 }
             });
 
@@ -128,6 +136,18 @@ export async function POST(request: NextRequest) {
                     ip
                 }
             });
+
+            // Trigger Confirmation Email
+            if (newAppointment.user?.email) {
+                await sendEmail(
+                    newAppointment.user.email,
+                    EMAIL_TEMPLATES.CONFIRMATION(
+                        newAppointment.user.name || "Patient",
+                        format(bookingDate, "PPP"),
+                        format(bookingDate, "p")
+                    )
+                );
+            }
 
             return NextResponse.json({ success: true, appointment: newAppointment });
         });

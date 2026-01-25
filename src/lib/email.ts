@@ -1,8 +1,4 @@
-/**
- * Clinic Email Notification System
- * Foundations for Resend/SMTP integration.
- * In development mode, logs the email content to clinical audit trail.
- */
+import { Resend } from 'resend';
 
 interface EmailTemplate {
     subject: string;
@@ -10,19 +6,35 @@ interface EmailTemplate {
 }
 
 export async function sendEmail(to: string, template: EmailTemplate) {
-    const isProd = process.env.NODE_OK === 'production';
+    const isProd = process.env.NODE_ENV === 'production';
+    const fromAddress = 'system@drzlatomiramanolova.vercel.app';
 
-    if (!isProd) {
-        console.log(`[CLINIC EMAIL SIMULATION] To: ${to}`);
+    if (!isProd || !process.env.RESEND_API_KEY) {
+        console.log(`[CLINIC EMAIL SIMULATION] From: ${fromAddress} To: ${to}`);
         console.log(`[SUBJECT]: ${template.subject}`);
         console.log(`[BODY]:\n${template.body}`);
         return { success: true, messageId: 'simulated-id' };
     }
 
-    // TODO: Final production integration with Resend API key
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // return await resend.emails.send({ ...template, to });
-    return { success: false, error: 'Provider not configured' };
+    try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const { data, error } = await resend.emails.send({
+            from: `Dr. Manolova Pediatrics <${fromAddress}>`,
+            to: [to],
+            subject: template.subject,
+            text: template.body
+        });
+
+        if (error) {
+            console.error('[EMAIL ERROR]:', error);
+            return { success: false, error: error.message };
+        }
+
+        return { success: true, messageId: data?.id };
+    } catch (e) {
+        console.error('[EMAIL EXCEPTION]:', e);
+        return { success: false, error: 'Failed to send email' };
+    }
 }
 
 export const EMAIL_TEMPLATES = {

@@ -6,21 +6,46 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
   const [index, setIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const step = isMobile ? 1 : 2;
     const timer = setInterval(() => {
-      setIndex((current) => (current + 2 >= testimonials.length ? 0 : current + 2));
+      setIndex((current) => (current + step >= testimonials.length ? 0 : current + step));
     }, 4500);
     return () => clearInterval(timer);
-  }, [testimonials.length]);
+  }, [testimonials.length, isMobile]);
 
-  const visibleReviews = [testimonials[index], testimonials[(index + 1) % testimonials.length]];
+  const visibleReviews = isMobile
+    ? [testimonials[index]]
+    : [testimonials[index], testimonials[(index + 1) % testimonials.length]];
 
   return (
-    <div style={{ display: 'flex', gap: '2rem', flex: 1, overflow: 'hidden', minHeight: '80px', alignItems: 'center' }}>
+    <div style={{
+      display: 'flex',
+      gap: isMobile ? '1rem' : '2rem',
+      flex: 1,
+      overflow: 'hidden',
+      minHeight: isMobile ? '120px' : '80px',
+      alignItems: 'center',
+      padding: isMobile ? '0 1rem' : '0'
+    }}>
       {visibleReviews.map((rev, i) => (
         <div key={`rev-${index}-${i}`} className="reveal active" style={{ flex: 1, animation: 'fadeInScale 0.8s ease-out' }}>
-          <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: 'var(--text-charcoal)', marginBottom: '0.4rem', lineHeight: '1.4' }}>
+          <p style={{
+            fontStyle: 'italic',
+            fontSize: isMobile ? '0.9rem' : '0.85rem',
+            color: 'var(--text-charcoal)',
+            marginBottom: '0.4rem',
+            lineHeight: '1.5'
+          }}>
             "{rev.text}"
           </p>
           <div style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
@@ -29,11 +54,11 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
         </div>
       ))}
       <style jsx>{`
-@keyframes fadeInScale {
+        @keyframes fadeInScale {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
-}
-`}</style>
+        }
+      `}</style>
     </div>
   );
 }
@@ -55,7 +80,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div style={{ overflowX: 'hidden' }}>
       {/* HERO SECTION */}
       <section className="hero-section">
         <Image
@@ -103,7 +128,7 @@ export default function Home() {
 
       {/* TRUST & PARTNERS BAR */}
       <section className="trust-bar reveal">
-        <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
+        <div className="container trust-container-responsive" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <a
             href={dict.home.trust.superdocLink}
             target="_blank"
@@ -112,7 +137,7 @@ export default function Home() {
             title={dict.home.trust.superdocTitle}
           >
             <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{dict.home.trust.rating}</div>
-            <div>
+            <div style={{ textAlign: 'left' }}>
               <div style={{ display: 'flex', color: '#f4b400', fontSize: '1.1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
@@ -132,16 +157,31 @@ export default function Home() {
             <div style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               {dict.home.trust.partners}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
-              <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
-                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={140} height={60} style={{ objectFit: 'contain' }} />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
+                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={130} height={55} style={{ objectFit: 'contain' }} />
               </a>
-              <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
-                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={140} height={60} style={{ objectFit: 'contain' }} />
+              <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
+                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={130} height={55} style={{ objectFit: 'contain' }} />
               </a>
             </div>
           </div>
         </div>
+        <style jsx>{`
+          .trust-container-responsive {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+          }
+          @media (max-width: 960px) {
+            .trust-container-responsive {
+              flex-direction: column;
+              gap: 2.5rem;
+              text-align: center;
+            }
+          }
+        `}</style>
       </section>
 
       {/* SPECIALIZED SERVICES GRID */}

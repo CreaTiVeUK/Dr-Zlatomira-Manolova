@@ -77,7 +77,12 @@ export default function Header({ user }: { user: any }) {
                     </nav>
 
                     {/* Mobile Menu Button */}
-                    <button className="mobile-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        style={{ padding: '0.75rem', fontSize: '1.8rem', marginRight: '-0.75rem' }}
+                        aria-label="Toggle Menu"
+                    >
                         {isMenuOpen ? '✕' : '☰'}
                     </button>
 

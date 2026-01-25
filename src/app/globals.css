@@ -327,7 +327,24 @@ a {
 }
 
 /* Mobile Breakpoint */
+/* Responsive Utilities */
+.mobile-only {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
+  .mobile-only {
+    display: block !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+
   .hero-section {
     height: auto;
     min-height: auto;
@@ -335,60 +352,55 @@ a {
   }
 
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    line-height: 1.2;
     word-wrap: break-word;
-    /* Prevent overflow */
   }
 
   .hero-subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    margin-bottom: 2rem;
   }
 
   .btn-group {
     flex-direction: column;
     width: 100%;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .btn {
     width: 100%;
     text-align: center;
+    padding: 1rem 2rem !important;
   }
 
-  .trust-bar-container {
+  .trust-bar {
+    padding: 2.5rem 0;
+  }
+
+  .trust-bar .container {
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem !important;
     text-align: center;
   }
 
   .review-badge {
-    border-right: none;
     padding-right: 0;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .trust-content {
-    padding-left: 0;
-    width: 100%;
+    justify-content: center;
   }
 
   .partner-logo-grid {
-    gap: 2rem;
+    gap: 1.5rem;
+    justify-content: center;
   }
 
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+  .section-padding {
+    padding: 4rem 0;
   }
 
-  .about-image {
-    height: 350px;
-  }
-
-  .booking-card {
-    padding: 1.5rem;
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
   }
 }
 
