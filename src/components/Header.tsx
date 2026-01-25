@@ -93,7 +93,24 @@ export default function Header({ user }: { user: any }) {
                         <Link href="/resources" onClick={() => setIsMenuOpen(false)}>{dict.header.nav.resources}</Link>
                         <Link href="/book" onClick={() => setIsMenuOpen(false)}>{dict.header.nav.book}</Link>
                         <Link href="/contact" onClick={() => setIsMenuOpen(false)}>{dict.header.nav.contact}</Link>
-                        <div style={{ borderTop: '1px solid #eee', width: '100%' }}></div>
+
+                        {/* Role-specific links for mobile */}
+                        {user && (
+                            <>
+                                <div style={{ borderTop: '1px solid #eee', width: '100%', margin: '0.5rem 0' }}></div>
+                                {user.role === 'ADMIN' ? (
+                                    <Link href="/admin/dashboard" onClick={() => setIsMenuOpen(false)} style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>
+                                        {dict.userMenu.dashboard}
+                                    </Link>
+                                ) : (
+                                    <Link href="/my-appointments" onClick={() => setIsMenuOpen(false)} style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>
+                                        {dict.userMenu.appointments}
+                                    </Link>
+                                )}
+                            </>
+                        )}
+
+                        <div style={{ borderTop: '1px solid #eee', width: '100%', margin: '0.5rem 0' }}></div>
                         <UserMenu user={user} />
                     </nav>
                 </div>

@@ -48,18 +48,20 @@ export default function UserMenu({ user }: UserMenuProps) {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            {user.role === 'ADMIN' && (
-                <Link href="/admin/dashboard" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                    {dict.userMenu.dashboard}
-                </Link>
-            )}
-            {user.role === 'PATIENT' && (
-                <Link href="/my-appointments" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                    {dict.userMenu.appointments}
-                </Link>
-            )}
-            <span style={{ fontWeight: '700', color: 'var(--text-charcoal)', fontSize: '0.9rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                {user.role === 'ADMIN' && (
+                    <Link href="/admin/dashboard" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                        {dict.userMenu.dashboard}
+                    </Link>
+                )}
+                {user.role === 'PATIENT' && (
+                    <Link href="/my-appointments" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                        {dict.userMenu.appointments}
+                    </Link>
+                )}
+            </div>
+            <span style={{ fontWeight: '700', color: 'var(--text-charcoal)', fontSize: '0.85rem' }}>
                 {user.name.split(' ')[0]}
             </span>
             <button

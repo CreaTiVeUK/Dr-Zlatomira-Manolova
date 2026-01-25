@@ -25,6 +25,9 @@
   /* SMOOTH TRANSITIONS */
   --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* MOBILE SIZING */
+  --mobile-smaller: 0.75rem;
 }
 
 * {
@@ -446,6 +449,74 @@ a {
   .section-title {
     font-size: 1.8rem;
     margin-bottom: 2rem;
+  }
+
+  /* Robust Header Mobile Fixes */
+  .header-utility-bar .container {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .contact-info {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    width: 100%;
+  }
+
+  .header-main .container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .header-logo {
+    flex: 1 !important;
+    min-width: 0;
+    /* Allow shrinking */
+  }
+
+  .logo-text {
+    font-size: 0.95rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .logo-section div:last-child {
+    font-size: 0.7rem !important;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    flex: 0 0 auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 0.85rem !important;
+  }
+
+  .header-actions {
+    display: none !important;
+    /* Move user menu completely into mobile nav on very small screens */
+  }
+
+  .mobile-menu-btn {
+    margin-right: 0 !important;
+  }
+
+  .section-padding {
+    padding: 3rem 0;
+    /* Further reduce for very small screens */
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
   }
 }
 
