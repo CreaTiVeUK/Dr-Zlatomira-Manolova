@@ -57,7 +57,24 @@ export async function logout() {
     cookieStore.delete("session");
 }
 
+import { auth as authjs } from "@/auth";
+
 export async function getSession() {
+    // 1. Try Auth.js session first (Social Login)
+    const authjsSession = await authjs();
+    if (authjsSession?.user) {
+        return {
+            user: {
+                id: (authjsSession.user as any).id,
+                email: authjsSession.user.email,
+                name: authjsSession.user.name,
+                role: (authjsSession.user as any).role || "PATIENT",
+                image: authjsSession.user.image
+            }
+        };
+    }
+
+    // 2. Fallback to Legacy JWT session (Credentials Login)
     const cookieStore = await cookies();
     const session = cookieStore.get("session")?.value;
     if (!session) return null;
@@ -65,7 +82,7 @@ export async function getSession() {
     const parsed = await decrypt(session);
     if (!parsed) return null;
 
-    // Inactivity Check
+    // Inactivity Check for legacy session
     if (isSessionExpired(parsed.lastActivity)) {
         return null;
     }

@@ -228,6 +228,7 @@ export const en = {
             email: "EMAIL ADDRESS",
             password: "PASSWORD",
             btn: "Login",
+            or: "or",
             noAccount: "Don't have an account?",
             registerLink: "Sign up"
         },
@@ -509,6 +510,7 @@ export const bg: Dictionary = {
             email: "ИМЕЙЛ АДРЕС",
             password: "ПАРОЛА",
             btn: "Вход",
+            or: "или",
             noAccount: "Нямате профил?",
             registerLink: "Регистрирайте се"
         },

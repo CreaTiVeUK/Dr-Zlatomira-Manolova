@@ -4,6 +4,43 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { signIn } from "next-auth/react";
+
+function SocialLoginButton({ provider, label }: { provider: string, label: string }) {
+    const brandColors: any = {
+        google: { bg: '#fff', text: '#757575', border: '#ddd' },
+        facebook: { bg: '#1877F2', text: '#fff', border: '#1877F2' },
+        apple: { bg: '#000', text: '#fff', border: '#000' }
+    };
+
+    const style = brandColors[provider];
+
+    return (
+        <button
+            onClick={() => signIn(provider)}
+            style={{
+                width: '100%',
+                padding: '0.75rem',
+                borderRadius: '6px',
+                border: `1px solid ${style.border}`,
+                background: style.bg,
+                color: style.text,
+                fontWeight: '600',
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                transition: 'opacity 0.2s'
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+        >
+            {label}
+        </button>
+    );
+}
 
 export default function LoginPage() {
     const { dict } = useLanguage();
@@ -78,8 +115,19 @@ export default function LoginPage() {
                         </button>
                     </form>
 
+                    <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ flex: 1, height: '1px', background: '#eee' }}></div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>{dict.auth.login.or}</span>
+                        <div style={{ flex: 1, height: '1px', background: '#eee' }}></div>
+                    </div>
 
-                    <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <SocialLoginButton provider="google" label="Google" />
+                        <SocialLoginButton provider="facebook" label="Facebook" />
+                        <SocialLoginButton provider="apple" label="Apple ID" />
+                    </div>
+
+                    <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                         {dict.auth.login.noAccount} <Link href="/register" style={{ color: 'var(--primary-teal)', fontWeight: '600' }}>{dict.auth.login.registerLink}</Link>
                     </div>
 

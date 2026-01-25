@@ -49,6 +49,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Account locked due to multiple failures. Try again later." }, { status: 403 });
         }
 
+        if (!user.password) {
+            return NextResponse.json({ error: "Please login with your social account" }, { status: 401 });
+        }
+
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
