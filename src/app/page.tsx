@@ -71,12 +71,14 @@ export default function Home() {
     fetch('/api/trust-stats')
       .then(res => res.json())
       .then(data => {
-        // Map data to localized testimonials
-        const testimonials = data.testimonials.map((t: any) => ({
-          text: language === 'en' ? t.textEn : t.textBg,
-          author: language === 'en' ? t.authorEn : t.authorBg
-        }));
-        setTrustStats({ ...data, testimonials });
+        if (data.testimonials && Array.isArray(data.testimonials)) {
+          // Map data to localized testimonials
+          const testimonials = data.testimonials.map((t: any) => ({
+            text: language === 'en' ? t.textEn : t.textBg,
+            author: language === 'en' ? t.authorEn : t.authorBg
+          }));
+          setTrustStats({ ...data, testimonials });
+        }
       })
       .catch(err => console.error("Stats fetch error:", err));
 
