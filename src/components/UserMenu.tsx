@@ -22,19 +22,15 @@ export default function UserMenu({ user }: UserMenuProps) {
 
     const handleLogout = async () => {
         try {
-            // 1. Clear Auth.js session (important for Social Login)
-            await signOut({ redirect: false });
-
-            // 2. Clear legacy session cookie
+            // 1. Clear legacy session cookie
             await fetch("/api/logout", { method: "POST" });
 
-            startTransition(() => {
-                router.refresh();
-                router.push("/login");
-            });
+            // 2. Clear Auth.js session and trigger redirect
+            // signOut with a callbackUrl is very reliable for immediate state refresh
+            await signOut({ callbackUrl: "/login" });
         } catch (err) {
             console.error("Logout failed:", err);
-            // Fallback: at least try to redirect
+            // Hard redirect as ultimate fallback
             window.location.href = "/login";
         }
     };
