@@ -20,7 +20,7 @@ export default function ServicesPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
 
                     {/* SERVICE 1 */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+                    <div className="service-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
                         <div style={{ position: 'relative', height: '400px', borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
                             <Image
                                 src="/service_general_paediatrics_1769272814052.png"
@@ -46,8 +46,8 @@ export default function ServicesPage() {
                     <div style={{ height: '1px', background: '#eee' }}></div>
 
                     {/* SERVICE 2 */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
-                        <div style={{ order: 2 }}>
+                    <div className="service-row service-row-reverse" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+                        <div className="order-1-mobile">
                             <h2 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem' }}>{dict.servicesPage.allergy.title}</h2>
                             <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
                                 {dict.servicesPage.allergy.desc}
@@ -59,7 +59,7 @@ export default function ServicesPage() {
                             </ul>
                             <Link href="/book" className="btn btn-outline">{dict.servicesPage.allergy.btn}</Link>
                         </div>
-                        <div style={{ position: 'relative', height: '400px', borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--shadow-md)', order: 1 }}>
+                        <div className="order-2-mobile" style={{ position: 'relative', height: '400px', borderRadius: '8px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
                             <Image
                                 src="/service_allergy_consultation_1769272828650.png"
                                 alt={dict.servicesPage.allergy.title}

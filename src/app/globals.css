@@ -409,8 +409,30 @@ a {
   }
 
   .about-image {
-    height: 350px;
+    display: block !important;
+    width: 100% !important;
+    height: 400px !important;
+    min-height: 400px !important;
     flex-shrink: 0;
+  }
+
+  .resource-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4rem !important;
+  }
+
+  .service-row {
+    grid-template-columns: 1fr !important;
+    gap: 3rem !important;
+  }
+
+  .service-row-reverse>.order-1-mobile {
+    order: 2 !important;
+  }
+
+  .service-row-reverse>.order-2-mobile {
+    order: 1 !important;
   }
 
   .booking-card {

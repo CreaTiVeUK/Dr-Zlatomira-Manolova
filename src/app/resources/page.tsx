@@ -34,7 +34,7 @@ export default function ResourcesPage() {
                     </p>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '5rem' }}>
+                <div className="resource-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '5rem' }}>
 
                     {/* ARTICLES */}
                     <div>
