@@ -229,6 +229,7 @@ export const en = {
             password: "PASSWORD",
             btn: "Login",
             or: "or",
+            continueWith: "Continue with",
             noAccount: "Don't have an account?",
             registerLink: "Sign up"
         },
@@ -511,6 +512,7 @@ export const bg: Dictionary = {
             password: "ПАРОЛА",
             btn: "Вход",
             or: "или",
+            continueWith: "Продължете с",
             noAccount: "Нямате профил?",
             registerLink: "Регистрирайте се"
         },
