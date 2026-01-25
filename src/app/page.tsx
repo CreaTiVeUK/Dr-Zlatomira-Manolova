@@ -194,6 +194,9 @@ export default function Home() {
               <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
                 <Image src="/plovdimed_logo.png" alt="Plovdimed" width={130} height={55} style={{ objectFit: 'contain' }} />
               </a>
+              <a href="https://superdoc.bg" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
+                <Image src="/superdoc_logo.png" alt="Superdoc" width={130} height={55} style={{ objectFit: 'contain' }} />
+              </a>
             </div>
           </div>
         </div>

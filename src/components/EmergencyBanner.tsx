@@ -16,14 +16,20 @@ export default function EmergencyBanner() {
                 <p style={{
                     margin: 0,
                     fontSize: "var(--mobile-smaller, 0.8rem)",
-                    lineHeight: 1.4,
-                    fontWeight: "700",
+                    lineHeight: 1.5,
+                    fontWeight: "900",
                     color: "#c53030"
                 }}>
                     🚨 {dict.header.emergency.text}
-                    <span style={{ fontWeight: "400", color: "#666", display: 'inline-block' }}>
-                        &nbsp;— {dict.header.emergency.sub}
-                    </span>
+                </p>
+                <p style={{
+                    margin: 0,
+                    fontSize: "var(--mobile-smaller, 0.75rem)",
+                    lineHeight: 1.4,
+                    fontWeight: "500",
+                    color: "#666"
+                }}>
+                    {dict.header.emergency.sub}
                 </p>
             </div>
             <style jsx>{`
