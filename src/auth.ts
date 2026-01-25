@@ -24,6 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             allowDangerousEmailAccountLinking: true,
         }),
     ],
+    secret: process.env.AUTH_SECRET,
     pages: {
         signIn: "/login",
     },
