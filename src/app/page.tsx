@@ -15,17 +15,22 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const step = isMobile ? 1 : 2;
+  const count = testimonials?.length || 0;
+
   useEffect(() => {
-    const step = isMobile ? 1 : 2;
+    if (count === 0) return;
     const timer = setInterval(() => {
-      setIndex((current) => (current + step >= testimonials.length ? 0 : current + step));
+      setIndex((current) => (current + step >= count ? 0 : current + step));
     }, 4500);
     return () => clearInterval(timer);
-  }, [testimonials.length, isMobile]);
+  }, [count, isMobile, step]);
+
+  if (!testimonials || count === 0) return null;
 
   const visibleReviews = isMobile
-    ? [testimonials[index]]
-    : [testimonials[index], testimonials[(index + 1) % testimonials.length]];
+    ? [testimonials[index % count]]
+    : [testimonials[index % count], testimonials[(index + 1) % count]].filter(Boolean);
 
   return (
     <div style={{
@@ -71,13 +76,17 @@ export default function Home() {
     fetch('/api/trust-stats')
       .then(res => res.json())
       .then(data => {
-        if (data.testimonials && Array.isArray(data.testimonials)) {
+        if (data.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
           // Map data to localized testimonials
           const testimonials = data.testimonials.map((t: any) => ({
             text: language === 'en' ? t.textEn : t.textBg,
             author: language === 'en' ? t.authorEn : t.authorBg
           }));
-          setTrustStats({ ...data, testimonials });
+          setTrustStats({
+            rating: data.rating || dict.home.trust.rating,
+            reviewsCount: data.reviewsCount || dict.home.trust.reviewsCount,
+            testimonials
+          });
         }
       })
       .catch(err => console.error("Stats fetch error:", err));
