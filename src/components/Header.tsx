@@ -14,37 +14,39 @@ export default function Header({ user }: { user: any }) {
         <>
             {/* Utility Bar */}
             <div className="header-utility-bar">
-                <div className="container utility-content">
-                    <div className="contact-info">
-                        <span>📞 +359 88 5557110</span>
-                        <span>✉️ zlatomira.manolova@gmail.com</span>
-                        <div className="clinical-badge">
+                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="contact-info" style={{ display: 'flex', gap: '1.5rem', fontSize: '0.8rem', fontWeight: '500' }}>
+                        <a href="tel:+359885557110" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span style={{ opacity: 0.7 }}>TEL:</span> +359 88 5557110
+                        </a>
+                        <a href="mailto:zlatomira.manolova@gmail.com" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span style={{ opacity: 0.7 }}>EMAIL:</span> zlatomira.manolova@gmail.com
+                        </a>
+                        <div className="clinical-badge" style={{ padding: '2px 8px', fontSize: '0.65rem' }}>
                             {dict.header.ageGroup}
                         </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            {dict.header.utility}
-                        </div>
-                        {/* Language Switcher */}
-                        <button
-                            onClick={toggleLanguage}
-                            style={{
-                                background: 'transparent',
-                                border: '1px solid #ddd',
-                                borderRadius: '4px',
-                                padding: '0.25rem 0.5rem',
-                                cursor: 'pointer',
-                                fontSize: '1.2rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                            }}
-                            title={dict.header.switchTitle}
-                        >
-                            {language === 'en' ? '🇧🇬' : '🇬🇧'}
-                        </button>
-                    </div>
+
+                    <button
+                        onClick={toggleLanguage}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '1rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.4rem',
+                            padding: '0 0.5rem',
+                            transition: 'var(--transition-fast)'
+                        }}
+                        title={dict.header.switchTitle}
+                    >
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
+                            {language === 'en' ? 'BG' : 'EN'}
+                        </span>
+                        {language === 'en' ? '🇧🇬' : '🇬🇧'}
+                    </button>
                 </div>
             </div>
 
