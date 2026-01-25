@@ -69,7 +69,7 @@ export default function Home() {
 
       {/* TRUST & PARTNERS BAR */}
       <section className="trust-bar reveal">
-        <div className="container trust-bar-container">
+        <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3rem' }}>
           <a
             href={dict.home.trust.superdocLink}
             target="_blank"
@@ -78,23 +78,23 @@ export default function Home() {
             style={{ textDecoration: 'none', transition: 'var(--transition-fast)' }}
             title={dict.home.trust.superdocTitle}
           >
-            <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary-teal)' }}>4.9/5</div>
+            <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>4.9/5</div>
             <div>
-              <div style={{ display: 'flex', color: 'var(--accent-bluish)', fontSize: '1rem', gap: '2px' }}>
+              <div style={{ display: 'flex', color: '#f4b400', fontSize: '1.1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>{dict.home.trust.reviews}</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.home.trust.reviews}</div>
             </div>
           </a>
 
-          <div style={{ height: '40px', width: '1px', background: '#eee', margin: '0 2rem' }} className="desktop-only"></div>
+          <div style={{ height: '45px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
 
-          <div style={{ flex: 1, textAlign: 'center' }}>
-            <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               {dict.home.trust.partners}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={380} height={50} style={{ objectFit: 'contain', opacity: 0.8 }} />
+              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={450} height={60} style={{ objectFit: 'contain' }} />
             </div>
           </div>
         </div>

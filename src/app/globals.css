@@ -237,14 +237,11 @@ a {
   align-items: center;
   gap: 4rem;
   flex-wrap: wrap;
-  opacity: 0.7;
-  filter: grayscale(100%);
   transition: var(--transition);
 }
 
 .partner-logo-grid:hover {
-  opacity: 1;
-  filter: grayscale(0%);
+  transform: scale(1.02);
 }
 
 .review-badge {
@@ -252,7 +249,6 @@ a {
   align-items: center;
   gap: 0.75rem;
   padding-right: 2rem;
-  border-right: 1px solid #eee;
 }
 
 /* Responsive Utilities */
