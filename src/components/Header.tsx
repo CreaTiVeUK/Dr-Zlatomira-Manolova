@@ -52,13 +52,6 @@ export default function Header({ user }: { user: any }) {
             <header className="header-main">
                 <div className="container header-container">
                     <Link href="/" className="logo-section">
-                        <Image
-                            src="/logo.jpg"
-                            alt="Лого"
-                            width={55}
-                            height={55}
-                            style={{ borderRadius: '50%' }}
-                        />
                         <div>
                             <div className="logo-text">
                                 {dict.header.title}

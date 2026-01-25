@@ -148,11 +148,11 @@ export default function Home() {
       </section>
 
       {/* ABOUT SECTION (REFINED) */}
-      <section className="bg-soft section-padding reveal">
+      <section className="bg-soft section-padding reveal" id="about">
         <div className="container about-grid">
           <div className="about-image">
             <Image
-              src="/logo.jpg"
+              src="/dr_manolova.jpg"
               alt={dict.home.about.imageAlt}
               fill
               style={{ objectFit: 'cover' }}
