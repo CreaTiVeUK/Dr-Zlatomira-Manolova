@@ -128,12 +128,17 @@ export default function Home() {
 
           <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', flexShrink: 0 }}>
             <div style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               {dict.home.trust.partners}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Image src="/partner_logos.png" alt={dict.home.partnerImageAlt} width={380} height={50} style={{ objectFit: 'contain' }} />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
+              <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
+                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={110} height={45} style={{ objectFit: 'contain' }} />
+              </a>
+              <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)' }} className="partner-logo">
+                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={110} height={45} style={{ objectFit: 'contain' }} />
+              </a>
             </div>
           </div>
         </div>
