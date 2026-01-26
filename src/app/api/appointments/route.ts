@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         }
 
         const bookingEnd = new Date(bookingDate.getTime() + duration * 60000);
-        const bookingEnd = new Date(bookingDate.getTime() + duration * 60000);
+
 
         // ATOMIC TRANSACTION: Check then Create
         return await prisma.$transaction(async (tx: any) => {
