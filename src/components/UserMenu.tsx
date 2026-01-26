@@ -17,20 +17,14 @@ interface UserMenuProps {
 export default function UserMenu({ user }: UserMenuProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-
     const { dict } = useLanguage();
 
     const handleLogout = async () => {
         try {
-            // 1. Clear legacy session cookie
             await fetch("/api/logout", { method: "POST" });
-
-            // 2. Clear Auth.js session and trigger redirect
-            // signOut with a callbackUrl is very reliable for immediate state refresh
             await signOut({ callbackUrl: "/login" });
         } catch (err) {
             console.error("Logout failed:", err);
-            // Hard redirect as ultimate fallback
             window.location.href = "/login";
         }
     };
@@ -44,34 +38,63 @@ export default function UserMenu({ user }: UserMenuProps) {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* Desktop Actions */}
+            <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {user.role === 'ADMIN' && (
-                    <Link href="/admin/dashboard" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                    <Link href="/admin/dashboard" className="btn btn-sm btn-outline" style={{ border: '1px solid var(--primary-teal)', color: 'var(--primary-teal)', fontWeight: '600', padding: '0.4rem 0.8rem', borderRadius: '4px', textDecoration: 'none' }}>
                         {dict.userMenu.dashboard}
                     </Link>
                 )}
                 {user.role === 'PATIENT' && (
-                    <Link href="/my-appointments" style={{ fontWeight: '700', color: 'var(--primary-teal)', textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                    <Link href="/my-appointments" className="btn btn-sm" style={{ color: 'var(--primary-teal)', fontWeight: '600', textDecoration: 'none' }}>
                         {dict.userMenu.appointments}
                     </Link>
                 )}
             </div>
-            <span style={{ fontWeight: '700', color: 'var(--text-charcoal)', fontSize: '0.85rem' }}>
-                {user.name.split(' ')[0]}
-            </span>
+
+            {/* User Badge */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                background: '#f0f4f8',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '2rem'
+            }}>
+                <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: 'var(--primary-teal)',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '0.9rem'
+                }}>
+                    {user.name ? user.name.charAt(0).toUpperCase() : '?'}
+                </div>
+                <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.9rem', color: '#333' }}>
+                    {user.name ? user.name.split(' ')[0] : 'User'}
+                </span>
+            </div>
+
+            {/* Logout */}
             <button
                 onClick={handleLogout}
                 disabled={isPending}
                 style={{
-                    background: 'none',
-                    border: '1px solid #ddd',
+                    background: 'transparent',
+                    border: 'none',
                     cursor: 'pointer',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '4px',
-                    fontSize: '0.75rem',
-                    fontWeight: '600'
+                    color: '#666',
+                    fontSize: '0.85rem',
+                    fontWeight: '500',
+                    transition: 'color 0.2s'
                 }}
+                className="hover-text-primary"
             >
                 {isPending ? '...' : dict.userMenu.logout}
             </button>

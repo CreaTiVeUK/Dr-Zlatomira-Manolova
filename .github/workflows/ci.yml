@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Linting
+        run: npm run lint
+
+      - name: Run Unit Tests
+        run: npm run test -- --run
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          AUTH_SECRET: supersecret
+          AUTH_GOOGLE_ID: mock-id
+          AUTH_GOOGLE_SECRET: mock-secret
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E Tests
+        run: npx playwright test
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          AUTH_SECRET: supersecret
+          # Note: E2E against localhost might require building and starting the app
+          # Playwright config 'webServer' handles this usually

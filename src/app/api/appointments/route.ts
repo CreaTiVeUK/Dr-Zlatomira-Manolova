@@ -7,6 +7,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { encrypt } from "@/lib/encryption";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
+import { logger } from "@/lib/logger";
 
 
 // Removed singleton instance
@@ -77,13 +78,16 @@ export async function POST(request: NextRequest) {
         const { dateTime, duration, price, notes, userId } = validation.data;
         const bookingDate = new Date(dateTime);
 
-        // Security: Disallow ADMIN from booking for themselves
-        if (session.user.role === 'ADMIN' && !userId) {
-            return NextResponse.json({ error: "Admins must specify a target patient" }, { status: 400 });
+        // Security: Admins can book for themselves OR others
+        const targetUserId = session.user.role === 'ADMIN' && userId ? userId : session.user.id;
+
+        // If it's not admin and they try to book for someone else (prevented by schema default userId check, but explicit here)
+        if (session.user.role !== 'ADMIN' && userId && userId !== session.user.id) {
+            return NextResponse.json({ error: "Booking for others is restricted" }, { status: 403 });
         }
 
         const bookingEnd = new Date(bookingDate.getTime() + duration * 60000);
-        const targetUserId = session.user.role === 'ADMIN' && userId ? userId : session.user.id;
+        const bookingEnd = new Date(bookingDate.getTime() + duration * 60000);
 
         // ATOMIC TRANSACTION: Check then Create
         return await prisma.$transaction(async (tx: any) => {
@@ -137,23 +141,26 @@ export async function POST(request: NextRequest) {
                 }
             });
 
-            // Trigger Confirmation Email
+            // Trigger Confirmation Email (Non-blocking)
             if (newAppointment.user?.email) {
-                await sendEmail(
+                // We fire and forget, or handle error gracefully to not revert transaction
+                sendEmail(
                     newAppointment.user.email,
                     EMAIL_TEMPLATES.CONFIRMATION(
                         newAppointment.user.name || "Patient",
                         format(bookingDate, "PPP"),
                         format(bookingDate, "p")
                     )
-                );
+                ).catch(err => {
+                    logger.error("Failed to send confirmation email", err, { appointmentId: newAppointment.id });
+                });
             }
 
             return NextResponse.json({ success: true, appointment: newAppointment });
         });
 
     } catch (error) {
-        console.error("Booking Transaction Error:", error);
+        logger.error("Booking Transaction Error:", error);
         return NextResponse.json({ error: "Database operation failed" }, { status: 500 });
     }
 }
