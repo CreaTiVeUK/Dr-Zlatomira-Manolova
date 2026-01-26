@@ -24,17 +24,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             allowDangerousEmailAccountLinking: true,
         }),
     ],
+    session: { strategy: "jwt" },
     secret: process.env.AUTH_SECRET,
     pages: {
         signIn: "/login",
     },
     callbacks: {
-        async session({ session, user }) {
-            if (session.user) {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
                 // @ts-ignore
-                session.user.id = user.id;
+                token.role = user.role || "PATIENT";
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (session.user && token.id) {
                 // @ts-ignore
-                session.user.role = user.role || "PATIENT";
+                session.user.id = token.id as string;
+                // @ts-ignore
+                session.user.role = token.role as string;
             }
             return session;
         },
