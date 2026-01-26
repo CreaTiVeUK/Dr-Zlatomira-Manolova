@@ -116,7 +116,8 @@ export const en = {
         },
         taken: "TAKEN",
         success: "Booking Successful!",
-        error: "Booking failed."
+        error: "Booking failed.",
+        loginRequired: "Please log in to book an appointment."
     },
     contact: {
         title: "Book an Appointment",
@@ -257,7 +258,8 @@ export const en = {
         cancelError: "Cancellation failed.",
         cancelRestriction: "Appointments can only be cancelled at least 24 hours in advance.",
         upcoming: "Upcoming Sessions",
-        past: "Past Consultations"
+        past: "Past Consultations",
+        loginRequired: "Please log in to view your appointments."
     },
     admin: {
         practiceControl: "Practice Control Center",
@@ -402,7 +404,8 @@ export const bg: Dictionary = {
         },
         taken: "ЗАЕТО",
         success: "Успешна резервация!",
-        error: "Резервацията не бе успешна."
+        error: "Резервацията не бе успешна.",
+        loginRequired: "Моля, влезте в профила си, за да запазите час."
     },
     contact: {
         title: "Запишете час",
@@ -540,7 +543,8 @@ export const bg: Dictionary = {
         cancelError: "Отмяната не бе успешна.",
         cancelRestriction: "Часовете могат да бъдат отменяни най-малко 24 часа предварително.",
         upcoming: "Предстоящи посещения",
-        past: "Минали консултации"
+        past: "Минали консултации",
+        loginRequired: "Моля, влезте в профила си, за да видите часовете си."
     },
     admin: {
         practiceControl: "Център за управление на практиката",
