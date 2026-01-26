@@ -76,7 +76,12 @@ export async function getSession() {
                     }
                 };
             }
-        } catch (error) {
+        } catch (error: any) {
+            // During static generation, Next.js throws a DYNAMIC_SERVER_USAGE error 
+            // to signal that the route must be dynamic. We shouldn't log this as a "failure".
+            if (error?.digest === 'DYNAMIC_SERVER_USAGE' || error?.message?.includes('Dynamic server usage')) {
+                throw error; // Re-throw so Next.js can handle it correctly
+            }
             console.error("Auth.js session check failed (likely config issue):", error);
         }
     }
