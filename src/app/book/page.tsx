@@ -11,6 +11,19 @@ export default function BookPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
+    const SERVICES = [
+        { name: dict.booking.services.standard, duration: 30, price: 25 },
+        { name: dict.booking.services.specialized, duration: 60, price: 50 },
+    ];
+
+    const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
+    const [selectedService, setSelectedService] = useState(SERVICES[0]);
+    const [slots, setSlots] = useState<Date[]>([]);
+    const [bookedSlots, setBookedSlots] = useState<{ dateTime: string; duration: number }[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const [tempSelectedSlot, setTempSelectedSlot] = useState<Date | null>(null);
+
     useEffect(() => {
         if (status === "unauthenticated") {
             // Use NextAuth's signIn to trigger the full flow including callbackUrl
