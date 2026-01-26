@@ -1,15 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { format, isAfter, subHours } from "date-fns";
 import { generateICS } from "@/lib/calendar";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function MyAppointments() {
     const { dict } = useLanguage();
+    const { status } = useSession();
     const [appointments, setAppointments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            signIn(undefined, { callbackUrl: "/my-appointments" });
+        }
+    }, [status]);
 
     useEffect(() => {
         fetchAppointments();

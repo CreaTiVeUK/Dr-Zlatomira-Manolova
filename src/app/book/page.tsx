@@ -1,24 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 import { format, addDays, startOfDay } from "date-fns";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function BookPage() {
     const { dict } = useLanguage();
+    const { data: session, status } = useSession();
+    const router = useRouter();
 
-    const SERVICES = [
-        { name: dict.booking.services.standard, duration: 30, price: 25 },
-        { name: dict.booking.services.specialized, duration: 60, price: 50 },
-    ];
-
-    const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
-    const [selectedService, setSelectedService] = useState(SERVICES[0]);
-    const [slots, setSlots] = useState<Date[]>([]);
-    const [bookedSlots, setBookedSlots] = useState<{ dateTime: string; duration: number }[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
-    const [tempSelectedSlot, setTempSelectedSlot] = useState<Date | null>(null);
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            // Use NextAuth's signIn to trigger the full flow including callbackUrl
+            signIn(undefined, { callbackUrl: "/book" });
+        }
+    }, [status, router]);
 
     // Prepare next 7 days
     const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
