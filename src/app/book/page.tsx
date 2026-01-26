@@ -32,6 +32,50 @@ export default function BookPage() {
         // Removed automatic redirect to prevent loops
     }, [status]);
 
+    useEffect(() => {
+        // Prepare next 7 days
+    }, []);
+
+    useEffect(() => {
+        // Update selected service when language changes if needed (optional but good for consistency)
+        // Reset or re-find service based on index if names change, but simplistic re-init is fine.
+        // Ideally we track by ID, but index 0 default is okay for now.
+        setSelectedService(SERVICES[0]);
+    }, [dict]);
+
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const res = await fetch("/api/availability");
+                if (res.ok) {
+                    const data = await res.json();
+                    setBookedSlots(data.takenSlots);
+                }
+            } catch (err) {
+                console.error("Error fetching availability:", err);
+            }
+        }
+        if (status === "authenticated") {
+            fetchData();
+        }
+    }, [selectedDate, status]);
+
+    useEffect(() => {
+        setTempSelectedSlot(null);
+        const generatedSlots = [];
+        for (let i = 9; i < 17; i++) {
+            const h1 = new Date(selectedDate);
+            h1.setHours(i, 0, 0, 0);
+            generatedSlots.push(h1);
+
+            const h2 = new Date(selectedDate);
+            h2.setHours(i, 30, 0, 0);
+            generatedSlots.push(h2);
+        }
+        setSlots(generatedSlots);
+    }, [selectedDate]);
+
     if (status === "loading") {
         return <div className="section-padding text-center"><div className="container">Loading...</div></div>;
     }
@@ -55,46 +99,8 @@ export default function BookPage() {
         );
     }
 
-    // Prepare next 7 days
+    // Prepare fixed days array for local use
     const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
-
-    // Update selected service when language changes if needed (optional but good for consistency)
-    useEffect(() => {
-        // Reset or re-find service based on index if names change, but simplistic re-init is fine.
-        // Ideally we track by ID, but index 0 default is okay for now.
-        setSelectedService(SERVICES[0]);
-    }, [dict]);
-
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const res = await fetch("/api/availability");
-                if (res.ok) {
-                    const data = await res.json();
-                    setBookedSlots(data.takenSlots);
-                }
-            } catch (err) {
-                console.error("Error fetching availability:", err);
-            }
-        }
-        fetchData();
-    }, [selectedDate]);
-
-    useEffect(() => {
-        setTempSelectedSlot(null);
-        const generatedSlots = [];
-        for (let i = 9; i < 17; i++) {
-            const h1 = new Date(selectedDate);
-            h1.setHours(i, 0, 0, 0);
-            generatedSlots.push(h1);
-
-            const h2 = new Date(selectedDate);
-            h2.setHours(i, 30, 0, 0);
-            generatedSlots.push(h2);
-        }
-        setSlots(generatedSlots);
-    }, [selectedDate]);
 
     const handleBooking = async (slot: Date) => {
         setMessage("");

@@ -17,6 +17,12 @@ export default function MyAppointments() {
         // Removed auto-redirect
     }, [status]);
 
+    useEffect(() => {
+        if (status === "authenticated") {
+            fetchAppointments();
+        }
+    }, [status]);
+
     if (status === "loading") return <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>Loading...</div>;
 
     if (status === "unauthenticated") {
@@ -33,10 +39,6 @@ export default function MyAppointments() {
             </div>
         );
     }
-
-    useEffect(() => {
-        fetchAppointments();
-    }, []);
 
     async function fetchAppointments() {
         try {
