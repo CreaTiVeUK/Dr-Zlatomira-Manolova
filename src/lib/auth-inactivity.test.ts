@@ -1,4 +1,17 @@
 import { describe, it, expect, vi } from 'vitest';
+
+// Mock dependencies that fail in JSDOM/Unit environment
+vi.mock("next/server", () => ({
+    NextRequest: class { },
+    NextResponse: class { },
+}));
+vi.mock("next/headers", () => ({
+    cookies: () => ({}),
+}));
+vi.mock("@/auth", () => ({
+    auth: vi.fn(),
+}));
+
 import { isSessionExpired } from './auth';
 
 describe('Auth Inactivity Helper', () => {

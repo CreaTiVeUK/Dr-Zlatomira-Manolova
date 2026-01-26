@@ -7,8 +7,10 @@
  */
 export function sanitizeString(input: string): string {
     if (!input) return input;
-    // Simple regex to strip HTML tags. Efficient and sufficient for this use case (stripping all tags).
-    return input.replace(/<[^>]*>/g, '').trim();
+    // 1. Remove script tags and their content
+    let clean = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+    // 2. Remove all other HTML tags
+    return clean.replace(/<[^>]*>/g, '').trim();
 }
 
 /**
