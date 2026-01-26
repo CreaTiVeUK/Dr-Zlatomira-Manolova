@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - paragraph [ref=e4]: 🚨 FOR EMERGENCIES CALL 112
+    - paragraph [ref=e5]: This service is for specialized pediatric care and checkups only.
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - 'link "TEL: +359 88 5557110" [ref=e9] [cursor=pointer]':
+        - /url: tel:+359885557110
+        - generic [ref=e10]: "TEL:"
+        - text: +359 88 5557110
+      - 'link "EMAIL: zlatomira.manolova@gmail.com" [ref=e11] [cursor=pointer]':
+        - /url: mailto:zlatomira.manolova@gmail.com
+        - generic [ref=e12]: "EMAIL:"
+        - text: zlatomira.manolova@gmail.com
+    - button "BG 🇧🇬" [ref=e13] [cursor=pointer]:
+      - generic [ref=e14]: BG
+      - text: 🇧🇬
+  - banner [ref=e15]:
+    - generic [ref=e16]:
+      - link "Dr. Zlatomira Manolova PEDIATRIC SPECIALIST" [ref=e18] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e19]: Dr. Zlatomira Manolova
+        - generic [ref=e20]: PEDIATRIC SPECIALIST
+      - button "Toggle Menu" [ref=e21] [cursor=pointer]: ☰
+      - navigation:
+        - link "HOME":
+          - /url: /
+        - link "SERVICES":
+          - /url: /services
+        - link "CONDITIONS":
+          - /url: /conditions
+        - link "RESOURCES":
+          - /url: /resources
+        - link "BOOK NOW":
+          - /url: /book
+        - link "CONTACT":
+          - /url: /contact
+        - link "APPOINTMENTS":
+          - /url: /my-appointments
+        - generic:
+          - generic: John
+          - button "LOGOUT"
+  - main [ref=e22]:
+    - generic [ref=e24]:
+      - heading "Online Booking" [level=2] [ref=e25]
+      - paragraph [ref=e26]: Please log in to book an appointment.
+      - button "Login" [ref=e27] [cursor=pointer]
+      - button "HOME" [ref=e29] [cursor=pointer]
+  - contentinfo [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "Manolova Pediatrics" [level=4] [ref=e34]
+          - paragraph [ref=e35]: Providing expert and compassionate pediatric care for children of all ages. Based in the heart of London.
+        - generic [ref=e36]:
+          - heading "QUICK LINKS" [level=4] [ref=e37]
+          - list [ref=e38]:
+            - listitem [ref=e39]:
+              - link "HOME" [ref=e40] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e41]:
+              - link "SERVICES" [ref=e42] [cursor=pointer]:
+                - /url: /services
+            - listitem [ref=e43]:
+              - link "BOOK NOW" [ref=e44] [cursor=pointer]:
+                - /url: /book
+            - listitem [ref=e45]:
+              - link "CONTACT" [ref=e46] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e47]:
+          - heading "LOCATION" [level=4] [ref=e48]
+          - list [ref=e49]:
+            - listitem [ref=e50]:
+              - strong [ref=e51]: Medical Center
+              - text: 123 Healthcare Way, London
+              - text: W1G 9HP
+            - listitem [ref=e52]:
+              - strong [ref=e53]: Partner Hospital
+              - text: 55 specialist Lane, London
+              - text: E4 8RR
+        - generic [ref=e54]:
+          - heading "OPENING HOURS" [level=4] [ref=e55]
+          - generic [ref=e56]:
+            - text: "Mon - Fri: 09:00 - 18:00"
+            - text: "Sat: 10:00 - 14:00"
+            - text: "Sun: Emergencies only"
+      - generic [ref=e57]:
+        - paragraph [ref=e58]: © 2026 Dr. Zlatomira Manolova. All rights reserved.
+        - generic [ref=e59]:
+          - link "Privacy Policy" [ref=e60] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms of Use" [ref=e61] [cursor=pointer]:
+            - /url: /terms
+  - generic [ref=e66] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e67]:
+      - img [ref=e68]
+    - generic [ref=e71]:
+      - button "Open issues overlay" [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]: "0"
+          - generic [ref=e75]: "1"
+        - generic [ref=e76]: Issue
+      - button "Collapse issues badge" [ref=e77]:
+        - img [ref=e78]
+  - alert [ref=e80]
+```
