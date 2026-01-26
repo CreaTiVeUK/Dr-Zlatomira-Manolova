@@ -38,21 +38,34 @@ export default function UserMenu({ user }: UserMenuProps) {
     }
 
     return (
-        <div className="user-menu-container" style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            {/* Desktop Actions */}
+            <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                {user.role === 'ADMIN' && (
+                    <Link href="/admin/dashboard" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                        {dict.userMenu.dashboard}
+                    </Link>
+                )}
+                {user.role === 'PATIENT' && (
+                    <Link href="/my-appointments" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                        {dict.userMenu.appointments}
+                    </Link>
+                )}
+            </div>
+
+            {/* Separator */}
+            <div className="desktop-only" style={{ height: '16px', width: '1px', background: '#ddd' }}></div>
+
+            {/* User Badge */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                cursor: 'pointer',
-                padding: '0.4rem 0.6rem',
-                borderRadius: '8px',
-                transition: 'var(--transition-fast)'
-            }}
-                className="user-badge-trigger"
-            >
+                gap: '0.6rem',
+                cursor: 'default'
+            }}>
                 <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '30px',
+                    height: '30px',
                     borderRadius: '50%',
                     background: 'var(--primary-teal)',
                     color: 'white',
@@ -60,96 +73,36 @@ export default function UserMenu({ user }: UserMenuProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: '700',
-                    fontSize: '0.9rem',
+                    fontSize: '1rem',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
                     {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                 </div>
-                <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
-                        {user.name ? user.name.split(' ')[0] : 'User'}
-                    </span>
-                    <span style={{ fontSize: '0.6rem', color: '#888' }}>▼</span>
-                </div>
+                <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
+                    {user.name ? user.name.split(' ')[0] : 'User'}
+                </span>
             </div>
 
-            {/* Dropdown Menu */}
-            <div className="user-dropdown">
-                <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #f0f0f0', fontSize: '0.75rem', color: '#888', fontWeight: '600' }}>
-                    {user.email}
-                </div>
-
-                {user.role === 'ADMIN' && (
-                    <Link href="/admin/dashboard" className="dropdown-item">
-                        {dict.userMenu.dashboard}
-                    </Link>
-                )}
-
-                {user.role === 'PATIENT' && (
-                    <Link href="/my-appointments" className="dropdown-item">
-                        {dict.userMenu.appointments}
-                    </Link>
-                )}
-
-                <div style={{ borderTop: '1px solid #f0f0f0', marginTop: '0.25rem' }}>
-                    <button
-                        onClick={handleLogout}
-                        disabled={isPending}
-                        className="dropdown-item logout-btn"
-                        style={{ width: '100%', textAlign: 'left', color: '#c53030' }}
-                    >
-                        {isPending ? '...' : dict.userMenu.logout}
-                    </button>
-                </div>
-            </div>
-
-            <style jsx>{`
-                .user-menu-container:hover .user-dropdown {
-                    opacity: 1;
-                    transform: translateY(0);
-                    pointer-events: all;
-                }
-                .user-badge-trigger:hover {
-                    background: #f1f5f9;
-                }
-                .user-dropdown {
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    margin-top: 0.5rem;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-                    border: 1px solid #e2e8f0;
-                    min-width: 180px;
-                    z-index: 1000;
-                    opacity: 0;
-                    transform: translateY(10px);
-                    pointer-events: none;
-                    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-                    overflow: hidden;
-                }
-                .dropdown-item {
-                    display: block;
-                    padding: 0.75rem 1rem;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    color: var(--text-charcoal);
-                    text-decoration: none;
-                    transition: background 0.2s;
-                    border: none;
-                    background: transparent;
-                    cursor: pointer;
-                }
-                .dropdown-item:hover {
-                    background: #f8fafc;
-                    color: var(--primary-teal);
-                }
-                .logout-btn:hover {
-                    background: #fff5f5 !important;
-                    color: #e53e3e !important;
-                }
-            `}</style>
+            {/* Logout */}
+            <button
+                onClick={handleLogout}
+                disabled={isPending}
+                style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#888',
+                    fontSize: '0.8rem',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    transition: 'color 0.2s',
+                    marginLeft: '0.5rem'
+                }}
+                className="hover-text-primary"
+            >
+                {isPending ? '...' : dict.userMenu.logout}
+            </button>
         </div>
     );
 }
