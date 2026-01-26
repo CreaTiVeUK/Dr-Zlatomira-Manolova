@@ -48,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.id = token.id as string;
                 // @ts-ignore
                 session.user.role = token.role as string;
-                console.log(`[AUTH_DEBUG] Session callback: Session ready for User ID: ${session.user.id}, Role: ${session.user.role}`);
+                console.log(`[AUTH_DEBUG] Session callback: Session ready for User ID: ${session.user.id}, Role: ${(session.user as any).role}`);
             } else {
                 console.warn(`[AUTH_DEBUG] Session callback: Missing session.user or token.id`, { hasUser: !!session.user, hasTokenId: !!token.id });
             }
