@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 test.describe('Security & Stress Testing', () => {
 
@@ -41,7 +41,7 @@ test.describe('Security & Stress Testing', () => {
                     body: JSON.stringify({ status: 'CANCELLED' })
                 });
                 return res.status;
-            } catch (e) { return 999; }
+            } catch { return 999; }
         });
 
         expect(attackResult).toBeGreaterThanOrEqual(400);
@@ -59,7 +59,8 @@ test.describe('Security & Stress Testing', () => {
         const page1 = await context1.newPage();
         const page2 = await context2.newPage();
 
-        for (const [p, email] of [[page1, 'patient@example.com'], [page2, 'patient2@example.com']] as [any, string][]) {
+        const pages: [Page, string][] = [[page1, 'patient@example.com'], [page2, 'patient2@example.com']];
+        for (const [p, email] of pages) {
             await p.goto('/login');
             await p.fill('input[name="email"]', email);
             await p.fill('input[name="password"]', 'password123');
@@ -67,7 +68,7 @@ test.describe('Security & Stress Testing', () => {
             await p.waitForURL((u: URL) => u.pathname === '/', { timeout: 15000 });
         }
 
-        const triggerBooking = async (p: any) => {
+        const triggerBooking = async (p: Page) => {
             return await p.evaluate(async (date: string) => {
                 try {
                     const res = await fetch('/api/appointments', {
@@ -81,7 +82,7 @@ test.describe('Security & Stress Testing', () => {
                         })
                     });
                     return res.status;
-                } catch (e) { return 500; }
+                } catch { return 500; }
             }, isoDate);
         };
 

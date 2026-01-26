@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
-import { encrypt } from "@/lib/encryption";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 import { logger } from "@/lib/logger";
 
@@ -26,7 +25,7 @@ const patchSchema = z.object({
     status: z.enum(["BOOKED", "CANCELLED", "COMPLETED"]),
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const session = await getSession();
     if (!session) {
         return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -49,7 +48,7 @@ export async function GET(request: NextRequest) {
         }
 
         return NextResponse.json({ appointments });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Action blocked by security policy" }, { status: 500 });
     }
 }
@@ -90,7 +89,7 @@ export async function POST(request: NextRequest) {
 
 
         // ATOMIC TRANSACTION: Check then Create
-        return await prisma.$transaction(async (tx: any) => {
+        return await prisma.$transaction(async (tx) => {
             const dayStart = new Date(bookingDate);
             dayStart.setHours(0, 0, 0, 0);
             const dayEnd = new Date(bookingDate);
@@ -103,7 +102,7 @@ export async function POST(request: NextRequest) {
                 }
             });
 
-            const hasConflict = dayAppointments.some((appt: { dateTime: Date; duration: number }) => {
+            const hasConflict = dayAppointments.some((appt) => {
                 const start = appt.dateTime.getTime();
                 const end = start + appt.duration * 60000;
                 return (bookingDate.getTime() < end && bookingEnd.getTime() > start);
@@ -132,7 +131,7 @@ export async function POST(request: NextRequest) {
                 }
             });
 
-            await (tx as any).auditLog.create({
+            await tx.auditLog.create({
                 data: {
                     userId: session.user.id,
                     action: "APPOINTMENT_CREATE",
@@ -151,7 +150,7 @@ export async function POST(request: NextRequest) {
                         format(bookingDate, "PPP"),
                         format(bookingDate, "p")
                     )
-                ).catch(err => {
+                ).catch((err: unknown) => {
                     logger.error("Failed to send confirmation email", err, { appointmentId: newAppointment.id });
                 });
             }
@@ -159,7 +158,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ success: true, appointment: newAppointment });
         });
 
-    } catch (error) {
+    } catch (error: unknown) {
         logger.error("Booking Transaction Error:", error);
         return NextResponse.json({ error: "Database operation failed" }, { status: 500 });
     }
@@ -203,7 +202,7 @@ export async function PATCH(request: NextRequest) {
         });
 
         // Audit Log
-        await (prisma as any).auditLog.create({
+        await prisma.auditLog.create({
             data: {
                 userId: session.user.id,
                 action: `APPOINTMENT_${status}`,
@@ -217,7 +216,7 @@ export async function PATCH(request: NextRequest) {
         }
 
         return NextResponse.json({ success: true, appointment: updated });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Modification blocked" }, { status: 500 });
     }
 }

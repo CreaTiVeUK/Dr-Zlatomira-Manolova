@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import SuccessPage from '../../app/book/success/page';
 import { useLanguage } from '../../lib/i18n/LanguageContext';
+import { Dictionary } from '../../lib/i18n/dictionaries';
 
 // Mock the hook
 vi.mock('../../lib/i18n/LanguageContext', () => ({
@@ -11,7 +12,8 @@ vi.mock('../../lib/i18n/LanguageContext', () => ({
 describe('SuccessPage', () => {
     it('renders text in English by default', () => {
         // Mock return value for useLanguage
-        (useLanguage as any).mockReturnValue({
+        vi.mocked(useLanguage).mockReturnValue({
+            language: 'en',
             dict: {
                 successPage: {
                     title: "Booking Successful!",
@@ -19,7 +21,9 @@ describe('SuccessPage', () => {
                     viewAppointments: "View Appointments",
                     home: "Home"
                 }
-            }
+            } as unknown as Dictionary,
+            toggleLanguage: vi.fn(),
+            setLanguage: vi.fn(),
         });
 
         render(<SuccessPage />);
@@ -31,7 +35,8 @@ describe('SuccessPage', () => {
 
     it('renders text in Bulgarian when dict is bg', () => {
         // Mock return value for useLanguage
-        (useLanguage as any).mockReturnValue({
+        vi.mocked(useLanguage).mockReturnValue({
+            language: 'bg',
             dict: {
                 successPage: {
                     title: "Часът е запазен успешно!",
@@ -39,7 +44,9 @@ describe('SuccessPage', () => {
                     viewAppointments: "Вижте часовете",
                     home: "Начало"
                 }
-            }
+            } as unknown as Dictionary,
+            toggleLanguage: vi.fn(),
+            setLanguage: vi.fn(),
         });
 
         render(<SuccessPage />);

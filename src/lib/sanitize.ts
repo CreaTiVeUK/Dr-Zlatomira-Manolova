@@ -8,7 +8,7 @@
 export function sanitizeString(input: string): string {
     if (!input) return input;
     // 1. Remove script tags and their content
-    let clean = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+    const clean = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
     // 2. Remove all other HTML tags
     return clean.replace(/<[^>]*>/g, '').trim();
 }
@@ -19,10 +19,10 @@ export function sanitizeString(input: string): string {
 export function sanitizeObject<T>(obj: T): T {
     if (typeof obj !== "object" || obj === null) return obj;
 
-    const sanitized = { ...obj } as any;
+    const sanitized = { ...obj } as Record<string, unknown>;
     for (const key in sanitized) {
         if (typeof sanitized[key] === "string") {
-            sanitized[key] = sanitizeString(sanitized[key]);
+            sanitized[key] = sanitizeString(sanitized[key] as string);
         } else if (typeof sanitized[key] === "object") {
             sanitized[key] = sanitizeObject(sanitized[key]);
         }

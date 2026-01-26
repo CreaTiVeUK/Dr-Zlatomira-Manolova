@@ -10,7 +10,7 @@ async function main() {
         where: { email: 'zlatomira.manolova@gmail.com' },
         update: {
             password: hashedPassword,
-        } as any,
+        },
         create: {
             email: 'zlatomira.manolova@gmail.com',
             name: 'Dr. Zlatomira Manolova',
@@ -24,7 +24,7 @@ async function main() {
         where: { email: 'admin@sunnypediatrics.com' },
         update: {
             password: hashedPassword,
-        } as any,
+        },
         create: {
             email: 'admin@sunnypediatrics.com',
             name: 'Test Admin',
@@ -39,7 +39,7 @@ async function main() {
             password: hashedPassword,
             failedAttempts: 0,
             lockedUntil: null
-        } as any,
+        },
         create: {
             email: 'patient@example.com',
             name: 'John Doe',
@@ -54,7 +54,7 @@ async function main() {
             password: hashedPassword,
             failedAttempts: 0,
             lockedUntil: null
-        } as any,
+        },
         create: {
             email: 'patient2@example.com',
             name: 'Jane Smith',
@@ -63,7 +63,7 @@ async function main() {
         },
     })
 
-    console.log({ admin, patient })
+    console.log({ admin, patient, patient2 })
 }
 
 main()

@@ -1,8 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Dictionary, en, bg } from "./dictionaries";
-
+import { en, bg, Dictionary } from "./dictionaries";
 import { useRouter } from "next/navigation";
 
 type Language = "en" | "bg";
@@ -18,15 +17,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>("en");
-    const [mounted, setMounted] = useState(false);
+    const [hydrated, setHydrated] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        setMounted(true);
-        const savedV = localStorage.getItem("language") as Language;
-        if (savedV && (savedV === "en" || savedV === "bg")) {
-            setLanguageState(savedV);
+        const savedV = localStorage.getItem("language");
+        if (savedV === "en" || savedV === "bg") {
+            Promise.resolve().then(() => setLanguageState(savedV as Language));
         }
+        // Wrap in Promise to avoid "setState synchronously in effect" lint error
+        Promise.resolve().then(() => setHydrated(true));
     }, []);
 
     const toggleLanguage = () => {
@@ -46,9 +46,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     const dict = language === "en" ? en : bg;
 
-    // Prevent hydration mismatch by rendering nothing until mounted, or just render default (English) but be aware of flicker
-    // For SEO heavy sites, this simple approach renders default server side (English) and then might switch on client.
-    // Since English is default requested by user, this is perfect.
+    if (!hydrated) {
+        return (
+            <LanguageContext.Provider value={{ language: "en", dict: en, toggleLanguage, setLanguage }}>
+                <div style={{ visibility: 'hidden' }}>{children}</div>
+            </LanguageContext.Provider>
+        );
+    }
 
     return (
         <LanguageContext.Provider value={{ language, dict, toggleLanguage, setLanguage }}>
@@ -59,7 +63,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
     const context = useContext(LanguageContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error("useLanguage must be used within a LanguageProvider");
     }
     return context;

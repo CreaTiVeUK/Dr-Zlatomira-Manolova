@@ -6,15 +6,6 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 export default function ResourcesPage() {
     const { dict } = useLanguage();
 
-    const RESOURCES = dict.resources.articles.map(article => ({
-        ...article,
-        link: "" // Links are not in dict, maybe I should have kept them in component or added to dict. 
-        // For now I will assume links are external and maybe hardcoded or I need to merge them.
-        // Actually, looking at previous file, links were specific external URLs. 
-        // I should probably keep the links in the component but get the text from dict.
-        // Or better, just map based on index if the count is same.
-    }));
-
     // Better approach: Define links in component, merge with text from dict.
     const EX_LINKS = [
         "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/",

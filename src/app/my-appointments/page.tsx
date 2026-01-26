@@ -6,10 +6,19 @@ import { format, isAfter, subHours } from "date-fns";
 import { generateICS } from "@/lib/calendar";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
+interface Appointment {
+    id: string;
+    dateTime: string;
+    duration: number;
+    status: string;
+    notes?: string | null;
+    user?: { name: string; email: string };
+}
+
 export default function MyAppointments() {
     const { dict } = useLanguage();
     const { status } = useSession();
-    const [appointments, setAppointments] = useState<any[]>([]);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
 
@@ -80,12 +89,12 @@ export default function MyAppointments() {
                 const data = await res.json();
                 setMessage(data.error || dict.myAppointments.cancelError);
             }
-        } catch (err) {
+        } catch {
             setMessage("Error occurred.");
         }
     }
 
-    async function handleDownload(appt: any) {
+    async function handleDownload(appt: Appointment) {
         const ics = generateICS({
             id: appt.id,
             dateTime: new Date(appt.dateTime),

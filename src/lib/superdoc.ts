@@ -72,8 +72,8 @@ export async function syncSuperdocReviews() {
         }
 
         return { success: true, rating, reviewsCount, synchronized: reviewBlocks.length };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Superdoc Sync Error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }

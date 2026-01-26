@@ -33,16 +33,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                // @ts-ignore
+                // @ts-expect-error role is added in jwt callback
                 token.role = user.role || "PATIENT";
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user && token.id) {
-                // @ts-ignore
                 session.user.id = token.id as string;
-                // @ts-ignore
+                // @ts-expect-error role is added in jwt callback
                 session.user.role = token.role as string;
             }
             return session;

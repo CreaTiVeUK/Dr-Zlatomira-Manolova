@@ -4,7 +4,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
+interface Testimonial {
+  text: string;
+  author: string;
+}
+
+function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -51,7 +56,7 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
             marginBottom: '0.4rem',
             lineHeight: '1.4'
           }}>
-            "{rev.text}"
+            &quot;{rev.text}&quot;
           </p>
           <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
             — {rev.author}
@@ -70,7 +75,7 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
 
 export default function Home() {
   const { dict, language } = useLanguage();
-  const [trustStats, setTrustStats] = useState<{ rating: string, reviewsCount: string, testimonials: any[] } | null>(null);
+  const [trustStats, setTrustStats] = useState<{ rating: string, reviewsCount: string, testimonials: Testimonial[] } | null>(null);
 
   useEffect(() => {
     fetch('/api/trust-stats')
@@ -78,7 +83,7 @@ export default function Home() {
       .then(data => {
         if (data.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
           // Map data to localized testimonials
-          const testimonials = data.testimonials.map((t: any) => ({
+          const testimonials = data.testimonials.map((t: { textEn: string; textBg: string; authorEn: string; authorBg: string }) => ({
             text: language === 'en' ? t.textEn : t.textBg,
             author: language === 'en' ? t.authorEn : t.authorBg
           }));
@@ -101,7 +106,7 @@ export default function Home() {
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [language]);
+  }, [language, dict.home.trust.rating, dict.home.trust.reviewsCount]);
 
   const stats = trustStats || {
     rating: dict.home.trust.rating,

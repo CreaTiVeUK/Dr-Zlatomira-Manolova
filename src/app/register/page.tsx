@@ -35,8 +35,8 @@ export default function RegisterPage() {
             } else {
                 setError(data.error || "Registration failed");
             }
-        } catch (err) {
-            setError("Error connecting to server.");
+        } catch {
+            setError("An error occurred during registration");
         } finally {
             setLoading(false);
         }

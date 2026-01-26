@@ -3,7 +3,6 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface UserMenuProps {
@@ -15,18 +14,19 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ user }: UserMenuProps) {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const { dict } = useLanguage();
 
     const handleLogout = async () => {
-        try {
-            await fetch("/api/logout", { method: "POST" });
-            await signOut({ callbackUrl: "/login" });
-        } catch (err) {
-            console.error("Logout failed:", err);
-            window.location.href = "/login";
-        }
+        startTransition(async () => {
+            try {
+                await fetch("/api/logout", { method: "POST" });
+                await signOut({ callbackUrl: "/login" });
+            } catch (err) {
+                console.error("Logout failed:", err);
+                window.location.href = "/login";
+            }
+        });
     };
 
     if (!user) {

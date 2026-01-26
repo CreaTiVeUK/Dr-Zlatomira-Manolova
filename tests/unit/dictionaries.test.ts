@@ -4,7 +4,7 @@ import { en, bg } from '../../src/lib/i18n/dictionaries';
 describe('Dictionary Consistency', () => {
 
     // Helper to recursively check keys
-    function checkKeys(obj1: any, obj2: any, path = '') {
+    function checkKeys(obj1: Record<string, unknown>, obj2: Record<string, unknown>, path = '') {
         const keys1 = Object.keys(obj1).sort();
         const keys2 = Object.keys(obj2).sort();
 
@@ -24,7 +24,7 @@ describe('Dictionary Consistency', () => {
             const isObj2 = typeof val2 === 'object' && val2 !== null && !Array.isArray(val2);
 
             if (isObj1 && isObj2) {
-                checkKeys(val1, val2, newPath);
+                checkKeys(val1 as Record<string, unknown>, val2 as Record<string, unknown>, newPath);
             } else if (isObj1 !== isObj2) {
                 throw new Error(`Type mismatch at ${newPath}: ${typeof val1} vs ${typeof val2}`);
             }
@@ -32,7 +32,7 @@ describe('Dictionary Consistency', () => {
     }
 
     it('should have identical keys structure for EN and BG', () => {
-        checkKeys(en, bg);
+        checkKeys(en as unknown as Record<string, unknown>, bg as unknown as Record<string, unknown>);
     });
 
     it('should explicitly contain critical booking keys', () => {

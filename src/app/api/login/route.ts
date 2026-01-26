@@ -4,7 +4,6 @@ import { login } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
-import { encrypt, decrypt } from "@/lib/encryption";
 import { sanitizeString } from "@/lib/sanitize";
 
 
@@ -59,7 +58,7 @@ export async function POST(request: NextRequest) {
             const attempts = user.failedAttempts + 1;
             const lockoutTime = attempts >= 5 ? new Date(Date.now() + 15 * 60000) : null;
 
-            await (prisma as any).user.update({
+            await prisma.user.update({
                 where: { id: user.id },
                 data: {
                     failedAttempts: attempts,
@@ -68,7 +67,7 @@ export async function POST(request: NextRequest) {
             });
 
             // Audit Failed Login
-            await (prisma as any).auditLog.create({
+            await prisma.auditLog.create({
                 data: {
                     userId: user.id,
                     action: "LOGIN_FAILED",
@@ -81,7 +80,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Success - Reset counters
-        await (prisma as any).user.update({
+        await prisma.user.update({
             where: { id: user.id },
             data: {
                 failedAttempts: 0,
@@ -92,7 +91,7 @@ export async function POST(request: NextRequest) {
 
         const sessionData = {
             id: user.id,
-            email: user.email, // In a real "fully encrypted PII" app, we'd store the encrypted version in the session too or decrypt it here.
+            email: user.email,
             role: user.role,
             name: user.name || user.email
         };
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
         await login(sessionData);
 
         // Audit Success Login
-        await (prisma as any).auditLog.create({
+        await prisma.auditLog.create({
             data: {
                 userId: user.id,
                 action: "LOGIN_SUCCESS",
@@ -110,7 +109,7 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({ success: true, role: user.role });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Login Security Filter Error:", error);
         return NextResponse.json({ error: "Security verification failed" }, { status: 500 });
     }

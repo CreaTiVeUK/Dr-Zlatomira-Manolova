@@ -5,7 +5,20 @@ import { NextRequest, NextResponse } from "next/server";
 const secretKey = "secret-key-change-me"; // In prod use env var
 const key = new TextEncoder().encode(secretKey);
 
-export async function encrypt(payload: any) {
+interface Session {
+    id: string;
+    user: {
+        id: string;
+        email: string;
+        role: string;
+        name: string;
+        image?: string | null;
+    };
+    expires: Date;
+    lastActivity: number;
+}
+
+export async function encrypt(payload: Record<string, unknown>) {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
@@ -13,13 +26,14 @@ export async function encrypt(payload: any) {
         .sign(key);
 }
 
-export async function decrypt(input: string): Promise<any> {
+export async function decrypt(input: string): Promise<Record<string, unknown> | null> {
     try {
         const { payload } = await jwtVerify(input, key, {
             algorithms: ["HS256"],
         });
-        return payload;
-    } catch (error) {
+        return payload as Record<string, unknown>;
+    } catch (error: unknown) {
+        console.error("JWT Decrypt error:", error);
         return null;
     }
 }
@@ -33,11 +47,12 @@ export function isSessionExpired(lastActivity: number) {
 export async function login(userData: { id: string; email: string; role: string; name: string }) {
     try {
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-        const session = await encrypt({
+        const sessionPayload: Record<string, unknown> = {
             user: userData,
-            expires,
+            expires: expires.toISOString(),
             lastActivity: Date.now()
-        });
+        };
+        const session = await encrypt(sessionPayload);
 
         const cookieStore = await cookies();
         cookieStore.set("session", session, {
@@ -46,7 +61,7 @@ export async function login(userData: { id: string; email: string; role: string;
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax'
         });
-    } catch (e) {
+    } catch (e: unknown) {
         console.error("Error in login:", e);
         throw e;
     }
@@ -59,42 +74,47 @@ export async function logout() {
 
 import { auth as authjs } from "@/auth";
 
-export async function getSession() {
+export async function getSession(): Promise<Session | null> {
     // 1. Try Auth.js session first (Social Login)
-    // Only attempt if secret is present to avoid premature initialization crashes
     if (process.env.AUTH_SECRET) {
         try {
             const authjsSession = await authjs();
             if (authjsSession?.user) {
+                const user = authjsSession.user as { id: string; email?: string | null; name?: string | null; role?: string | null; image?: string | null };
                 return {
+                    id: user.id,
                     user: {
-                        id: (authjsSession.user as any).id,
-                        email: authjsSession.user.email,
-                        name: authjsSession.user.name,
-                        role: (authjsSession.user as any).role || "PATIENT",
-                        image: authjsSession.user.image
-                    }
+                        id: user.id,
+                        email: user.email || "",
+                        name: user.name || "",
+                        role: user.role || "PATIENT",
+                        image: user.image || null
+                    },
+                    expires: new Date(authjsSession.expires),
+                    lastActivity: Date.now()
                 };
             }
-        } catch (error: any) {
-            // During static generation, Next.js throws a DYNAMIC_SERVER_USAGE error 
-            // to signal that the route must be dynamic. We shouldn't log this as a "failure".
-            if (error?.digest === 'DYNAMIC_SERVER_USAGE' || error?.message?.includes('Dynamic server usage')) {
-                throw error; // Re-throw so Next.js can handle it correctly
+        } catch (error: unknown) {
+            const err = error as { digest?: string; message?: string };
+            if (err?.digest === 'DYNAMIC_SERVER_USAGE' || err?.message?.includes('Dynamic server usage')) {
+                throw error;
             }
-            console.error("Auth.js session check failed (likely config issue):", error);
+            console.error("Auth.js session check failed:", error);
         }
     }
 
-    // 2. Fallback to Legacy JWT session (Credentials Login)
+    // 2. Fallback to Legacy JWT session
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("session")?.value;
     if (!sessionCookie) return null;
 
-    const parsed = await decrypt(sessionCookie);
-    if (!parsed) return null;
+    const parsedRaw = await decrypt(sessionCookie);
+    if (!parsedRaw) return null;
 
-    // Inactivity Check for legacy session
+    // Type casting with safety
+    const parsed = parsedRaw as unknown as Session;
+    if (!parsed.user || typeof parsed.lastActivity !== 'number') return null;
+
     if (isSessionExpired(parsed.lastActivity)) {
         return null;
     }
@@ -106,20 +126,19 @@ export async function updateSession(request: NextRequest) {
     const session = request.cookies.get("session")?.value;
     if (!session) return null;
 
-    const parsed = await decrypt(session);
-    if (!parsed) return null;
+    const parsedRaw = await decrypt(session);
+    if (!parsedRaw) return null;
 
-    // Check inactivity before refreshing
+    const parsed = parsedRaw as unknown as Session;
     if (isSessionExpired(parsed.lastActivity)) {
         return null;
     }
 
-    // Update last activity
     parsed.lastActivity = Date.now();
     const res = NextResponse.next();
     res.cookies.set({
         name: "session",
-        value: await encrypt(parsed),
+        value: await encrypt(parsed as unknown as Record<string, unknown>),
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',

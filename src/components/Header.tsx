@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import UserMenu from "@/components/UserMenu";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-export default function Header({ user }: { user: any }) {
+interface HeaderProps {
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+    } | null;
+}
+
+export default function Header({ user }: HeaderProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { language, toggleLanguage, dict } = useLanguage();
 

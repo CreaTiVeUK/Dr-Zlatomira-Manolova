@@ -23,11 +23,19 @@ export default async function AdminDashboard() {
         },
     });
 
-    const auditLogs = await (prisma as any).auditLog.findMany({
+    interface AuditLogWithUser {
+        id: string;
+        action: string;
+        details: string | null;
+        timestamp: Date;
+        user: { name: string | null };
+    }
+
+    const auditLogs = (await prisma.auditLog.findMany({
         take: 20,
         orderBy: { timestamp: "desc" },
         include: { user: { select: { name: true } } }
-    });
+    })) as AuditLogWithUser[];
 
     const now = new Date();
     const upcoming = appointments.filter(a => isAfter(new Date(a.dateTime), now) && a.status !== 'CANCELLED');
@@ -123,11 +131,11 @@ export default async function AdminDashboard() {
                         <div style={{ background: '#1a1a1a', padding: '2rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)', color: '#eee' }}>
                             <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--accent-bluish)' }}>{d.auditTrail}</h2>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                {auditLogs.map((log: any) => (
+                                {auditLogs.map((log) => (
                                     <div key={log.id} style={{ borderBottom: '1px solid #333', paddingBottom: '1rem', display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
                                         <div>
                                             <span style={{ color: 'var(--accent-bluish)', fontWeight: '700', marginRight: '0.5rem' }}>[{log.action}]</span>
-                                            <span style={{ color: '#aaa' }}>{log.details.substring(0, 30)}...</span>
+                                            <span style={{ color: '#aaa' }}>{log.details?.substring(0, 30)}...</span>
                                         </div>
                                         <div style={{ color: '#666' }}>{format(new Date(log.timestamp), "HH:mm")}</div>
                                     </div>

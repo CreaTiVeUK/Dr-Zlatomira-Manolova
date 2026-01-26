@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { Dictionary } from "@/lib/i18n/dictionaries";
 import { signIn } from "next-auth/react";
 
-function SocialLoginButton({ provider, label, dict }: { provider: string, label: string, dict: any }) {
-    const icons: any = {
+function SocialLoginButton({ provider, label, dict }: { provider: string, label: string, dict: Dictionary }) {
+    const icons: Record<string, React.ReactNode> = {
         google: (
             <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -28,7 +29,7 @@ function SocialLoginButton({ provider, label, dict }: { provider: string, label:
         )
     };
 
-    const brandColors: any = {
+    const brandColors: Record<string, { bg: string; text: string; border: string }> = {
         google: { bg: '#fff', text: '#3c4043', border: '#dadce0' },
         facebook: { bg: '#0866FF', text: '#fff', border: '#0866FF' },
         apple: { bg: '#000', text: '#fff', border: '#000' }
@@ -94,8 +95,8 @@ export default function LoginPage() {
                 const data = await res.json();
                 setError(data.error || "Login failed"); // Keeping generic fallback or add to dict
             }
-        } catch (err) {
-            setError("An error occurred");
+        } catch {
+            setError("An error occurred during registration");
         }
     };
 

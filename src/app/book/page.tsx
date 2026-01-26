@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { format, addDays, startOfDay } from "date-fns";
@@ -11,10 +11,10 @@ export default function BookPage() {
     const { status } = useSession();
     const router = useRouter();
 
-    const SERVICES = [
+    const SERVICES = useMemo(() => [
         { name: dict.booking.services.standard, duration: 30, price: 25 },
         { name: dict.booking.services.specialized, duration: 60, price: 50 },
-    ];
+    ], [dict]);
 
     const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
     const [selectedService, setSelectedService] = useState(SERVICES[0]);
@@ -25,19 +25,12 @@ export default function BookPage() {
     const [tempSelectedSlot, setTempSelectedSlot] = useState<Date | null>(null);
 
     useEffect(() => {
-        // Removed automatic redirect to prevent loops
-    }, [status]);
-
-    useEffect(() => {
         // Prepare next 7 days
     }, []);
 
     useEffect(() => {
-        // Update selected service when language changes if needed (optional but good for consistency)
-        // Reset or re-find service based on index if names change, but simplistic re-init is fine.
-        // Ideally we track by ID, but index 0 default is okay for now.
         setSelectedService(SERVICES[0]);
-    }, [dict]);
+    }, [SERVICES]);
 
 
     useEffect(() => {
@@ -95,7 +88,6 @@ export default function BookPage() {
         );
     }
 
-    // Prepare fixed days array for local use
     const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
 
     const handleBooking = async (slot: Date) => {
@@ -110,19 +102,18 @@ export default function BookPage() {
                     dateTime: slot.toISOString(),
                     duration: selectedService.duration,
                     price: selectedService.price,
-                    notes: `Service: ${selectedService.name}` // Internal note in EN mostly distinct
+                    notes: `Service: ${selectedService.name}`
                 }),
             });
 
             const data = await res.json();
 
             if (res.ok) {
-                // Direct redirect to success
                 window.location.href = `/book/success`;
             } else {
                 setMessage(data.error || dict.booking.error);
             }
-        } catch (err) {
+        } catch {
             setMessage("Error occurred.");
         } finally {
             setLoading(false);
@@ -151,11 +142,10 @@ export default function BookPage() {
 
                 <div className="booking-card">
 
-                    {/* 1. SELECT SERVICE */}
                     <div style={{ marginBottom: '3.5rem' }}>
                         <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step1}</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                            {SERVICES.map(s => (
+                            {SERVICES.map((s: { name: string; duration: number; price: number }) => (
                                 <button
                                     key={s.name}
                                     onClick={() => {
@@ -185,7 +175,6 @@ export default function BookPage() {
                         </div>
                     </div>
 
-                    {/* 2. SELECT DATE */}
                     <div style={{ marginBottom: '3.5rem' }}>
                         <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step2}</h3>
                         <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '1rem' }}>
@@ -212,7 +201,6 @@ export default function BookPage() {
                         </div>
                     </div>
 
-                    {/* 3. SELECT TIME SLOT */}
                     <div>
                         <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step3}</h3>
                         {message && <div style={{ padding: '1rem', background: '#fff9c4', color: '#827717', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{message}</div>}
@@ -275,4 +263,3 @@ export default function BookPage() {
         </div>
     );
 }
-
