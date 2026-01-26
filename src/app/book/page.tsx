@@ -25,11 +25,31 @@ export default function BookPage() {
     const [tempSelectedSlot, setTempSelectedSlot] = useState<Date | null>(null);
 
     useEffect(() => {
-        if (status === "unauthenticated") {
-            // Use NextAuth's signIn to trigger the full flow including callbackUrl
-            signIn(undefined, { callbackUrl: "/book" });
-        }
-    }, [status, router]);
+        // Removed automatic redirect to prevent loops
+    }, [status]);
+
+    if (status === "loading") {
+        return <div className="section-padding text-center"><div className="container">Loading...</div></div>;
+    }
+
+    if (status === "unauthenticated") {
+        return (
+            <div className="section-padding bg-soft" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
+                <div className="container" style={{ maxWidth: '500px', textAlign: 'center', background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
+                    <h2 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem' }}>{dict.booking.title}</h2>
+                    <p style={{ marginBottom: '2rem', color: 'var(--text-muted)' }}>{dict.booking.loginRequired || "Please log in to book an appointment."}</p>
+                    <button onClick={() => signIn(undefined, { callbackUrl: "/book" })} className="btn btn-primary" style={{ width: '100%' }}>
+                        {dict.auth.login.btn || "Log In"}
+                    </button>
+                    <div style={{ marginTop: '1rem' }}>
+                        <button onClick={() => router.push('/')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', textDecoration: 'underline' }}>
+                            {dict.header.nav.home || "Back to Home"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Prepare next 7 days
     const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));

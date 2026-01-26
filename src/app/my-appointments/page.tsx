@@ -14,10 +14,25 @@ export default function MyAppointments() {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        if (status === "unauthenticated") {
-            signIn(undefined, { callbackUrl: "/my-appointments" });
-        }
+        // Removed auto-redirect
     }, [status]);
+
+    if (status === "loading") return <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>Loading...</div>;
+
+    if (status === "unauthenticated") {
+        return (
+            <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
+                <h1 style={{ color: "var(--primary-teal)", marginBottom: '2rem' }}>{dict.myAppointments.title}</h1>
+                <p style={{ marginBottom: '2rem' }}>{dict.myAppointments.loginRequired || "Please log in to view your appointments."}</p>
+                <button
+                    onClick={() => signIn(undefined, { callbackUrl: "/my-appointments" })}
+                    className="btn btn-primary"
+                >
+                    {dict.auth.login.btn || "Log In"}
+                </button>
+            </div>
+        );
+    }
 
     useEffect(() => {
         fetchAppointments();
