@@ -128,24 +128,26 @@ export default function MyAppointments() {
                         ) : (
                             <div style={{ display: 'grid', gap: '1rem' }}>
                                 {upcoming.map((appt) => (
-                                    <div key={appt.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
-                                        <div>
-                                            <div style={{ fontWeight: 'bold' }}>{format(new Date(appt.dateTime), "PPPP")}</div>
-                                            <div style={{ color: '#666' }}>{format(new Date(appt.dateTime), "p")} - <span style={{ color: '#2e7d32', fontWeight: '700' }}>{dict.myAppointments.confirmed}</span></div>
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <button
-                                                onClick={() => handleDownload(appt)}
-                                                style={{ background: '#f4f9fa', color: 'var(--primary-teal)', border: '1px solid var(--primary-teal)', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
-                                            >
-                                                {dict.myAppointments.download}
-                                            </button>
-                                            <button
-                                                onClick={() => handleCancel(appt.id, appt.dateTime)}
-                                                style={{ background: '#fff5f5', color: '#c53030', border: '1px solid #feb2b2', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
-                                            >
-                                                {dict.myAppointments.cancel}
-                                            </button>
+                                    <div key={appt.id} className="table-responsive" style={{ borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '500px' }}>
+                                            <div>
+                                                <div style={{ fontWeight: 'bold' }}>{format(new Date(appt.dateTime), "PPPP")}</div>
+                                                <div style={{ color: '#666' }}>{format(new Date(appt.dateTime), "p")} - <span style={{ color: '#2e7d32', fontWeight: '700' }}>{dict.myAppointments.confirmed}</span></div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                <button
+                                                    onClick={() => handleDownload(appt)}
+                                                    style={{ background: '#f4f9fa', color: 'var(--primary-teal)', border: '1px solid var(--primary-teal)', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
+                                                >
+                                                    {dict.myAppointments.download}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleCancel(appt.id, appt.dateTime)}
+                                                    style={{ background: '#fff5f5', color: '#c53030', border: '1px solid #feb2b2', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
+                                                >
+                                                    {dict.myAppointments.cancel}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

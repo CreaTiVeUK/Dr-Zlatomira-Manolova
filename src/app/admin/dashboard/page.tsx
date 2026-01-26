@@ -65,40 +65,42 @@ export default async function AdminDashboard() {
                             {d.upcoming}
                         </h2>
                         {upcoming.length === 0 ? <p style={{ color: '#999' }}>No upcoming sessions.</p> : (
-                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                                <thead>
-                                    <tr style={{ borderBottom: "2px solid var(--bg-soft)", textAlign: "left", fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                        <th style={{ padding: "1rem" }}>{d.patient}</th>
-                                        <th style={{ padding: "1rem" }}>{d.dateTime}</th>
-                                        <th style={{ padding: "1rem" }}>{d.status}</th>
-                                        <th style={{ padding: "1rem" }}>{d.fee}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {upcoming.map((appt) => (
-                                        <tr key={appt.id} style={{ borderBottom: "1px solid var(--bg-soft)" }}>
-                                            <td style={{ padding: "1.2rem 1rem" }}>
-                                                <div style={{ fontWeight: "700" }}>{appt.user.name}</div>
-                                                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{appt.user.email}</div>
-                                            </td>
-                                            <td style={{ padding: "1rem" }}>
-                                                <div style={{ fontWeight: '600' }}>{format(new Date(appt.dateTime), "MMM d, yyyy")}</div>
-                                                <div style={{ fontSize: '0.8rem' }}>{format(new Date(appt.dateTime), "HH:mm")}</div>
-                                            </td>
-                                            <td style={{ padding: "1rem" }}>
-                                                <span style={{
-                                                    background: appt.paymentStatus === "PAID" ? '#e8f5e9' : '#fff3e0',
-                                                    color: appt.paymentStatus === "PAID" ? '#2e7d32' : '#e65100',
-                                                    padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700'
-                                                }}>
-                                                    {appt.paymentStatus}
-                                                </span>
-                                            </td>
-                                            <td style={{ padding: "1rem", fontWeight: '700' }}>£{appt.price}</td>
+                            <div className="table-responsive">
+                                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: '600px' }}>
+                                    <thead>
+                                        <tr style={{ borderBottom: "2px solid var(--bg-soft)", textAlign: "left", fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                            <th style={{ padding: "1rem" }}>{d.patient}</th>
+                                            <th style={{ padding: "1rem" }}>{d.dateTime}</th>
+                                            <th style={{ padding: "1rem" }}>{d.status}</th>
+                                            <th style={{ padding: "1rem" }}>{d.fee}</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {upcoming.map((appt) => (
+                                            <tr key={appt.id} style={{ borderBottom: "1px solid var(--bg-soft)" }}>
+                                                <td style={{ padding: "1.2rem 1rem" }}>
+                                                    <div style={{ fontWeight: "700" }}>{appt.user.name}</div>
+                                                    <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{appt.user.email}</div>
+                                                </td>
+                                                <td style={{ padding: "1rem" }}>
+                                                    <div style={{ fontWeight: '600' }}>{format(new Date(appt.dateTime), "MMM d, yyyy")}</div>
+                                                    <div style={{ fontSize: '0.8rem' }}>{format(new Date(appt.dateTime), "HH:mm")}</div>
+                                                </td>
+                                                <td style={{ padding: "1rem" }}>
+                                                    <span style={{
+                                                        background: appt.paymentStatus === "PAID" ? '#e8f5e9' : '#fff3e0',
+                                                        color: appt.paymentStatus === "PAID" ? '#2e7d32' : '#e65100',
+                                                        padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700'
+                                                    }}>
+                                                        {appt.paymentStatus}
+                                                    </span>
+                                                </td>
+                                                <td style={{ padding: "1rem", fontWeight: '700' }}>£{appt.price}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )}
                     </div>
 

@@ -635,32 +635,17 @@ a {
   display: none;
 }
 
-@media (max-width: 960px) {
-  .utility-content {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-
-  .contact-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .header-utility-bar .clinical-badge {
-    display: none;
-  }
-
-  .logo-text {
-    font-size: 1.1rem;
-  }
-
+@media (max-width: 1100px) {
   .nav-center {
     display: none;
   }
 
   .mobile-menu-btn {
     display: block;
+  }
+
+  .header-actions {
+    margin-right: 1rem;
   }
 
   .mobile-nav {
@@ -672,14 +657,14 @@ a {
     width: 100%;
     background: white;
     border-bottom: 1px solid #eee;
-    padding: 1rem;
-    gap: 1rem;
+    padding: 1.5rem;
+    gap: 1.25rem;
     box-shadow: var(--shadow-md);
     z-index: 1000;
     transform: translateY(-20px);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .mobile-nav.open {
@@ -687,4 +672,69 @@ a {
     opacity: 1;
     pointer-events: all;
   }
+}
+
+/* Tablet & Mobile Specific Refinements */
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 1.1rem !important;
+  }
+
+  .logo-section div:last-child {
+    font-size: 0.75rem !important;
+  }
+
+  .header-utility-bar {
+    display: none;
+    /* Hide top bar on mobile for focus */
+  }
+
+  .section-padding {
+    padding: 3.5rem 0;
+  }
+}
+
+/* Landscape Mode Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-section {
+    min-height: 100vh;
+    height: auto;
+    padding: 5rem 0;
+  }
+
+  .header-main {
+    padding: 0.75rem 0;
+  }
+
+  .mobile-nav {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+/* Responsive Table Helper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+/* Professionally Styled Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-teal);
 }

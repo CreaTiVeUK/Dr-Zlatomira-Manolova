@@ -43,17 +43,17 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
       padding: isMobile ? '0 1rem' : '0'
     }}>
       {visibleReviews.map((rev, i) => (
-        <div key={`rev-${index}-${i}`} className="reveal active" style={{ flex: 1, animation: 'fadeInScale 0.8s ease-out' }}>
+        <div key={`rev-${index}-${i}`} className="reveal active" style={{ flex: 1, animation: 'fadeInScale 0.8s ease-out', minWidth: isMobile ? '100%' : 'auto' }}>
           <p style={{
             fontStyle: 'italic',
-            fontSize: isMobile ? '0.9rem' : '0.85rem',
+            fontSize: isMobile ? '0.85rem' : '0.85rem',
             color: 'var(--text-charcoal)',
             marginBottom: '0.4rem',
-            lineHeight: '1.5'
+            lineHeight: '1.4'
           }}>
             "{rev.text}"
           </p>
-          <div style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
+          <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
             — {rev.author}
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function Home() {
               </div>
             </div>
 
-            <h1 className="hero-title">
+            <h1 className="hero-title" style={{ fontSize: 'clamp(2rem, 8vw, 4.5rem)' }}>
               {dict.home.hero.title}<br />
               <span style={{ color: 'var(--primary-teal)' }}>{dict.home.hero.titleHighlight}</span>
             </h1>

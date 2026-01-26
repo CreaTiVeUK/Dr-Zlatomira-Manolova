@@ -62,7 +62,7 @@ export default function Header({ user }: { user: any }) {
                         </Link>
                     </div>
 
-                    <nav className="nav-center" style={{ gap: '1.75rem' }}>
+                    <nav className="nav-center" style={{ gap: '1.5rem' }}>
                         <Link href="/">{dict.header.nav.home}</Link>
                         <Link href="/services">{dict.header.nav.services}</Link>
                         <Link href="/conditions">{dict.header.nav.conditions}</Link>
