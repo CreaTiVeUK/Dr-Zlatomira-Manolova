@@ -62,13 +62,29 @@ export default function Header({ user }: { user: any }) {
                         </Link>
                     </div>
 
-                    <nav className="nav-center" style={{ gap: '1.25rem' }}>
+                    <nav className="nav-center" style={{ gap: '1.5rem' }}>
                         <Link href="/">{dict.header.nav.home}</Link>
                         <Link href="/services">{dict.header.nav.services}</Link>
                         <Link href="/conditions">{dict.header.nav.conditions}</Link>
                         <Link href="/resources">{dict.header.nav.resources}</Link>
                         <Link href="/book" style={{ whiteSpace: 'nowrap' }}>{dict.header.nav.book}</Link>
                         <Link href="/contact">{dict.header.nav.contact}</Link>
+
+                        {/* Dynamic User Links Spaced Identically */}
+                        {user && (
+                            <>
+                                {user.role === 'ADMIN' ? (
+                                    <Link href="/admin/dashboard" style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>
+                                        {dict.userMenu.dashboard}
+                                    </Link>
+                                ) : (
+                                    <Link href="/my-appointments" style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>
+                                        {dict.userMenu.appointments}
+                                    </Link>
+                                )
+                                }
+                            </>
+                        )}
                     </nav>
 
                     <div className="header-actions">

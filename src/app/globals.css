@@ -585,6 +585,8 @@ a {
 
 .header-actions {
   justify-content: flex-end;
+  margin-left: 2rem;
+  flex-shrink: 0;
 }
 
 .nav-center {

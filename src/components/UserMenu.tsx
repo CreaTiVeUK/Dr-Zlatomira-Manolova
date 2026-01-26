@@ -38,25 +38,8 @@ export default function UserMenu({ user }: UserMenuProps) {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            {/* Desktop Actions */}
-            <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                {user.role === 'ADMIN' && (
-                    <Link href="/admin/dashboard" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                        {dict.userMenu.dashboard}
-                    </Link>
-                )}
-                {user.role === 'PATIENT' && (
-                    <Link href="/my-appointments" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                        {dict.userMenu.appointments}
-                    </Link>
-                )}
-            </div>
-
-            {/* Separator */}
-            <div className="desktop-only" style={{ height: '16px', width: '1px', background: '#ddd' }}></div>
-
-            {/* User Badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* User Profile */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -64,8 +47,8 @@ export default function UserMenu({ user }: UserMenuProps) {
                 cursor: 'default'
             }}>
                 <div style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '32px',
+                    height: '32px',
                     borderRadius: '50%',
                     background: 'var(--primary-teal)',
                     color: 'white',
@@ -83,6 +66,9 @@ export default function UserMenu({ user }: UserMenuProps) {
                 </span>
             </div>
 
+            {/* Separator */}
+            <div className="desktop-only" style={{ height: '16px', width: '1px', background: '#ddd', margin: '0 0.5rem' }}></div>
+
             {/* Logout */}
             <button
                 onClick={handleLogout}
@@ -96,8 +82,7 @@ export default function UserMenu({ user }: UserMenuProps) {
                     fontWeight: '700',
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px',
-                    transition: 'color 0.2s',
-                    marginLeft: '0.5rem'
+                    transition: 'color 0.2s'
                 }}
                 className="hover-text-primary"
             >
