@@ -38,8 +38,12 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Setup Database
+        run: |
+          npx prisma db push --accept-data-loss
+          npx prisma db seed
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
 
       - name: Run Linting
         run: npm run lint
@@ -60,5 +64,4 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
           AUTH_SECRET: supersecret
-          # Note: E2E against localhost might require building and starting the app
-          # Playwright config 'webServer' handles this usually
+          NEXTAUTH_URL: http://localhost:3000
