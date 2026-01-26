@@ -30,11 +30,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signIn: "/login",
     },
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, account }) {
+            if (account) {
+                console.log(`[AUTH_DEBUG] JWT callback: New login with provider ${account.provider}`);
+            }
             if (user) {
                 token.id = user.id;
                 // @ts-ignore
                 token.role = user.role || "PATIENT";
+                console.log(`[AUTH_DEBUG] JWT callback: User attached to token. ID: ${token.id}, Role: ${token.role}`);
             }
             return token;
         },
@@ -44,10 +48,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.id = token.id as string;
                 // @ts-ignore
                 session.user.role = token.role as string;
+                console.log(`[AUTH_DEBUG] Session callback: Session ready for User ID: ${session.user.id}, Role: ${session.user.role}`);
+            } else {
+                console.warn(`[AUTH_DEBUG] Session callback: Missing session.user or token.id`, { hasUser: !!session.user, hasTokenId: !!token.id });
             }
             return session;
         },
         async redirect({ url, baseUrl }) {
+            console.log(`[AUTH_DEBUG] Redirect callback: url=${url}, baseUrl=${baseUrl}`);
             // Allows relative callback URLs
             if (url.startsWith("/")) return `${baseUrl}${url}`;
             // Allows callback URLs on the same origin

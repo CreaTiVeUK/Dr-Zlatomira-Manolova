@@ -11,6 +11,10 @@ export default function BookPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
+    useEffect(() => {
+        console.log(`[AUTH_DEBUG] BookPage: Session status=${status}, user=${session?.user?.email || 'none'}`);
+    }, [session, status]);
+
     const SERVICES = [
         { name: dict.booking.services.standard, duration: 30, price: 25 },
         { name: dict.booking.services.specialized, duration: 60, price: 50 },

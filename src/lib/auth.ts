@@ -66,6 +66,7 @@ export async function getSession() {
         try {
             const authjsSession = await authjs();
             if (authjsSession?.user) {
+                console.log(`[AUTH_DEBUG] getSession: Found Auth.js session for ${authjsSession.user.email}`);
                 return {
                     user: {
                         id: (authjsSession.user as any).id,
@@ -76,29 +77,38 @@ export async function getSession() {
                     }
                 };
             }
+            console.log(`[AUTH_DEBUG] getSession: No Auth.js session found.`);
         } catch (error: any) {
             // During static generation, Next.js throws a DYNAMIC_SERVER_USAGE error 
             // to signal that the route must be dynamic. We shouldn't log this as a "failure".
             if (error?.digest === 'DYNAMIC_SERVER_USAGE' || error?.message?.includes('Dynamic server usage')) {
                 throw error; // Re-throw so Next.js can handle it correctly
             }
-            console.error("Auth.js session check failed (likely config issue):", error);
+            console.error("[AUTH_DEBUG] getSession: Auth.js session check failed:", error);
         }
     }
 
     // 2. Fallback to Legacy JWT session (Credentials Login)
     const cookieStore = await cookies();
-    const session = cookieStore.get("session")?.value;
-    if (!session) return null;
-
-    const parsed = await decrypt(session);
-    if (!parsed) return null;
-
-    // Inactivity Check for legacy session
-    if (isSessionExpired(parsed.lastActivity)) {
+    const sessionCookie = cookieStore.get("session")?.value;
+    if (!sessionCookie) {
+        console.log(`[AUTH_DEBUG] getSession: No legacy session cookie found.`);
         return null;
     }
 
+    const parsed = await decrypt(sessionCookie);
+    if (!parsed) {
+        console.warn(`[AUTH_DEBUG] getSession: Failed to decrypt legacy session cookie.`);
+        return null;
+    }
+
+    // Inactivity Check for legacy session
+    if (isSessionExpired(parsed.lastActivity)) {
+        console.log(`[AUTH_DEBUG] getSession: Legacy session expired due to inactivity.`);
+        return null;
+    }
+
+    console.log(`[AUTH_DEBUG] getSession: Found valid legacy session for ${parsed.user?.email}`);
     return parsed;
 }
 
