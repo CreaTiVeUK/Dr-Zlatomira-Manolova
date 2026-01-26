@@ -38,45 +38,47 @@ export default function UserMenu({ user }: UserMenuProps) {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
             {/* Desktop Actions */}
             <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {user.role === 'ADMIN' && (
-                    <Link href="/admin/dashboard" className="btn btn-sm btn-outline" style={{ border: '1px solid var(--primary-teal)', color: 'var(--primary-teal)', fontWeight: '600', padding: '0.4rem 0.8rem', borderRadius: '4px', textDecoration: 'none' }}>
+                    <Link href="/admin/dashboard" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
                         {dict.userMenu.dashboard}
                     </Link>
                 )}
                 {user.role === 'PATIENT' && (
-                    <Link href="/my-appointments" className="btn btn-sm" style={{ color: 'var(--primary-teal)', fontWeight: '600', textDecoration: 'none' }}>
+                    <Link href="/my-appointments" style={{ color: 'var(--primary-teal)', fontWeight: '700', fontSize: '0.8rem', textDecoration: 'none', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
                         {dict.userMenu.appointments}
                     </Link>
                 )}
             </div>
 
+            {/* Separator */}
+            <div className="desktop-only" style={{ height: '20px', width: '1px', background: '#e0e0e0' }}></div>
+
             {/* User Badge */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                background: '#f0f4f8',
-                padding: '0.4rem 0.8rem',
-                borderRadius: '2rem'
+                gap: '0.6rem',
+                cursor: 'default'
             }}>
                 <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '30px',
+                    height: '30px',
                     borderRadius: '50%',
                     background: 'var(--primary-teal)',
                     color: 'white',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontWeight: 'bold',
-                    fontSize: '0.9rem'
+                    fontWeight: '700',
+                    fontSize: '0.85rem',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
                     {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                 </div>
-                <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.9rem', color: '#333' }}>
+                <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
                     {user.name ? user.name.split(' ')[0] : 'User'}
                 </span>
             </div>
@@ -89,10 +91,13 @@ export default function UserMenu({ user }: UserMenuProps) {
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
-                    color: '#666',
-                    fontSize: '0.85rem',
-                    fontWeight: '500',
-                    transition: 'color 0.2s'
+                    color: '#888',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    transition: 'color 0.2s',
+                    padding: '0.5rem 0'
                 }}
                 className="hover-text-primary"
             >

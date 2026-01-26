@@ -8,12 +8,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function BookPage() {
     const { dict } = useLanguage();
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const router = useRouter();
-
-    useEffect(() => {
-        console.log(`[AUTH_DEBUG] BookPage: Session status=${status}, user=${session?.user?.email || 'none'}`);
-    }, [session, status]);
 
     const SERVICES = [
         { name: dict.booking.services.standard, duration: 30, price: 25 },

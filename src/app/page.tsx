@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { useSession } from "next-auth/react";
 
 function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
   const [index, setIndex] = useState(0);
@@ -70,12 +69,7 @@ function ReviewCarousel({ testimonials }: { testimonials: any[] }) {
 }
 
 export default function Home() {
-  const { data: session, status } = useSession();
   const { dict, language } = useLanguage();
-
-  useEffect(() => {
-    console.log(`[AUTH_DEBUG] Home: Session status=${status}, user=${session?.user?.email || 'none'}`);
-  }, [session, status]);
   const [trustStats, setTrustStats] = useState<{ rating: string, reviewsCount: string, testimonials: any[] } | null>(null);
 
   useEffect(() => {
