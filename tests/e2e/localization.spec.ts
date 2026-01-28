@@ -12,7 +12,7 @@ test.describe('Localization & Internationalization', () => {
         await expect(page.locator('h1').first()).toContainText('Elite Medical Care');
 
         // Subtitle verification
-        await expect(page.getByText('Dedicated to Children.')).toBeVisible();
+        await expect(page.getByText('Dedicated to Children.').first()).toBeVisible();
 
         // Strict Check: Ensure specific Bulgarian strings are NOT present in the visible body text
         const bodyText = await page.evaluate(() => document.body.innerText);
@@ -42,7 +42,7 @@ test.describe('Localization & Internationalization', () => {
         await expect(page.getByTitle('Switch to English')).toBeVisible();
 
         // Check Services link text
-        const servicesLink = page.locator('.nav-desktop a[href="/services"]');
+        const servicesLink = page.locator('.nav-center a[href="/services"]');
         await expect(servicesLink).toContainText('УСЛУГИ');
 
         await servicesLink.click();
