@@ -54,6 +54,14 @@ jobs:
           POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
           POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
 
+      - name: Build Application
+        run: npm run build
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
+          AUTH_SECRET: supersecret
+
       - name: Run Linting
         run: npm run lint
 

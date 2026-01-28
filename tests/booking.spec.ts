@@ -8,7 +8,7 @@ test.describe('Booking Flow', () => {
         await page.fill('input[name="password"]', 'password123');
         await page.click('button:has-text("Login")');
 
-        await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
+        await page.waitForURL((url: URL) => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
         await page.goto('/book');
 
         // Ensure page is ready

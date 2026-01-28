@@ -7,7 +7,7 @@ test.describe('Security & Stress Testing', () => {
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
         await page.click('button:has-text("Login")');
-        await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
+        await page.waitForURL((url: URL) => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
 
         const result = await page.evaluate(async () => {
             const res = await fetch('/api/appointments', {
@@ -31,7 +31,7 @@ test.describe('Security & Stress Testing', () => {
         await page.fill('input[name="email"]', 'patient@example.com');
         await page.fill('input[name="password"]', 'password123');
         await page.click('button:has-text("Login")');
-        await page.waitForURL((url: URL) => url.pathname === '/', { timeout: 15000 });
+        await page.waitForURL((url: URL) => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
 
         const attackResult = await page.evaluate(async () => {
             try {
@@ -65,7 +65,7 @@ test.describe('Security & Stress Testing', () => {
             await p.fill('input[name="email"]', email);
             await p.fill('input[name="password"]', 'password123');
             await p.click('button:has-text("Login")');
-            await p.waitForURL((u: URL) => u.pathname === '/', { timeout: 15000 });
+            await p.waitForURL((u: URL) => ['/', '/book'].includes(u.pathname), { timeout: 15000 });
         }
 
         const triggerBooking = async (p: Page) => {

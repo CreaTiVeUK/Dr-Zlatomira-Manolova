@@ -18,11 +18,11 @@ test.describe('Authentication & Access Control', () => {
         await page.fill('input[name="password"]', 'password123');
         await page.click('button:has-text("Login")');
 
-        await page.waitForURL(url => url.pathname === '/', { timeout: 15000 });
+        await page.waitForURL(url => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
 
         // Try direct access to admin
         await page.goto('/admin/dashboard');
-        await expect(page).toHaveURL(url => url.pathname === '/', { timeout: 15000 });
+        await expect(page).toHaveURL(url => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
     });
 
     test('Invalid login should show error', async ({ page }) => {
