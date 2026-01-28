@@ -38,10 +38,11 @@
     "jsdom": "^27.4.0",
     "prisma": "^5.19.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.0.18"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   }
 }

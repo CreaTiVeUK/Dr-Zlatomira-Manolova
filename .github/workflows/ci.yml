@@ -42,6 +42,8 @@ jobs:
         run: npx prisma generate
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
 
       - name: Setup Database
         run: |
@@ -49,6 +51,8 @@ jobs:
           npx prisma db seed
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
 
       - name: Run Linting
         run: npm run lint
@@ -57,6 +61,8 @@ jobs:
         run: npm run test -- --run
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
           AUTH_SECRET: supersecret
           AUTH_GOOGLE_ID: mock-id
           AUTH_GOOGLE_SECRET: mock-secret
@@ -68,5 +74,7 @@ jobs:
         run: npx playwright test
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_PRISMA_URL: postgres://postgres:password@localhost:5432/testdb
+          POSTGRES_URL_NON_POOLING: postgres://postgres:password@localhost:5432/testdb
           AUTH_SECRET: supersecret
           NEXTAUTH_URL: http://localhost:3000
