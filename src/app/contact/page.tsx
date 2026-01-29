@@ -82,7 +82,7 @@ export default function ContactPage() {
                         {/* GOOGLE MAP */}
                         <div style={{ borderRadius: '8px', overflow: 'hidden', height: '300px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
                             <iframe
-                                src="https://maps.google.com/maps?q=Zh.K.+Trakia+52+Plovdiv&z=16&output=embed"
+                                src="https://maps.google.com/maps?q=42.136959,24.790681&z=15&output=embed"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
