@@ -25,7 +25,7 @@ export function generateICS(appointment: {
         `DTEND:${end}`,
         `SUMMARY:${appointment.summary}`,
         `DESCRIPTION:${appointment.description || ''}`,
-        'LOCATION:Medical Center 1, Blvd Vasil Aprilov 20, 4002 Plovdiv',
+        'LOCATION:Medical Center 1, Blvd Vasil Aprilov 20, 4000 Plovdiv',
         'END:VEVENT',
         'END:VCALENDAR'
     ].join('\r\n');
