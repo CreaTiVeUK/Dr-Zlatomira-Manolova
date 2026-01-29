@@ -12,7 +12,10 @@ test.describe('Security & Stress Testing', () => {
         const result = await page.evaluate(async () => {
             const res = await fetch('/api/appointments', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-forwarded-for': Math.random().toString() // Bypass rate limit
+                },
                 body: JSON.stringify({
                     dateTime: new Date(Date.now() + 86400000).toISOString(),
                     duration: -30,
@@ -73,7 +76,10 @@ test.describe('Security & Stress Testing', () => {
                 try {
                     const res = await fetch('/api/appointments', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-forwarded-for': Math.random().toString()
+                        },
                         body: JSON.stringify({
                             dateTime: date,
                             duration: 30,
