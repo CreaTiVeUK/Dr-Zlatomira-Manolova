@@ -30,13 +30,11 @@ export default function Footer() {
                         <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', color: '#bbb' }}>
                             <li>
                                 <strong>{dict.footer.medicalCenter}</strong><br />
-                                123 Healthcare Way, London<br />
-                                W1G 9HP
+                                {dict.footer.addressMain}
                             </li>
                             <li>
                                 <strong>{dict.footer.partnerHospital}</strong><br />
-                                55 specialist Lane, London<br />
-                                E4 8RR
+                                {dict.footer.addressSecond}
                             </li>
                         </ul>
                     </div>

@@ -25,7 +25,7 @@ export function generateICS(appointment: {
         `DTEND:${end}`,
         `SUMMARY:${appointment.summary}`,
         `DESCRIPTION:${appointment.description || ''}`,
-        'LOCATION:Dr. Manolova Pediatrics London',
+        'LOCATION:Medical Center 1, Blvd Vasil Aprilov 20, 4002 Plovdiv',
         'END:VEVENT',
         'END:VCALENDAR'
     ].join('\r\n');

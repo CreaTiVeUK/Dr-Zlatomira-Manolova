@@ -22,14 +22,17 @@ export const en = {
     },
     footer: {
         title: "Manolova Pediatrics",
-        desc: "Providing expert and compassionate pediatric care for children of all ages. Based in the heart of London.",
+        desc: "Providing expert and compassionate pediatric care for children of all ages. Based in Plovdiv.",
         links: "QUICK LINKS",
         location: "LOCATION",
-        medicalCenter: "Medical Center",
-        partnerHospital: "Partner Hospital",
+        medicalCenter: "Medical Center 1",
+        partnerHospital: "MHAT Pazardzhik",
+        addressMain: "Blvd. Vasil Aprilov 20, 4002 Plovdiv",
+        addressSecond: "Pazardzhik, Bulgaria",
+        phone: "+359 88 5557110",
         hours: "OPENING HOURS",
         hoursDetails: {
-            weekdays: "Mon - Fri: 09:00 - 18:00",
+            weekdays: "Mon - Fri: 08:30 - 16:30",
             saturday: "Sat: 10:00 - 14:00",
             sunday: "Sun: Emergencies only"
         },
@@ -122,9 +125,11 @@ export const en = {
     contact: {
         title: "Book an Appointment",
         subtitle: "Contact Dr. Manolova for expert pediatric care and clinical diagnostics.",
-        clinics: "Our Clinics",
-        medicalCenter: "Medical Center",
-        partnerHospital: "Partner Hospital",
+        clinics: "Our Locations",
+        medicalCenter: "Medical Center 1 (Plovdiv)",
+        partnerHospital: "MHAT Pazardzhik",
+        addressMain: "Blvd. Vasil Aprilov 20, 4002 Plovdiv",
+        addressSecond: "Pazardzhik, Bulgaria",
         tel: "Tel",
         email: "Email",
         admin: {
@@ -317,14 +322,17 @@ export const bg: Dictionary = {
     },
     footer: {
         title: "Педиатрия Манолова",
-        desc: "Предоставяне на експертна и състрадателна педиатрична помощ за деца от всички възрасти. Базирана в сърцето на Лондон.",
+        desc: "Предоставяне на експертна и състрадателна педиатрична помощ за деца от всички възрасти. Базирана в Пловдив.",
         links: "БЪРЗИ ВРЪЗКИ",
         location: "МЕСТОПОЛОЖЕНИЕ",
-        medicalCenter: "Медицински център",
-        partnerHospital: "Партньорска болница",
+        medicalCenter: "Медицински център 1",
+        partnerHospital: "МБАЛ Пазарджик",
+        addressMain: "бул. „Васил Априлов“ 20, 4002 Пловдив",
+        addressSecond: "Пазарджик, България",
+        phone: "+359 88 5557110",
         hours: "РАБОТНО ВРЕМЕ",
         hoursDetails: {
-            weekdays: "Пн - Пт: 09:00 - 18:00",
+            weekdays: "Пн - Пт: 08:30 - 16:30",
             saturday: "Сб: 10:00 - 14:00",
             sunday: "Нд: Само спешни случаи"
         },
@@ -417,9 +425,11 @@ export const bg: Dictionary = {
     contact: {
         title: "Запишете час",
         subtitle: "Свържете се с д-р Манолова за експертна педиатрична грижа и клинична диагностика.",
-        clinics: "Нашите клиники",
-        medicalCenter: "Медицински център",
-        partnerHospital: "Партньорска болница",
+        clinics: "Нашите Локации",
+        medicalCenter: "Медицински център 1 (Пловдив)",
+        partnerHospital: "МБАЛ Пазарджик",
+        addressMain: "бул. „Васил Априлов“ 20, 4002 Пловдив",
+        addressSecond: "Пазарджик, България",
         tel: "Тел",
         email: "Имейл",
         admin: {
