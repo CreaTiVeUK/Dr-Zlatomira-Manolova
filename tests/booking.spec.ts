@@ -11,8 +11,8 @@ test.describe('Booking Flow', () => {
         await page.waitForURL((url: URL) => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
         await page.goto('/book');
 
-        // Ensure page is ready
-        await expect(page.getByRole('heading', { name: 'Online Booking' })).toBeVisible();
+        // Ensure page is ready and authenticated (wait for step 1 to appear)
+        await expect(page.getByText('1. Select Service')).toBeVisible({ timeout: 15000 });
 
         // Select Specialized Consultation
         await page.click('button:has-text("Specialized Consultation")');
