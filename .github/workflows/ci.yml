@@ -66,6 +66,9 @@ jobs:
       - name: Run Linting
         run: npm run lint
 
+      - name: Build Storybook
+        run: npm run build-storybook
+
       - name: Run Unit Tests
         run: npm run test -- --run
         env:
