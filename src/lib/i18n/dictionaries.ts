@@ -25,9 +25,9 @@ export const en = {
         desc: "Providing expert and compassionate pediatric care for children of all ages. Based in Plovdiv.",
         links: "QUICK LINKS",
         location: "LOCATION",
-        medicalCenter: "Medical Center 1",
+        medicalCenter: "MC 'Zahari Zograf'",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "Blvd. Vasil Aprilov 20, 4000 Plovdiv",
+        addressMain: "A11 - \"Zahari Zograf\" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         phone: "+359 88 5557110",
         hours: "OPENING HOURS",
@@ -126,9 +126,9 @@ export const en = {
         title: "Book an Appointment",
         subtitle: "Contact Dr. Manolova for expert pediatric care and clinical diagnostics.",
         clinics: "Our Locations",
-        medicalCenter: "Medical Center 1 (Plovdiv)",
+        medicalCenter: "MC 'Zahari Zograf' (Plovdiv)",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "Blvd. Vasil Aprilov 20, 4000 Plovdiv",
+        addressMain: "A11 - \"Zahari Zograf\" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         tel: "Tel",
         email: "Email",
@@ -204,27 +204,32 @@ export const en = {
             {
                 title: "Pediatrics doesn't fit in textbooks, it is lived",
                 category: "INTERVIEW • 2025",
-                excerpt: "Deep philosophical and practical interview for 'Pediatrics Plus' magazine regarding the calling and challenges in modern child care."
+                excerpt: "Deep philosophical and practical interview for 'Pediatrics Plus' magazine regarding the calling and challenges in modern child care.",
+                link: "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/"
             },
             {
                 title: "Humanity and art in pediatrics",
                 category: "INITIATIVE • 2024",
-                excerpt: "Report on the project to transform the children's ward in Pazardzhik with the participation of local students and public figures."
+                excerpt: "Report on the project to transform the children's ward in Pazardzhik with the participation of local students and public figures.",
+                link: "https://darik.bg/osmoklasnici-preobraziha-steni-vav-vtoro-detsko-otdelenie-na-mbal-pazardzik"
             },
             {
                 title: "The biggest motivation is the children",
                 category: "VISION • 2024",
-                excerpt: "Dr. Manolova on her ambitions to completely renovate the look of pediatric care and the role of modern diagnostics."
+                excerpt: "Dr. Manolova on her ambitions to completely renovate the look of pediatric care and the role of modern diagnostics.",
+                link: "https://pa1-media.bg/%D0%B4-%D1%80-%D0%B7%D0%BB%D0%B0%D1%82%D0%BE%D0%BC%D0%B8%D1%80%D0%B0-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%BD%D0%B8%D0%BA-%D0%BD%D0%B0-%D0%B2%D1%82%D0%BE/"
             },
             {
                 title: "Appointment as Head of Second Department",
                 category: "CAREER • 2023",
-                excerpt: "Official announcement of taking the leadership post in one of the busiest pediatric departments in the country."
+                excerpt: "Official announcement of taking the leadership post in one of the busiest pediatric departments in the country.",
+                link: "https://www.mbal-pz.com/home/685-%D0%B4-%D1%80-%D0%B7-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%B4%D0%B5%D1%86%D0%B0%D1%82%D0%B0-%D0%B8%D0%BC%D0%B0%D1%82-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D1%84%D0%B8%D1%87%D0%B5%D0%BD-%D0%B7%D0%B0%D1%80%D1%8F%D0%B4-%D0%BA%D0%BE%D0%B9%D1%82%D0%BE-%D0%BC%D0%B5-%D0%BC%D0%BE%D1%82%D0%B2%D0%B8%D1%80%D0%B0-%D0%B4%D0%B0-%D1%81%D1%8A%D0%BC-%D0%B4%D0%B5%D1%82%D1%81%D0%BA%D0%B8-%D0%BB%D0%B5%D0%BA%D0%B0%D1%80"
             },
             {
                 title: "Nomination 'You are our future'",
                 category: "RECOGNITION • 2023",
-                excerpt: "Prestigious distinction from the Bulgarian Medical Association for contribution to the future of medicine in Bulgaria."
+                excerpt: "Prestigious distinction from the Bulgarian Medical Association for contribution to the future of medicine in Bulgaria.",
+                link: "https://www.mbal-pz.com/home/658-%D0%B4-%D1%80-%D0%B4%D0%B8%D0%BC%D0%B8%D1%82%D1%8A%D1%80-%D0%BC%D0%B8%D1%82%D1%80%D0%B5%D0%B2-%D0%B8-%D0%B4-%D1%80-%D0%B7%D0%BB%D0%B0%D1%82%D0%BE%D0%BC%D0%B8%D1%80%D0%B0-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%B1%D1%8F%D1%85%D0%B0-%D0%BD%D0%B0%D0%B3%D1%80%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8-%D0%BE%D1%82-%D1%80%D0%BA-%D0%BD%D0%B0-%D0%B1%D0%BB%D1%81"
             }
         ]
     },
@@ -325,9 +330,9 @@ export const bg: Dictionary = {
         desc: "Предоставяне на експертна и състрадателна педиатрична помощ за деца от всички възрасти. Базирана в Пловдив.",
         links: "БЪРЗИ ВРЪЗКИ",
         location: "МЕСТОПОЛОЖЕНИЕ",
-        medicalCenter: "Медицински център 1",
+        medicalCenter: "МЦ 'Захари Зограф'",
         partnerHospital: "МБАЛ Пазарджик",
-        addressMain: "бул. „Васил Априлов“ 20, 4000 Пловдив",
+        addressMain: "A11 - кв. „Захари Зограф“, Ж.К. Тракия 52Б, 4023 Пловдив, България",
         addressSecond: "Пазарджик, България",
         phone: "+359 88 5557110",
         hours: "РАБОТНО ВРЕМЕ",
@@ -426,9 +431,9 @@ export const bg: Dictionary = {
         title: "Запишете час",
         subtitle: "Свържете се с д-р Манолова за експертна педиатрична грижа и клинична диагностика.",
         clinics: "Нашите Локации",
-        medicalCenter: "Медицински център 1 (Пловдив)",
+        medicalCenter: "МЦ 'Захари Зограф' (Пловдив)",
         partnerHospital: "МБАЛ Пазарджик",
-        addressMain: "бул. „Васил Априлов“ 20, 4000 Пловдив",
+        addressMain: "A11 - кв. „Захари Зограф“, Ж.К. Тракия 52Б, 4023 Пловдив, България",
         addressSecond: "Пазарджик, България",
         tel: "Тел",
         email: "Имейл",
@@ -501,27 +506,32 @@ export const bg: Dictionary = {
             {
                 title: "Педиатрията не се побира в учебници, тя се живее",
                 category: "ИНТЕРВЮ • 2025",
-                excerpt: "Дълбоко философско и практическо интервю за списание 'Педиатрия плюс' относно призванието и предизвикателствата в съвременната грижа за децата."
+                excerpt: "Дълбоко философско и практическо интервю за списание 'Педиатрия плюс' относно призванието и предизвикателствата в съвременната грижа за децата.",
+                link: "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/"
             },
             {
                 title: "Хуманност и изкуство в педиатрията",
                 category: "ИНИЦИАТИВА • 2024",
-                excerpt: "Репортаж за проекта по преобразяване на детското отделение в Пазарджик с участието на местни ученици и общественици."
+                excerpt: "Репортаж за проекта по преобразяване на детското отделение в Пазарджик с участието на местни ученици и общественици.",
+                link: "https://darik.bg/osmoklasnici-preobraziha-steni-vav-vtoro-detsko-otdelenie-na-mbal-pazardzik"
             },
             {
                 title: "Най-голямата мотивация са децата",
                 category: "ВИЗИЯ • 2024",
-                excerpt: "Д-р Манолова за амбициите си да обнови изцяло облика на педиатричната помощ и ролята на модерната диагностика."
+                excerpt: "Д-р Манолова за амбициите си да обнови изцяло облика на педиатричната помощ и ролята на модерната диагностика.",
+                link: "https://pa1-media.bg/%D0%B4-%D1%80-%D0%B7%D0%BB%D0%B0%D1%82%D0%BE%D0%BC%D0%B8%D1%80%D0%B0-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%BD%D0%B8%D0%BA-%D0%BD%D0%B0-%D0%B2%D1%82%D0%BE/"
             },
             {
                 title: "Назначение за Началник на Второ отделение",
                 category: "КАРИЕРА • 2023",
-                excerpt: "Официално съобщение за поемането на ръководния пост в едно от най-натоварените педиатрични отделения в страната."
+                excerpt: "Официално съобщение за поемането на ръководния пост в едно от най-натоварените педиатрични отделения в страната.",
+                link: "https://www.mbal-pz.com/home/685-%D0%B4-%D1%80-%D0%B7-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%B4%D0%B5%D1%86%D0%B0%D1%82%D0%B0-%D0%B8%D0%BC%D0%B0%D1%82-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D1%84%D0%B8%D1%87%D0%B5%D0%BD-%D0%B7%D0%B0%D1%80%D1%8F%D0%B4-%D0%BA%D0%BE%D0%B9%D1%82%D0%BE-%D0%BC%D0%B5-%D0%BC%D0%BE%D1%82%D0%B2%D0%B8%D1%80%D0%B0-%D0%B4%D0%B0-%D1%81%D1%8A%D0%BC-%D0%B4%D0%B5%D1%82%D1%81%D0%BA%D0%B8-%D0%BB%D0%B5%D0%BA%D0%B0%D1%80"
             },
             {
                 title: "Номинация 'Ти си нашето бъдеще'",
                 category: "ПРИЗНАНИЕ • 2023",
-                excerpt: "Престижно отличие от Българския лекарски съюз за принос към бъдещето на медицината в България."
+                excerpt: "Престижно отличие от Българския лекарски съюз за принос към бъдещето на медицината в България.",
+                link: "https://www.mbal-pz.com/home/658-%D0%B4-%D1%80-%D0%B4%D0%B8%D0%BC%D0%B8%D1%82%D1%8A%D1%80-%D0%BC%D0%B8%D1%82%D1%80%D0%B5%D0%B2-%D0%B8-%D0%B4-%D1%80-%D0%B7%D0%BB%D0%B0%D1%82%D0%BE%D0%BC%D0%B8%D1%80%D0%B0-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%B1%D1%8F%D1%85%D0%B0-%D0%BD%D0%B0%D0%B3%D1%80%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8-%D0%BE%D1%82-%D1%80%D0%BA-%D0%BD%D0%B0-%D0%B1%D0%BB%D1%81"
             }
         ]
     },
