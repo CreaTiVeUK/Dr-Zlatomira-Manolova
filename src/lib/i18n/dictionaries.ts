@@ -285,6 +285,13 @@ export const en = {
         message: "Thank you for your booking. You will receive a confirmation email shortly.",
         viewAppointments: "View Appointments",
         home: "Home"
+    },
+    cookies: {
+        title: "We respect your privacy",
+        desc: "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking 'Accept', you consent to our use of cookies.",
+        learnMore: "Learn More",
+        accept: "Accept Cookies",
+        reject: "Decline"
     }
 };
 
@@ -570,5 +577,12 @@ export const bg: Dictionary = {
         message: "Благодарим ви за резервацията. Скоро ще получите потвърждение по имейл.",
         viewAppointments: "Вижте часовете",
         home: "Начало"
+    },
+    cookies: {
+        title: "Ние уважаваме вашата поверителност",
+        desc: "Използваме бисквитки, за да подобрим вашето изживяване при сърфиране, да предоставяме персонализирано съдържание и да анализираме трафика си. Като кликнете върху „Приемам“, вие се съгласявате с използването на бисквитки.",
+        learnMore: "Научете повече",
+        accept: "Приемам бисквитки",
+        reject: "Отказ"
     }
 };

@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import EmergencyBanner from "@/components/EmergencyBanner";
+import CookieConsent from "@/components/CookieConsent";
 import { getSession } from "@/lib/auth";
 import { Providers } from "@/components/Providers";
 
@@ -50,6 +51,7 @@ export default async function RootLayout({
           <Header user={user} />
           <main style={{ minHeight: '80vh' }}>{children}</main>
           <Footer />
+          <CookieConsent />
         </Providers>
       </body>
     </html>
