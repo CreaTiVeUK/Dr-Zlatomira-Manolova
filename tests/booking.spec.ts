@@ -15,7 +15,12 @@ test.describe('Booking Flow', () => {
         await expect(page.getByRole('heading', { name: 'Online Booking' })).toBeVisible();
 
         // Select Specialized Consultation
-        await page.getByRole('button', { name: /Specialized Consultation/ }).click();
+        await page.click('button:has-text("Specialized Consultation")');
+
+        // Select Tomorrow to ensure slots are available regardless of CI run time
+        // The date buttons are in a flex container with overflow-x: auto
+        const nextDay = page.locator('div[style*="overflow-x: auto"] button').nth(1);
+        await nextDay.click();
 
         // Pick first available slot by time pattern (HH:mm)
         const slot = page.locator('button:not([disabled])').filter({ hasText: /^\d{2}:\d{2}$/ }).first();
