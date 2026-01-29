@@ -115,7 +115,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
+    <div>
       {/* HERO SECTION */}
       <section className="hero-section">
         <Image

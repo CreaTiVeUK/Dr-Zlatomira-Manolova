@@ -45,6 +45,13 @@ body {
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.011em;
   /* Modern typography adjustment */
+  /* Modern typography adjustment */
+  overflow-x: hidden;
+  width: 100%;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 h1,
@@ -272,6 +279,8 @@ a {
   align-items: center;
   overflow: hidden;
   background: #001a1e;
+  touch-action: pan-y;
+  /* Fix mobile scroll blocking */
 }
 
 /* Fix Hero Image Scroll Trap on Mobile */
