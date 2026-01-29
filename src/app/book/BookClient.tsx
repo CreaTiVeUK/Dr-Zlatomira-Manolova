@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { format, addDays, startOfDay } from "date-fns";
+import { format, addDays, startOfDay, endOfDay } from "date-fns";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface BookClientProps {
@@ -41,7 +41,11 @@ export default function BookClient({ session }: BookClientProps) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch("/api/availability");
+                // Optimize: Fetch next 30 days of availability
+                const start = startOfDay(new Date()).toISOString();
+                const end = endOfDay(addDays(new Date(), 30)).toISOString();
+
+                const res = await fetch(`/api/availability?start=${start}&end=${end}`);
                 if (res.ok) {
                     const data = await res.json();
                     setBookedSlots(data.takenSlots);
@@ -53,7 +57,8 @@ export default function BookClient({ session }: BookClientProps) {
         if (session) {
             fetchData();
         }
-    }, [selectedDate, session]);
+        // Removed selectedDate dependency as we fetch a wide range once
+    }, [session]);
 
     useEffect(() => {
         setTempSelectedSlot(null);
