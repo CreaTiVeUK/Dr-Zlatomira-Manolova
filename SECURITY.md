@@ -15,7 +15,7 @@ We are committed to providing medical software with the highest security standar
 
 If you discover a security vulnerability, we would appreciate it if you could report it to us privately. This allows us to resolve the issue before it is made public.
 
-To report a vulnerability, please email **simeon.manolov@example.com** (replace with actual contact) or use the contact information provided to the practice.
+To report a vulnerability, please email **simeon_penev@hotmail.com** or use the contact information provided to the practice.
 
 When reporting a vulnerability, please include:
 - A description of the vulnerability.
