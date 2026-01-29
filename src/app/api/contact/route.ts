@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
+import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 
 const contactSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -35,13 +36,13 @@ export async function POST(request: NextRequest) {
         const cleanName = sanitizeString(name);
         const cleanMessage = sanitizeString(message);
 
-        // TODO: Integrate actual email service (Resend/Nodemailer)
-        // For now, log the inquiry to the system logs
-        console.log(`[CONTACT FORM] From: ${cleanName} <${email}>`);
-        console.log(`[CONTACT FORM] Message: ${cleanMessage}`);
+        // Send email notification using existing utility
+        const emailResult = await sendEmail("zlatomira.manolova@gmail.com", EMAIL_TEMPLATES.CONTACT_INQUIRY(cleanName, email, cleanMessage));
 
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        if (!emailResult.success) {
+            console.error("Failed to send contact email:", emailResult.error);
+            // We still return success to the user to not discourage them, but log the failure
+        }
 
         return NextResponse.json(
             { success: true, message: "Message sent successfully" },
