@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: zlati-pediatrics-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/zlati_pediatrics
+      - POSTGRES_PRISMA_URL=postgresql://postgres:password@db:5432/zlati_pediatrics
+      - POSTGRES_URL_NON_POOLING=postgresql://postgres:password@db:5432/zlati_pediatrics
+      - AUTH_SECRET=supersecret
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      - db
+
+  db:
+    container_name: zlati-pediatrics-db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=zlati_pediatrics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
