@@ -52,6 +52,23 @@ services:
     depends_on:
       - elasticsearch
 
+  backup:
+    container_name: zlati-pediatrics-backup
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=zlati_pediatrics
+      - POSTGRES_HOST=db
+    volumes:
+      - ./scripts:/scripts
+      - backups:/backups
+    depends_on:
+      - db
+    command: sh -c "chmod +x /scripts/backup.sh && while true; do /scripts/backup.sh; sleep 86400; done"
+
 volumes:
   postgres_data:
   elastic_data:
+  backups:
