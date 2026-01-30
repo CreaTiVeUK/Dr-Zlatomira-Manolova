@@ -44,26 +44,28 @@ export default function UserMenu({ user }: UserMenuProps) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.6rem',
-                cursor: 'default'
+                cursor: 'pointer' // Changed to pointer for link
             }}>
-                <div style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    background: 'var(--primary-teal)',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: '700',
-                    fontSize: '1rem',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                    {user.name ? user.name.charAt(0).toUpperCase() : '?'}
-                </div>
-                <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
-                    {user.name ? user.name.split(' ')[0] : 'User'}
-                </span>
+                <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none', color: 'inherit' }}>
+                    <div style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: 'var(--primary-teal)',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: '700',
+                        fontSize: '1rem',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}>
+                        {user.name ? user.name.charAt(0).toUpperCase() : '?'}
+                    </div>
+                    <span className="desktop-only" style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
+                        {user.name ? user.name.split(' ')[0] : 'User'}
+                    </span>
+                </Link>
             </div>
 
             {/* Separator */}

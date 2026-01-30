@@ -43,8 +43,8 @@ export const en = {
     home: {
         hero: {
             title: "Elite Medical Care",
-            titleHighlight: "Dedicated to Children.",
-            subtitle: "Providing the highest standard of pediatric expertise in the heart of Plovdiv, combining clinical excellence with deep compassionate care.",
+            titleHighlight: "A Mission for Children.",
+            subtitle: "Head of Second Pediatric Department, MHAT Pazardzhik. Recipient of 'You are our future' award by BMA. Expert diagnostics and compassionate care.",
             bookBtn: "Book Consultation",
             servicesBtn: "View Services",
         },
@@ -84,19 +84,19 @@ export const en = {
             }
         },
         about: {
-            badge: "ESTABLISHED PEDIATRICIAN",
+            badge: "HEAD OF DEPARTMENT • PEDIATRICIAN",
             name: "Dr. Zlatomira Manolova-Peneva",
-            role: "Head of Second Pediatric Department",
-            bio1: "Dr. Zlatomira Manolova-Peneva graduated from the Medical University of Plovdiv in 2018 and acquired a specialty in pediatrics in 2023. From the very beginning of her professional path, she focused her interests on child healthcare, striving for in-depth practical and theoretical training.",
-            bio2: "She began her specialization in the Second Pediatric Department with an Intensive Care Sector at MHAT Pazardzhik, where she gained valuable clinical experience. During her training, she also passed through the Pediatric Clinic of UMHAT 'St. George' Plovdiv, which contributed to broadening her professional preparation and clinical view.",
-            bio3: "After successfully completing her specialization, Dr. Manolova-Peneva continued her professional development as a specialist physician at MHAT Pazardzhik, while simultaneously becoming part of the team at the 'Plovdimed' 24-hour Children's Polyclinic in Plovdiv. Her work is aimed at providing quality and timely medical care for children of different age groups.",
-            bio4: "In 2025, she took a leadership position as Head of Department – initially as acting head, and subsequently, after successfully passing a competition, as the titular head. Her professionalism, responsibility, and dedication to patients and the team are highly appreciated, and in 2023 she was nominated by the Bulgarian Medical Association in the category 'You are our future'.",
-            qualifications: "QUALIFICATIONS",
-            qualList: ["• MBBS Medical Degree", "• DCH Diploma in Child Health", "• MRCPCH Member of RCPCH", "• FRCPCH Fellow of RCPCH"],
-            specialties: "SPECIALTIES",
-            specList: ["• Pediatric Allergy", "• Early Child Development", "• Emergency Conditions", "• Neonatal Consultations"],
-            bioBtn: "Request Full Biography",
-            imageAlt: "Dr. Manolova Specialist"
+            role: "Head of Second Pediatric Department, MHAT Pazardzhik",
+            bio1: "Dr. Zlatomira Manolova-Peneva graduated from the Medical University of Plovdiv in 2018 and acquired a specialty in pediatrics in 2023. From the very start, she has believed that \"Pediatrics doesn't fit in textbooks, it is lived!\".",
+            bio2: "Her professional path includes the Intensive Care Sector of the Second Pediatric Department at MHAT Pazardzhik and the Pediatric Clinic of UMHAT 'St. George' Plovdiv, where she gained invaluable experience in emergency and intensive pediatric care.",
+            bio3: "In 2025, Dr. Manolova won the competition to become the titular Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients – an initiative starting with the transformation of the ward by young artists to turn \"children's tears into smiles\".",
+            bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
+            qualifications: "QUALIFICATIONS & HONORS",
+            qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of Bulgarian Pediatric Association"],
+            specialties: "EXPERTISE",
+            specList: ["• Pediatric Intensive Care", "• Emergency Conditions", "• Pediatric Pulmonology", "• Early Child Development"],
+            bioBtn: "Read Full Interview",
+            imageAlt: "Dr. Manolova with patient"
         },
         heroImageAlt: "Clinical Consultation with Dr. Manolova",
         partnerImageAlt: "Partner Hospital Logos"
@@ -148,13 +148,13 @@ export const en = {
         title: "Our Pediatric Services",
         subtitle: "We provide a full spectrum of pediatric care - from routine preventative checks to specialized diagnostic clinics.",
         general: {
-            title: "General Pediatrics",
-            desc: "We ensure comprehensive health checks for children of all ages, ensuring their growth and development are on track.",
+            title: "Emergency & General Pediatrics",
+            desc: "Drawing on her intensive care experience, Dr. Manolova provides competent assessment for acute conditions as well as precise preventative care.",
             list: [
-                "• Comprehensive health assessments",
-                "• Routine vaccinations and immunizations",
-                "• Management of acute childhood illnesses",
-                "• Growth and nutrition consultations"
+                "• Emergency condition & fever assessment",
+                "• Treatment of respiratory infections",
+                "• Routine checkups & vaccinations",
+                "• Consultations for frequent illnesses"
             ],
             btn: "Book this appointment"
         },
@@ -177,7 +177,7 @@ export const en = {
         gastro: { title: "Gastrointestinal", list: ["• Reflux & Vomiting", "• Abdominal Pain", "• Constipation"] },
         allergy: { title: "Allergic", list: ["• Food Allergies", "• Eczema", "• Hay Fever"] },
         neonatal: { title: "Neonatal", list: ["• Colic & Feeding Support", "• Jaundice Monitoring", "• Newborn Growth"] },
-        general: { title: "General Health", list: ["• High Fever", "• Growth Issues", "• Bedwetting"] }
+        general: { title: "Acute Conditions", list: ["• High Fever (Febrile stats)", "• Acute Viral Infections", "• Respiratory Distress"] }
     },
     resources: {
         title: "Knowledge Base",
@@ -347,9 +347,9 @@ export const bg: Dictionary = {
     },
     home: {
         hero: {
-            title: "Елитна медицинска помощ",
-            titleHighlight: "Посветена на децата.",
-            subtitle: "Осигуряване на най-високия стандарт на педиатричен опит в сърцето на Пловдив, съчетаващ клинични постижения с дълбока състрадателна грижа.",
+            title: "Елитна медицинска грижа",
+            titleHighlight: "С мисия за децата.",
+            subtitle: "Началник на Второ педиатрично отделение, МБАЛ Пазарджик. Носител на отличие 'Ти си нашето бъдеще' от БЛС. Експертна диагностика и хуманно отношение.",
             bookBtn: "Запазете консултация",
             servicesBtn: "Вижте услугите",
         },
@@ -373,8 +373,8 @@ export const bg: Dictionary = {
             title: "Клиничен опит",
             subtitle: "От рутинни прегледи до специализирани диагностични клиники, ние предоставяме пълен спектър от педиатрични грижи.",
             general: {
-                title: "Обща педиатрия",
-                desc: "Експертно управление на остри детски заболявания, рутинни здравни прегледи и клинични ваксинации.",
+                title: "Спешна и Обща педиатрия",
+                desc: "Експертно управление на остри състояния, висока температура и инфекции. Рутинни профилактични прегледи и ваксинации.",
                 btn: "ВИЖТЕ УСЛУГАТА →"
             },
             allergy: {
@@ -389,19 +389,19 @@ export const bg: Dictionary = {
             }
         },
         about: {
-            badge: "УТВЪРДЕН ПЕДИАТЪР",
+            badge: "НАЧАЛЬНИК ОТДЕЛЕНИЕ • ПЕДИАТЪР",
             name: "Д-р Златомира Манолова-Пенева",
-            role: "Началник на Второ педиатрично отделение",
-            bio1: "Д-р Златомира Манолова-Пенева завършва Медицински университет – Пловдив през 2018 г., а през 2023 г. придобива специалност по педиатрия. Още в началото на професионалния си път тя насочва интересите си към детското здравеопазване, като се стреми към задълбочено практическо и теоретично обучение.",
-            bio2: "Специализацията си започва във Второ педиатрично отделение с интензивен сектор към МБАЛ – Пазарджик, където натрупва ценен клиничен опит. В рамките на обучението си преминава и през Клиниката по педиатрия на УМБАЛ „Св. Георги“ – Пловдив, което допринася за разширяване на професионалната ѝ подготовка и клиничен поглед.",
-            bio3: "След успешно завършване на специализацията д-р Манолова-Пенева продължава професионалното си развитие като лекар-специалист в МБАЛ – Пазарджик, като паралелно с това става част от екипа на Денонощна детска поликлиника „Пловдимед“ в Пловдив. Работата ѝ е насочена към осигуряване на качествена и навременна медицинска грижа за деца от различни възрастови групи.",
-            bio4: "През 2025 г. тя заема ръководна позиция като началник на отделение – първоначално като временно изпълняващ длъжността, а впоследствие, след успешно проведен конкурс, и като титулярен началник. Професионализмът, отговорността и отдадеността ѝ към пациентите и екипа са високо оценени, като през 2023 г. е номинирана от Българския лекарски съюз в категорията „Ти си нашето бъдеще“.",
-            qualifications: "КВАЛИФИКАЦИИ",
-            qualList: ["• MBBS Медицинска степен", "• DCH Диплома по детско здраве", "• MRCPCH Член на RCPCH", "• FRCPCH Член на RCPCH"],
-            specialties: "СПЕЦИАЛНОСТИ",
-            specList: ["• Педиатрична алергология", "• Ранно детско развитие", "• Спешни състояния", "• Неонатологични консултации"],
-            bioBtn: "Поискайте пълна биография",
-            imageAlt: "Д-р Манолова Специалист"
+            role: "Началник на Второ педиатрично отделение, МБАЛ Пазарджик",
+            bio1: "Д-р Златомира Манолова-Пенева завършва Медицински университет – Пловдив през 2018 г., а през 2023 г. придобива специалност по педиатрия. Още от самото начало тя вярва, че „Педиатрията не се побира в рамките на учебниците, тя се живее!“.",
+            bio2: "Професионалният ѝ път преминава през интензивния сектор на Второ педиатрично отделение в МБАЛ – Пазарджик и Клиниката по педиатрия на УМБАЛ „Св. Георги“ – Пловдив, където натрупва безценен опит в спешната и интензивна детска грижа.",
+            bio3: "През 2025 г. д-р Манолова печели конкурс и оглавява Второ педиатрично отделение на МБАЛ Пазарджик. Нейната визия включва пълно обновяваме на средата за малките пациенти – инициатива, която стартира с преобразяването на отделението от млади художници, за да превърне „детския плач в усмивка“.",
+            bio4: "Носител е на престижната номинация „Ти си нашето бъдеще“ (2023) от Българския лекарски съюз. Д-р Манолова приема медицината не просто като професия, а като кауза, водена от убеждението, че всяко дете заслужава не само лечение, а разбиране и топлота.",
+            qualifications: "КВАЛИФИКАЦИИ И ОТЛИЧИЯ",
+            qualList: ["• Специалност Педиатрия (2023)", "• Началник Отделение (2025)", "• Отличие 'Ти си нашето бъдеще' (БЛС)", "• Член на Българската Педиатрична Асоциация"],
+            specialties: "ЕКСПЕРТИЗА",
+            specList: ["• Интензивна педиатрична грижа", "• Спешни състояния", "• Детска пулмология", "• Ранно детско развитие"],
+            bioBtn: "Вижте пълното интервю",
+            imageAlt: "Д-р Манолова с пациент"
         },
         heroImageAlt: "Клинична консултация с д-р Манолова",
         partnerImageAlt: "Лога на партньорски болници"
@@ -453,13 +453,13 @@ export const bg: Dictionary = {
         title: "Нашите педиатрични услуги",
         subtitle: "Предоставяме пълен спектър от педиатрични грижи - от рутинни профилактични прегледи до специализирани диагностични клиники.",
         general: {
-            title: "Обща педиатрия",
-            desc: "Осигуряваме цялостни здравни прегледи за деца от всички възрасти, гарантирайки, че тяхното израстване и развитие са в норма.",
+            title: "Спешна и Обща педиатрия",
+            desc: "Благодарение на опита си в интензивен сектор, д-р Манолова осигурява компетентна оценка при остри състояния, както и прецизна профилактика.",
             list: [
-                "• Цялостни здравни оценки",
-                "• Рутинни ваксинации и имунизации",
-                "• Лечение на остри детски заболявания",
-                "• Консултации за растеж и хранене"
+                "• Оценка на спешни състояния и фебрилитет",
+                "• Лечение на дихателни инфекции",
+                "• Профилактични прегледи и ваксинации",
+                "• Консултации при често боледуващи деца"
             ],
             btn: "Запазете този час"
         },
@@ -482,7 +482,7 @@ export const bg: Dictionary = {
         gastro: { title: "Гастроинтестинални", list: ["• Рефлукс и повръщане", "• Коремна болка", "• Запек"] },
         allergy: { title: "Алергични", list: ["• Хранителни алергии", "• Екзема", "• Сенна хрема"] },
         neonatal: { title: "Неонатални", list: ["• Колики и подкрепа при хранене", "• Мониторинг на жълтеница", "• Растеж на новороденото"] },
-        general: { title: "Общо здраве", list: ["• Висока температура", "• Проблеми с растежа", "• Нощно напикаване"] }
+        general: { title: "Спешни състояния", list: ["• Висока температура (Фебрилитет)", "• Остри вирусни инфекции", "• Дихателна недостатъчност"] }
     },
     resources: {
         title: "База знания",
