@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { format, isAfter } from "date-fns";
 import { en, bg } from "@/lib/i18n/dictionaries";
 import { cookies } from "next/headers";
+import Link from "next/link";
 
 export default async function AdminDashboard() {
     const session = await getSession();
@@ -63,6 +64,10 @@ export default async function AdminDashboard() {
                         <div style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--primary-teal)' }}>{auditLogs.length}</div>
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: '700' }}>{d.securityEvents}</div>
                     </div>
+                    <Link href="/admin/users" className="premium-card" style={{ textAlign: 'center', textDecoration: 'none', background: '#f0f9ff', border: '1px solid #bae6fd' }}>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '700', color: '#0284c7' }}>👥</div>
+                        <div style={{ color: '#0369a1', fontSize: '0.8rem', fontWeight: '700', marginTop: '0.5rem' }}>MANAGE PATIENTS</div>
+                    </Link>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
