@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useRouter } from "next/navigation";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 interface Child {
     id: string;
@@ -215,16 +217,23 @@ export default function ProfilePage() {
                             <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-charcoal)' }}>
                                 {dict.auth.register.phone}
                             </label>
-                            <input
-                                type="tel"
+                            <PhoneInput
+                                country={'bg'}
                                 value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                placeholder="+359..."
-                                style={{
+                                onChange={phone => setFormData({ ...formData, phone })}
+                                inputStyle={{
                                     width: '100%',
-                                    padding: '0.9rem',
+                                    height: '42px',
+                                    fontSize: '16px',
                                     border: '1px solid #ddd',
                                     borderRadius: '6px'
+                                }}
+                                buttonStyle={{
+                                    border: '1px solid #ddd',
+                                    borderRight: 'none',
+                                    borderTopLeftRadius: '6px',
+                                    borderBottomLeftRadius: '6px',
+                                    background: '#f8fafc'
                                 }}
                             />
                         </div>
