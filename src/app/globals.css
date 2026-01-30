@@ -76,7 +76,13 @@ a {
 .container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
 }
 
 .section-padding {
@@ -97,6 +103,8 @@ a {
   align-items: center;
   justify-content: center;
   padding: 0.875rem 2.25rem;
+  min-height: 48px;
+  /* Ensure accessible touch target size */
   border-radius: 6px;
   /* Slightly softer than 4px */
   font-family: var(--font-heading);
@@ -168,14 +176,14 @@ a {
 
 /* Typography Enhancements */
 .hero-title {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   letter-spacing: -0.03em;
   margin-bottom: 2rem;
   font-weight: 800;
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   margin-bottom: 3rem;
   position: relative;
   display: inline-block;
@@ -475,10 +483,10 @@ a {
     padding: 4rem 0;
   }
 
-  .section-title {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
+  .section-padding {
+    padding: 4rem 0;
   }
+
 
   /* Robust Header Mobile Fixes */
   .header-utility-bar .container {

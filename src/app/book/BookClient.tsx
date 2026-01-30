@@ -78,7 +78,7 @@ export default function BookClient({ session }: BookClientProps) {
     if (!session) {
         return (
             <div className="section-padding bg-soft" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
-                <div className="container" style={{ maxWidth: '500px', textAlign: 'center', background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
+                <div className="container booking-card" style={{ maxWidth: '500px', textAlign: 'center' }}>
                     <h2 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem' }}>{dict.booking.title}</h2>
                     <p style={{ marginBottom: '2rem', color: 'var(--text-muted)' }}>{dict.booking.loginRequired || "Please log in to book an appointment."}</p>
                     <button onClick={() => signIn(undefined, { callbackUrl: "/book" })} className="btn btn-primary" style={{ width: '100%' }}>
@@ -150,7 +150,7 @@ export default function BookClient({ session }: BookClientProps) {
 
                     <div style={{ marginBottom: '3.5rem' }}>
                         <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step1}</h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
                             {SERVICES.map((s: { name: string; duration: number; price: number }) => (
                                 <button
                                     key={s.name}
