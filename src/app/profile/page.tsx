@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useRouter } from "next/navigation";
 import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
+import 'react-phone-input-2/lib/high-res.css';
 
 interface Child {
     id: string;
@@ -221,19 +221,25 @@ export default function ProfilePage() {
                                 country={'bg'}
                                 value={formData.phone}
                                 onChange={phone => setFormData({ ...formData, phone })}
+                                enableSearch={true}
+                                containerStyle={{ width: '100%' }}
                                 inputStyle={{
                                     width: '100%',
                                     height: '42px',
                                     fontSize: '16px',
+                                    paddingLeft: '48px',
                                     border: '1px solid #ddd',
                                     borderRadius: '6px'
                                 }}
                                 buttonStyle={{
                                     border: '1px solid #ddd',
                                     borderRight: 'none',
+                                    background: '#f8fafc',
                                     borderTopLeftRadius: '6px',
-                                    borderBottomLeftRadius: '6px',
-                                    background: '#f8fafc'
+                                    borderBottomLeftRadius: '6px'
+                                }}
+                                dropdownStyle={{
+                                    width: '300px'
                                 }}
                             />
                         </div>
