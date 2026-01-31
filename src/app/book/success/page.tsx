@@ -8,9 +8,9 @@ export default function SuccessPage() {
 
     return (
         <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
-            <div style={{ background: 'white', padding: '3rem', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', maxWidth: '500px', margin: '0 auto', border: '1px solid var(--border)' }}>
                 <h1 style={{ color: '#2ecc71', marginBottom: '1rem' }}>{dict.successPage.title}</h1>
-                <p style={{ color: '#666', marginBottom: '2rem' }}>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
                     {dict.successPage.message}
                 </p>
                 <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>

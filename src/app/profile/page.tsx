@@ -185,10 +185,10 @@ export default function ProfilePage() {
                                 style={{
                                     width: '100%',
                                     padding: '0.9rem',
-                                    border: '1px solid #ddd',
+                                    border: '1px solid var(--border)',
                                     borderRadius: '6px',
-                                    background: '#f5f5f5',
-                                    color: '#888',
+                                    background: 'var(--bg-soft)',
+                                    color: 'var(--text-muted)',
                                     cursor: 'not-allowed'
                                 }}
                             />
@@ -207,8 +207,10 @@ export default function ProfilePage() {
                                 style={{
                                     width: '100%',
                                     padding: '0.9rem',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '6px'
+                                    border: '1px solid var(--border)',
+                                    borderRadius: '6px',
+                                    background: 'var(--bg-white)',
+                                    color: 'var(--text-charcoal)'
                                 }}
                             />
                         </div>
@@ -254,7 +256,7 @@ export default function ProfilePage() {
                         </button>
                     </form>
                     {/* CHILDREN SECTION */}
-                    <div style={{ marginTop: '3rem', borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+                    <div style={{ marginTop: '3rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                             <h2 style={{ fontSize: '1.2rem', color: 'var(--text-charcoal)', margin: 0 }}>Children Profiles</h2>
                             <button
@@ -277,7 +279,7 @@ export default function ProfilePage() {
                                             required
                                             value={childForm.name}
                                             onChange={e => setChildForm({ ...childForm, name: e.target.value })}
-                                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                         />
                                     </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -288,7 +290,7 @@ export default function ProfilePage() {
                                                 required
                                                 value={childForm.birthDate}
                                                 onChange={e => setChildForm({ ...childForm, birthDate: e.target.value })}
-                                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                             />
                                         </div>
                                         <div style={{ marginBottom: '1rem' }}>
@@ -296,7 +298,7 @@ export default function ProfilePage() {
                                             <select
                                                 value={childForm.gender}
                                                 onChange={e => setChildForm({ ...childForm, gender: e.target.value })}
-                                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                             >
                                                 <option value="M">Boy</option>
                                                 <option value="F">Girl</option>
@@ -315,7 +317,7 @@ export default function ProfilePage() {
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                 {children.map((child: Child) => (
-                                    <div key={child.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#fff', border: '1px solid #eee', borderRadius: '6px' }}>
+                                    <div key={child.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--bg-white)', border: '1px solid var(--border)', borderRadius: '6px' }}>
                                         <div>
                                             <div style={{ fontWeight: '700', color: 'var(--text-charcoal)' }}>{child.name}</div>
                                             <div style={{ fontSize: '0.8rem', color: '#666' }}>
@@ -335,7 +337,7 @@ export default function ProfilePage() {
                     </div>
 
                     {/* DOCUMENTS SECTION */}
-                    <div style={{ marginTop: '3rem', borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+                    <div style={{ marginTop: '3rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
                         <h2 style={{ fontSize: '1.2rem', color: 'var(--text-charcoal)', marginBottom: '1.5rem' }}>Medical Documents</h2>
 
                         {documents.length === 0 ? (
@@ -344,7 +346,7 @@ export default function ProfilePage() {
                             <div className="table-responsive">
                                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: '0.9rem' }}>
                                     <thead>
-                                        <tr style={{ borderBottom: "2px solid #eee", textAlign: "left", color: 'var(--text-muted)' }}>
+                                        <tr style={{ borderBottom: "2px solid var(--border)", textAlign: "left", color: 'var(--text-muted)' }}>
                                             <th style={{ padding: "0.8rem" }}>Date</th>
                                             <th style={{ padding: "0.8rem" }}>Document</th>
                                             <th style={{ padding: "0.8rem", textAlign: 'right' }}>Action</th>
@@ -352,7 +354,7 @@ export default function ProfilePage() {
                                     </thead>
                                     <tbody>
                                         {documents.map((doc: Document) => (
-                                            <tr key={doc.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
+                                            <tr key={doc.id} style={{ borderBottom: "1px solid var(--border)" }}>
                                                 <td style={{ padding: "0.8rem", color: '#666' }}>
                                                     {new Date(doc.uploadedAt).toLocaleDateString()}
                                                 </td>

@@ -103,7 +103,7 @@ export default function LoginPage() {
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '80vh' }}>
             <div className="container" style={{ maxWidth: '450px' }}>
-                <div style={{ background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
+                <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
                     <h2 style={{ textAlign: 'center', color: 'var(--primary-teal)', marginBottom: '2.5rem', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.auth.login.title}</h2>
 
                     {error && <div style={{ padding: '0.75rem', background: '#ffebee', color: '#c62828', borderRadius: '4px', textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{error}</div>}
@@ -117,7 +117,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="email@example.com"
                             />
                         </div>
@@ -129,7 +129,7 @@ export default function LoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="••••••••"
                             />
                         </div>
@@ -139,9 +139,9 @@ export default function LoginPage() {
                     </form>
 
                     <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{ flex: 1, height: '1px', background: '#eee' }}></div>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>{dict.auth.login.or}</span>
-                        <div style={{ flex: 1, height: '1px', background: '#eee' }}></div>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

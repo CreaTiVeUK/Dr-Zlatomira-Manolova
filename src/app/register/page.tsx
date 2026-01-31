@@ -45,7 +45,7 @@ export default function RegisterPage() {
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '80vh' }}>
             <div className="container" style={{ maxWidth: '450px' }}>
-                <div style={{ background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
+                <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
                     <h2 style={{ textAlign: 'center', color: 'var(--primary-teal)', marginBottom: '2.5rem', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.auth.register.title}</h2>
 
                     {error && <div style={{ padding: '0.75rem', background: '#ffebee', color: '#c62828', borderRadius: '4px', textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{error}</div>}
@@ -58,7 +58,7 @@ export default function RegisterPage() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="John Doe"
                             />
                         </div>
@@ -69,7 +69,7 @@ export default function RegisterPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="email@example.com"
                             />
                         </div>
@@ -79,7 +79,7 @@ export default function RegisterPage() {
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="+44 77..."
                             />
                         </div>
@@ -91,7 +91,7 @@ export default function RegisterPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 minLength={8}
-                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }}
+                                style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'var(--bg-soft)', color: 'var(--text-charcoal)' }}
                                 placeholder="Min 8 chars"
                             />
                         </div>

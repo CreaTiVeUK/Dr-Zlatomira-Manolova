@@ -163,7 +163,7 @@ export default function BookClient({ session }: BookClientProps) {
                                         padding: '1.5rem',
                                         border: `2px solid ${selectedService.name === s.name ? 'var(--primary-teal)' : 'var(--bg-soft)'}`,
                                         borderRadius: '8px',
-                                        background: selectedService.name === s.name ? '#f4f9fa' : 'white',
+                                        background: selectedService.name === s.name ? 'var(--bg-header-alt)' : 'var(--bg-white)',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s',
                                         display: 'flex',
@@ -190,9 +190,9 @@ export default function BookClient({ session }: BookClientProps) {
                                     onClick={() => setSelectedDate(startOfDay(day))}
                                     style={{
                                         padding: '1rem',
-                                        background: startOfDay(day).getTime() === selectedDate.getTime() ? 'var(--primary-teal)' : 'white',
+                                        background: startOfDay(day).getTime() === selectedDate.getTime() ? 'var(--primary-teal)' : 'var(--bg-white)',
                                         color: startOfDay(day).getTime() === selectedDate.getTime() ? 'white' : 'var(--text-charcoal)',
-                                        border: `1px solid ${startOfDay(day).getTime() === selectedDate.getTime() ? 'var(--primary-teal)' : '#ddd'}`,
+                                        border: `1px solid ${startOfDay(day).getTime() === selectedDate.getTime() ? 'var(--primary-teal)' : 'var(--border)'}`,
                                         borderRadius: '4px',
                                         cursor: 'pointer',
                                         minWidth: '95px',
@@ -223,10 +223,10 @@ export default function BookClient({ session }: BookClientProps) {
                                         disabled={loading || isTaken}
                                         style={{
                                             padding: '0.75rem',
-                                            background: isTaken ? '#fafafa' : (isSelected ? 'var(--primary-teal)' : 'white'),
-                                            border: `1px solid ${isTaken ? '#eee' : 'var(--primary-teal)'}`,
+                                            background: isTaken ? 'var(--bg-header-alt)' : (isSelected ? 'var(--primary-teal)' : 'var(--bg-white)'),
+                                            border: `1px solid ${isTaken ? 'var(--border)' : 'var(--primary-teal)'}`,
                                             borderRadius: '4px',
-                                            color: isTaken ? '#ccc' : (isSelected ? 'white' : 'var(--primary-teal)'),
+                                            color: isTaken ? 'var(--text-muted)' : (isSelected ? 'white' : 'var(--primary-teal)'),
                                             cursor: isTaken ? 'not-allowed' : 'pointer',
                                             fontWeight: '700',
                                             fontSize: '0.95rem',
@@ -246,7 +246,7 @@ export default function BookClient({ session }: BookClientProps) {
                                 padding: '2rem',
                                 borderRadius: '4px',
                                 textAlign: 'center',
-                                border: '1px solid #ddd'
+                                border: '1px solid var(--border)'
                             }}>
                                 <p style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>
                                     {dict.booking.confirm.text.replace('%s', selectedService.name).replace('%s', format(tempSelectedSlot, "PPP 'at' HH:mm"))}

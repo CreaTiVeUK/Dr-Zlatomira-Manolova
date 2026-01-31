@@ -94,8 +94,8 @@ export default function ContactPage() {
                     </div>
 
                     {/* CONTACT FORM */}
-                    <div style={{ background: 'white', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
-                        <h3 style={{ marginBottom: '2rem' }}>{dict.contact.form.title}</h3>
+                    <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
+                        <h3 style={{ marginBottom: '2rem', color: 'var(--text-charcoal)' }}>{dict.contact.form.title}</h3>
 
                         {status === "success" ? (
                             <div style={{ padding: '1.5rem', background: '#e8f5e9', color: '#2e7d32', borderRadius: '4px', textAlign: 'center' }}>
@@ -119,7 +119,7 @@ export default function ContactPage() {
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         required
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                         placeholder=""
                                     />
                                 </div>
@@ -131,7 +131,7 @@ export default function ContactPage() {
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         required
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                         placeholder=""
                                     />
                                 </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                         required
                                         minLength={10}
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px', height: '120px' }}
+                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', height: '120px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
                                         placeholder=""
                                     ></textarea>
                                 </div>

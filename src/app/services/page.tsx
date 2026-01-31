@@ -43,7 +43,7 @@ export default function ServicesPage() {
                         </div>
                     </div>
 
-                    <div style={{ height: '1px', background: '#eee' }}></div>
+                    <div style={{ height: '1px', background: 'var(--border)' }}></div>
 
                     {/* SERVICE 2 */}
                     <div className="service-row service-row-reverse" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
