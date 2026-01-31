@@ -78,7 +78,7 @@ export default function BookClient({ session }: BookClientProps) {
     if (!session) {
         return (
             <div className="section-padding bg-soft" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
-                <div className="container booking-card" style={{ maxWidth: '500px', textAlign: 'center' }}>
+                <div className="container booking-card" style={{ maxWidth: '500px', textAlign: 'center', background: 'var(--bg-white)', border: '1px solid var(--border)' }}>
                     <h2 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem' }}>{dict.booking.title}</h2>
                     <p style={{ marginBottom: '2rem', color: 'var(--text-muted)' }}>{dict.booking.loginRequired || "Please log in to book an appointment."}</p>
                     <button onClick={() => signIn(undefined, { callbackUrl: "/book" })} className="btn btn-primary" style={{ width: '100%' }}>
@@ -209,7 +209,7 @@ export default function BookClient({ session }: BookClientProps) {
 
                     <div>
                         <h3 style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.booking.step3}</h3>
-                        {message && <div style={{ padding: '1rem', background: '#fff9c4', color: '#827717', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{message}</div>}
+                        {message && <div style={{ padding: '1rem', background: 'var(--bg-warning)', color: 'var(--text-warning)', border: '1px solid var(--border-warning)', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{message}</div>}
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
                             {slots.map((slot) => {

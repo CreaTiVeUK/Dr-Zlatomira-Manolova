@@ -41,7 +41,7 @@ export default function Conditions() {
                     </div>
                     <div className="premium-card">
                         <h3>{dict.conditions.general.title}</h3>
-                        <ul style={{ listStyle: 'none', padding: 0, color: 'var(--text-muted)' }}>
+                        <ul className="list-checked" style={{ color: 'var(--text-muted)' }}>
                             {dict.conditions.general.list.map((item, i) => <li key={i}>{item}</li>)}
                         </ul>
                     </div>

@@ -126,7 +126,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                     >
                         <Bell size={20} color={textSec} />
                         {notifications.some(n => !n.read) && (
-                            <span style={{ position: 'absolute', top: -2, right: -2, width: '10px', height: '10px', background: '#EF4444', borderRadius: '50%' }} />
+                            <span style={{ position: 'absolute', top: -2, right: -2, width: '10px', height: '10px', background: 'var(--text-emergency)', borderRadius: '50%' }} />
                         )}
                     </button>
 
@@ -146,7 +146,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                         <div key={n.id} style={{ padding: '0.8rem 1rem', borderBottom: `1px solid ${border}`, opacity: n.read ? 0.6 : 1, display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: '0.5rem' }}>
                                             <span style={{ fontSize: '0.9rem' }}>{n.text}</span>
                                             {!n.read && (
-                                                <button onClick={() => markAsRead(n.id)} title="Mark as read" style={{ color: '#3182CE', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                                <button onClick={() => markAsRead(n.id)} title="Mark as read" style={{ color: 'var(--accent-bluish)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                                     <Check size={16} />
                                                 </button>
                                             )}
@@ -330,7 +330,7 @@ function MetricCard({ title, value, change, color, darkText = false, isDark = fa
                 </div>
             </div>
             <div style={{ fontSize: '0.8rem', color: subColor }}>
-                <span style={{ color: change.startsWith('+') ? '#10B981' : '#EF4444', fontWeight: 'bold' }}>{change}</span> than last month
+                <span style={{ color: change.startsWith('+') ? 'var(--text-success)' : 'var(--text-error)', fontWeight: 'bold' }}>{change}</span> than last month
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ export default function ResourcesPage() {
 
                     {/* ARTICLES */}
                     <div>
-                        <h2 style={{ marginBottom: '2.5rem', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem' }}>{dict.resources.latest}</h2>
+                        <h2 style={{ marginBottom: '2.5rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{dict.resources.latest}</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                             {dict.resources.articles.map((r, i) => (
                                 <div key={i} style={{ borderBottom: '1px solid var(--border)', paddingBottom: '3rem' }}>
@@ -54,7 +54,7 @@ export default function ResourcesPage() {
                         <div style={{ background: 'var(--primary-teal)', color: 'white', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
                             <h3 style={{ color: 'white', marginBottom: '1rem' }}>{dict.resources.cta.title}</h3>
                             <p style={{ fontSize: '0.9rem', marginBottom: '1.5rem', opacity: 0.9 }}>{dict.resources.cta.text}</p>
-                            <LinkNext href="/contact" className="btn" style={{ background: 'var(--bg-white)', color: 'var(--primary-teal)', border: 'none', width: '100%' }}>{dict.resources.cta.btn}</LinkNext>
+                            <LinkNext href="/contact" className="btn btn-primary" style={{ background: 'var(--bg-white)', color: 'var(--primary-teal)', border: 'none', width: '100%', transition: 'var(--transition-fast)' }}>{dict.resources.cta.btn}</LinkNext>
                         </div>
                     </div>
                 </div>

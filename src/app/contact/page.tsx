@@ -98,16 +98,16 @@ export default function ContactPage() {
                         <h3 style={{ marginBottom: '2rem', color: 'var(--text-charcoal)' }}>{dict.contact.form.title}</h3>
 
                         {status === "success" ? (
-                            <div style={{ padding: '1.5rem', background: '#e8f5e9', color: '#2e7d32', borderRadius: '4px', textAlign: 'center' }}>
+                            <div style={{ padding: '1.5rem', background: 'var(--bg-success)', color: 'var(--text-success)', border: '1px solid var(--border-success)', borderRadius: '4px', textAlign: 'center' }}>
                                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
                                 <strong>Message Sent!</strong>
                                 <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Thank you for reaching out. We will get back to you shortly.</p>
-                                <button onClick={() => setStatus("idle")} style={{ marginTop: '1rem', background: 'none', border: 'none', textDecoration: 'underline', color: 'inherit', cursor: 'pointer' }}>Send another</button>
+                                <button onClick={() => setStatus("idle")} style={{ marginTop: '1rem', background: 'none', border: 'none', textDecoration: 'underline', color: 'inherit', cursor: 'pointer', fontWeight: '600' }}>Send another</button>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                 {status === "error" && (
-                                    <div style={{ padding: '0.75rem', background: '#ffebee', color: '#c62828', borderRadius: '4px', fontSize: '0.9rem' }}>
+                                    <div style={{ padding: '0.75rem', background: 'var(--bg-error)', color: 'var(--text-error)', border: '1px solid var(--border-error)', borderRadius: '4px', fontSize: '0.9rem' }}>
                                         {errorMsg}
                                     </div>
                                 )}
@@ -143,8 +143,17 @@ export default function ContactPage() {
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                         required
                                         minLength={10}
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', height: '120px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
-                                        placeholder=""
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.8rem',
+                                            border: '1px solid var(--border)',
+                                            borderRadius: '6px',
+                                            background: 'var(--bg-white)',
+                                            color: 'var(--text-charcoal)',
+                                            outline: 'none',
+                                            transition: 'var(--transition-fast)'
+                                        }}
+                                        className="input-focus"
                                     ></textarea>
                                 </div>
                                 <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem' }} disabled={loading}>
