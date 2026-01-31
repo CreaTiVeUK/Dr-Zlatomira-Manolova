@@ -297,7 +297,7 @@ function MetricCard({ title, value, change, color, darkText = false, isDark = fa
     const textColor = darkText ? (isDark ? '#F9FAFB' : '#1E293B') : 'white';
     const subColor = darkText ? (isDark ? '#9CA3AF' : '#64748B') : 'rgba(255,255,255,0.7)';
     const bg = color;
-    const iconColor = darkText ? (isDark ? '#3182CE' : '#0F4C81') : 'rgba(255,255,255,0.4)';
+    const iconColor = darkText ? 'var(--accent-bluish)' : 'rgba(255,255,255,0.4)';
 
     return (
         <div

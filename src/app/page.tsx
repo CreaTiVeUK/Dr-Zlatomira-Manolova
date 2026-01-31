@@ -58,7 +58,7 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
           }}>
             &quot;{rev.text}&quot;
           </p>
-          <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--primary-teal)', opacity: 0.8 }}>
+          <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--accent-bluish)', opacity: 0.8 }}>
             — {rev.author}
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function Home() {
 
             <h1 className="hero-title" style={{ fontSize: 'clamp(2rem, 8vw, 4.5rem)' }}>
               {dict.home.hero.title}<br />
-              <span style={{ color: 'var(--primary-teal)' }}>{dict.home.hero.titleHighlight}</span>
+              <span style={{ color: 'var(--accent-bluish)' }}>{dict.home.hero.titleHighlight}</span>
             </h1>
 
             <p className="hero-subtitle">
@@ -173,7 +173,7 @@ export default function Home() {
           >
             <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{stats.rating}</div>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ display: 'flex', color: '#f4b400', fontSize: '1.1rem', gap: '2px' }}>
+              <div style={{ display: 'flex', color: 'var(--accent-bluish)', fontSize: '1.1rem', gap: '2px' }}>
                 {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
               </div>
               <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
@@ -291,7 +291,7 @@ export default function Home() {
             />
           </div>
           <div>
-            <div className="clinical-badge" style={{ marginBottom: '1.5rem' }}>{dict.home.about.badge}</div>
+            <div className="clinical-badge" style={{ marginBottom: '1.5rem', color: 'var(--accent-bluish)' }}>{dict.home.about.badge}</div>
             <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>{dict.home.about.name}</h2>
             <p style={{ fontSize: '1.2rem', marginBottom: '2rem', fontWeight: '600', color: 'var(--text-charcoal)' }}>
               {dict.home.about.role}
