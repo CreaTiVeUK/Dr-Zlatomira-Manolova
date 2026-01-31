@@ -4,6 +4,7 @@ import Link from "next/link";
 import UserMenu from "@/components/UserMenu";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import ThemeToggle from "./ThemeToggle";
 
 interface HeaderProps {
     user: {
@@ -55,6 +56,10 @@ export default function Header({ user }: HeaderProps) {
                         </span>
                         {language === 'en' ? '🇧🇬' : '🇬🇧'}
                     </button>
+
+                    <div style={{ height: '16px', width: '1px', background: 'var(--border)', margin: '0 0.5rem' }}></div>
+
+                    <ThemeToggle />
                 </div>
             </div>
 
@@ -121,7 +126,7 @@ export default function Header({ user }: HeaderProps) {
                         {/* Role-specific links for mobile */}
                         {user && (
                             <>
-                                <div style={{ borderTop: '1px solid #eee', width: '100%', margin: '0.5rem 0' }}></div>
+                                <div style={{ borderTop: '1px solid var(--border)', width: '100%', margin: '0.5rem 0' }}></div>
                                 {user.role === 'ADMIN' ? (
                                     <Link href="/admin/dashboard" onClick={() => setIsMenuOpen(false)} style={{ fontWeight: '700', color: 'var(--primary-teal)' }}>
                                         {dict.userMenu.dashboard}
@@ -134,7 +139,7 @@ export default function Header({ user }: HeaderProps) {
                             </>
                         )}
 
-                        <div style={{ borderTop: '1px solid #eee', width: '100%', margin: '0.5rem 0' }}></div>
+                        <div style={{ borderTop: '1px solid var(--border)', width: '100%', margin: '0.5rem 0' }}></div>
                         <UserMenu user={user} />
                     </nav>
                 </div>

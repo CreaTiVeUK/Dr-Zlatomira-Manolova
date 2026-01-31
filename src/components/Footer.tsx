@@ -47,7 +47,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                <div style={{ borderTop: '1px solid #444', paddingTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#888' }}>
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#888' }}>
                     <p>&copy; {new Date().getFullYear()} {dict.footer.rights}</p>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
                         <Link href="/privacy">{dict.footer.privacy}</Link>

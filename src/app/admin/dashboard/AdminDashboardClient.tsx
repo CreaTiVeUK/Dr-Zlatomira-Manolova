@@ -67,10 +67,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     const isDark = theme === 'dark';
 
     // Styles
-    const bgCard = isDark ? '#1F2937' : 'white';   // gray-800 : white
-    const textMain = isDark ? '#F9FAFB' : '#1F2937'; // gray-50 : gray-800
-    const textSec = isDark ? '#9CA3AF' : '#6B7280';  // gray-400 : gray-500
-    const border = isDark ? '#374151' : '#E5E7EB';   // gray-700 : gray-200
+    const bgCard = 'var(--bg-white)';
+    const textMain = 'var(--text-charcoal)';
+    const textSec = 'var(--text-muted)';
+    const border = 'var(--border)';
 
     // Filter Logic
     const filteredPatients = recentPatients.filter(p => {
@@ -160,19 +160,6 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                     <div style={{ padding: '0.6rem', background: bgCard, borderRadius: '12px', cursor: 'pointer', border: `1px solid ${border}` }}>
                         <MessageSquare size={20} color={textSec} />
                     </div>
-
-                    {/* Theme Toggle */}
-                    <button
-                        onClick={toggleTheme}
-                        style={{ display: 'flex', background: bgCard, borderRadius: '20px', padding: '0.3rem', border: `1px solid ${border}`, cursor: 'pointer' }}
-                    >
-                        <div style={{ padding: '0.3rem', background: !isDark ? '#F59E0B' : 'transparent', borderRadius: '50%', color: !isDark ? 'white' : textSec, transition: 'all 0.2s' }}>
-                            <Sun size={16} />
-                        </div>
-                        <div style={{ padding: '0.3rem', background: isDark ? '#3182CE' : 'transparent', borderRadius: '50%', color: isDark ? 'white' : textSec, transition: 'all 0.2s' }}>
-                            <Moon size={16} />
-                        </div>
-                    </button>
                 </div>
             </div>
 
@@ -228,7 +215,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                         {filteredUpcoming.length === 0 ?
                             <p style={{ color: textSec }}>No upcoming appointments</p> :
                             filteredUpcoming.slice(0, 5).map((apt, i) => (
-                                <div key={i} style={{ padding: '1rem', background: isDark ? '#111827' : '#F8FAFC', borderRadius: '8px', border: `1px solid ${border}` }}>
+                                <div key={i} style={{ padding: '1rem', background: 'var(--bg-soft)', borderRadius: '8px', border: `1px solid ${border}` }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: textSec, marginBottom: '0.5rem' }}>
                                         <span>{apt.time}</span>
                                         <span style={{ fontWeight: '700', color: '#0F4C81' }}>{apt.type}</span>

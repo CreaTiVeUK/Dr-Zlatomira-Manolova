@@ -37,8 +37,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Analytics", icon: BarChart, href: "/admin/analytics" },
     ];
 
-    const sidebarBg = isDark ? '#1F2937' : '#0F4C81'; // gray-800 vs teal
-    const mainBg = isDark ? '#111827' : '#f8fafc'; // gray-900 vs soft-gray
+    const sidebarBg = 'var(--bg-sidebar)';
+    const mainBg = 'var(--bg-admin-main)';
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: mainBg, transition: 'background-color 0.3s' }}>

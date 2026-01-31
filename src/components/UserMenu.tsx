@@ -69,7 +69,7 @@ export default function UserMenu({ user }: UserMenuProps) {
             </div>
 
             {/* Separator */}
-            <div className="desktop-only" style={{ height: '16px', width: '1px', background: '#ddd', margin: '0 0.5rem' }}></div>
+            <div className="desktop-only" style={{ height: '16px', width: '1px', background: 'var(--border)', margin: '0 0.5rem' }}></div>
 
             {/* Logout */}
             <button
@@ -79,7 +79,7 @@ export default function UserMenu({ user }: UserMenuProps) {
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
-                    color: '#888',
+                    color: 'var(--text-muted)',
                     fontSize: '0.8rem',
                     fontWeight: '700',
                     textTransform: 'uppercase',
