@@ -10,7 +10,7 @@ import {
     PieChart, Pie, Cell, Legend, AreaChart, Area,
     ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
-import { Search, Bell, MessageSquare, Sun, Moon, Check } from "lucide-react";
+import { Search, Bell, MessageSquare, Sun, Moon, Check, Users, Calendar, Activity, DollarSign } from "lucide-react";
 
 interface DashboardProps {
     stats: {
@@ -47,6 +47,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [notifications, setNotifications] = useState([
         { id: 1, text: "New appointment request from P. Parker", read: false },
@@ -55,6 +56,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     ]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 
@@ -65,17 +67,18 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     const isDark = theme === 'dark';
 
     // Styles
-    const bgMain = isDark ? '#111827' : '#F3F4F6'; // gray-900 : gray-100
     const bgCard = isDark ? '#1F2937' : 'white';   // gray-800 : white
     const textMain = isDark ? '#F9FAFB' : '#1F2937'; // gray-50 : gray-800
     const textSec = isDark ? '#9CA3AF' : '#6B7280';  // gray-400 : gray-500
     const border = isDark ? '#374151' : '#E5E7EB';   // gray-700 : gray-200
 
     // Filter Logic
-    const filteredPatients = recentPatients.filter(p =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.status.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredPatients = recentPatients.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.status.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = filterStatus ? p.status.toLowerCase() === filterStatus.toLowerCase() : true;
+        return matchesSearch && matchesStatus;
+    });
 
     const filteredUpcoming = upcoming.filter(a =>
         a.patient.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -90,6 +93,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
     return (
         <div style={{ fontFamily: '"Open Sans", sans-serif', color: textMain, minHeight: '100%', transition: 'background-color 0.3s, color 0.3s' }}>
+            <div style={{ marginBottom: '2rem' }}>
+                <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>Welcome back, Dr. Manolova</h1>
+                <p style={{ color: textSec, fontSize: '0.9rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+            </div>
             {/* TOP BAR */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{ position: 'relative', width: '60%' }}>
@@ -171,16 +178,23 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
             {/* METRICS GRID */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
-                <MetricCard title="Appointments" value={stats.appointments} change="-4.3%" color="#3182CE" isDark={isDark} />
-                <MetricCard title="Total Patients" value={stats.patients} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} />
-                <MetricCard title="Admitted Patients" value={stats.admitted} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} />
-                <MetricCard title="Total Revenue" value={`£${stats.revenue}`} change="+12%" color={bgCard} darkText={!isDark} isDark={isDark} />
+                <MetricCard title="Appointments" value={stats.appointments} change="-4.3%" color="#3182CE" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
+                <MetricCard title="Total Patients" value={stats.patients} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} onClick={() => setFilterStatus(null)} />
+                <MetricCard title="Admitted Patients" value={stats.admitted} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} onClick={() => setFilterStatus('admitted')} />
+                <MetricCard title="Pending" value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} onClick={() => setFilterStatus('Pending')} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
                 {/* PATIENT LIST */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: `1px solid ${border}` }}>
-                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>Patient List</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Patient List</h3>
+                        {filterStatus && (
+                            <button onClick={() => setFilterStatus(null)} style={{ fontSize: '0.8rem', color: '#3182CE', border: 'none', background: 'none', cursor: 'pointer' }}>
+                                Reset Filter ({filterStatus})
+                            </button>
+                        )}
+                    </div>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                         <thead>
                             <tr style={{ textAlign: 'left', color: textSec, borderBottom: `1px solid ${border}` }}>
@@ -291,24 +305,43 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     );
 }
 
-function MetricCard({ title, value, change, color, darkText = false, isDark = false }: { title: string, value: string | number, change: string, color: string, darkText?: boolean, isDark?: boolean }) {
+function MetricCard({ title, value, change, color, darkText = false, isDark = false, icon: Icon, onClick }: { title: string, value: string | number, change: string, color: string, darkText?: boolean, isDark?: boolean, icon: React.ElementType, onClick?: () => void }) {
+    const [isHovered, setIsHovered] = useState(false);
     const textColor = darkText ? (isDark ? '#F9FAFB' : '#1E293B') : 'white';
     const subColor = darkText ? (isDark ? '#9CA3AF' : '#64748B') : 'rgba(255,255,255,0.7)';
     const bg = color;
+    const iconColor = darkText ? (isDark ? '#3182CE' : '#0F4C81') : 'rgba(255,255,255,0.4)';
 
     return (
-        <div style={{
-            background: bg,
-            padding: '1.5rem',
-            borderRadius: '12px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-            color: textColor,
-            border: isDark && darkText ? '1px solid #374151' : 'none'
-        }}>
-            <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>{title}</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>{value}</div>
+        <div
+            onClick={onClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+                background: bg,
+                padding: '1.5rem',
+                borderRadius: '16px',
+                boxShadow: isHovered ? '0 8px 25px rgba(0,0,0,0.1)' : '0 4px 15px rgba(0,0,0,0.05)',
+                color: textColor,
+                border: isDark && darkText ? '1px solid #374151' : 'none',
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: onClick ? 'pointer' : 'default',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isHovered && onClick ? 'translateY(-4px)' : 'translateY(0)',
+            }}
+        >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600', opacity: 0.9 }}>{title}</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>{value}</div>
+                </div>
+                <div style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                    <Icon size={24} color={iconColor} />
+                </div>
+            </div>
             <div style={{ fontSize: '0.8rem', color: subColor }}>
-                <span style={{ color: change.startsWith('+') ? '#10B981' : '#EF4444', fontWeight: 'bold' }}>{change}</span> then last month
+                <span style={{ color: change.startsWith('+') ? '#10B981' : '#EF4444', fontWeight: 'bold' }}>{change}</span> than last month
             </div>
         </div>
     );

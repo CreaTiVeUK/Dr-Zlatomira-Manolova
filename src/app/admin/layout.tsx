@@ -56,8 +56,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 zIndex: 1000,
                 transition: 'background-color 0.3s'
             }}>
-                <div style={{ padding: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <h1 style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '0.05em' }}>MEDITECH</h1>
+                <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                    <div style={{ position: 'relative', width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
+                        <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
+                    </div>
+                    <h1 style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.05em', lineHeight: 1.2 }}>ZLATI<br />PEDIATRICS</h1>
                 </div>
 
                 {/* USER INFO */}
