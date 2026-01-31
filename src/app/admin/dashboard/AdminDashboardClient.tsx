@@ -65,7 +65,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     }, []);
 
     if (!mounted) {
-        return <div style={{ padding: '2rem' }}>Loading dashboard...</div>;
+        return <div style={{ padding: '2rem' }}>{dict.admin.loading}</div>;
     }
 
     const isDark = theme === 'dark';
@@ -98,8 +98,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
         <div style={{ fontFamily: '"Open Sans", sans-serif', color: textMain, minHeight: '100%', transition: 'background-color 0.3s, color 0.3s' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '2.5rem' }}>
                 <div>
-                    <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>Welcome back, Dr. Manolova</h1>
-                    <p style={{ color: textSec, fontSize: '0.9rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+                    <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>
+                        {dict.admin.welcome.replace('%s', 'Dr. Manolova')}
+                    </h1>
+                    <p style={{ color: textSec, fontSize: '0.9rem' }}>{dict.admin.welcomeSub}</p>
                 </div>
 
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -147,7 +149,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                     <Search style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: textSec }} size={20} />
                     <input
                         type="text"
-                        placeholder="Search patients, appointments..."
+                        placeholder={dict.admin.searchPlaceholder}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         style={{
@@ -181,16 +183,16 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                             background: bgCard, border: `1px solid ${border}`, borderRadius: '12px',
                             boxShadow: '0 10px 25px rgba(0,0,0,0.1)', zIndex: 50, overflow: 'hidden'
                         }}>
-                            <div style={{ padding: '1rem', borderBottom: `1px solid ${border}`, fontWeight: 'bold' }}>Notifications</div>
+                            <div style={{ padding: '1rem', borderBottom: `1px solid ${border}`, fontWeight: 'bold' }}>{dict.admin.notifications}</div>
                             <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                                 {notifications.length === 0 ? (
-                                    <div style={{ padding: '1rem', color: textSec, textAlign: 'center' }}>No notifications</div>
+                                    <div style={{ padding: '1rem', color: textSec, textAlign: 'center' }}>{dict.admin.noNotifications}</div>
                                 ) : (
                                     notifications.map(n => (
                                         <div key={n.id} style={{ padding: '0.8rem 1rem', borderBottom: `1px solid ${border}`, opacity: n.read ? 0.6 : 1, display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: '0.5rem' }}>
                                             <span style={{ fontSize: '0.9rem' }}>{n.text}</span>
                                             {!n.read && (
-                                                <button onClick={() => markAsRead(n.id)} title="Mark as read" style={{ color: 'var(--accent-bluish)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                                <button onClick={() => markAsRead(n.id)} title={dict.admin.markAsRead} style={{ color: 'var(--accent-bluish)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                                     <Check size={16} />
                                                 </button>
                                             )}
@@ -209,20 +211,20 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
             {/* METRICS GRID */}
             <div className="grid-metrics">
-                <MetricCard title="Appointments" value={stats.appointments} change="-4.3%" color="var(--accent-bluish)" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
-                <MetricCard title="Total Patients" value={stats.patients} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} onClick={() => setFilterStatus(null)} />
-                <MetricCard title="Admitted Patients" value={stats.admitted} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} onClick={() => setFilterStatus('admitted')} />
-                <MetricCard title="Pending" value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} onClick={() => setFilterStatus('Pending')} />
+                <MetricCard title={dict.admin.metrics.appointments} value={stats.appointments} change="-4.3%" suffix={dict.admin.metrics.trendSuffix} color="var(--accent-bluish)" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
+                <MetricCard title={dict.admin.metrics.totalPatients} value={stats.patients} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} onClick={() => setFilterStatus(null)} />
+                <MetricCard title={dict.admin.metrics.admittedPatients} value={stats.admitted} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} onClick={() => setFilterStatus('admitted')} />
+                <MetricCard title={dict.admin.metrics.pending} value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} onClick={() => setFilterStatus('Pending')} />
             </div>
 
             <div className="grid-main">
                 {/* PATIENT LIST */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Patient List</h3>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>{dict.admin.patientList.title}</h3>
                         {filterStatus && (
                             <button onClick={() => setFilterStatus(null)} style={{ fontSize: '0.8rem', color: 'var(--accent-bluish)', border: 'none', background: 'none', cursor: 'pointer' }}>
-                                Reset Filter ({filterStatus})
+                                {dict.admin.patientList.resetFilter.replace('%s', filterStatus)}
                             </button>
                         )}
                     </div>
@@ -230,10 +232,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                             <thead>
                                 <tr style={{ textAlign: 'left', color: textSec, borderBottom: `1px solid ${border}` }}>
-                                    <th style={{ padding: '0.8rem 0' }}>Name</th>
-                                    <th style={{ padding: '0.8rem 0' }}>Date</th>
-                                    <th style={{ padding: '0.8rem 0' }}>Type</th>
-                                    <th style={{ padding: '0.8rem 0' }}>Status</th>
+                                    <th style={{ padding: '0.8rem 0' }}>{dict.admin.patientList.colName}</th>
+                                    <th style={{ padding: '0.8rem 0' }}>{dict.admin.patientList.colDate}</th>
+                                    <th style={{ padding: '0.8rem 0' }}>{dict.admin.patientList.colType}</th>
+                                    <th style={{ padding: '0.8rem 0' }}>{dict.admin.patientList.colStatus}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -246,7 +248,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={4} style={{ padding: '1rem', textAlign: 'center', color: textSec }}>No patients found</td>
+                                        <td colSpan={4} style={{ padding: '1rem', textAlign: 'center', color: textSec }}>{dict.admin.patientList.noPatients}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -256,10 +258,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
                 {/* CALENDAR / UPCOMING */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
-                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>Upcoming Queue</h3>
+                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>{dict.admin.upcomingQueue.title}</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {filteredUpcoming.length === 0 ?
-                            <p style={{ color: textSec }}>No upcoming appointments</p> :
+                            <p style={{ color: textSec }}>{dict.admin.upcomingQueue.noUpcoming}</p> :
                             filteredUpcoming.slice(0, 5).map((apt, i) => (
                                 <div key={i} style={{ padding: '1rem', background: 'var(--bg-soft)', borderRadius: '8px', border: `1px solid ${border}` }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: textSec, marginBottom: '0.5rem' }}>
@@ -267,8 +269,8 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                         <span style={{ fontWeight: '700', color: '#0F4C81' }}>{apt.type}</span>
                                     </div>
                                     <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>{apt.patient}</div>
-                                    <div style={{ fontSize: '0.8rem', color: textSec }}>{apt.reason || 'General Checkup'}</div>
-                                    <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>View Details</button>
+                                    <div style={{ fontSize: '0.8rem', color: textSec }}>{apt.reason || dict.admin.upcomingQueue.defaultReason}</div>
+                                    <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>{dict.admin.upcomingQueue.viewDetails}</button>
                                 </div>
                             ))
                         }
@@ -280,9 +282,9 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
             <div className="grid-charts">
                 {/* PIE CHART */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', border: isDark ? `1px solid ${border}` : 'none' }}>
-                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700', alignSelf: 'flex-start' }}>Appointment Types</h3>
+                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700', alignSelf: 'flex-start' }}>{dict.admin.charts.aptTypes}</h3>
                     {appointmentTypes.length === 0 ? (
-                        <div style={{ color: textSec }}>No data</div>
+                        <div style={{ color: textSec }}>{dict.admin.charts.noData}</div>
                     ) : (
                         <div style={{ width: '100%', height: 250 }}>
                             <ResponsiveContainer>
@@ -310,9 +312,9 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
                 {/* LINE CHART */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
-                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>Monthly Patients Visit</h3>
+                    <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>{dict.admin.charts.monthlyVisits}</h3>
                     {monthlyVisits.length === 0 ? (
-                        <div style={{ color: textSec }}>No data</div>
+                        <div style={{ color: textSec }}>{dict.admin.charts.noData}</div>
                     ) : (
                         <div style={{ width: '100%', height: 250 }}>
                             <ResponsiveContainer>
@@ -338,7 +340,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     );
 }
 
-function MetricCard({ title, value, change, color, darkText = false, isDark = false, icon: Icon, onClick }: { title: string, value: string | number, change: string, color: string, darkText?: boolean, isDark?: boolean, icon: React.ElementType, onClick?: () => void }) {
+function MetricCard({ title, value, change, suffix, color, darkText = false, isDark = false, icon: Icon, onClick }: { title: string, value: string | number, change: string, suffix: string, color: string, darkText?: boolean, isDark?: boolean, icon: React.ElementType, onClick?: () => void }) {
     const [isHovered, setIsHovered] = useState(false);
     const textColor = darkText ? (isDark ? '#F9FAFB' : '#1E293B') : 'white';
     const subColor = darkText ? (isDark ? '#9CA3AF' : '#64748B') : 'rgba(255,255,255,0.7)';
@@ -376,7 +378,7 @@ function MetricCard({ title, value, change, color, darkText = false, isDark = fa
                 </div>
             </div>
             <div style={{ fontSize: '0.8rem', color: subColor }}>
-                <span style={{ color: change.startsWith('+') ? 'var(--text-success)' : 'var(--text-error)', fontWeight: 'bold' }}>{change}</span> than last month
+                <span style={{ color: change.startsWith('+') ? 'var(--text-success)' : 'var(--text-error)', fontWeight: 'bold' }}>{change}</span> {suffix}
             </div>
         </div>
     );

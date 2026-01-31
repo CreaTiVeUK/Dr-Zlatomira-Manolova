@@ -272,17 +272,50 @@ export const en = {
         loginRequired: "Please log in to view your appointments."
     },
     admin: {
-        practiceControl: "Practice Control Center",
-        clinicalOps: "Managed clinical operations and security audits.",
-        upcoming: "UPCOMING APPOINTMENTS",
-        historical: "HISTORICAL RECORDS",
-        status: "STATUS",
-        patient: "PATIENT",
-        dateTime: "DATE & TIME",
-        fee: "FEE",
-        totalBookings: "TOTAL BOOKINGS",
-        securityEvents: "SECURITY EVENTS",
-        auditTrail: "SYSTEM AUDIT TRAIL"
+        loading: "Loading dashboard...",
+        welcome: "Welcome back, %s",
+        welcomeSub: "Here's what's happening with your clinic today.",
+        searchPlaceholder: "Search patients, appointments...",
+        notifications: "Notifications",
+        noNotifications: "No notifications",
+        markAsRead: "Mark as read",
+        metrics: {
+            appointments: "Appointments",
+            totalPatients: "Total Patients",
+            admittedPatients: "Admitted Patients",
+            pending: "Pending",
+            trendSuffix: "than last month"
+        },
+        patientList: {
+            title: "Patient List",
+            resetFilter: "Reset Filter (%s)",
+            colName: "Name",
+            colDate: "Date",
+            colType: "Type",
+            colStatus: "Status",
+            noPatients: "No patients found"
+        },
+        upcomingQueue: {
+            title: "Upcoming Queue",
+            noUpcoming: "No upcoming appointments",
+            viewDetails: "View Details",
+            defaultReason: "General Checkup"
+        },
+        charts: {
+            aptTypes: "Appointment Types",
+            monthlyVisits: "Monthly Patients Visit",
+            noData: "No data"
+        },
+        sidebar: {
+            dashboard: "Dashboard",
+            appointments: "Appointments",
+            patientRecord: "Patient Record",
+            reports: "Reports",
+            analytics: "Analytics",
+            settings: "Settings",
+            logout: "Logout",
+            roleAdmin: "Admin"
+        }
     },
     userMenu: {
         login: "LOGIN",
@@ -574,17 +607,50 @@ export const bg: Dictionary = {
         loginRequired: "Моля, влезте в профила си, за да видите часовете си."
     },
     admin: {
-        practiceControl: "Център за управление на практиката",
-        clinicalOps: "Управление на клинични операции и одити на сигурността.",
-        upcoming: "ПРЕДСТОЯЩИ ЧАСОВЕ",
-        historical: "ИСТОРИЯ НА ПРЕГЛЕДИТЕ",
-        status: "СТАТУС",
-        patient: "ПАЦИЕНТ",
-        dateTime: "ДАТА И ЧАС",
-        fee: "ТАКСА",
-        totalBookings: "ОБЩО РЕЗЕРВАЦИИ",
-        securityEvents: "СЪБИТИЯ ПО СИГУРНОСТТА",
-        auditTrail: "СИСТЕМЕН ОДИТ"
+        loading: "Зареждане на таблото...",
+        welcome: "Добре дошли отново, %s",
+        welcomeSub: "Ето какво се случва във вашата клиника днес.",
+        searchPlaceholder: "Търсене на пациенти, часове...",
+        notifications: "Известия",
+        noNotifications: "Няма нови известия",
+        markAsRead: "Маркирай като прочетено",
+        metrics: {
+            appointments: "Часове",
+            totalPatients: "Общо пациенти",
+            admittedPatients: "Приети пациенти",
+            pending: "Изчакващи",
+            trendSuffix: "спрямо миналия месец"
+        },
+        patientList: {
+            title: "Списък с пациенти",
+            resetFilter: "Изчисти филтъра (%s)",
+            colName: "Име",
+            colDate: "Дата",
+            colType: "Тип",
+            colStatus: "Статус",
+            noPatients: "Не са намерени пациенти"
+        },
+        upcomingQueue: {
+            title: "Предстояща опашка",
+            noUpcoming: "Няма предстоящи часове",
+            viewDetails: "Виж детайли",
+            defaultReason: "Общ преглед"
+        },
+        charts: {
+            aptTypes: "Типове прегледи",
+            monthlyVisits: "Месечни посещения на пациенти",
+            noData: "Няма данни"
+        },
+        sidebar: {
+            dashboard: "Табло",
+            appointments: "Часове",
+            patientRecord: "Пациентски досиета",
+            reports: "Отчети",
+            analytics: "Анализи",
+            settings: "Настройки",
+            logout: "Изход",
+            roleAdmin: "Админ"
+        }
     },
     userMenu: {
         login: "ВХОД",

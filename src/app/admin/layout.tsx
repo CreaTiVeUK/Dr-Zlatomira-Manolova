@@ -18,9 +18,11 @@ import {
     X
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const { dict } = useLanguage();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 
@@ -31,11 +33,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
     const menuItems = [
-        { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-        { name: "Appointments", icon: Calendar, href: "/admin/appointments" },
-        { name: "Patient Record", icon: Users, href: "/admin/users" },
-        { name: "Reports", icon: FileText, href: "/admin/reports" },
-        { name: "Analytics", icon: BarChart, href: "/admin/analytics" },
+        { name: dict.admin.sidebar.dashboard, icon: LayoutDashboard, href: "/admin/dashboard" },
+        { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
+        { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
+        { name: dict.admin.sidebar.reports, icon: FileText, href: "/admin/reports" },
+        { name: dict.admin.sidebar.analytics, icon: BarChart, href: "/admin/analytics" },
     ];
 
 
@@ -47,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ position: 'relative', width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
                         <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
                     </div>
-                    <span style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '0.05em' }}>ZLATI PEDIATRICS</span>
+                    <span style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '0.05em' }}>{dict.header.title.toUpperCase()}</span>
                 </div>
                 <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
                     {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -63,7 +65,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ position: 'relative', width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
                         <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
                     </div>
-                    <h1 style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.05em', lineHeight: 1.2 }}>ZLATI<br />PEDIATRICS</h1>
+                    <h1 style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.05em', lineHeight: 1.2 }}>
+                        {dict.header.title.split(' ')[0].toUpperCase()}<br />
+                        {dict.header.title.split(' ').slice(1).join(' ').toUpperCase()}
+                    </h1>
                 </div>
 
                 {/* USER INFO */}
@@ -78,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </div>
                     <div>
                         <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>Dr. Manolova</div>
-                        <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Admin</div>
+                        <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{dict.admin.sidebar.roleAdmin}</div>
                     </div>
                 </div>
 
@@ -119,7 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', color: 'white', opacity: 0.8, textDecoration: 'none' }}
                     >
                         <Settings size={20} />
-                        <span style={{ fontSize: '0.9rem' }}>Settings</span>
+                        <span style={{ fontSize: '0.9rem' }}>{dict.admin.sidebar.settings}</span>
                     </Link>
                     <button
                         onClick={() => signOut({ callbackUrl: '/' })}
@@ -137,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         }}
                     >
                         <LogOut size={20} />
-                        <span style={{ fontSize: '0.9rem' }}>Logout</span>
+                        <span style={{ fontSize: '0.9rem' }}>{dict.admin.sidebar.logout}</span>
                     </button>
                 </div>
             </aside>
