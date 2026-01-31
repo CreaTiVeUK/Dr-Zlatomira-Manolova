@@ -93,11 +93,13 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
     return (
         <div style={{ fontFamily: '"Open Sans", sans-serif', color: textMain, minHeight: '100%', transition: 'background-color 0.3s, color 0.3s' }}>
-            <div style={{ marginBottom: '2.5rem' }}>
-                <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>Welcome back, Dr. Manolova</h1>
-                <p style={{ color: textSec, fontSize: '0.9rem', marginBottom: '1.25rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                <div>
+                    <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>Welcome back, Dr. Manolova</h1>
+                    <p style={{ color: textSec, fontSize: '0.9rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+                </div>
 
-                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap', padding: '0.75rem 1.25rem', background: 'var(--bg-soft)', borderRadius: '12px', width: 'fit-content', border: `1px solid ${border}` }}>
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap', padding: '0.75rem 1.25rem', background: 'var(--bg-soft)', borderRadius: '12px', border: `1px solid ${border}` }}>
                     <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-bluish)', fontSize: '0.85rem', fontWeight: '700', textDecoration: 'none' }}>
                         <Globe size={16} /> PUBLIC WEBSITE
                     </Link>
