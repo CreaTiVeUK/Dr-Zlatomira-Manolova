@@ -13,21 +13,22 @@ import {
     FileText,
     BarChart,
     Settings,
-    LogOut
+    LogOut,
+    Menu,
+    X
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const { theme } = useTheme();
-    const [mounted, setMounted] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMounted(true);
-    }, []);
+        setIsSidebarOpen(false);
+    }, [pathname]);
 
-    const isDark = mounted && theme === 'dark';
 
     const menuItems = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
@@ -37,25 +38,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Analytics", icon: BarChart, href: "/admin/analytics" },
     ];
 
-    const sidebarBg = 'var(--bg-sidebar)';
-    const mainBg = 'var(--bg-admin-main)';
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', background: mainBg, transition: 'background-color 0.3s' }}>
+        <div className="admin-layout">
+            {/* MOBILE HEADER */}
+            <div className="admin-header-mobile">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                    <div style={{ position: 'relative', width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
+                        <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
+                    </div>
+                    <span style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '0.05em' }}>ZLATI PEDIATRICS</span>
+                </div>
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
+                    {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
+
+            {/* SIDEBAR OVERLAY */}
+            <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} onClick={() => setIsSidebarOpen(false)} />
+
             {/* SIDEBAR */}
-            <aside style={{
-                width: '260px',
-                background: sidebarBg,
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'fixed',
-                height: '100vh',
-                left: 0,
-                top: 0,
-                zIndex: 1000,
-                transition: 'background-color 0.3s'
-            }}>
+            <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                     <div style={{ position: 'relative', width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
                         <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
@@ -116,7 +119,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', color: 'white', opacity: 0.8, textDecoration: 'none' }}
                     >
                         <Settings size={20} />
-                        <span style={{ fontSize: '0.9rem' }}>Setting</span>
+                        <span style={{ fontSize: '0.9rem' }}>Settings</span>
                     </Link>
                     <button
                         onClick={() => signOut({ callbackUrl: '/' })}
@@ -140,13 +143,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* MAIN CONTENT AREA */}
-            <main style={{
-                flex: 1,
-                marginLeft: '260px', // Matches sidebar width
-                padding: '2rem',
-                maxWidth: '100%',
-                overflowX: 'hidden'
-            }}>
+            <main className="admin-main">
                 {children}
             </main>
         </div>

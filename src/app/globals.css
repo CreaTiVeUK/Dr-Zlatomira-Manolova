@@ -624,10 +624,13 @@ textarea.input-focus {
     gap: 0.5rem !important;
   }
 
+  .header-actions {
+    display: none !important;
+  }
+
   .header-logo {
-    flex: 1 !important;
+    flex: 0 1 auto !important;
     min-width: 0;
-    /* Allow shrinking */
   }
 
   .logo-text {
@@ -870,4 +873,142 @@ textarea.input-focus {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-teal);
+}
+
+/* Admin Dashboard System */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-admin-main);
+  transition: background-color 0.3s;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: var(--bg-sidebar);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, visibility 0.3s;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 2rem;
+  max-width: 100%;
+  overflow-x: hidden;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-header-mobile {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--bg-sidebar);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* Dashboard Grid Utilities */
+.grid-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.grid-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.grid-charts {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.5rem;
+}
+
+/* Responsiveness Overrides */
+@media (max-width: 1100px) {
+  .grid-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+
+  .admin-header-mobile {
+    display: flex;
+  }
+
+  .grid-main,
+  .grid-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-main {
+    padding: 1rem;
+  }
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+.sidebar-overlay.open {
+  display: block;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 800px;
+}
+
+@media (max-width: 640px) {
+  .table-responsive table {
+    min-width: 600px;
+  }
 }

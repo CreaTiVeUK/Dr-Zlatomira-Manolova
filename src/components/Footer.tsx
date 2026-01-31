@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
     const { dict } = useLanguage();
+    const pathname = usePathname();
+
+    if (pathname.startsWith('/admin')) return null;
 
     return (
         <footer style={{ background: 'var(--bg-footer)', color: 'white', padding: '6rem 0 3rem' }}>

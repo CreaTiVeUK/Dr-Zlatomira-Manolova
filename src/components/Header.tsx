@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import UserMenu from "@/components/UserMenu";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -18,6 +19,9 @@ interface HeaderProps {
 export default function Header({ user }: HeaderProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { language, toggleLanguage, dict } = useLanguage();
+    const pathname = usePathname();
+
+    if (pathname.startsWith('/admin')) return null;
 
     return (
         <>

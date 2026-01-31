@@ -10,7 +10,7 @@ import {
     PieChart, Pie, Cell, Legend, AreaChart, Area,
     ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
-import { Search, Bell, MessageSquare, Sun, Moon, Check, Users, Calendar, Activity, DollarSign } from "lucide-react";
+import { Search, Bell, MessageSquare, Check, Users, Calendar, Activity, DollarSign } from "lucide-react";
 
 interface DashboardProps {
     stats: {
@@ -41,10 +41,10 @@ interface DashboardProps {
     }[];
 }
 
-const COLORS = ['#0F4C81', '#F59E0B', '#3182CE', '#10B981'];
+const COLORS = ['#0F4C81', '#F59E0B', 'var(--accent-bluish)', '#10B981'];
 
 export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, appointmentTypes, recentPatients }: DashboardProps) {
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
@@ -85,7 +85,6 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
         a.type.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
     const toggleNotifications = () => setNotificationsOpen(!notificationsOpen);
     const markAsRead = (id: number) => {
         setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
@@ -164,48 +163,50 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
             </div>
 
             {/* METRICS GRID */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
-                <MetricCard title="Appointments" value={stats.appointments} change="-4.3%" color="#3182CE" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
+            <div className="grid-metrics">
+                <MetricCard title="Appointments" value={stats.appointments} change="-4.3%" color="var(--accent-bluish)" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
                 <MetricCard title="Total Patients" value={stats.patients} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} onClick={() => setFilterStatus(null)} />
                 <MetricCard title="Admitted Patients" value={stats.admitted} change="+6.5%" color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} onClick={() => setFilterStatus('admitted')} />
                 <MetricCard title="Pending" value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} onClick={() => setFilterStatus('Pending')} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="grid-main">
                 {/* PATIENT LIST */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                         <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Patient List</h3>
                         {filterStatus && (
-                            <button onClick={() => setFilterStatus(null)} style={{ fontSize: '0.8rem', color: '#3182CE', border: 'none', background: 'none', cursor: 'pointer' }}>
+                            <button onClick={() => setFilterStatus(null)} style={{ fontSize: '0.8rem', color: 'var(--accent-bluish)', border: 'none', background: 'none', cursor: 'pointer' }}>
                                 Reset Filter ({filterStatus})
                             </button>
                         )}
                     </div>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                        <thead>
-                            <tr style={{ textAlign: 'left', color: textSec, borderBottom: `1px solid ${border}` }}>
-                                <th style={{ padding: '0.8rem 0' }}>Name</th>
-                                <th style={{ padding: '0.8rem 0' }}>Date</th>
-                                <th style={{ padding: '0.8rem 0' }}>Type</th>
-                                <th style={{ padding: '0.8rem 0' }}>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredPatients.length > 0 ? filteredPatients.map((p, i) => (
-                                <tr key={i} style={{ borderBottom: `1px solid ${isDark ? '#374151' : '#f9f9f9'}` }}>
-                                    <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>{p.name}</td>
-                                    <td style={{ padding: '0.8rem 0', color: textSec }}>{p.date}</td>
-                                    <td style={{ padding: '0.8rem 0', color: '#3182CE' }}>{p.type}</td>
-                                    <td style={{ padding: '0.8rem 0' }}>{p.status}</td>
+                    <div className="table-responsive">
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                            <thead>
+                                <tr style={{ textAlign: 'left', color: textSec, borderBottom: `1px solid ${border}` }}>
+                                    <th style={{ padding: '0.8rem 0' }}>Name</th>
+                                    <th style={{ padding: '0.8rem 0' }}>Date</th>
+                                    <th style={{ padding: '0.8rem 0' }}>Type</th>
+                                    <th style={{ padding: '0.8rem 0' }}>Status</th>
                                 </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan={4} style={{ padding: '1rem', textAlign: 'center', color: textSec }}>No patients found</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filteredPatients.length > 0 ? filteredPatients.map((p, i) => (
+                                    <tr key={i} style={{ borderBottom: `1px solid ${isDark ? '#374151' : '#f9f9f9'}` }}>
+                                        <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>{p.name}</td>
+                                        <td style={{ padding: '0.8rem 0', color: textSec }}>{p.date}</td>
+                                        <td style={{ padding: '0.8rem 0', color: 'var(--accent-bluish)' }}>{p.type}</td>
+                                        <td style={{ padding: '0.8rem 0' }}>{p.status}</td>
+                                    </tr>
+                                )) : (
+                                    <tr>
+                                        <td colSpan={4} style={{ padding: '1rem', textAlign: 'center', color: textSec }}>No patients found</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* CALENDAR / UPCOMING */}
@@ -222,7 +223,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                     </div>
                                     <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>{apt.patient}</div>
                                     <div style={{ fontSize: '0.8rem', color: textSec }}>{apt.reason || 'General Checkup'}</div>
-                                    <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: '#3182CE', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>View Details</button>
+                                    <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>View Details</button>
                                 </div>
                             ))
                         }
@@ -231,7 +232,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
             </div>
 
             {/* CHARTS ROW */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+            <div className="grid-charts">
                 {/* PIE CHART */}
                 <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700', alignSelf: 'flex-start' }}>Appointment Types</h3>
@@ -273,15 +274,15 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                 <AreaChart data={monthlyVisits}>
                                     <defs>
                                         <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3182CE" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#3182CE" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="var(--accent-bluish)" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="var(--accent-bluish)" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: textSec, fontSize: 12 }} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: textSec, fontSize: 12 }} />
                                     <CartesianGrid vertical={false} stroke={border} />
                                     <Tooltip contentStyle={{ backgroundColor: bgCard, borderColor: border, color: textMain }} />
-                                    <Area type="monotone" dataKey="patients" stroke="#3182CE" strokeWidth={3} fillOpacity={1} fill="url(#colorPv)" />
+                                    <Area type="monotone" dataKey="patients" stroke="var(--accent-bluish)" strokeWidth={3} fillOpacity={1} fill="url(#colorPv)" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
