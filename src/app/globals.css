@@ -28,9 +28,11 @@
 
   /* MOBILE SIZING */
   --mobile-smaller: 0.75rem;
+
+  --border: #E5E7EB;
 }
 
-[data-theme='dark'] {
+.dark {
   --primary-teal: #3182CE;
   /* Lighter blue for dark mode */
   --primary-teal-dark: #2C5282;
@@ -44,6 +46,7 @@
   --accent-bluish: #63B3ED;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --border: #374151;
 }
 
 * {
@@ -168,13 +171,13 @@ a {
 }
 
 .premium-card {
-  background: white;
+  background: var(--bg-white);
   padding: 3rem;
   border-radius: 12px;
   /* Premium softness */
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
-  border: 1px solid rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
 }

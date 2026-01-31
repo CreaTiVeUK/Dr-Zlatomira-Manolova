@@ -223,7 +223,7 @@ export default function Home() {
       </section>
 
       {/* SPECIALIZED SERVICES GRID */}
-      <section className="section-padding" style={{ background: '#fcfdfd' }}>
+      <section className="section-padding" style={{ background: 'var(--bg-soft)' }}>
         <div className="container">
           <div className="text-center reveal">
             <h2 className="section-title">{dict.home.services.title}</h2>
@@ -267,7 +267,7 @@ export default function Home() {
 
             <div className="premium-card reveal delay-3">
               <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ background: '#f4f6f8', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>👶</div>
+                <div style={{ background: 'var(--bg-soft)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>👶</div>
               </div>
               <h3>{dict.home.services.newborn.title}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
