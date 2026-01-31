@@ -7,6 +7,8 @@ import Link from "next/link";
 
 
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
     PieChart, Pie, Cell, Legend, AreaChart, Area,
     ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip
@@ -46,6 +48,7 @@ const COLORS = ['#0F4C81', '#F59E0B', 'var(--accent-bluish)', '#10B981'];
 
 export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, appointmentTypes, recentPatients }: DashboardProps) {
     const { theme } = useTheme();
+    const { language, toggleLanguage, dict } = useLanguage();
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
@@ -99,15 +102,43 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                     <p style={{ color: textSec, fontSize: '0.9rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap', padding: '0.75rem 1.25rem', background: 'var(--bg-soft)', borderRadius: '12px', border: `1px solid ${border}` }}>
-                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-bluish)', fontSize: '0.85rem', fontWeight: '700', textDecoration: 'none' }}>
-                        <Globe size={16} /> PUBLIC WEBSITE
-                    </Link>
-                    <div style={{ width: '1px', height: '16px', background: border }}></div>
-                    <Link href="/services" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Services</Link>
-                    <Link href="/conditions" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Conditions</Link>
-                    <Link href="/resources" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Resources</Link>
-                    <Link href="/contact" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Contact</Link>
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {/* Navigation Links - Exactly like public header */}
+                    <nav className="nav-center" style={{ gap: '1.5rem' }}>
+                        <Link href="/">{dict.header.nav.home}</Link>
+                        <Link href="/services">{dict.header.nav.services}</Link>
+                        <Link href="/conditions">{dict.header.nav.conditions}</Link>
+                        <Link href="/resources">{dict.header.nav.resources}</Link>
+                        <Link href="/book" style={{ whiteSpace: 'nowrap' }}>{dict.header.nav.book}</Link>
+                        <Link href="/contact">{dict.header.nav.contact}</Link>
+                    </nav>
+
+                    <div style={{ width: '1px', height: '24px', background: border, opacity: 0.5 }}></div>
+
+                    {/* Toggles */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <button
+                            onClick={toggleLanguage}
+                            style={{
+                                background: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                fontSize: '1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                padding: '0 0.5rem',
+                                transition: 'var(--transition-fast)'
+                            }}
+                            title={dict.header.switchTitle}
+                        >
+                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--accent-bluish)' }}>
+                                {language === 'en' ? 'BG' : 'EN'}
+                            </span>
+                            {language === 'en' ? '🇧🇬' : '🇬🇧'}
+                        </button>
+                        <ThemeToggle />
+                    </div>
                 </div>
             </div>
             {/* TOP BAR */}
