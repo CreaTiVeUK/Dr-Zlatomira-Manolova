@@ -30,6 +30,22 @@
   --mobile-smaller: 0.75rem;
 }
 
+[data-theme='dark'] {
+  --primary-teal: #3182CE;
+  /* Lighter blue for dark mode */
+  --primary-teal-dark: #2C5282;
+  --bg-soft: #111827;
+  /* Dark background */
+  --bg-white: #1F2937;
+  /* Slightly lighter dark for cards */
+  --text-charcoal: #F9FAFB;
+  /* Light text */
+  --text-muted: #9CA3AF;
+  --accent-bluish: #63B3ED;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
