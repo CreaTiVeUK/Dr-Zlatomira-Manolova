@@ -31,6 +31,9 @@ export default function ServicesPage() {
                         </div>
                         <div>
                             <h2 style={{ color: 'var(--primary-teal)', marginBottom: '1.5rem' }}>{dict.servicesPage.general.title}</h2>
+                            <Link href="/book" className="btn btn-primary" style={{ width: 'fit-content' }}>
+                                {dict.servicesPage.general.btn}
+                            </Link>
                             <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
                                 {dict.servicesPage.general.desc}
                             </p>
@@ -39,7 +42,6 @@ export default function ServicesPage() {
                                     <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>
                                 ))}
                             </ul>
-                            <Link href="/book" className="btn btn-outline">{dict.servicesPage.general.btn}</Link>
                         </div>
                     </div>
 

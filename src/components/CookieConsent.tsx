@@ -34,14 +34,14 @@ export default function CookieConsent() {
             bottom: '2rem',
             left: '2rem',
             right: '2rem',
-            background: 'white',
-            boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
+            background: 'var(--bg-white)',
+            boxShadow: 'var(--shadow-lg)',
             padding: '1.5rem',
             zIndex: 9999,
             borderRadius: '12px',
             maxWidth: '1200px',
             margin: '0 auto',
-            border: '1px solid #e2e8f0',
+            border: '1px solid var(--border)',
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem'
@@ -60,32 +60,15 @@ export default function CookieConsent() {
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <button
                     onClick={handleReject}
-                    style={{
-                        padding: '0.6rem 1.25rem',
-                        borderRadius: '6px',
-                        border: '1px solid var(--text-muted)',
-                        background: 'white',
-                        color: 'var(--text-charcoal)',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        flex: '1'
-                    }}
+                    className="btn btn-outline"
+                    style={{ flex: '1', padding: '0.6rem 1.25rem' }}
                 >
                     {dict.cookies?.reject || "Decline"}
                 </button>
                 <button
                     onClick={handleAccept}
-                    style={{
-                        padding: '0.6rem 1.25rem',
-                        borderRadius: '6px',
-                        border: 'none',
-                        background: 'var(--primary-teal)',
-                        color: 'white',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        flex: '1',
-                        boxShadow: '0 2px 4px rgba(45, 212, 191, 0.2)'
-                    }}
+                    className="btn btn-primary"
+                    style={{ flex: '1', padding: '0.6rem 1.25rem' }}
                 >
                     {dict.cookies?.accept || "Accept Cookies"}
                 </button>

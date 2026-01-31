@@ -7,8 +7,8 @@ export default function EmergencyBanner() {
 
     return (
         <div style={{
-            backgroundColor: "#fff5f5",
-            borderBottom: "1px solid #feb2b2",
+            backgroundColor: "var(--bg-emergency)",
+            borderBottom: "1px solid var(--border-emergency)",
             padding: "0.6rem 0",
             textAlign: "center"
         }}>
@@ -18,7 +18,7 @@ export default function EmergencyBanner() {
                     fontSize: "var(--mobile-smaller, 0.8rem)",
                     lineHeight: 1.5,
                     fontWeight: "900",
-                    color: "#c53030"
+                    color: "var(--text-emergency)"
                 }}>
                     🚨 {dict.header.emergency.text}
                 </p>
@@ -27,7 +27,7 @@ export default function EmergencyBanner() {
                     fontSize: "var(--mobile-smaller, 0.75rem)",
                     lineHeight: 1.4,
                     fontWeight: "500",
-                    color: "#666"
+                    color: "var(--text-muted)"
                 }}>
                     {dict.header.emergency.sub}
                 </p>

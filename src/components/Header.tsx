@@ -140,6 +140,32 @@ export default function Header({ user }: HeaderProps) {
                         )}
 
                         <div style={{ borderTop: '1px solid var(--border)', width: '100%', margin: '0.5rem 0' }}></div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <button
+                                    onClick={toggleLanguage}
+                                    style={{
+                                        background: 'var(--bg-header-alt)',
+                                        border: '1px solid var(--border)',
+                                        cursor: 'pointer',
+                                        fontSize: '0.9rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.6rem',
+                                        padding: '0.6rem 1rem',
+                                        borderRadius: '8px',
+                                        color: 'var(--text-charcoal)',
+                                        fontWeight: '600'
+                                    }}
+                                >
+                                    {language === 'en' ? '🇧🇬 BG' : '🇬🇧 EN'}
+                                </button>
+                                <ThemeToggle />
+                            </div>
+                        </div>
+
+                        <div style={{ borderTop: '1px solid var(--border)', width: '100%', margin: '0.5rem 0' }}></div>
                         <UserMenu user={user} />
                     </nav>
                 </div>

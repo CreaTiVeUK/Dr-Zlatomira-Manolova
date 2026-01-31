@@ -154,8 +154,8 @@ export default function Home() {
             </p>
 
             <div className="btn-group">
-              <Link href="/book" className="btn btn-primary" style={{ padding: '1.25rem 3.5rem', fontSize: '1rem' }}>{dict.home.hero.bookBtn}</Link>
-              <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white', padding: '1.25rem 3.5rem' }}>{dict.home.hero.servicesBtn}</Link>
+              <Link href="/book" className="btn btn-primary">{dict.home.hero.bookBtn}</Link>
+              <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white' }}>{dict.home.hero.servicesBtn}</Link>
             </div>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
                 {dict.home.services.general.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.general.btn}</Link>
+              <Link href="/services" className="btn btn-outline" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.general.btn}</Link>
             </div>
 
             <div className="premium-card reveal delay-2">
@@ -262,7 +262,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
                 {dict.home.services.allergy.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--primary-teal)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.allergy.btn}</Link>
+              <Link href="/services" className="btn btn-outline" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.allergy.btn}</Link>
             </div>
 
             <div className="premium-card reveal delay-3">
@@ -273,7 +273,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
                 {dict.home.services.newborn.desc}
               </p>
-              <Link href="/services" style={{ color: 'var(--accent-bluish)', fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.newborn.btn}</Link>
+              <Link href="/services" className="btn btn-primary" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.newborn.btn}</Link>
             </div>
           </div>
         </div>
