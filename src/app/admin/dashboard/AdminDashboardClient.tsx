@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 
 import { useTheme } from "next-themes";
@@ -10,7 +11,7 @@ import {
     PieChart, Pie, Cell, Legend, AreaChart, Area,
     ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
-import { Search, Bell, MessageSquare, Check, Users, Calendar, Activity, DollarSign } from "lucide-react";
+import { Search, Bell, MessageSquare, Check, Users, Calendar, Activity, DollarSign, Globe } from "lucide-react";
 
 interface DashboardProps {
     stats: {
@@ -92,9 +93,20 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
     return (
         <div style={{ fontFamily: '"Open Sans", sans-serif', color: textMain, minHeight: '100%', transition: 'background-color 0.3s, color 0.3s' }}>
-            <div style={{ marginBottom: '2rem' }}>
+            <div style={{ marginBottom: '2.5rem' }}>
                 <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.2rem' }}>Welcome back, Dr. Manolova</h1>
-                <p style={{ color: textSec, fontSize: '0.9rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+                <p style={{ color: textSec, fontSize: '0.9rem', marginBottom: '1.25rem' }}>Here&apos;s what&apos;s happening with your clinic today.</p>
+
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap', padding: '0.75rem 1.25rem', background: 'var(--bg-soft)', borderRadius: '12px', width: 'fit-content', border: `1px solid ${border}` }}>
+                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-bluish)', fontSize: '0.85rem', fontWeight: '700', textDecoration: 'none' }}>
+                        <Globe size={16} /> PUBLIC WEBSITE
+                    </Link>
+                    <div style={{ width: '1px', height: '16px', background: border }}></div>
+                    <Link href="/services" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Services</Link>
+                    <Link href="/conditions" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Conditions</Link>
+                    <Link href="/resources" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Resources</Link>
+                    <Link href="/contact" style={{ color: textSec, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', transition: 'color 0.2s' }}>Contact</Link>
+                </div>
             </div>
             {/* TOP BAR */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
