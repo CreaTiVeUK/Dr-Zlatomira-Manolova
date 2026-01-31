@@ -29,12 +29,14 @@
   /* MOBILE SIZING */
   --mobile-smaller: 0.75rem;
 
-  --border: #E5E7EB;
+  --border: #eeeeee;
   --bg-header: rgba(255, 255, 255, 0.98);
   --bg-header-alt: #F8FAFC;
   --bg-trust: rgba(255, 255, 255, 0.9);
   --bg-sidebar: #0F4C81;
   --bg-admin-main: #f8fafc;
+  --bg-page-alt: #fcfdfd;
+  --bg-placeholder: #f4f6f8;
 }
 
 .dark {
@@ -57,6 +59,8 @@
   --bg-trust: rgba(31, 41, 55, 0.9);
   --bg-sidebar: #111827;
   --bg-admin-main: #1F2937;
+  --bg-page-alt: #111827;
+  --bg-placeholder: #374151;
 }
 
 * {
@@ -176,16 +180,14 @@ a {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
-  /* Increased for better visual breathing room */
+  gap: 2rem;
 }
 
 .premium-card {
   background: var(--bg-white);
   padding: 3rem;
-  border-radius: 12px;
-  /* Premium softness */
-  box-shadow: var(--shadow-sm);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
   transition: var(--transition);
   border: 1px solid var(--border);
   display: flex;

@@ -173,7 +173,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
                 {/* PATIENT LIST */}
-                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: `1px solid ${border}` }}>
+                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                         <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Patient List</h3>
                         {filterStatus && (
@@ -209,7 +209,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                 </div>
 
                 {/* CALENDAR / UPCOMING */}
-                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: `1px solid ${border}` }}>
+                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>Upcoming Queue</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {filteredUpcoming.length === 0 ?
@@ -233,7 +233,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
             {/* CHARTS ROW */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
                 {/* PIE CHART */}
-                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', border: `1px solid ${border}` }}>
+                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', alignItems: 'center', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700', alignSelf: 'flex-start' }}>Appointment Types</h3>
                     {appointmentTypes.length === 0 ? (
                         <div style={{ color: textSec }}>No data</div>
@@ -263,7 +263,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                 </div>
 
                 {/* LINE CHART */}
-                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: `1px solid ${border}` }}>
+                <div style={{ background: bgCard, padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', border: isDark ? `1px solid ${border}` : 'none' }}>
                     <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '700' }}>Monthly Patients Visit</h3>
                     {monthlyVisits.length === 0 ? (
                         <div style={{ color: textSec }}>No data</div>
@@ -307,10 +307,12 @@ function MetricCard({ title, value, change, color, darkText = false, isDark = fa
             style={{
                 background: bg,
                 padding: '1.5rem',
-                borderRadius: '16px',
-                boxShadow: isHovered ? '0 8px 25px rgba(0,0,0,0.1)' : '0 4px 15px rgba(0,0,0,0.05)',
+                borderRadius: isDark ? '16px' : '12px',
+                boxShadow: isDark
+                    ? (isHovered ? '0 8px 25px rgba(0,0,0,0.15)' : '0 4px 15px rgba(0,0,0,0.1)')
+                    : '0 2px 10px rgba(0,0,0,0.05)',
                 color: textColor,
-                border: isDark && darkText ? '1px solid #374151' : 'none',
+                border: isDark ? '1px solid var(--border)' : 'none',
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: onClick ? 'pointer' : 'default',
