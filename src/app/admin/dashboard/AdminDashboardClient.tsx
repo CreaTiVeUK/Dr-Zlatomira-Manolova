@@ -54,9 +54,9 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [notifications, setNotifications] = useState([
-        { id: 1, text: "New appointment request from P. Parker", read: false },
-        { id: 2, text: "Lab results ready for M. Jane", read: false },
-        { id: 3, text: "System maintenance scheduled tonight", read: true },
+        { id: 1, text: language === 'en' ? "New appointment request from P. Parker" : "Нова заявка за час от П. Паркър", read: false },
+        { id: 2, text: language === 'en' ? "Lab results ready for M. Jane" : "Резултати от изследвания за М. Джейн", read: false },
+        { id: 3, text: language === 'en' ? "System maintenance scheduled tonight" : "Планова поддръжка на системата тази вечер", read: true },
     ]);
 
     useEffect(() => {
@@ -241,10 +241,16 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                             <tbody>
                                 {filteredPatients.length > 0 ? filteredPatients.map((p, i) => (
                                     <tr key={i} style={{ borderBottom: `1px solid ${isDark ? '#374151' : '#f9f9f9'}` }}>
-                                        <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>{p.name}</td>
-                                        <td style={{ padding: '0.8rem 0', color: textSec }}>{p.date}</td>
-                                        <td style={{ padding: '0.8rem 0', color: 'var(--accent-bluish)' }}>{p.type}</td>
-                                        <td style={{ padding: '0.8rem 0' }}>{p.status}</td>
+                                        <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>{p.name === 'Unknown' ? dict.admin.data.unknown : p.name}</td>
+                                        <td style={{ padding: '0.8rem 0', color: textSec }}>
+                                            {p.date.split(',')[0].split(' ').map(part => dict.admin.data.months[part as keyof typeof dict.admin.data.months] || part).join(' ') + ',' + p.date.split(',')[1]}
+                                        </td>
+                                        <td style={{ padding: '0.8rem 0', color: 'var(--accent-bluish)' }}>
+                                            {dict.admin.data.statuses[p.type as keyof typeof dict.admin.data.statuses] || p.type}
+                                        </td>
+                                        <td style={{ padding: '0.8rem 0' }}>
+                                            {dict.admin.data.statuses[p.status as keyof typeof dict.admin.data.statuses] || p.status}
+                                        </td>
                                     </tr>
                                 )) : (
                                     <tr>
@@ -265,10 +271,12 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                             filteredUpcoming.slice(0, 5).map((apt, i) => (
                                 <div key={i} style={{ padding: '1rem', background: 'var(--bg-soft)', borderRadius: '8px', border: `1px solid ${border}` }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: textSec, marginBottom: '0.5rem' }}>
-                                        <span>{apt.time}</span>
-                                        <span style={{ fontWeight: '700', color: '#0F4C81' }}>{apt.type}</span>
+                                        <span>{apt.time.replace('AM', language === 'en' ? 'AM' : 'ч.').replace('PM', language === 'en' ? 'PM' : 'ч.')}</span>
+                                        <span style={{ fontWeight: '700', color: '#0F4C81' }}>
+                                            {dict.admin.data.aptTypes[apt.type.toLowerCase().replace(/\s+/g, '') as keyof typeof dict.admin.data.aptTypes] || apt.type}
+                                        </span>
                                     </div>
-                                    <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>{apt.patient}</div>
+                                    <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>{apt.patient === 'Unknown' ? dict.admin.data.unknown : apt.patient}</div>
                                     <div style={{ fontSize: '0.8rem', color: textSec }}>{apt.reason || dict.admin.upcomingQueue.defaultReason}</div>
                                     <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>{dict.admin.upcomingQueue.viewDetails}</button>
                                 </div>
@@ -290,7 +298,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                             <ResponsiveContainer>
                                 <PieChart>
                                     <Pie
-                                        data={appointmentTypes}
+                                        data={appointmentTypes.map(t => ({
+                                            ...t,
+                                            name: dict.admin.data.aptTypes[t.name.toLowerCase().replace(/\s+/g, '') as keyof typeof dict.admin.data.aptTypes] || t.name
+                                        }))}
                                         cx="50%"
                                         cy="50%"
                                         innerRadius={60}
@@ -325,10 +336,19 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                             <stop offset="95%" stopColor="var(--accent-bluish)" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: textSec, fontSize: 12 }} />
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: textSec, fontSize: 12 }}
+                                        tickFormatter={(val) => dict.admin.data.months[val as keyof typeof dict.admin.data.months] || val}
+                                    />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: textSec, fontSize: 12 }} />
                                     <CartesianGrid vertical={false} stroke={border} />
-                                    <Tooltip contentStyle={{ backgroundColor: bgCard, borderColor: border, color: textMain }} />
+                                    <Tooltip
+                                        contentStyle={{ backgroundColor: bgCard, borderColor: border, color: textMain }}
+                                        labelFormatter={(label) => dict.admin.data.months[label as keyof typeof dict.admin.data.months] || label}
+                                    />
                                     <Area type="monotone" dataKey="patients" stroke="var(--accent-bluish)" strokeWidth={3} fillOpacity={1} fill="url(#colorPv)" />
                                 </AreaChart>
                             </ResponsiveContainer>

@@ -315,6 +315,36 @@ export const en = {
             settings: "Settings",
             logout: "Logout",
             roleAdmin: "Admin"
+        },
+        data: {
+            statuses: {
+                BOOKED: "Booked",
+                CANCELLED: "Cancelled",
+                PAID: "Paid",
+                Upcoming: "Upcoming",
+                Past: "Past",
+                Pending: "Pending"
+            },
+            aptTypes: {
+                followup: "Follow up",
+                firstvisit: "First visit",
+                emergency: "Emergency"
+            },
+            unknown: "Unknown",
+            months: {
+                Jan: "Jan",
+                Feb: "Feb",
+                Mar: "Mar",
+                Apr: "Apr",
+                May: "May",
+                Jun: "Jun",
+                Jul: "Jul",
+                Aug: "Aug",
+                Sep: "Sep",
+                Oct: "Oct",
+                Nov: "Nov",
+                Dec: "Dec"
+            }
         }
     },
     userMenu: {
@@ -650,6 +680,36 @@ export const bg: Dictionary = {
             settings: "Настройки",
             logout: "Изход",
             roleAdmin: "Админ"
+        },
+        data: {
+            statuses: {
+                BOOKED: "Запазен",
+                CANCELLED: "Отменен",
+                PAID: "Платен",
+                Upcoming: "Предстоящ",
+                Past: "Минал",
+                Pending: "Изчакващ"
+            },
+            aptTypes: {
+                followup: "Последващ преглед",
+                firstvisit: "Първичен преглед",
+                emergency: "Спешен преглед"
+            },
+            unknown: "Неизвестен",
+            months: {
+                Jan: "Яну",
+                Feb: "Фев",
+                Mar: "Мар",
+                Apr: "Апр",
+                May: "Май",
+                Jun: "Юни",
+                Jul: "Юли",
+                Aug: "Авг",
+                Sep: "Сеп",
+                Oct: "Окт",
+                Nov: "Ное",
+                Dec: "Дек"
+            }
         }
     },
     userMenu: {
