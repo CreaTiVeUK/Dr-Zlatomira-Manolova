@@ -1,14 +1,14 @@
 
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import AdminDashboardClient from "./AdminDashboardClient";
 import { isSameMonth, subMonths, isSameYear, format } from "date-fns";
 
 export default async function AdminDashboard() {
-    const session = await getSession();
+    const session = await auth();
 
-    if (!session || session.user.role !== "ADMIN") {
+    if (!session?.user || session.user.role !== "ADMIN") {
         redirect("/");
     }
 

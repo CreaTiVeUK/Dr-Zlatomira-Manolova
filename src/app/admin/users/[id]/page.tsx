@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
-import { Mic, FileText, Sparkles, Languages } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -52,7 +52,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                     </div>
 
                     {/* DOCUMENTS & UPLOAD */}
-                    <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <div id="upload-section" className="bg-white p-6 rounded-lg shadow-sm">
                         <h2 className="text-xl font-bold mb-4 text-gray-800">Medical Documents</h2>
 
                         <div className="mb-8 p-4 bg-blue-50 rounded border border-blue-100">

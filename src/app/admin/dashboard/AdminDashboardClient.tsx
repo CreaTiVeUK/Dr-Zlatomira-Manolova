@@ -13,7 +13,7 @@ import {
     PieChart, Pie, Cell, Legend, AreaChart, Area,
     ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
-import { Search, Bell, MessageSquare, Check, Users, Calendar, Activity, DollarSign, Globe } from "lucide-react";
+import { Search, Bell, MessageSquare, Check, Users, Calendar, Activity, DollarSign } from "lucide-react";
 
 interface DashboardProps {
     stats: {
@@ -105,15 +105,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                 </div>
 
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    {/* Navigation Links - Exactly like public header */}
-                    <nav className="nav-center" style={{ gap: '1.5rem' }}>
-                        <Link href="/">{dict.header.nav.home}</Link>
-                        <Link href="/services">{dict.header.nav.services}</Link>
-                        <Link href="/conditions">{dict.header.nav.conditions}</Link>
-                        <Link href="/resources">{dict.header.nav.resources}</Link>
-                        <Link href="/book" style={{ whiteSpace: 'nowrap' }}>{dict.header.nav.book}</Link>
-                        <Link href="/contact">{dict.header.nav.contact}</Link>
-                    </nav>
+                    {/* Public navigation links removed to prevent accidental redirection */}
 
                     <div style={{ width: '1px', height: '24px', background: border, opacity: 0.5 }}></div>
 
@@ -211,10 +203,10 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
 
             {/* METRICS GRID */}
             <div className="grid-metrics">
-                <MetricCard title={dict.admin.metrics.appointments} value={stats.appointments} change="-4.3%" suffix={dict.admin.metrics.trendSuffix} color="var(--accent-bluish)" isDark={isDark} icon={Calendar} onClick={() => setFilterStatus(null)} />
-                <MetricCard title={dict.admin.metrics.totalPatients} value={stats.patients} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} onClick={() => setFilterStatus(null)} />
-                <MetricCard title={dict.admin.metrics.admittedPatients} value={stats.admitted} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} onClick={() => setFilterStatus('admitted')} />
-                <MetricCard title={dict.admin.metrics.pending} value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} onClick={() => setFilterStatus('Pending')} />
+                <MetricCard title={dict.admin.metrics.appointments} value={stats.appointments} change="-4.3%" suffix={dict.admin.metrics.trendSuffix} color="var(--accent-bluish)" isDark={isDark} icon={Calendar} href="/admin/appointments" />
+                <MetricCard title={dict.admin.metrics.totalPatients} value={stats.patients} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Users} href="/admin/users" />
+                <MetricCard title={dict.admin.metrics.admittedPatients} value={stats.admitted} change="+6.5%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={Activity} />
+                <MetricCard title={dict.admin.metrics.pending} value={recentPatients.filter(p => p.status === 'Pending').length} change="+12%" suffix={dict.admin.metrics.trendSuffix} color={bgCard} darkText={!isDark} isDark={isDark} icon={DollarSign} />
             </div>
 
             <div className="grid-main">
@@ -241,7 +233,11 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                             <tbody>
                                 {filteredPatients.length > 0 ? filteredPatients.map((p, i) => (
                                     <tr key={i} style={{ borderBottom: `1px solid ${isDark ? '#374151' : '#f9f9f9'}` }}>
-                                        <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>{p.name === 'Unknown' ? dict.admin.data.unknown : p.name}</td>
+                                        <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>
+                                            <Link href={`/admin/users?search=${encodeURIComponent(p.name)}`} className="hover:underline text-teal-600">
+                                                {p.name === 'Unknown' ? dict.admin.data.unknown : p.name}
+                                            </Link>
+                                        </td>
                                         <td style={{ padding: '0.8rem 0', color: textSec }}>
                                             {p.date.split(',')[0].split(' ').map(part => dict.admin.data.months[part as keyof typeof dict.admin.data.months] || part).join(' ') + ',' + p.date.split(',')[1]}
                                         </td>
@@ -360,46 +356,64 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
     );
 }
 
-function MetricCard({ title, value, change, suffix, color, darkText = false, isDark = false, icon: Icon, onClick }: { title: string, value: string | number, change: string, suffix: string, color: string, darkText?: boolean, isDark?: boolean, icon: React.ElementType, onClick?: () => void }) {
+function MetricCard({ title, value, change, suffix, color, darkText = false, isDark = false, icon: Icon, onClick, href }: { title: string, value: string | number, change: string, suffix: string, color: string, darkText?: boolean, isDark?: boolean, icon: React.ElementType, onClick?: () => void, href?: string }) {
     const [isHovered, setIsHovered] = useState(false);
-    const textColor = darkText ? (isDark ? '#F9FAFB' : '#1E293B') : 'white';
-    const subColor = darkText ? (isDark ? '#9CA3AF' : '#64748B') : 'rgba(255,255,255,0.7)';
-    const bg = color;
-    const iconColor = darkText ? 'var(--accent-bluish)' : 'rgba(255,255,255,0.4)';
-
-    return (
-        <div
-            onClick={onClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                background: bg,
-                padding: '1.5rem',
-                borderRadius: isDark ? '16px' : '12px',
-                boxShadow: isDark
-                    ? (isHovered ? '0 8px 25px rgba(0,0,0,0.15)' : '0 4px 15px rgba(0,0,0,0.1)')
-                    : '0 2px 10px rgba(0,0,0,0.05)',
-                color: textColor,
-                border: isDark ? '1px solid var(--border)' : 'none',
-                position: 'relative',
-                overflow: 'hidden',
-                cursor: onClick ? 'pointer' : 'default',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: isHovered && onClick ? 'translateY(-4px)' : 'translateY(0)',
-            }}
-        >
+    const content = (
+        <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                     <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600', opacity: 0.9 }}>{title}</div>
                     <div style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>{value}</div>
                 </div>
                 <div style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}>
-                    <Icon size={24} color={iconColor} />
+                    <Icon size={24} color={darkText ? 'var(--accent-bluish)' : 'rgba(255,255,255,0.4)'} />
                 </div>
             </div>
-            <div style={{ fontSize: '0.8rem', color: subColor }}>
+            <div style={{ fontSize: '0.8rem', color: darkText ? (isDark ? '#9CA3AF' : '#64748B') : 'rgba(255,255,255,0.7)' }}>
                 <span style={{ color: change.startsWith('+') ? 'var(--text-success)' : 'var(--text-error)', fontWeight: 'bold' }}>{change}</span> {suffix}
             </div>
+        </>
+    );
+
+    const cardStyles: React.CSSProperties = {
+        background: color,
+        padding: '1.5rem',
+        borderRadius: isDark ? '16px' : '12px',
+        boxShadow: isDark
+            ? (isHovered ? '0 8px 25px rgba(0,0,0,0.15)' : '0 4px 15px rgba(0,0,0,0.1)')
+            : '0 2px 10px rgba(0,0,0,0.05)',
+        color: darkText ? (isDark ? '#F9FAFB' : '#1E293B') : 'white',
+        border: isDark ? '1px solid var(--border)' : 'none',
+        position: 'relative',
+        overflow: 'hidden',
+        cursor: (onClick || href) ? 'pointer' : 'default',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: isHovered && (onClick || href) ? 'translateY(-4px)' : 'translateY(0)',
+        display: 'block',
+        textDecoration: 'none'
+    };
+
+    if (href) {
+        return (
+            <Link
+                href={href}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={cardStyles}
+            >
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        <div
+            onClick={onClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={cardStyles}
+        >
+            {content}
         </div>
     );
 }
