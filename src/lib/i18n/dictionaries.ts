@@ -327,7 +327,8 @@ export const en = {
         sidebar: {
             dashboard: "Dashboard",
             appointments: "Appointments",
-            patientRecord: "Patient Record",
+            patientRecord: "Patient Records",
+            sessions: "Sessions",
             reports: "Reports",
             analytics: "Analytics",
             settings: "Settings",
@@ -711,6 +712,7 @@ export const bg: Dictionary = {
             dashboard: "Табло",
             appointments: "Часове",
             patientRecord: "Пациентски досиета",
+            sessions: "Сесии",
             reports: "Отчети",
             analytics: "Анализи",
             settings: "Настройки",

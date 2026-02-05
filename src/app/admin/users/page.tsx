@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
+import { Mic } from "lucide-react";
 
 export default async function AdminUserList() {
     const session = await auth();
@@ -60,12 +61,21 @@ export default async function AdminUserList() {
                                         ) : <span className="text-gray-400">-</span>}
                                     </td>
                                     <td className="p-4 text-right">
-                                        <Link
-                                            href={`/admin/users/${user.id}`}
-                                            className="text-teal-600 hover:text-teal-800 font-bold text-sm"
-                                        >
-                                            View Profile →
-                                        </Link>
+                                        <div className="flex items-center justify-end gap-3">
+                                            <Link
+                                                href={`/admin/users/${user.id}`}
+                                                className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                                                title="Record Session"
+                                            >
+                                                <Mic size={18} />
+                                            </Link>
+                                            <Link
+                                                href={`/admin/users/${user.id}`}
+                                                className="text-teal-600 hover:text-teal-800 font-bold text-sm"
+                                            >
+                                                View Profile →
+                                            </Link>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

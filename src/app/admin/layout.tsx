@@ -15,7 +15,8 @@ import {
     Settings,
     LogOut,
     Menu,
-    X
+    X,
+    Mic
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -36,6 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: dict.admin.sidebar.dashboard, icon: LayoutDashboard, href: "/admin/dashboard" },
         { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
         { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
+        { name: dict.admin.sidebar.sessions, icon: Mic, href: "/admin/sessions" },
         { name: dict.admin.sidebar.reports, icon: FileText, href: "/admin/reports" },
         { name: dict.admin.sidebar.analytics, icon: BarChart, href: "/admin/analytics" },
     ];
