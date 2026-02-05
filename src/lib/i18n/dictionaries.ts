@@ -306,6 +306,24 @@ export const en = {
             monthlyVisits: "Monthly Patients Visit",
             noData: "No data"
         },
+        sessions: {
+            title: "Patient Session Recording",
+            subtitle: "Record and summarize consultation highlights",
+            start: "Start Session Recording",
+            stop: "Stop Recording",
+            recording: "Recording",
+            ready: "Recording ready",
+            summarize: "Summarize with AI",
+            uploading: "Uploading...",
+            processing: "Crafting Session Summary...",
+            processingSub: "This usually takes 10-20 seconds",
+            success: "Summary Generated!",
+            successSub: "The session summary has been added to medical documents.",
+            error: "Something went wrong",
+            tryAgain: "Try Again",
+            summaryTitle: "Session Summary",
+            viewTranscription: "View Full Transcription"
+        },
         sidebar: {
             dashboard: "Dashboard",
             appointments: "Appointments",
@@ -670,6 +688,24 @@ export const bg: Dictionary = {
             aptTypes: "Типове прегледи",
             monthlyVisits: "Месечни посещения на пациенти",
             noData: "Няма данни"
+        },
+        sessions: {
+            title: "Запис на пациентска сесия",
+            subtitle: "Запишете и обобщете акцентите от консултацията",
+            start: "Започнете запис на сесията",
+            stop: "Спрете записа",
+            recording: "Записване",
+            ready: "Записът е готов",
+            summarize: "Обобщете с AI",
+            uploading: "Качване...",
+            processing: "Изготвяне на резюме на сесията...",
+            processingSub: "Това обикновено отнема 10-20 секунди",
+            success: "Резюмето е генерирано!",
+            successSub: "Резюмето на сесията е добавено към медицинските документи.",
+            error: "Нещо се обърка",
+            tryAgain: "Опитайте отново",
+            summaryTitle: "Резюме на сесията",
+            viewTranscription: "Вижте пълната транскрипция"
         },
         sidebar: {
             dashboard: "Табло",

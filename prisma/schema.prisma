@@ -57,7 +57,9 @@ model PatientDocument {
   fileUrl    String
   fileType   String
   fileSize   Int?
-  uploadedAt DateTime @default(now())
+  uploadedAt   DateTime @default(now())
+  summary      String?  @db.Text
+  transcription String? @db.Text
 
   userId     String
   user       User     @relation("PatientDocuments", fields: [userId], references: [id], onDelete: Cascade)
