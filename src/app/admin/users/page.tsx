@@ -1,13 +1,13 @@
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic } from "lucide-react";
 
 export default async function AdminUserList() {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 
     const users = await prisma.user.findMany({

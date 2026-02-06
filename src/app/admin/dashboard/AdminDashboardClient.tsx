@@ -23,6 +23,7 @@ interface DashboardProps {
         revenue: number;
     };
     upcoming: {
+        id: string;
         time: string;
         patient: string;
         reason: string | null;
@@ -37,6 +38,7 @@ interface DashboardProps {
         value: number;
     }[];
     recentPatients: {
+        id: string;
         name: string;
         date: string;
         type: string;
@@ -234,7 +236,7 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                 {filteredPatients.length > 0 ? filteredPatients.map((p, i) => (
                                     <tr key={i} style={{ borderBottom: `1px solid ${isDark ? '#374151' : '#f9f9f9'}` }}>
                                         <td style={{ padding: '0.8rem 0', fontWeight: '600' }}>
-                                            <Link href={`/admin/users?search=${encodeURIComponent(p.name)}`} className="hover:underline text-teal-600">
+                                            <Link href={`/admin/users/${p.id}`} className="hover:underline text-teal-600">
                                                 {p.name === 'Unknown' ? dict.admin.data.unknown : p.name}
                                             </Link>
                                         </td>
@@ -274,7 +276,12 @@ export default function AdminDashboardClient({ stats, upcoming, monthlyVisits, a
                                     </div>
                                     <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>{apt.patient === 'Unknown' ? dict.admin.data.unknown : apt.patient}</div>
                                     <div style={{ fontSize: '0.8rem', color: textSec }}>{apt.reason || dict.admin.upcomingQueue.defaultReason}</div>
-                                    <button style={{ marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>{dict.admin.upcomingQueue.viewDetails}</button>
+                                    <Link
+                                        href={`/admin/users/${apt.id}`}
+                                        style={{ display: 'block', marginTop: '0.8rem', width: '100%', padding: '0.4rem', background: 'var(--accent-bluish)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', textAlign: 'center', textDecoration: 'none' }}
+                                    >
+                                        {dict.admin.upcomingQueue.viewDetails}
+                                    </Link>
                                 </div>
                             ))
                         }

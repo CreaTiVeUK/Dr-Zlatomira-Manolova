@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Mic, Sparkles, FileText, ChevronRight, Filter, Plus, MessageSquare } from "lucide-react";
 
 export default async function AdminSessionsLog({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 
     const { userId } = await searchParams;

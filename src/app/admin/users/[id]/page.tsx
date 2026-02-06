@@ -1,14 +1,14 @@
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import { FileText, Sparkles } from "lucide-react";
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 
     const { id } = await params;

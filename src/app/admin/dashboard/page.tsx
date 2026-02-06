@@ -1,12 +1,11 @@
-
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminDashboardClient from "./AdminDashboardClient";
 import { isSameMonth, subMonths, isSameYear, format } from "date-fns";
 
 export default async function AdminDashboard() {
-    const session = await auth();
+    const session = await getSession();
 
     if (!session?.user || session.user.role !== "ADMIN") {
         redirect("/");
@@ -39,6 +38,7 @@ export default async function AdminDashboard() {
         .filter(a => new Date(a.dateTime) > now && a.status !== 'CANCELLED')
         .slice(0, 5) // Top 5
         .map(a => ({
+            id: a.user.id,
             time: format(new Date(a.dateTime), "hh:mm a"),
             patient: a.user.name || "Unknown",
             reason: a.notes,
@@ -47,6 +47,7 @@ export default async function AdminDashboard() {
 
     // 3. RECENT PATIENTS LIST
     const recentPatients = appointments.slice(0, 5).map(a => ({
+        id: a.user.id,
         name: a.user.name || "Unknown",
         date: format(new Date(a.dateTime), "MMM d, yyyy"),
         type: a.status === 'BOOKED' ? 'Upcoming' : 'Past',
