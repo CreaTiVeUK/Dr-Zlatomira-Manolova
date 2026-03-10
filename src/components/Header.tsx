@@ -45,10 +45,10 @@ export default function Header({ user }: HeaderProps) {
                 <div className="container header-utility-bar__inner">
                     <div className="contact-info">
                         <a href="tel:+359885557110">
-                            <span style={{ opacity: 0.7 }}>TEL:</span> +359 88 5557110
+                            <span style={{ opacity: 0.7 }}>{dict.header.contact.tel}:</span> +359 88 5557110
                         </a>
                         <a href="mailto:zlatomira.manolova@gmail.com">
-                            <span style={{ opacity: 0.7 }}>EMAIL:</span> zlatomira.manolova@gmail.com
+                            <span style={{ opacity: 0.7 }}>{dict.header.contact.email}:</span> zlatomira.manolova@gmail.com
                         </a>
                         <div className="clinical-badge">
                             {dict.header.ageGroup}
@@ -110,7 +110,7 @@ export default function Header({ user }: HeaderProps) {
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         aria-controls="mobile-primary-nav"
                         aria-expanded={isMenuOpen}
-                        aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                        aria-label={isMenuOpen ? dict.header.closeMenu : dict.header.openMenu}
                         type="button"
                     >
                         {isMenuOpen ? <X size={20} /> : <Menu size={20} />}

@@ -2,11 +2,28 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminUploadForm({ userId }: { userId: string }) {
   const router = useRouter();
+  const { language } = useLanguage();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const copy = language === "bg"
+    ? {
+        uploadFailed: "Качването не бе успешно",
+        uploadSuccess: "Файлът е качен успешно.",
+        uploadError: "Грешка при качването на файла.",
+        uploading: "Качване...",
+        uploadFile: "Качи файл",
+      }
+    : {
+        uploadFailed: "Upload failed",
+        uploadSuccess: "File uploaded successfully.",
+        uploadError: "Error uploading file.",
+        uploading: "Uploading...",
+        uploadFile: "Upload file",
+      };
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,14 +39,14 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) throw new Error(copy.uploadFailed);
 
       setFile(null);
       router.refresh();
-      alert("File uploaded successfully.");
+      alert(copy.uploadSuccess);
     } catch (error) {
       console.error(error);
-      alert("Error uploading file.");
+      alert(copy.uploadError);
     } finally {
       setUploading(false);
     }
@@ -45,7 +62,7 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
       />
       {file ? (
         <button type="submit" disabled={uploading} className="btn btn-primary">
-          {uploading ? "Uploading..." : "Upload file"}
+          {uploading ? copy.uploading : copy.uploadFile}
         </button>
       ) : null}
     </form>

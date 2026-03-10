@@ -10,7 +10,7 @@ interface AudioRecorderProps {
 }
 
 export default function AudioRecorder({ userId }: AudioRecorderProps) {
-  const { dict } = useLanguage();
+  const { dict, language } = useLanguage();
   const router = useRouter();
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -18,6 +18,21 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [status, setStatus] = useState<"idle" | "recording" | "stopped" | "uploading" | "processing" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const copy = language === "bg"
+    ? {
+        micDenied: "Достъпът до микрофона е отказан или възникна грешка.",
+        processingFailed: "Обработката не бе успешна",
+        processingError: "Възникна грешка по време на обработката.",
+        discard: "Изтрий и запиши отново",
+        reset: "Нулирай",
+      }
+    : {
+        micDenied: "Microphone access denied or an error occurred.",
+        processingFailed: "Processing failed",
+        processingError: "An error occurred during processing.",
+        discard: "Discard and retake",
+        reset: "Reset",
+      };
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -55,7 +70,7 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
     } catch (err) {
       console.error("Error accessing microphone:", err);
       setStatus("error");
-      setErrorMessage("Microphone access denied or an error occurred.");
+      setErrorMessage(copy.micDenied);
     }
   };
 
@@ -102,7 +117,7 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Processing failed");
+        throw new Error(data.error || copy.processingFailed);
       }
 
       setStatus("success");
@@ -111,7 +126,7 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
     } catch (err: unknown) {
       console.error("Upload/Processing error:", err);
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "An error occurred during processing.");
+      setErrorMessage(err instanceof Error ? err.message : copy.processingError);
     }
   };
 
@@ -161,9 +176,9 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
                   {dict.admin.sessions.ready}
                 </button>
               </div>
-              <button onClick={resetRecording} className="btn btn-outline" title="Discard and retake" type="button">
+              <button onClick={resetRecording} className="btn btn-outline" title={copy.discard} type="button">
                 <RefreshCw size={16} />
-                Reset
+                {copy.reset}
               </button>
             </div>
           </div>

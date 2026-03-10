@@ -5,12 +5,15 @@ import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import EmptyState from "@/components/EmptyState";
 import { getSession } from "@/lib/auth";
+import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session?.user || session.user.role !== "ADMIN") redirect("/");
+  const { dict, language } = await getServerDictionary();
+  const copy = dict.admin.userDetailPage;
 
   const { id } = await params;
 
@@ -22,7 +25,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
   if (!user) {
     return (
       <div className="admin-page">
-        <EmptyState title="Patient not found" description="The requested patient record could not be located." />
+        <EmptyState title={copy.notFoundTitle} description={copy.notFoundDescription} />
       </div>
     );
   }
@@ -57,29 +60,29 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
       <div className="admin-page-header">
         <div className="admin-page-header__copy">
           <Link href="/admin/users" className="page-intro__eyebrow" style={{ width: "fit-content" }}>
-            Back to users
+            {copy.backToUsers}
           </Link>
           <h1 className="section-title">{user.name}</h1>
-          <p>{user.email} · {user.phone || "No phone number"}</p>
+          <p>{user.email} · {user.phone || copy.noPhone}</p>
         </div>
       </div>
 
       <div className="admin-grid admin-grid--two">
         <section className="admin-panel">
           <div className="admin-panel__header">
-            <h2>Children</h2>
+            <h2>{copy.children}</h2>
           </div>
           <div className="admin-panel__body">
             {!childrenAvailable ? (
-              <EmptyState title="Children unavailable" description="Child records will appear here after the latest database migration is applied." compact />
+              <EmptyState title={copy.childrenUnavailableTitle} description={copy.childrenUnavailableDescription} compact />
             ) : children.length === 0 ? (
-              <EmptyState title="No children listed" description="This patient account does not have child profiles yet." compact />
+              <EmptyState title={copy.noChildrenTitle} description={copy.noChildrenDescription} compact />
             ) : (
               <div className="admin-record-list">
                 {children.map((child) => (
                   <div key={child.id} className="admin-record-card">
                     <strong>{child.name}</strong>
-                    <p>{new Date(child.birthDate).toLocaleDateString()} · {child.gender}</p>
+                    <p>{new Date(child.birthDate).toLocaleDateString(language === "bg" ? "bg-BG" : "en-GB")} · {child.gender}</p>
                     {child.notes ? <p className="admin-status-note">{child.notes}</p> : null}
                   </div>
                 ))}
@@ -90,18 +93,18 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
 
         <section className="admin-panel" id="upload-section">
           <div className="admin-panel__header">
-            <h2>Medical documents</h2>
+            <h2>{copy.medicalDocuments}</h2>
           </div>
           <div className="admin-panel__body admin-section-stack">
             {!documentsAvailable ? (
               <div className="status-banner status-banner--warning">
-                <strong>Medical documents are temporarily unavailable.</strong>
-                <p>Apply the latest production database migration to restore documents and AI session logs.</p>
+                <strong>{copy.documentsUnavailableTitle}</strong>
+                <p>{copy.documentsUnavailableDescription}</p>
               </div>
             ) : (
               <>
                 <div className="surface-card surface-card--accent">
-                  <h3 style={{ marginBottom: "0.65rem" }}>Upload new document</h3>
+                  <h3 style={{ marginBottom: "0.65rem" }}>{copy.uploadNewDocument}</h3>
                   <AdminUploadForm userId={user.id} />
                 </div>
 
@@ -112,11 +115,11 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             )}
 
             <div className="stack-md">
-              <h3>Existing files</h3>
+              <h3>{copy.existingFiles}</h3>
               {!documentsAvailable ? (
-                <EmptyState title="Documents unavailable" description="Document storage is not available in this environment yet." compact />
+                <EmptyState title={copy.documentsUnavailableEmptyTitle} description={copy.documentsUnavailableEmptyDescription} compact />
               ) : documents.length === 0 ? (
-                <EmptyState title="No documents yet" description="Upload reports or use session recording to generate new entries." compact />
+                <EmptyState title={copy.noDocumentsTitle} description={copy.noDocumentsDescription} compact />
               ) : (
                 <div className="admin-record-list">
                   {documents.map((doc) => (
@@ -129,13 +132,13 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                             </span>
                             <div>
                               <strong>{doc.name}</strong>
-                              <p>{new Date(doc.uploadedAt).toLocaleDateString()} · {doc.fileSize ? `${(doc.fileSize / 1024).toFixed(1)} KB` : "Unknown size"}</p>
+                              <p>{new Date(doc.uploadedAt).toLocaleDateString(language === "bg" ? "bg-BG" : "en-GB")} · {doc.fileSize ? `${(doc.fileSize / 1024).toFixed(1)} KB` : copy.unknownSize}</p>
                             </div>
                           </div>
                         </div>
                         <div className="admin-record-card__actions">
                           <a href={`/api/documents/${doc.id}`} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                            Download
+                            {copy.download}
                           </a>
                         </div>
                       </div>
@@ -143,13 +146,13 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                       {doc.summary ? (
                         <div className="stack-md" style={{ marginTop: "1rem" }}>
                           <div className="admin-note-box">
-                            <strong style={{ display: "block", marginBottom: "0.45rem" }}>Session summary</strong>
+                            <strong style={{ display: "block", marginBottom: "0.45rem" }}>{copy.sessionSummary}</strong>
                             <p style={{ whiteSpace: "pre-wrap" }}>{doc.summary}</p>
                           </div>
 
                           {doc.transcription ? (
                             <details>
-                              <summary className="helper-text" style={{ cursor: "pointer" }}>View full transcription</summary>
+                              <summary className="helper-text" style={{ cursor: "pointer" }}>{copy.viewFullTranscription}</summary>
                               <div className="admin-note-box" style={{ marginTop: "0.75rem" }}>
                                 <p style={{ whiteSpace: "pre-wrap" }}>{doc.transcription}</p>
                               </div>

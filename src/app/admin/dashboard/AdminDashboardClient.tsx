@@ -117,7 +117,7 @@ export default function AdminDashboardClient({
     appointmentTypes
 }: DashboardProps) {
     const { resolvedTheme } = useTheme();
-    const { language, toggleLanguage } = useLanguage();
+    const { language, toggleLanguage, dict } = useLanguage();
     const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
     const [searchQuery, setSearchQuery] = useState("");
     const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -276,7 +276,7 @@ export default function AdminDashboardClient({
                 </div>
 
                 <div className="admin-dashboard-controls">
-                    <button className="admin-dashboard-lang" onClick={toggleLanguage} title="Switch language">
+                    <button className="admin-dashboard-lang" onClick={toggleLanguage} title={dict.header.switchTitle}>
                         {language === "en" ? "BG" : "EN"}
                     </button>
                     <ThemeToggle />

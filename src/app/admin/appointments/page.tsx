@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { getServerLanguage } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { format, isSameDay, startOfDay } from "date-fns";
+import { bg, enUS } from "date-fns/locale";
 import AdminAppointmentsClient from "./AdminAppointmentsClient";
 
 export default async function AdminAppointmentsPage({
@@ -18,6 +20,9 @@ export default async function AdminAppointmentsPage({
     if (!session?.user || session.user.role !== "ADMIN") {
         redirect("/");
     }
+    const language = await getServerLanguage();
+    const dateLocale = language === "bg" ? bg : enUS;
+    const unknownPatient = language === "bg" ? "Неизвестен пациент" : "Unknown Patient";
 
     const initialFilters = await searchParams;
 
@@ -47,9 +52,9 @@ export default async function AdminAppointmentsPage({
     const serializedAppointments = appointments.map((appointment) => ({
         id: appointment.id,
         userId: appointment.userId,
-        patient: appointment.user.name || "Unknown Patient",
+        patient: appointment.user.name || unknownPatient,
         email: appointment.user.email || "",
-        dateLabel: format(new Date(appointment.dateTime), "EEE, MMM d, yyyy"),
+        dateLabel: format(new Date(appointment.dateTime), "EEE, MMM d, yyyy", { locale: dateLocale }),
         timeLabel: format(new Date(appointment.dateTime), "HH:mm"),
         isoDate: new Date(appointment.dateTime).toISOString(),
         duration: appointment.duration,

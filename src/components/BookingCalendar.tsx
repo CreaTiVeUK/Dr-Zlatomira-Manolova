@@ -1,12 +1,34 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function BookingCalendar() {
     const [slots, setSlots] = useState<Date[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
+    const { language } = useLanguage();
+
+    const copy = language === "bg"
+        ? {
+            loading: "Зареждаме свободните часове...",
+            back: "← Назад към датите",
+            availableTimes: "Свободни часове за",
+            confirm: "Потвърдете часа",
+            comingSoon: "Логиката за резервация предстои.",
+            bookNow: "Запази сега",
+            cancel: "Отказ",
+        }
+        : {
+            loading: "Loading availability...",
+            back: "← Back to Dates",
+            availableTimes: "Available Times for",
+            confirm: "Confirm Booking",
+            comingSoon: "Booking logic coming soon!",
+            bookNow: "Book Now",
+            cancel: "Cancel",
+        };
 
     useEffect(() => {
         fetch('/api/availability')
@@ -23,7 +45,7 @@ export default function BookingCalendar() {
             });
     }, []);
 
-    if (loading) return <div>Loading availability...</div>;
+    if (loading) return <div>{copy.loading}</div>;
 
     // Group spots by date
     const slotsByDate: Record<string, Date[]> = {};
@@ -47,14 +69,14 @@ export default function BookingCalendar() {
                             onClick={() => setSelectedDate(date)}
                             style={{ padding: '2rem', fontSize: '1.2rem' }}
                         >
-                            {new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            {new Date(date).toLocaleDateString(language === "bg" ? "bg-BG" : "en-US", { weekday: 'short', month: 'short', day: 'numeric' })}
                         </button>
                     ))}
                 </div>
             ) : (
                 <div className="slots-view">
-                    <button className="btn" onClick={() => setSelectedDate(null)} style={{ marginBottom: '1rem' }}>&larr; Back to Dates</button>
-                    <h3>Available Times for {new Date(selectedDate).toLocaleDateString()}</h3>
+                    <button className="btn" onClick={() => setSelectedDate(null)} style={{ marginBottom: '1rem' }}>{copy.back}</button>
+                    <h3>{copy.availableTimes} {new Date(selectedDate).toLocaleDateString(language === "bg" ? "bg-BG" : "en-US")}</h3>
                     <div className="slots-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                         {slotsByDate[selectedDate].map(slot => (
                             <button
@@ -62,7 +84,7 @@ export default function BookingCalendar() {
                                 className="btn btn-secondary"
                                 onClick={() => setSelectedSlot(slot)}
                             >
-                                {slot.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                {slot.toLocaleTimeString(language === "bg" ? "bg-BG" : "en-US", { hour: '2-digit', minute: '2-digit' })}
                             </button>
                         ))}
                     </div>
@@ -72,12 +94,12 @@ export default function BookingCalendar() {
             {selectedSlot && (
                 <div className="booking-modal" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', maxWidth: '500px', width: '100%' }}>
-                        <h3>Confirm Booking</h3>
-                        <p>{selectedSlot.toLocaleString()}</p>
+                        <h3>{copy.confirm}</h3>
+                        <p>{selectedSlot.toLocaleString(language === "bg" ? "bg-BG" : "en-US")}</p>
                         {/* Form will go here */}
                         <div style={{ marginTop: '1rem' }}>
-                            <button className="btn btn-primary" onClick={() => alert('Booking logic coming soon!')}>Book Now</button>
-                            <button className="btn" onClick={() => setSelectedSlot(null)} style={{ marginLeft: '1rem' }}>Cancel</button>
+                            <button className="btn btn-primary" onClick={() => alert(copy.comingSoon)}>{copy.bookNow}</button>
+                            <button className="btn" onClick={() => setSelectedSlot(null)} style={{ marginLeft: '1rem' }}>{copy.cancel}</button>
                         </div>
                     </div>
                 </div>

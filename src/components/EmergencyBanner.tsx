@@ -12,7 +12,7 @@ export default function EmergencyBanner() {
     }
 
     return (
-        <div className="emergency-banner" role="note" aria-label="Emergency notice">
+        <div className="emergency-banner" role="note" aria-label={dict.header.emergency.text}>
             <div className="container emergency-banner__inner">
                 <span className="emergency-banner__icon" aria-hidden="true">
                     !

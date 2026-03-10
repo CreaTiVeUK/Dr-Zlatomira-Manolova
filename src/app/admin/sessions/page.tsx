@@ -5,9 +5,11 @@ import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import EmptyState from "@/components/EmptyState";
 import { getSession } from "@/lib/auth";
+import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 import PatientFilter from "./PatientFilter";
+import { bg, enUS } from "date-fns/locale";
 
 const sessionLogArgs = Prisma.validator<Prisma.PatientDocumentDefaultArgs>()({
   include: {
@@ -28,6 +30,9 @@ type SessionLog = Prisma.PatientDocumentGetPayload<typeof sessionLogArgs>;
 export default async function AdminSessionsLog({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
   const session = await getSession();
   if (!session?.user || session.user.role !== "ADMIN") redirect("/");
+  const { dict, language } = await getServerDictionary();
+  const copy = dict.admin.sessionLogsPage;
+  const dateLocale = language === "bg" ? bg : enUS;
 
   const { userId } = await searchParams;
 
@@ -62,16 +67,16 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
     <div className="admin-page">
       {sessionsUnavailable ? (
         <div className="status-banner status-banner--warning">
-          <strong>Session logs are temporarily unavailable.</strong>
-          <p>The production database has not been migrated to the latest schema yet.</p>
+          <strong>{copy.unavailableTitle}</strong>
+          <p>{copy.unavailableDescription}</p>
         </div>
       ) : null}
 
       <div className="admin-page-header">
         <div className="admin-page-header__copy">
-          <span className="page-intro__eyebrow">Session logs</span>
-          <h1 className="section-title">Session logs &amp; feedback</h1>
-          <p>Review AI summaries, revisit uploaded recordings, and jump directly into the relevant patient profile.</p>
+          <span className="page-intro__eyebrow">{copy.eyebrow}</span>
+          <h1 className="section-title">{copy.title}</h1>
+          <p>{copy.subtitle}</p>
         </div>
 
         <div className="admin-page-actions">
@@ -82,7 +87,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
             </div>
             <Link href="/admin/users" className="btn btn-primary">
               <Plus size={16} />
-              New session
+              {copy.newSession}
             </Link>
           </div>
         </div>
@@ -91,8 +96,8 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
       {sessions.length === 0 ? (
         <EmptyState
           icon={Mic}
-          title="No sessions match your criteria"
-          description="Try adjusting the filter or start a new recording from a patient profile."
+          title={copy.emptyTitle}
+          description={copy.emptyDescription}
         />
       ) : (
         <div className="admin-section-stack">
@@ -109,9 +114,9 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                     <div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
                         <Link href={`/admin/users/${sessionLog.userId}`} style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>
-                          {sessionLog.user?.name || "Unknown patient"}
+                          {sessionLog.user?.name || copy.unknownPatient}
                         </Link>
-                        <span className="helper-text">Recorded {format(new Date(sessionLog.uploadedAt), "MMM d, h:mm a")}</span>
+                        <span className="helper-text">{copy.recorded} {format(new Date(sessionLog.uploadedAt), "MMM d, h:mm a", { locale: dateLocale })}</span>
                       </div>
                       <p>{sessionLog.name}</p>
                     </div>
@@ -120,10 +125,10 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                   <div className="admin-record-card__actions">
                     <Link href={`/admin/users/${sessionLog.userId}#upload-section`} className="btn btn-outline">
                       <Plus size={16} />
-                      Add doc
+                      {copy.addDoc}
                     </Link>
                     <Link href={`/admin/users/${sessionLog.userId}`} className="btn btn-primary">
-                      Profile
+                      {copy.profile}
                       <ChevronRight size={16} />
                     </Link>
                   </div>
@@ -134,23 +139,23 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                     <div className="admin-note-box">
                       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
                         <Sparkles size={16} color="var(--accent-gold)" />
-                        <strong>AI session summary</strong>
+                        <strong>{copy.aiSummary}</strong>
                       </div>
-                      <p style={{ whiteSpace: "pre-wrap" }}>{sessionLog.summary || "No summary available."}</p>
+                      <p style={{ whiteSpace: "pre-wrap" }}>{sessionLog.summary || copy.noSummary}</p>
                     </div>
 
                     <div className="admin-note-box">
                       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
                         <MessageSquare size={16} color="var(--primary-teal)" />
-                        <strong>Latest patient note</strong>
+                        <strong>{copy.latestPatientNote}</strong>
                       </div>
                       {lastApt ? (
                         <>
-                          <p style={{ fontStyle: "italic" }}>&quot;{lastApt.notes || "No notes provided for this visit."}&quot;</p>
-                          <span className="helper-text">From visit on {format(new Date(lastApt.dateTime), "MMM d, yyyy")}</span>
+                          <p style={{ fontStyle: "italic" }}>&quot;{lastApt.notes || copy.noVisitNotes}&quot;</p>
+                          <span className="helper-text">{copy.fromVisitOn} {format(new Date(lastApt.dateTime), "MMM d, yyyy", { locale: dateLocale })}</span>
                         </>
                       ) : (
-                        <p className="helper-text">No recent appointment notes found for this patient.</p>
+                        <p className="helper-text">{copy.noRecentNotes}</p>
                       )}
                     </div>
                   </div>
@@ -158,12 +163,12 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                   {sessionLog.transcription ? (
                     <details style={{ marginTop: "1rem" }}>
                       <summary className="helper-text" style={{ cursor: "pointer" }}>
-                        View full transcription
+                        {copy.fullTranscription}
                       </summary>
                       <div className="admin-note-box" style={{ marginTop: "0.75rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
                           <FileText size={16} color="var(--primary-teal)" />
-                          <strong>Transcription</strong>
+                          <strong>{copy.transcription}</strong>
                         </div>
                         <p style={{ whiteSpace: "pre-wrap" }}>{sessionLog.transcription}</p>
                       </div>

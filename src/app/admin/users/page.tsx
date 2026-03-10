@@ -4,12 +4,17 @@ import { Mic } from "lucide-react";
 import { redirect } from "next/navigation";
 import EmptyState from "@/components/EmptyState";
 import { getSession } from "@/lib/auth";
+import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
+import { bg, enUS } from "date-fns/locale";
 
 export default async function AdminUserList() {
   const session = await getSession();
   if (!session?.user || session.user.role !== "ADMIN") redirect("/");
+  const { dict, language } = await getServerDictionary();
+  const copy = dict.admin.usersPage;
+  const dateLocale = language === "bg" ? bg : enUS;
 
   const [users, childrenAvailable, documentsAvailable] = await Promise.all([
     prisma.user
@@ -66,16 +71,16 @@ export default async function AdminUserList() {
     <div className="admin-page">
       <div className="admin-page-header">
         <div className="admin-page-header__copy">
-          <span className="page-intro__eyebrow">Patient records</span>
-          <h1 className="section-title">Patient management</h1>
-          <p>Review patient accounts, open detailed profiles, and jump straight into session recording when needed.</p>
+          <span className="page-intro__eyebrow">{copy.eyebrow}</span>
+          <h1 className="section-title">{copy.title}</h1>
+          <p>{copy.subtitle}</p>
         </div>
       </div>
 
       {users.length === 0 ? (
         <EmptyState
-          title="No patients found"
-          description="New patient registrations will appear here."
+          title={copy.emptyTitle}
+          description={copy.emptyDescription}
         />
       ) : (
         <div className="table-card">
@@ -83,21 +88,21 @@ export default async function AdminUserList() {
             <table className="table-modern">
               <thead>
                 <tr>
-                  <th>Patient</th>
-                  <th>Joined</th>
-                  <th>Children</th>
-                  <th>Documents</th>
-                  <th>Actions</th>
+                  <th>{copy.columns.patient}</th>
+                  <th>{copy.columns.joined}</th>
+                  <th>{copy.columns.children}</th>
+                  <th>{copy.columns.documents}</th>
+                  <th>{copy.columns.actions}</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
                   <tr key={user.id}>
                     <td>
-                      <strong>{user.name || "No name"}</strong>
+                      <strong>{user.name || copy.noName}</strong>
                       <p>{user.email}</p>
                     </td>
-                    <td>{format(new Date(user.createdAt), "MMM d, yyyy")}</td>
+                    <td>{format(new Date(user.createdAt), "MMM d, yyyy", { locale: dateLocale })}</td>
                     <td>
                       {childrenAvailable ? (
                         user._count.children > 0 ? (
@@ -122,12 +127,12 @@ export default async function AdminUserList() {
                     </td>
                     <td>
                       <div className="btn-group" style={{ justifyContent: "flex-end" }}>
-                        <Link href={`/admin/users/${user.id}#session-recorder`} className="btn btn-outline" title="Record session">
+                        <Link href={`/admin/users/${user.id}#session-recorder`} className="btn btn-outline" title={copy.recordSession}>
                           <Mic size={16} />
-                          Session
+                          {copy.session}
                         </Link>
                         <Link href={`/admin/users/${user.id}`} className="btn btn-primary">
-                          View profile
+                          {copy.viewProfile}
                         </Link>
                       </div>
                     </td>
