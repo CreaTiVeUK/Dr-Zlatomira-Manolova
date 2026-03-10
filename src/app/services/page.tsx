@@ -5,6 +5,10 @@ import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
+function stripLeadingBullet(value: string) {
+  return value.replace(/^[•\-\s]+/, "").trim();
+}
+
 export default function ServicesPage() {
   const { dict } = useLanguage();
 
@@ -33,7 +37,7 @@ export default function ServicesPage() {
               <p>{dict.servicesPage.general.desc}</p>
               <ul>
                 {dict.servicesPage.general.list.map((item, i) => (
-                  <li key={i}>{item}</li>
+                  <li key={i}>{stripLeadingBullet(item)}</li>
                 ))}
               </ul>
               <Link href="/book" className="btn btn-primary">
@@ -49,7 +53,7 @@ export default function ServicesPage() {
               <p>{dict.servicesPage.allergy.desc}</p>
               <ul>
                 {dict.servicesPage.allergy.list.map((item, i) => (
-                  <li key={i}>{item}</li>
+                  <li key={i}>{stripLeadingBullet(item)}</li>
                 ))}
               </ul>
               <Link href="/book" className="btn btn-outline">

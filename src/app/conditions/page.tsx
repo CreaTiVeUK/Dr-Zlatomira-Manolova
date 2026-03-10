@@ -3,6 +3,10 @@
 import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
+function stripLeadingBullet(value: string) {
+  return value.replace(/^[•\-\s]+/, "").trim();
+}
+
 export default function Conditions() {
   const { dict } = useLanguage();
 
@@ -19,31 +23,31 @@ export default function Conditions() {
           <div className="premium-card">
             <h3>{dict.conditions.respiratory.title}</h3>
             <ul className="list-checked">
-              {dict.conditions.respiratory.list.map((item, i) => <li key={i}>{item}</li>)}
+              {dict.conditions.respiratory.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
             <h3>{dict.conditions.gastro.title}</h3>
             <ul className="list-checked">
-              {dict.conditions.gastro.list.map((item, i) => <li key={i}>{item}</li>)}
+              {dict.conditions.gastro.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
             <h3>{dict.conditions.allergy.title}</h3>
             <ul className="list-checked">
-              {dict.conditions.allergy.list.map((item, i) => <li key={i}>{item}</li>)}
+              {dict.conditions.allergy.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
             <h3>{dict.conditions.neonatal.title}</h3>
             <ul className="list-checked">
-              {dict.conditions.neonatal.list.map((item, i) => <li key={i}>{item}</li>)}
+              {dict.conditions.neonatal.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
             <h3>{dict.conditions.general.title}</h3>
             <ul className="list-checked">
-              {dict.conditions.general.list.map((item, i) => <li key={i}>{item}</li>)}
+              {dict.conditions.general.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
         </div>

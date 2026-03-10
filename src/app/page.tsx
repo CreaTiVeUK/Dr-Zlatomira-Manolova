@@ -19,6 +19,10 @@ interface Testimonial {
   author: string;
 }
 
+function stripLeadingBullet(value: string) {
+  return value.replace(/^[•\-\s]+/, "").trim();
+}
+
 function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -154,6 +158,19 @@ export default function Home() {
     testimonials: dict.home.trust.testimonials,
   };
 
+  const homeCopy =
+    language === "bg"
+      ? {
+          reviews: "потвърдени отзива",
+          servicesLead:
+            "От профилактични прегледи до специализирана диагностика и неонатална подкрепа.",
+        }
+      : {
+          reviews: "verified reviews",
+          servicesLead:
+            "From preventive checkups to specialized diagnostics and newborn support.",
+        };
+
   return (
     <div>
       <section className="hero-section">
@@ -200,7 +217,7 @@ export default function Home() {
               <div className="hero-trust-card">
                 <ShieldCheck size={18} color="white" />
                 <strong>{stats.rating}</strong>
-                <span>{stats.reviewsCount} verified reviews</span>
+                <span>{stats.reviewsCount} {homeCopy.reviews}</span>
               </div>
               <div className="hero-trust-card">
                 <Stethoscope size={18} color="white" />
@@ -270,9 +287,7 @@ export default function Home() {
             <span className="page-intro__eyebrow">{dict.home.services.title}</span>
             <div className="page-intro__copy">
               <h2 className="page-intro__title">{dict.home.services.subtitle}</h2>
-              <p className="page-intro__subtitle">
-                Structured pediatric support for routine consultations, complex diagnostics, and early-life care.
-              </p>
+              <p className="page-intro__subtitle">{homeCopy.servicesLead}</p>
             </div>
           </div>
 
@@ -370,7 +385,7 @@ export default function Home() {
                 <h4>{dict.home.about.qualifications}</h4>
                 <ul className="list-checked">
                   {dict.home.about.qualList.map((item, i) => (
-                    <li key={i}>{item}</li>
+                    <li key={i}>{stripLeadingBullet(item)}</li>
                   ))}
                 </ul>
               </div>
@@ -378,7 +393,7 @@ export default function Home() {
                 <h4>{dict.home.about.specialties}</h4>
                 <ul className="list-checked">
                   {dict.home.about.specList.map((item, i) => (
-                    <li key={i}>{item}</li>
+                    <li key={i}>{stripLeadingBullet(item)}</li>
                   ))}
                 </ul>
               </div>
