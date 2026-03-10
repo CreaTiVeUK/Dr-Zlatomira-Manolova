@@ -171,7 +171,7 @@ export default function AdminAppointmentsClient({
     };
 
     return (
-        <div className="section-padding bg-soft admin-appointments-shell" style={{ minHeight: "100vh" }}>
+        <div className="admin-appointments-shell">
             <div className="container admin-appointments-grid">
                 <div className="admin-appointments-header">
                     <div>
@@ -306,22 +306,10 @@ export default function AdminAppointmentsClient({
             </div>
             <style jsx>{`
                 .admin-appointments-shell {
-                    position: relative;
-                    isolation: isolate;
-                }
-                .admin-appointments-shell::before {
-                    content: "";
-                    position: absolute;
-                    inset: 0;
-                    background:
-                        radial-gradient(circle at top left, rgba(59, 130, 246, 0.08), transparent 22%),
-                        radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 18%);
-                    pointer-events: none;
-                    z-index: 0;
+                    display: grid;
+                    gap: 1.25rem;
                 }
                 .admin-appointments-grid {
-                    position: relative;
-                    z-index: 1;
                     display: grid;
                     gap: 1.25rem;
                 }
@@ -336,10 +324,9 @@ export default function AdminAppointmentsClient({
                 .admin-appointments-summary-card,
                 .admin-appointments-panel,
                 .admin-appointments-card {
-                    background: color-mix(in srgb, var(--bg-white) 94%, transparent 6%);
-                    border: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
-                    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
-                    backdrop-filter: blur(16px);
+                    background: var(--surface-elevated);
+                    border: 1px solid var(--border-card);
+                    box-shadow: var(--shadow-sm);
                 }
                 .admin-appointments-message {
                     padding: 0.9rem 1rem;
@@ -358,7 +345,7 @@ export default function AdminAppointmentsClient({
                 }
                 .admin-appointments-panel {
                     border-radius: 24px;
-                    padding: 1rem;
+                    padding: 1.25rem;
                     display: grid;
                     gap: 1rem;
                 }
@@ -375,7 +362,7 @@ export default function AdminAppointmentsClient({
                     border-radius: 16px;
                     padding: 0 0.9rem;
                     min-height: 50px;
-                    background: color-mix(in srgb, var(--bg-white) 92%, transparent 8%);
+                    background: color-mix(in srgb, var(--surface-card-strong) 92%, transparent 8%);
                 }
                 .admin-appointments-list {
                     display: grid;
@@ -388,7 +375,7 @@ export default function AdminAppointmentsClient({
                     align-items: center;
                     padding: 1rem;
                     border-radius: 20px;
-                    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-soft) 82%, white 18%), color-mix(in srgb, var(--bg-soft) 96%, transparent 4%));
+                    background: color-mix(in srgb, var(--surface-card-strong) 84%, transparent 16%);
                 }
                 .admin-appointments-actions {
                     display: grid;
@@ -396,12 +383,8 @@ export default function AdminAppointmentsClient({
                     justify-items: stretch;
                     min-width: 144px;
                 }
-                :global(.dark) .admin-appointments-message,
-                :global(.dark) .admin-appointments-summary-card,
-                :global(.dark) .admin-appointments-panel,
                 :global(.dark) .admin-appointments-card {
-                    box-shadow: 0 20px 48px rgba(2, 6, 23, 0.22);
-                    border-color: rgba(148, 163, 184, 0.12);
+                    background: color-mix(in srgb, var(--surface-card-strong) 74%, transparent 26%);
                 }
                 @media (max-width: 980px) {
                     .admin-appointments-summary {

@@ -1,9 +1,15 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function EmergencyBanner() {
     const { dict } = useLanguage();
+    const pathname = usePathname();
+
+    if (pathname.startsWith("/admin")) {
+        return null;
+    }
 
     return (
         <div className="emergency-banner" role="note" aria-label="Emergency notice">
