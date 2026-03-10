@@ -38,13 +38,7 @@ export default async function AdminDashboard() {
             select: {
                 id: true,
                 name: true,
-                createdAt: true,
-                _count: {
-                    select: {
-                        appointments: true,
-                        children: true
-                    }
-                }
+                createdAt: true
             }
         }),
         prisma.patientDocument.count().catch((error) => {
@@ -109,9 +103,9 @@ export default async function AdminDashboard() {
             id: patient.id,
             name: patient.name || "Unknown Patient",
             joinedLabel: format(new Date(patient.createdAt), "MMM d, yyyy"),
-            appointmentsCount: patient._count.appointments,
+            appointmentsCount: appointments.filter((appointment) => appointment.userId === patient.id).length,
             documentsCount: 0,
-            childrenCount: patient._count.children
+            childrenCount: 0
         }));
 
     const recentActivity = [...appointments]
