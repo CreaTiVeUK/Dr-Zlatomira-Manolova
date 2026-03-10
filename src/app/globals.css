@@ -1048,12 +1048,12 @@ textarea.input-focus {
 
 .hero-section {
   position: relative;
-  min-height: min(92vh, 860px);
+  min-height: min(96vh, 980px);
   display: flex;
   align-items: center;
   overflow: clip;
   isolation: isolate;
-  padding: 4rem 0;
+  padding: 5.5rem 0 4.5rem;
   background:
     linear-gradient(130deg, rgba(6, 18, 31, 0.8), rgba(6, 18, 31, 0.44)),
     radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 28%),
@@ -1089,17 +1089,40 @@ textarea.input-focus {
 .hero-content {
   position: relative;
   z-index: 1;
-  width: min(980px, 100%);
+  width: min(1120px, 100%);
   display: grid;
-  gap: 1.6rem;
+  gap: 2rem;
   margin: 0 auto;
   justify-items: center;
   text-align: center;
 }
 
+.hero-copy-block {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 1.35rem;
+  justify-items: center;
+}
+
 .hero-title,
 .hero-subtitle {
   color: white;
+}
+
+.hero-title {
+  max-width: 11ch;
+  margin: 0 auto;
+  font-size: clamp(3.8rem, 8vw, 6.35rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.hero-subtitle {
+  max-width: 34ch;
+  margin: 0 auto;
+  font-size: clamp(1.08rem, 1.7vw, 1.38rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-actions {
@@ -1113,50 +1136,54 @@ textarea.input-focus {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 0.75rem;
-  width: min(100%, 980px);
+  margin-top: 0.5rem;
+  width: min(100%, 920px);
+  align-items: stretch;
 }
 
 .hero-trust-card {
   display: grid;
   justify-items: center;
   align-content: start;
-  gap: 0.5rem;
-  padding: 1.1rem 1.2rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(12px);
+  gap: 0.6rem;
+  min-height: 210px;
+  padding: 1.35rem 1.3rem;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.28), rgba(15, 23, 42, 0.42));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px);
   text-align: center;
+  box-shadow: 0 22px 50px rgba(7, 15, 28, 0.16);
 }
 
 .hero-trust-card strong {
   display: block;
   color: white;
   font-family: var(--font-heading);
-  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-  line-height: 1.3;
-  max-width: 18ch;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+  line-height: 1.22;
+  max-width: 16ch;
 }
 
 .hero-trust-card span {
   color: rgba(255, 255, 255, 0.78);
-  font-size: 0.92rem;
-  line-height: 1.55;
-  max-width: 28ch;
+  font-size: 0.96rem;
+  line-height: 1.62;
+  max-width: 26ch;
 }
 
 .trust-bar {
-  margin-top: -2.5rem;
+  margin-top: 0;
   position: relative;
   z-index: 2;
+  padding: 1.75rem 0 0;
 }
 
 .trust-panel {
   display: grid;
   grid-template-columns: 1.1fr 1.5fr 1.4fr;
   gap: 1rem;
-  padding: 1rem;
+  padding: 1.15rem;
   border-radius: 28px;
   background: var(--bg-trust);
   border: 1px solid var(--border-card);
@@ -1169,7 +1196,7 @@ textarea.input-focus {
   align-items: center;
   gap: 1rem;
   min-height: 100%;
-  padding: 1.1rem 1.15rem;
+  padding: 1.35rem 1.25rem;
   border-radius: 22px;
   background: color-mix(in srgb, var(--surface-card-strong) 72%, transparent 28%);
   border: 1px solid color-mix(in srgb, var(--border) 72%, transparent 28%);
@@ -1204,22 +1231,27 @@ textarea.input-focus {
 }
 
 .partner-logo-grid {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: 1rem;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .partner-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 132px;
+  width: 100%;
   min-height: 72px;
   padding: 0.8rem 1rem;
   border-radius: 18px;
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
   border: 1px solid var(--border);
+}
+
+.partner-logo:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .partner-logo:hover {
@@ -2492,6 +2524,40 @@ textarea.input-focus {
     grid-template-columns: 1fr 1fr;
   }
 
+  .hero-section {
+    min-height: auto;
+    padding: 5rem 0 3.75rem;
+  }
+
+  .hero-content {
+    width: min(960px, 100%);
+  }
+
+  .hero-title {
+    max-width: 12ch;
+    font-size: clamp(3.25rem, 7vw, 5rem);
+  }
+
+  .hero-subtitle {
+    max-width: 38ch;
+  }
+
+  .trust-bar {
+    padding-top: 1.25rem;
+  }
+
+  .trust-panel__cell {
+    padding: 1.15rem;
+  }
+
+  .partner-logo-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .partner-logo:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
   .date-strip {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -2558,11 +2624,28 @@ textarea.input-focus {
 
   .hero-section {
     min-height: auto;
-    padding: 5rem 0 3.5rem;
+    padding: 4.75rem 0 3rem;
   }
 
   .hero-content {
     width: min(100%, 720px);
+    gap: 1.5rem;
+  }
+
+  .hero-copy-block {
+    gap: 1.1rem;
+  }
+
+  .hero-title {
+    max-width: 11ch;
+    font-size: clamp(2.8rem, 10vw, 4.2rem);
+    line-height: 0.98;
+  }
+
+  .hero-subtitle {
+    max-width: 34ch;
+    font-size: 1rem;
+    line-height: 1.72;
   }
 
   .field input,
@@ -2591,6 +2674,19 @@ textarea.input-focus {
   .form-grid--two,
   .footer-grid,
   .trust-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-trust-card {
+    min-height: unset;
+    padding: 1.2rem 1.1rem;
+  }
+
+  .trust-bar {
+    padding-top: 1rem;
+  }
+
+  .partner-logo-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2684,6 +2780,10 @@ textarea.input-focus {
   .hero-subtitle,
   .page-intro__subtitle {
     font-size: 1rem;
+  }
+
+  .hero-copy-block {
+    width: 100%;
   }
 
   .cookie-banner {

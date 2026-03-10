@@ -188,29 +188,31 @@ export default function Home() {
               MBBS, DCH, MRCPCH, FRCP
             </div>
 
-            <h1 className="hero-title">
-              {dict.home.hero.title}
-              <br />
-              <span style={{ color: "#9ed3ff" }}>{dict.home.hero.titleHighlight}</span>
-            </h1>
+            <div className="hero-copy-block">
+              <h1 className="hero-title">
+                {dict.home.hero.title}
+                <br />
+                <span style={{ color: "#9ed3ff" }}>{dict.home.hero.titleHighlight}</span>
+              </h1>
 
-            <p className="hero-subtitle">{dict.home.hero.subtitle}</p>
+              <p className="hero-subtitle">{dict.home.hero.subtitle}</p>
 
-            <div className="hero-actions">
-              <Link href="/book" className="btn btn-primary">
-                {dict.home.hero.bookBtn}
-              </Link>
-              <Link
-                href="/services"
-                className="btn btn-outline"
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  borderColor: "rgba(255,255,255,0.18)",
-                  color: "white",
-                }}
-              >
-                {dict.home.hero.servicesBtn}
-              </Link>
+              <div className="hero-actions">
+                <Link href="/book" className="btn btn-primary">
+                  {dict.home.hero.bookBtn}
+                </Link>
+                <Link
+                  href="/services"
+                  className="btn btn-outline"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    borderColor: "rgba(255,255,255,0.18)",
+                    color: "white",
+                  }}
+                >
+                  {dict.home.hero.servicesBtn}
+                </Link>
+              </div>
             </div>
 
             <div className="hero-trust-grid">
