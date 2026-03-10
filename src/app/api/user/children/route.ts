@@ -1,26 +1,21 @@
 
-import { auth } from "@/auth";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-    const session = await auth();
+    const session = await getSession();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { email: session.user.email },
-            include: { children: { orderBy: { birthDate: 'desc' } } }
+        const children = await prisma.child.findMany({
+            where: { parentId: session.user.id },
+            orderBy: { birthDate: 'desc' }
         });
-
-        if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
-        return NextResponse.json(user.children);
+        return NextResponse.json(children);
     } catch (error) {
         console.error("Children fetch error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -28,9 +23,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-    const session = await auth();
+    const session = await getSession();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -42,18 +37,13 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Name and Birth Date are required" }, { status: 400 });
         }
 
-        const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-        if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
         const child = await prisma.child.create({
             data: {
                 name,
                 birthDate: new Date(birthDate),
                 gender,
                 notes,
-                parentId: user.id
+                parentId: session.user.id
             }
         });
 
@@ -65,9 +55,9 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-    const session = await auth();
+    const session = await getSession();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -79,12 +69,9 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: "Child ID is required" }, { status: 400 });
         }
 
-        const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-        if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
-
         // Verify ownership
         const child = await prisma.child.findUnique({ where: { id } });
-        if (!child || child.parentId !== user.id) {
+        if (!child || child.parentId !== session.user.id) {
             return NextResponse.json({ error: "Child not found or unauthorized" }, { status: 404 });
         }
 

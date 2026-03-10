@@ -480,21 +480,25 @@ export default function AdminDashboardClient({
                         <h2>{copy.monthlyVisits}</h2>
                     </div>
                     <div className="admin-chart-wrap">
-                        <ResponsiveContainer>
-                            <AreaChart data={monthlyVisits}>
-                                <defs>
-                                    <linearGradient id="adminVisitsFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#0F4C81" stopOpacity={0.28} />
-                                        <stop offset="95%" stopColor="#0F4C81" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid vertical={false} stroke="var(--border)" />
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                                <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
-                                <Tooltip contentStyle={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 12 }} />
-                                <Area type="monotone" dataKey="visits" stroke="#0F4C81" strokeWidth={3} fill="url(#adminVisitsFill)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                        {mounted ? (
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                                <AreaChart data={monthlyVisits}>
+                                    <defs>
+                                        <linearGradient id="adminVisitsFill" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#0F4C81" stopOpacity={0.28} />
+                                            <stop offset="95%" stopColor="#0F4C81" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid vertical={false} stroke="var(--border)" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
+                                    <Tooltip contentStyle={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 12 }} />
+                                    <Area type="monotone" dataKey="visits" stroke="#0F4C81" strokeWidth={3} fill="url(#adminVisitsFill)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="admin-chart-placeholder" aria-hidden="true" />
+                        )}
                     </div>
                 </div>
 
@@ -503,16 +507,20 @@ export default function AdminDashboardClient({
                         <h2>{copy.appointmentMix}</h2>
                     </div>
                     <div className="admin-chart-wrap">
-                        <ResponsiveContainer>
-                            <PieChart>
-                                <Pie data={appointmentTypes} dataKey="value" innerRadius={50} outerRadius={74} paddingAngle={4}>
-                                    {appointmentTypes.map((entry, index) => (
-                                        <Cell key={entry.name} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip contentStyle={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 12 }} />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        {mounted ? (
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                                <PieChart>
+                                    <Pie data={appointmentTypes} dataKey="value" innerRadius={50} outerRadius={74} paddingAngle={4}>
+                                        {appointmentTypes.map((entry, index) => (
+                                            <Cell key={entry.name} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip contentStyle={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 12 }} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="admin-chart-placeholder" aria-hidden="true" />
+                        )}
                     </div>
                     <div className="admin-chart-legend">
                         {appointmentTypes.map((item, index) => (
@@ -928,6 +936,14 @@ export default function AdminDashboardClient({
                 .admin-chart-wrap {
                     width: 100%;
                     height: 260px;
+                    min-width: 0;
+                }
+                .admin-chart-placeholder {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 20px;
+                    background: linear-gradient(180deg, rgba(15, 76, 129, 0.08), rgba(15, 76, 129, 0.02));
+                    border: 1px dashed color-mix(in srgb, var(--border) 80%, transparent 20%);
                 }
                 .admin-chart-legend div {
                     display: grid;

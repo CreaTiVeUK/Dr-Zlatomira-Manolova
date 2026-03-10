@@ -2471,6 +2471,10 @@ textarea.input-focus {
 }
 
 @media (max-width: 1024px) {
+  .admin-layout {
+    display: block;
+  }
+
   .trust-panel,
   .about-grid,
   .resource-layout,
@@ -2515,6 +2519,7 @@ textarea.input-focus {
 
   .admin-header-mobile {
     display: flex;
+    width: 100%;
   }
 }
 

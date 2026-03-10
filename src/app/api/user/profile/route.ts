@@ -1,18 +1,18 @@
 
-import { auth } from "@/auth";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-    const session = await auth();
+    const session = await getSession();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
         const user = await prisma.user.findUnique({
-            where: { email: session.user.email },
+            where: { id: session.user.id },
             select: {
                 name: true,
                 email: true,
@@ -33,9 +33,9 @@ export async function GET() {
 }
 
 export async function PATCH(req: Request) {
-    const session = await auth();
+    const session = await getSession();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -49,7 +49,7 @@ export async function PATCH(req: Request) {
         }
 
         const updatedUser = await prisma.user.update({
-            where: { email: session.user.email },
+            where: { id: session.user.id },
             data: {
                 name,
                 phone
