@@ -1,5 +1,5 @@
 
-import { auth } from "@/auth";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { saveFile } from "@/lib/storage";
 import { getSummaryClient, getTranscriptionClient } from "@/lib/ai";
@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { createReadStream } from "fs";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-    const session = await auth();
+    const session = await getSession();
 
     // 1. Verify Admin Role
     if (!session?.user || session.user.role !== "ADMIN") {
