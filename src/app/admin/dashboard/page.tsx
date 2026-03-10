@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isMissingTableError } from "@/lib/prisma-errors";
 import AdminDashboardClient from "./AdminDashboardClient";
 import {
     addDays,
@@ -12,10 +12,6 @@ import {
     startOfDay,
     subMonths
 } from "date-fns";
-
-function isMissingTableError(error: unknown) {
-    return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021";
-}
 
 export default async function AdminDashboard() {
     const session = await getSession();

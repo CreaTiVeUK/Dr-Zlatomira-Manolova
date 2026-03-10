@@ -2,18 +2,11 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { isMissingTableError } from "@/lib/prisma-errors";
 import Link from "next/link";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import { FileText, Sparkles } from "lucide-react";
-
-const adminUserArgs = Prisma.validator<Prisma.UserDefaultArgs>()({
-    include: {
-        children: true,
-        documents: { orderBy: { uploadedAt: "desc" } }
-    }
-});
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
     const session = await getSession();
@@ -23,10 +16,47 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
 
     const user = await prisma.user.findUnique({
         where: { id },
-        ...adminUserArgs
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true
+        }
     });
 
     if (!user) return <div>User not found</div>;
+
+    const [children, documents] = await Promise.all([
+        prisma.child.findMany({
+            where: { parentId: id },
+            orderBy: { createdAt: "desc" }
+        }).catch((error) => {
+            if (isMissingTableError(error)) {
+                return [];
+            }
+
+            throw error;
+        }),
+        prisma.patientDocument.findMany({
+            where: { userId: id },
+            orderBy: { uploadedAt: "desc" }
+        }).catch((error) => {
+            if (isMissingTableError(error)) {
+                return [];
+            }
+
+            throw error;
+        })
+    ]);
+
+    const childrenAvailable = children.length > 0 || await prisma.child.count().then(() => true).catch((error) => {
+        if (isMissingTableError(error)) return false;
+        throw error;
+    });
+    const documentsAvailable = documents.length > 0 || await prisma.patientDocument.count().then(() => true).catch((error) => {
+        if (isMissingTableError(error)) return false;
+        throw error;
+    });
 
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
@@ -41,9 +71,9 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                     {/* CHILDREN INFO */}
                     <div className="bg-white p-6 rounded-lg shadow-sm h-fit">
                         <h2 className="text-xl font-bold mb-4 text-gray-800">Children</h2>
-                        {user.children.length === 0 ? <p className="text-gray-500">No children listed.</p> : (
+                        {!childrenAvailable ? <p className="text-gray-500">Children will appear here after the production database migration is applied.</p> : children.length === 0 ? <p className="text-gray-500">No children listed.</p> : (
                             <ul className="space-y-3">
-                                {user.children.map(child => (
+                                {children.map(child => (
                                     <li key={child.id} className="p-3 border rounded bg-gray-50">
                                         <div className="font-bold">{child.name}</div>
                                         <div className="text-sm text-gray-600">
@@ -60,19 +90,27 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                     <div id="upload-section" className="bg-white p-6 rounded-lg shadow-sm">
                         <h2 className="text-xl font-bold mb-4 text-gray-800">Medical Documents</h2>
 
-                        <div className="mb-8 p-4 bg-blue-50 rounded border border-blue-100">
-                            <h3 className="font-bold text-blue-900 mb-2 text-sm">Upload New Document</h3>
-                            <AdminUploadForm userId={user.id} />
-                        </div>
+                        {!documentsAvailable ? (
+                            <div className="mb-8 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-amber-900">
+                                Medical documents and AI session logs are temporarily unavailable in production until the latest database migration is applied.
+                            </div>
+                        ) : (
+                            <>
+                                <div className="mb-8 p-4 bg-blue-50 rounded border border-blue-100">
+                                    <h3 className="font-bold text-blue-900 mb-2 text-sm">Upload New Document</h3>
+                                    <AdminUploadForm userId={user.id} />
+                                </div>
 
-                        <div className="mb-8">
-                            <AudioRecorder userId={user.id} onSuccess={() => { }} />
-                        </div>
+                                <div className="mb-8">
+                                    <AudioRecorder userId={user.id} onSuccess={() => { }} />
+                                </div>
+                            </>
+                        )}
 
                         <h3 className="font-bold text-gray-700 mb-3 text-sm uppercase tracking-wider">Existing Files</h3>
-                        {user.documents.length === 0 ? <p className="text-gray-500">No documents yet.</p> : (
+                        {!documentsAvailable ? <p className="text-gray-500">Document storage is not available in this environment yet.</p> : documents.length === 0 ? <p className="text-gray-500">No documents yet.</p> : (
                             <ul className="space-y-4">
-                                {user.documents.map(doc => (
+                                {documents.map(doc => (
                                     <li key={doc.id} className="p-4 border rounded-xl hover:bg-gray-50 transition-colors bg-white">
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex items-center gap-3">

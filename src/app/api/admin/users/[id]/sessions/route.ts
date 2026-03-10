@@ -2,19 +2,9 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { saveFile } from "@/lib/storage";
+import { getSummaryClient, getTranscriptionClient } from "@/lib/ai";
 import { NextResponse } from "next/server";
-import { OpenAI } from "openai";
 import { createReadStream } from "fs";
-
-function getOpenAIClient() {
-    if (!process.env.OPENAI_API_KEY) {
-        throw new Error("OPENAI_API_KEY is not configured");
-    }
-
-    return new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-    });
-}
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -26,7 +16,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     try {
         const { id: patientId } = await params;
-        const openai = getOpenAIClient();
+        const { client: transcriptionClient, model: transcriptionModel } = getTranscriptionClient();
+        const { client: summaryClient, model: summaryModel } = getSummaryClient();
 
         // 2. Parse Form Data
         const formData = await req.formData();
@@ -42,9 +33,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         // 4. Transcription with Whisper
         let transcription = "";
         try {
-            const transcriptRes = await openai.audio.transcriptions.create({
+            const transcriptRes = await transcriptionClient.audio.transcriptions.create({
                 file: createReadStream(filepath),
-                model: "whisper-1",
+                model: transcriptionModel,
             });
             transcription = transcriptRes.text;
         } catch (err: unknown) {
@@ -55,8 +46,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         // 5. Summarization with GPT-4o
         let summary = "";
         try {
-            const summaryRes = await openai.chat.completions.create({
-                model: "gpt-4o",
+            const summaryRes = await summaryClient.chat.completions.create({
+                model: summaryModel,
                 messages: [
                     {
                         role: "system",
@@ -71,7 +62,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             });
             summary = summaryRes.choices[0]?.message?.content || "";
         } catch (err: unknown) {
-            console.error("GPT-4o error:", err);
+            console.error("Summary model error:", err);
             return NextResponse.json({ error: "Summarization failed: " + (err instanceof Error ? err.message : String(err)) }, { status: 500 });
         }
 

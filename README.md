@@ -53,6 +53,7 @@ Access the application at `http://localhost:3000`.
 
 3.  **Setup Environment**:
     Copy `.env.example` to `.env` and configure your database credentials.
+    If you want AI summaries to run through Vercel AI Gateway, set `VERCEL_AI_GATEWAY_API_KEY` and optionally override `VERCEL_AI_GATEWAY_MODEL`. Audio transcription in the current implementation still requires `OPENAI_API_KEY`.
 
 4.  **Database**:
     ```bash

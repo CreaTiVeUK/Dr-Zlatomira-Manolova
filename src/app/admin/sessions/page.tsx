@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { isMissingTableError } from "@/lib/prisma-errors";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -35,7 +36,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
         orderBy: { name: 'asc' }
     });
 
-    const sessions = await prisma.patientDocument.findMany({
+    const { sessions, sessionsUnavailable } = await prisma.patientDocument.findMany({
         where: {
             AND: [
                 {
@@ -49,11 +50,28 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
         },
         orderBy: { uploadedAt: 'desc' },
         ...sessionLogArgs
+    }).then((result) => ({
+        sessions: result,
+        sessionsUnavailable: false
+    })).catch((error) => {
+        if (isMissingTableError(error)) {
+            return {
+                sessions: [] as SessionLog[],
+                sessionsUnavailable: true
+            };
+        }
+
+        throw error;
     });
 
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
             <div className="container">
+                {sessionsUnavailable && (
+                    <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900">
+                        Session logs are temporarily unavailable because the production database has not been migrated to the latest schema yet.
+                    </div>
+                )}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h1 className="section-title">Session Logs & Feedback</h1>

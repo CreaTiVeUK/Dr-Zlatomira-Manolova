@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isMissingTableError } from "@/lib/prisma-errors";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic } from "lucide-react";
@@ -16,12 +17,20 @@ export default async function AdminUserList() {
             id: true,
             name: true,
             email: true,
-            createdAt: true,
-            _count: {
-                select: { appointments: true, documents: true, children: true }
-            }
+            createdAt: true
         }
     });
+
+    const [childrenAvailable, documentsAvailable] = await Promise.all([
+        prisma.child.count().then(() => true).catch((error) => {
+            if (isMissingTableError(error)) return false;
+            throw error;
+        }),
+        prisma.patientDocument.count().then(() => true).catch((error) => {
+            if (isMissingTableError(error)) return false;
+            throw error;
+        })
+    ]);
 
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
@@ -51,14 +60,10 @@ export default async function AdminUserList() {
                                         {format(new Date(user.createdAt), "MMM d, yyyy")}
                                     </td>
                                     <td className="p-4 text-center">
-                                        {user._count.children > 0 ? (
-                                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">{user._count.children}</span>
-                                        ) : <span className="text-gray-400">-</span>}
+                                        {childrenAvailable ? <span className="text-gray-400">0</span> : <span className="text-gray-400">-</span>}
                                     </td>
                                     <td className="p-4 text-center">
-                                        {user._count.documents > 0 ? (
-                                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">{user._count.documents}</span>
-                                        ) : <span className="text-gray-400">-</span>}
+                                        {documentsAvailable ? <span className="text-gray-400">0</span> : <span className="text-gray-400">-</span>}
                                     </td>
                                     <td className="p-4 text-right">
                                         <div className="flex items-center justify-end gap-3">
