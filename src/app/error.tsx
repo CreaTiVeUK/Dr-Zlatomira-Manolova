@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import EmptyState from '@/components/EmptyState';
+import { AlertTriangle } from 'lucide-react';
 
 export default function Error({
     error,
@@ -15,26 +17,29 @@ export default function Error({
     }, [error]);
 
     return (
-        <div className="section-padding">
-            <div className="container" style={{ textAlign: 'center', maxWidth: '600px' }}>
-                <h1 className="section-title" style={{ color: '#c62828' }}>System Offline</h1>
-                <p style={{ fontSize: '1.2rem', marginBottom: '2.5rem', color: 'var(--text-muted)' }}>
-                    We encountered an unexpected technical issue. Our clinical team has been notified.
-                </p>
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                    <button
-                        onClick={() => reset()}
-                        className="btn btn-primary"
-                    >
-                        TRY AGAIN
-                    </button>
-                    <Link href="/" className="btn btn-outline">
-                        BACK TO HOME
-                    </Link>
+        <div className="page-shell page-shell--soft">
+            <div className="container state-shell">
+                <div className="state-shell__panel">
+                    <EmptyState
+                        icon={AlertTriangle}
+                        title="System Offline"
+                        description="We encountered an unexpected technical issue. Our clinical team has been notified."
+                        tone="warning"
+                        action={
+                            <div className="btn-group" style={{ justifyContent: 'center' }}>
+                                <button onClick={() => reset()} className="btn btn-primary" type="button">
+                                    Try again
+                                </button>
+                                <Link href="/" className="btn btn-outline">
+                                    Back to home
+                                </Link>
+                            </div>
+                        }
+                    />
+                    <p className="helper-text">
+                        Error Reference: {error.digest || 'Internal System Disruption'}
+                    </p>
                 </div>
-                <p style={{ marginTop: '3rem', fontSize: '0.8rem', color: '#ccc' }}>
-                    Error Reference: {error.digest || 'Internal System Disruption'}
-                </p>
             </div>
         </div>
     );

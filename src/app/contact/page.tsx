@@ -1,170 +1,213 @@
 "use client";
+
 import { useState } from "react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ContactPage() {
-    const { dict } = useLanguage();
+  const { dict, language } = useLanguage();
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-    // State for form handling
-    const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-    const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-    const [errorMsg, setErrorMsg] = useState("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus("idle");
+    setErrorMsg("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setStatus("idle");
-        setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-        try {
-            const res = await fetch("/api/contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+      const data = await res.json();
 
-            const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+        setErrorMsg(data.error || "Failed to send message");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            if (res.ok) {
-                setStatus("success");
-                setFormData({ name: "", email: "", message: "" });
-            } else {
-                setStatus("error");
-                setErrorMsg(data.error || "Failed to send message");
-            }
-        } catch {
-            setStatus("error");
-            setErrorMsg("Network error. Please try again.");
-        } finally {
-            setLoading(false);
+  const successCopy =
+    language === "bg"
+      ? {
+          title: "Съобщението е изпратено",
+          body: "Благодарим Ви. Ще се свържем с Вас възможно най-скоро.",
+          reset: "Изпратете ново",
+          sending: "Изпращане...",
         }
-    };
+      : {
+          title: "Message sent",
+          body: "Thank you for reaching out. We will get back to you shortly.",
+          reset: "Send another",
+          sending: "Sending...",
+        };
 
-    return (
-        <div className="section-padding">
-            <div className="container">
-                <div className="text-center" style={{ marginBottom: '4rem' }}>
-                    <h1 className="section-title">{dict.contact.title}</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>{dict.contact.subtitle}</p>
+  return (
+    <div className="page-shell page-shell--soft">
+      <div className="container">
+        <PageIntro
+          eyebrow={dict.contact.clinics}
+          title={dict.contact.title}
+          subtitle={dict.contact.subtitle}
+        />
+
+        <div className="contact-layout">
+          <div className="stack-lg">
+            <div className="contact-panel stack-md">
+              <h3>{dict.contact.clinics}</h3>
+
+              <div className="contact-list">
+                <div className="contact-item">
+                  <div className="btn-group" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div className="stack-md" style={{ gap: "0.5rem" }}>
+                      <span className="clinical-badge">
+                        <MapPin size={14} />
+                        {dict.contact.medicalCenter}
+                      </span>
+                      <p>
+                        {dict.contact.addressMain}
+                        <br />
+                        <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
+                        <br />
+                        <strong>{dict.contact.email}:</strong> zlatomira.manolova@gmail.com
+                      </p>
+                    </div>
+                    <Mail size={18} color="var(--primary-teal)" />
+                  </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '5rem' }}>
-
-                    {/* CLINIC INFO */}
-                    <div>
-                        <h3 style={{ marginBottom: '2rem', color: 'var(--primary-teal)' }}>{dict.contact.clinics}</h3>
-
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <h4 style={{ marginBottom: '0.5rem' }}>{dict.contact.medicalCenter}</h4>
-                            <p style={{ color: 'var(--text-muted)' }}>
-                                {dict.contact.addressMain}<br />
-                                <strong>{dict.contact.tel}:</strong> {dict.footer.phone}<br />
-                                <strong>{dict.contact.email}:</strong> zlatomira.manolova@gmail.com
-                            </p>
-                        </div>
-
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <h4 style={{ marginBottom: '0.5rem' }}>{dict.contact.partnerHospital}</h4>
-                            <p style={{ color: 'var(--text-muted)' }}>
-                                {dict.contact.addressSecond}<br />
-                                <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
-                            </p>
-                        </div>
-
-                        <div style={{ background: 'var(--bg-soft)', padding: '2rem', borderRadius: '4px', marginBottom: '2rem' }}>
-                            <h4 style={{ marginBottom: '1rem' }}>{dict.contact.admin.title}</h4>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                                {dict.contact.admin.text}
-                            </p>
-                        </div>
-
-                        {/* GOOGLE MAP */}
-                        <div style={{ borderRadius: '8px', overflow: 'hidden', height: '300px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                            <iframe
-                                src="https://maps.google.com/maps?q=42.136959,24.790681&z=15&output=embed"
-                                width="100%"
-                                height="100%"
-                                style={{ border: 0 }}
-                                allowFullScreen
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
-                            ></iframe>
-                        </div>
+                <div className="contact-item">
+                  <div className="btn-group" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div className="stack-md" style={{ gap: "0.5rem" }}>
+                      <span className="clinical-badge">
+                        <Phone size={14} />
+                        {dict.contact.partnerHospital}
+                      </span>
+                      <p>
+                        {dict.contact.addressSecond}
+                        <br />
+                        <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
+                      </p>
                     </div>
-
-                    {/* CONTACT FORM */}
-                    <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '8px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
-                        <h3 style={{ marginBottom: '2rem', color: 'var(--text-charcoal)' }}>{dict.contact.form.title}</h3>
-
-                        {status === "success" ? (
-                            <div style={{ padding: '1.5rem', background: 'var(--bg-success)', color: 'var(--text-success)', border: '1px solid var(--border-success)', borderRadius: '4px', textAlign: 'center' }}>
-                                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
-                                <strong>Message Sent!</strong>
-                                <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>Thank you for reaching out. We will get back to you shortly.</p>
-                                <button onClick={() => setStatus("idle")} style={{ marginTop: '1rem', background: 'none', border: 'none', textDecoration: 'underline', color: 'inherit', cursor: 'pointer', fontWeight: '600' }}>Send another</button>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                {status === "error" && (
-                                    <div style={{ padding: '0.75rem', background: 'var(--bg-error)', color: 'var(--text-error)', border: '1px solid var(--border-error)', borderRadius: '4px', fontSize: '0.9rem' }}>
-                                        {errorMsg}
-                                    </div>
-                                )}
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.contact.form.name}</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        required
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
-                                        placeholder=""
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.contact.form.email}</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        required
-                                        style={{ width: '100%', padding: '0.8rem', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--bg-white)', color: 'var(--text-charcoal)' }}
-                                        placeholder=""
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '0.5rem' }}>{dict.contact.form.msg}</label>
-                                    <textarea
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                        required
-                                        minLength={10}
-                                        style={{
-                                            width: '100%',
-                                            padding: '0.8rem',
-                                            border: '1px solid var(--border)',
-                                            borderRadius: '6px',
-                                            background: 'var(--bg-white)',
-                                            color: 'var(--text-charcoal)',
-                                            outline: 'none',
-                                            transition: 'var(--transition-fast)'
-                                        }}
-                                        className="input-focus"
-                                    ></textarea>
-                                </div>
-                                <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem' }} disabled={loading}>
-                                    {loading ? "Sending..." : dict.contact.form.btn}
-                                </button>
-                            </form>
-                        )}
-                    </div>
+                    <Phone size={18} color="var(--primary-teal)" />
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    );
-}
 
+            <div className="surface-card surface-card--accent">
+              <h4 style={{ marginBottom: "0.65rem" }}>{dict.contact.admin.title}</h4>
+              <p>{dict.contact.admin.text}</p>
+            </div>
+
+            <div className="map-card">
+              <iframe
+                src="https://maps.google.com/maps?q=42.136959,24.790681&z=15&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={dict.contact.clinics}
+              ></iframe>
+            </div>
+          </div>
+
+          <div className="form-panel">
+            <div className="stack-md">
+              <div>
+                <span className="page-intro__eyebrow">{dict.contact.form.title}</span>
+                <h3 style={{ marginTop: "1rem" }}>{dict.contact.form.title}</h3>
+              </div>
+
+              {status === "success" ? (
+                <div className="status-banner status-banner--success">
+                  <strong>{successCopy.title}</strong>
+                  <p>{successCopy.body}</p>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    type="button"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "inherit",
+                      padding: 0,
+                      textDecoration: "underline",
+                      justifySelf: "flex-start",
+                    }}
+                  >
+                    {successCopy.reset}
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="form-grid">
+                  {status === "error" && (
+                    <div className="status-banner status-banner--error">
+                      <strong>{errorMsg}</strong>
+                    </div>
+                  )}
+
+                  <div className="field">
+                    <label htmlFor="contact-name">{dict.contact.form.name}</label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="contact-email">{dict.contact.form.email}</label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="contact-message">{dict.contact.form.msg}</label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
+                      minLength={10}
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? successCopy.sending : dict.contact.form.btn}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

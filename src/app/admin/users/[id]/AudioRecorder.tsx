@@ -1,237 +1,206 @@
-
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mic, Square, Play, Pause, RefreshCw, Check, AlertCircle, FileAudio, Sparkles } from "lucide-react";
+import { AlertCircle, Check, FileAudio, Mic, Pause, Play, RefreshCw, Sparkles, Square } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface AudioRecorderProps {
-    userId: string;
+  userId: string;
 }
 
 export default function AudioRecorder({ userId }: AudioRecorderProps) {
-    const { dict } = useLanguage();
-    const router = useRouter();
-    const [isRecording, setIsRecording] = useState(false);
-    const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-    const [audioUrl, setAudioUrl] = useState<string | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [status, setStatus] = useState<'idle' | 'recording' | 'stopped' | 'uploading' | 'processing' | 'success' | 'error'>('idle');
-    const [errorMessage, setErrorMessage] = useState("");
+  const { dict } = useLanguage();
+  const router = useRouter();
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [status, setStatus] = useState<"idle" | "recording" | "stopped" | "uploading" | "processing" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const audioChunksRef = useRef<Blob[]>([]);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    useEffect(() => {
-        return () => {
-            if (audioUrl) URL.revokeObjectURL(audioUrl);
-        };
-    }, [audioUrl]);
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
 
-    const startRecording = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mediaRecorder = new MediaRecorder(stream);
-            mediaRecorderRef.current = mediaRecorder;
-            audioChunksRef.current = [];
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    audioChunksRef.current.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-                setAudioBlob(blob);
-                const url = URL.createObjectURL(blob);
-                setAudioUrl(url);
-                setStatus('stopped');
-            };
-
-            mediaRecorder.start();
-            setIsRecording(true);
-            setStatus('recording');
-        } catch (err) {
-            console.error("Error accessing microphone:", err);
-            setStatus('error');
-            setErrorMessage("Microphone access denied or error occurred.");
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
         }
-    };
+      };
 
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && isRecording) {
-            mediaRecorderRef.current.stop();
-            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-            setIsRecording(false);
-        }
-    };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        setAudioBlob(blob);
+        setAudioUrl(URL.createObjectURL(blob));
+        setStatus("stopped");
+      };
 
-    const togglePlayback = () => {
-        if (!audioRef.current) return;
+      mediaRecorder.start();
+      setIsRecording(true);
+      setStatus("recording");
+    } catch (err) {
+      console.error("Error accessing microphone:", err);
+      setStatus("error");
+      setErrorMessage("Microphone access denied or an error occurred.");
+    }
+  };
 
-        if (isPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-        setIsPlaying(!isPlaying);
-    };
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
+      setIsRecording(false);
+    }
+  };
 
-    const resetRecording = () => {
-        setAudioBlob(null);
-        if (audioUrl) URL.revokeObjectURL(audioUrl);
-        setAudioUrl(null);
-        setStatus('idle');
-        setErrorMessage("");
-    };
+  const togglePlayback = () => {
+    if (!audioRef.current) return;
 
-    const handleUploadAndSummarize = async () => {
-        if (!audioBlob) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
 
-        setStatus('uploading');
-        try {
-            const formData = new FormData();
-            formData.append("file", audioBlob, `session-${Date.now()}.webm`);
+  const resetRecording = () => {
+    setAudioBlob(null);
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null);
+    setStatus("idle");
+    setErrorMessage("");
+  };
 
-            setStatus('processing');
-            const res = await fetch(`/api/admin/users/${userId}/sessions`, {
-                method: "POST",
-                body: formData
-            });
+  const handleUploadAndSummarize = async () => {
+    if (!audioBlob) return;
 
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || "Processing failed");
-            }
+    setStatus("uploading");
+    try {
+      const formData = new FormData();
+      formData.append("file", audioBlob, `session-${Date.now()}.webm`);
 
-            setStatus('success');
-            router.refresh();
-            setTimeout(() => resetRecording(), 3000);
-        } catch (err: unknown) {
-            console.error("Upload/Processing error:", err);
-            setStatus('error');
-            setErrorMessage(err instanceof Error ? err.message : "An error occurred during processing.");
-        }
-    };
+      setStatus("processing");
+      const res = await fetch(`/api/admin/users/${userId}/sessions`, {
+        method: "POST",
+        body: formData,
+      });
 
-    return (
-        <div className="p-6 bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-teal-50 rounded-lg">
-                        <FileAudio className="w-5 h-5 text-teal-600" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-gray-900">{dict.admin.sessions.title}</h3>
-                        <p className="text-xs text-gray-500">{dict.admin.sessions.subtitle}</p>
-                    </div>
-                </div>
-                {status === 'recording' && (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-red-50 text-red-600 rounded-full animate-pulse border border-red-100">
-                        <div className="w-2 h-2 bg-red-600 rounded-full"></div>
-                        <span className="text-xs font-bold uppercase tracking-wider">{dict.admin.sessions.recording}</span>
-                    </div>
-                )}
-            </div>
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Processing failed");
+      }
 
-            <div className="flex flex-col gap-4">
-                {status === 'idle' && (
-                    <button
-                        onClick={startRecording}
-                        className="flex items-center justify-center gap-3 w-full py-4 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-100"
-                    >
-                        <Mic className="w-5 h-5" />
-                        {dict.admin.sessions.start}
-                    </button>
-                )}
+      setStatus("success");
+      router.refresh();
+      setTimeout(() => resetRecording(), 3000);
+    } catch (err: unknown) {
+      console.error("Upload/Processing error:", err);
+      setStatus("error");
+      setErrorMessage(err instanceof Error ? err.message : "An error occurred during processing.");
+    }
+  };
 
-                {status === 'recording' && (
-                    <button
-                        onClick={stopRecording}
-                        className="flex items-center justify-center gap-3 w-full py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-100"
-                    >
-                        <Square className="w-5 h-5" />
-                        {dict.admin.sessions.stop}
-                    </button>
-                )}
-
-                {status === 'stopped' && (
-                    <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                            <audio
-                                ref={audioRef}
-                                src={audioUrl || ""}
-                                onEnded={() => setIsPlaying(false)}
-                                className="hidden"
-                            />
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={togglePlayback}
-                                        className="p-3 bg-white rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-                                    >
-                                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-                                    </button>
-                                    <span className="text-sm font-medium text-gray-700">{dict.admin.sessions.ready}</span>
-                                </div>
-                                <button
-                                    onClick={resetRecording}
-                                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                                    title="Discard and retake"
-                                >
-                                    <RefreshCw className="w-5 h-5" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={handleUploadAndSummarize}
-                            className="flex items-center justify-center gap-3 w-full py-4 bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-xl font-bold hover:from-teal-700 hover:to-teal-600 transition-all shadow-lg shadow-teal-100"
-                        >
-                            <Sparkles className="w-5 h-5" />
-                            {dict.admin.sessions.summarize}
-                        </button>
-                    </div>
-                )}
-
-                {(status === 'uploading' || status === 'processing') && (
-                    <div className="flex flex-col items-center justify-center p-8 bg-teal-50 rounded-xl border border-teal-100">
-                        <div className="relative mb-4">
-                            <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin"></div>
-                            <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-teal-600" />
-                        </div>
-                        <p className="font-bold text-teal-900">{status === 'uploading' ? dict.admin.sessions.uploading : dict.admin.sessions.processing}</p>
-                        <p className="text-xs text-teal-600 mt-1">{dict.admin.sessions.processingSub}</p>
-                    </div>
-                )}
-
-                {status === 'success' && (
-                    <div className="flex flex-col items-center justify-center p-8 bg-green-50 rounded-xl border border-green-100">
-                        <div className="p-3 bg-green-100 rounded-full mb-3">
-                            <Check className="w-6 h-6 text-green-600" />
-                        </div>
-                        <p className="font-bold text-green-900">{dict.admin.sessions.success}</p>
-                        <p className="text-xs text-green-600 mt-1">{dict.admin.sessions.successSub}</p>
-                    </div>
-                )}
-
-                {status === 'error' && (
-                    <div className="flex flex-col items-center justify-center p-6 bg-red-50 rounded-xl border border-red-100">
-                        <AlertCircle className="w-8 h-8 text-red-600 mb-3" />
-                        <p className="font-bold text-red-900">{dict.admin.sessions.error}</p>
-                        <p className="text-xs text-red-600 text-center mt-1">{errorMessage}</p>
-                        <button
-                            onClick={resetRecording}
-                            className="mt-4 text-sm font-bold text-red-700 hover:underline"
-                        >
-                            {dict.admin.sessions.tryAgain}
-                        </button>
-                    </div>
-                )}
-            </div>
+  return (
+    <div className="audio-recorder">
+      <div className="audio-recorder__header">
+        <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+          <span className="icon-badge">
+            <FileAudio size={18} />
+          </span>
+          <div>
+            <h3>{dict.admin.sessions.title}</h3>
+            <p>{dict.admin.sessions.subtitle}</p>
+          </div>
         </div>
-    );
+
+        {status === "recording" ? (
+          <span className="audio-recorder__status">
+            <span className="audio-recorder__pulse" />
+            {dict.admin.sessions.recording}
+          </span>
+        ) : null}
+      </div>
+
+      {status === "idle" ? (
+        <button onClick={startRecording} className="btn btn-primary" type="button">
+          <Mic size={16} />
+          {dict.admin.sessions.start}
+        </button>
+      ) : null}
+
+      {status === "recording" ? (
+        <button onClick={stopRecording} className="btn btn-outline" type="button">
+          <Square size={16} />
+          {dict.admin.sessions.stop}
+        </button>
+      ) : null}
+
+      {status === "stopped" ? (
+        <div className="stack-md">
+          <div className="audio-recorder__panel">
+            <audio ref={audioRef} src={audioUrl || ""} onEnded={() => setIsPlaying(false)} className="hidden" />
+            <div className="audio-recorder__playback">
+              <div className="btn-group">
+                <button onClick={togglePlayback} className="btn btn-outline" type="button">
+                  {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                  {dict.admin.sessions.ready}
+                </button>
+              </div>
+              <button onClick={resetRecording} className="btn btn-outline" title="Discard and retake" type="button">
+                <RefreshCw size={16} />
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <button onClick={handleUploadAndSummarize} className="btn btn-primary" type="button">
+            <Sparkles size={16} />
+            {dict.admin.sessions.summarize}
+          </button>
+        </div>
+      ) : null}
+
+      {status === "uploading" || status === "processing" ? (
+        <div className="audio-recorder__loader">
+          <div className="audio-recorder__loader-ring" aria-hidden="true" />
+          <strong>{status === "uploading" ? dict.admin.sessions.uploading : dict.admin.sessions.processing}</strong>
+          <p>{dict.admin.sessions.processingSub}</p>
+        </div>
+      ) : null}
+
+      {status === "success" ? (
+        <div className="audio-recorder__feedback audio-recorder__feedback--success">
+          <Check size={22} color="var(--text-success)" />
+          <strong>{dict.admin.sessions.success}</strong>
+          <p>{dict.admin.sessions.successSub}</p>
+        </div>
+      ) : null}
+
+      {status === "error" ? (
+        <div className="audio-recorder__feedback audio-recorder__feedback--error">
+          <AlertCircle size={22} color="var(--text-error)" />
+          <strong>{dict.admin.sessions.error}</strong>
+          <p>{errorMessage}</p>
+          <button onClick={resetRecording} className="btn btn-outline" type="button">
+            {dict.admin.sessions.tryAgain}
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
 }

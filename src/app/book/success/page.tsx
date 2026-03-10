@@ -1,27 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import { CircleCheckBig } from "lucide-react";
+import EmptyState from "@/components/EmptyState";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function SuccessPage() {
-    const { dict } = useLanguage();
+  const { dict } = useLanguage();
 
-    return (
-        <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
-            <div style={{ background: 'var(--bg-white)', padding: '3rem', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', maxWidth: '500px', margin: '0 auto', border: '1px solid var(--border)' }}>
-                <h1 style={{ color: '#2ecc71', marginBottom: '1rem' }}>{dict.successPage.title}</h1>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-                    {dict.successPage.message}
-                </p>
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                    <Link href="/my-appointments" className="btn btn-primary" style={{ textDecoration: 'none', padding: '0.8rem 1.5rem', borderRadius: '6px' }}>
-                        {dict.successPage.viewAppointments}
-                    </Link>
-                    <Link href="/" style={{ textDecoration: 'none', color: 'var(--primary-teal)', padding: '0.8rem 1.5rem' }}>
-                        {dict.successPage.home}
-                    </Link>
-                </div>
-            </div>
+  return (
+    <div className="page-shell page-shell--soft">
+      <div className="container state-shell">
+        <div className="state-shell__panel">
+          <EmptyState
+            icon={CircleCheckBig}
+            title={dict.successPage.title}
+            description={dict.successPage.message}
+            tone="success"
+            action={
+              <div className="btn-group" style={{ justifyContent: "center" }}>
+                <Link href="/my-appointments" className="btn btn-primary">
+                  {dict.successPage.viewAppointments}
+                </Link>
+                <Link href="/" className="btn btn-outline">
+                  {dict.successPage.home}
+                </Link>
+              </div>
+            }
+          />
         </div>
-    );
+      </div>
+    </div>
+  );
 }

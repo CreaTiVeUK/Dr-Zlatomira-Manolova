@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
+const display = Outfit({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-display",
+});
+
+const body = Source_Sans_3({
+  subsets: ["latin"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
@@ -45,11 +50,16 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={outfit.className}>
+      <body className={`${display.variable} ${body.variable}`}>
         <Providers>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
           <EmergencyBanner />
           <Header user={user} />
-          <main style={{ minHeight: '80vh' }}>{children}</main>
+          <main id="main-content" className="site-main">
+            {children}
+          </main>
           <Footer />
           <CookieConsent />
         </Providers>

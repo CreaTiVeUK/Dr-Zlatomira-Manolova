@@ -17,7 +17,6 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>("en");
-    const [hydrated, setHydrated] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -25,8 +24,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         if (savedV === "en" || savedV === "bg") {
             Promise.resolve().then(() => setLanguageState(savedV as Language));
         }
-        // Wrap in Promise to avoid "setState synchronously in effect" lint error
-        Promise.resolve().then(() => setHydrated(true));
     }, []);
 
     const toggleLanguage = () => {
@@ -45,14 +42,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     };
 
     const dict = language === "en" ? en : bg;
-
-    if (!hydrated) {
-        return (
-            <LanguageContext.Provider value={{ language: "en", dict: en, toggleLanguage, setLanguage }}>
-                <div style={{ visibility: 'hidden' }}>{children}</div>
-            </LanguageContext.Provider>
-        );
-    }
 
     return (
         <LanguageContext.Provider value={{ language, dict, toggleLanguage, setLanguage }}>

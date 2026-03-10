@@ -1,7 +1,17 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import {
+  Award,
+  Baby,
+  HeartPulse,
+  MapPin,
+  ShieldCheck,
+  Star,
+  Stethoscope,
+} from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Testimonial {
@@ -16,8 +26,8 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const step = isMobile ? 1 : 2;
@@ -29,44 +39,66 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
       setIndex((current) => (current + step >= count ? 0 : current + step));
     }, 4500);
     return () => clearInterval(timer);
-  }, [count, isMobile, step]);
+  }, [count, step]);
 
-  if (!testimonials || count === 0) return null;
+  if (count === 0) return null;
 
   const visibleReviews = isMobile
     ? [testimonials[index % count]]
     : [testimonials[index % count], testimonials[(index + 1) % count]].filter(Boolean);
 
   return (
-    <div style={{
-      display: 'flex',
-      gap: isMobile ? '1rem' : '2rem',
-      flex: 1,
-      overflow: 'hidden',
-      minHeight: isMobile ? '120px' : '80px',
-      alignItems: 'center',
-      padding: isMobile ? '0 1rem' : '0'
-    }}>
+    <div
+      style={{
+        display: "grid",
+        gap: "0.9rem",
+        width: "100%",
+      }}
+    >
       {visibleReviews.map((rev, i) => (
-        <div key={`rev-${index}-${i}`} className="reveal active" style={{ flex: 1, animation: 'fadeInScale 0.8s ease-out', minWidth: isMobile ? '100%' : 'auto' }}>
-          <p style={{
-            fontStyle: 'italic',
-            fontSize: isMobile ? '0.85rem' : '0.85rem',
-            color: 'var(--text-charcoal)',
-            marginBottom: '0.4rem',
-            lineHeight: '1.4'
-          }}>
+        <div
+          key={`rev-${index}-${i}`}
+          className="reveal active"
+          style={{
+            display: "grid",
+            gap: "0.45rem",
+            padding: "0.2rem 0",
+            animation: "fadeInScale 0.7s ease-out",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "0.96rem",
+              color: "var(--text-charcoal)",
+              lineHeight: 1.7,
+            }}
+          >
             &quot;{rev.text}&quot;
           </p>
-          <div style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--accent-bluish)', opacity: 0.8 }}>
-            — {rev.author}
-          </div>
+          <span
+            style={{
+              fontFamily: "var(--font-heading)",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--primary-teal)",
+            }}
+          >
+            {rev.author}
+          </span>
         </div>
       ))}
       <style jsx>{`
         @keyframes fadeInScale {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>
@@ -75,264 +107,294 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
 
 export default function Home() {
   const { dict, language } = useLanguage();
-  const [trustStats, setTrustStats] = useState<{ rating: string, reviewsCount: string, testimonials: Testimonial[] } | null>(null);
+  const [trustStats, setTrustStats] = useState<{
+    rating: string;
+    reviewsCount: string;
+    testimonials: Testimonial[];
+  } | null>(null);
 
   useEffect(() => {
-    fetch('/api/trust-stats')
-      .then(res => res.json())
-      .then(data => {
+    fetch("/api/trust-stats")
+      .then((res) => res.json())
+      .then((data) => {
         if (data.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
-          // Map data to localized testimonials
-          const testimonials = data.testimonials.map((t: { textEn: string; textBg: string; authorEn: string; authorBg: string }) => ({
-            text: language === 'en' ? t.textEn : t.textBg,
-            author: language === 'en' ? t.authorEn : t.authorBg
-          }));
+          const testimonials = data.testimonials.map(
+            (t: { textEn: string; textBg: string; authorEn: string; authorBg: string }) => ({
+              text: language === "en" ? t.textEn : t.textBg,
+              author: language === "en" ? t.authorEn : t.authorBg,
+            }),
+          );
           setTrustStats({
             rating: data.rating || dict.home.trust.rating,
             reviewsCount: data.reviewsCount || dict.home.trust.reviewsCount,
-            testimonials
+            testimonials,
           });
         }
       })
-      .catch(err => console.error("Stats fetch error:", err));
+      .catch((err) => console.error("Stats fetch error:", err));
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.1 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [language, dict.home.trust.rating, dict.home.trust.reviewsCount]);
+  }, [dict.home.trust.rating, dict.home.trust.reviewsCount, language]);
 
   const stats = trustStats || {
     rating: dict.home.trust.rating,
     reviewsCount: dict.home.trust.reviewsCount,
-    testimonials: dict.home.trust.testimonials
+    testimonials: dict.home.trust.testimonials,
   };
 
   return (
     <div>
-      {/* HERO SECTION */}
       <section className="hero-section">
         <Image
           src="/hero_premium.png"
           alt={dict.home.heroImageAlt}
           fill
-          style={{ objectFit: 'cover', opacity: 0.55 }}
+          style={{ objectFit: "cover", opacity: 0.52 }}
           priority
         />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="reveal hero-content">
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              marginBottom: '1.5rem'
-            }}>
-              <div style={{
-                color: 'var(--accent-bluish)',
-                fontWeight: '700',
-                letterSpacing: '3px',
-                fontSize: '0.85rem',
-                textShadow: '0 2px 4px rgba(0,0,0,0.5)'
-              }}>
-                MBBS, DCH, MRCPCH, FRCP
-              </div>
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="hero-content reveal">
+            <div className="clinical-badge">
+              <Award size={14} />
+              MBBS, DCH, MRCPCH, FRCP
             </div>
 
-            <h1 className="hero-title" style={{ fontSize: 'clamp(2rem, 8vw, 4.5rem)' }}>
-              {dict.home.hero.title}<br />
-              <span style={{ color: 'var(--accent-bluish)' }}>{dict.home.hero.titleHighlight}</span>
+            <h1 className="hero-title">
+              {dict.home.hero.title}
+              <br />
+              <span style={{ color: "#9ed3ff" }}>{dict.home.hero.titleHighlight}</span>
             </h1>
 
-            <p className="hero-subtitle">
-              {dict.home.hero.subtitle}
-            </p>
+            <p className="hero-subtitle">{dict.home.hero.subtitle}</p>
 
-            <div className="btn-group">
-              <Link href="/book" className="btn btn-primary">{dict.home.hero.bookBtn}</Link>
-              <Link href="/services" className="btn btn-outline" style={{ border: '2px solid white', color: 'white' }}>{dict.home.hero.servicesBtn}</Link>
+            <div className="hero-actions">
+              <Link href="/book" className="btn btn-primary">
+                {dict.home.hero.bookBtn}
+              </Link>
+              <Link
+                href="/services"
+                className="btn btn-outline"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  borderColor: "rgba(255,255,255,0.18)",
+                  color: "white",
+                }}
+              >
+                {dict.home.hero.servicesBtn}
+              </Link>
+            </div>
+
+            <div className="hero-trust-grid">
+              <div className="hero-trust-card">
+                <ShieldCheck size={18} color="white" />
+                <strong>{stats.rating}</strong>
+                <span>{stats.reviewsCount} verified reviews</span>
+              </div>
+              <div className="hero-trust-card">
+                <Stethoscope size={18} color="white" />
+                <strong>{dict.home.about.role}</strong>
+                <span>{dict.home.about.badge}</span>
+              </div>
+              <div className="hero-trust-card">
+                <MapPin size={18} color="white" />
+                <strong>{dict.contact.medicalCenter}</strong>
+                <span>{dict.footer.addressMain}</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TRUST & PARTNERS BAR */}
       <section className="trust-bar reveal">
-        <div className="container trust-container-responsive" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <a
-            href={dict.home.trust.superdocLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none', transition: 'var(--transition-fast)', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}
-            title={dict.home.trust.superdocTitle}
-          >
-            <div style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--primary-teal)' }}>{stats.rating}</div>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ display: 'flex', color: 'var(--accent-bluish)', fontSize: '1.1rem', gap: '2px' }}>
-                {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
+        <div className="container">
+          <div className="trust-panel">
+            <a
+              href={dict.home.trust.superdocLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="trust-panel__cell"
+              title={dict.home.trust.superdocTitle}
+            >
+              <div>
+                <div className="trust-rating">{stats.rating}</div>
+                <div className="trust-stars" aria-hidden="true">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={16} fill="currentColor" />
+                  ))}
+                </div>
               </div>
-              <div style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                {stats.reviewsCount} {dict.home.trust.reviewsLabel}
+              <div>
+                <div className="trust-label">{dict.home.trust.reviewsLabel}</div>
+                <p style={{ marginTop: "0.35rem" }}>{stats.reviewsCount} Superdoc</p>
               </div>
+            </a>
+
+            <div className="trust-panel__cell trust-panel__cell--column">
+              <div className="trust-label">{dict.home.trust.superdocTitle}</div>
+              <ReviewCarousel testimonials={stats.testimonials} />
             </div>
-          </a>
 
-          <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
-
-          <ReviewCarousel testimonials={stats.testimonials} />
-
-          <div style={{ height: '50px', width: '1px', background: '#e2e8f0' }} className="desktop-only"></div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', flexShrink: 0 }}>
-            <div style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-              {dict.home.trust.partners}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-              <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
-                <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={130} height={55} style={{ objectFit: 'contain' }} />
-              </a>
-              <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
-                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={130} height={55} style={{ objectFit: 'contain' }} />
-              </a>
-              <a href="https://superdoc.bg/lekar/zlatomira-manolova" target="_blank" rel="noopener noreferrer" style={{ transition: 'var(--transition-fast)', padding: '0.5rem' }} className="partner-logo">
-                <Image src="/superdoc_logo.svg" alt="Superdoc" width={130} height={55} style={{ objectFit: 'contain' }} />
-              </a>
+            <div className="trust-panel__cell trust-panel__cell--column">
+              <div className="trust-label">{dict.home.trust.partners}</div>
+              <div className="partner-logo-grid">
+                <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
+                  <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={120} height={44} style={{ objectFit: "contain" }} />
+                </a>
+                <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
+                  <Image src="/plovdimed_logo.png" alt="Plovdimed" width={120} height={44} style={{ objectFit: "contain" }} />
+                </a>
+                <a href="https://superdoc.bg/lekar/zlatomira-manolova" target="_blank" rel="noopener noreferrer" className="partner-logo">
+                  <Image src="/superdoc_logo.svg" alt="Superdoc" width={120} height={44} style={{ objectFit: "contain" }} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <style jsx>{`
-          .trust-container-responsive {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 3rem;
-          }
-          @media (max-width: 960px) {
-            .trust-container-responsive {
-              flex-direction: column;
-              gap: 2.5rem;
-              text-align: center;
-            }
-          }
-        `}</style>
       </section>
 
-      {/* SPECIALIZED SERVICES GRID */}
-      <section className="section-padding" style={{ background: 'var(--bg-page-alt)' }}>
-        <div className="container">
-          <div className="text-center reveal">
-            <h2 className="section-title">{dict.home.services.title}</h2>
-            <p style={{ maxWidth: '700px', margin: '-1rem auto 4rem', color: 'var(--text-muted)', fontSize: '1.1rem' }}>
-              {dict.home.services.subtitle}
-            </p>
+      <section className="section-padding site-section">
+        <div className="container stack-lg">
+          <div className="page-intro page-intro--center reveal">
+            <span className="page-intro__eyebrow">{dict.home.services.title}</span>
+            <div className="page-intro__copy">
+              <h2 className="page-intro__title">{dict.home.services.subtitle}</h2>
+              <p className="page-intro__subtitle">
+                Structured pediatric support for routine consultations, complex diagnostics, and early-life care.
+              </p>
+            </div>
           </div>
 
           <div className="card-grid">
-            <div className="premium-card reveal delay-1">
-              <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
+            <article className="premium-card reveal delay-1">
+              <div className="service-media" style={{ minHeight: "240px" }}>
                 <Image
                   src="/service_general_paediatrics_1769272814052.png"
                   alt={dict.home.services.general.title}
                   fill
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: "cover" }}
                 />
               </div>
+              <div className="icon-badge">
+                <HeartPulse size={18} />
+              </div>
               <h3>{dict.home.services.general.title}</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                {dict.home.services.general.desc}
-              </p>
-              <Link href="/services" className="btn btn-outline" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.general.btn}</Link>
-            </div>
+              <p>{dict.home.services.general.desc}</p>
+              <Link href="/services" className="btn btn-outline">
+                {dict.home.services.general.btn}
+              </Link>
+            </article>
 
-            <div className="premium-card reveal delay-2">
-              <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
+            <article className="premium-card reveal delay-2">
+              <div className="service-media" style={{ minHeight: "240px" }}>
                 <Image
                   src="/service_allergy_consultation_1769272828650.png"
                   alt={dict.home.services.allergy.title}
                   fill
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: "cover" }}
                 />
               </div>
+              <div className="icon-badge">
+                <ShieldCheck size={18} />
+              </div>
               <h3>{dict.home.services.allergy.title}</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                {dict.home.services.allergy.desc}
-              </p>
-              <Link href="/services" className="btn btn-outline" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.allergy.btn}</Link>
-            </div>
+              <p>{dict.home.services.allergy.desc}</p>
+              <Link href="/services" className="btn btn-outline">
+                {dict.home.services.allergy.btn}
+              </Link>
+            </article>
 
-            <div className="premium-card reveal delay-3">
-              <div style={{ position: 'relative', height: '240px', marginBottom: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ background: 'var(--bg-placeholder)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>👶</div>
+            <article className="premium-card reveal delay-3">
+              <div
+                className="service-media"
+                style={{
+                  minHeight: "240px",
+                  display: "grid",
+                  placeItems: "center",
+                  background:
+                    "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
+                }}
+              >
+                <Baby size={76} color="var(--primary-teal)" />
+              </div>
+              <div className="icon-badge">
+                <Baby size={18} />
               </div>
               <h3>{dict.home.services.newborn.title}</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                {dict.home.services.newborn.desc}
-              </p>
-              <Link href="/services" className="btn btn-primary" style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '1px' }}>{dict.home.services.newborn.btn}</Link>
-            </div>
+              <p>{dict.home.services.newborn.desc}</p>
+              <Link href="/services" className="btn btn-primary">
+                {dict.home.services.newborn.btn}
+              </Link>
+            </article>
           </div>
         </div>
       </section>
 
-      {/* ABOUT SECTION (REFINED) */}
-      <section className="bg-soft section-padding reveal" id="about">
+      <section className="section-padding bg-soft site-section reveal" id="about">
         <div className="container about-grid">
           <div className="about-image">
             <Image
               src="/dr_manolova.jpg"
               alt={dict.home.about.imageAlt}
               fill
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: "cover" }}
             />
           </div>
-          <div>
-            <div className="clinical-badge" style={{ marginBottom: '1.5rem', color: 'var(--accent-bluish)' }}>{dict.home.about.badge}</div>
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>{dict.home.about.name}</h2>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem', fontWeight: '600', color: 'var(--text-charcoal)' }}>
+
+          <div className="surface-card surface-card--elevated about-copy">
+            <span className="page-intro__eyebrow">{dict.home.about.badge}</span>
+            <h2 className="page-intro__title" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
+              {dict.home.about.name}
+            </h2>
+            <p style={{ fontSize: "1.05rem", color: "var(--text-charcoal)", fontWeight: 600 }}>
               {dict.home.about.role}
             </p>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              {dict.home.about.bio1}
-            </p>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              {dict.home.about.bio2}
-            </p>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              {dict.home.about.bio3}
-            </p>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '1.05rem', lineHeight: '1.8' }}>
-              {dict.home.about.bio4}
-            </p>
+            <p>{dict.home.about.bio1}</p>
+            <p>{dict.home.about.bio2}</p>
+            <p>{dict.home.about.bio3}</p>
+            <p>{dict.home.about.bio4}</p>
 
             <div className="qual-grid">
-              <div>
-                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.qualifications}</h4>
-                <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {dict.home.about.qualList.map((q, i) => (
-                    <li key={i}><strong>{q.split(' ')[0]} {q.split(' ')[1]}</strong> {q.split(' ').slice(2).join(' ')}</li>
+              <div className="qual-card">
+                <h4>{dict.home.about.qualifications}</h4>
+                <ul className="list-checked">
+                  {dict.home.about.qualList.map((item, i) => (
+                    <li key={i}>{item}</li>
                   ))}
                 </ul>
               </div>
-              <div>
-                <h4 style={{ color: 'var(--primary-teal)', marginBottom: '1rem', fontSize: '0.9rem', letterSpacing: '1px' }}>{dict.home.about.specialties}</h4>
-                <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {dict.home.about.specList.map((s, i) => (
-                    <li key={i}>{s}</li>
+              <div className="qual-card">
+                <h4>{dict.home.about.specialties}</h4>
+                <ul className="list-checked">
+                  {dict.home.about.specList.map((item, i) => (
+                    <li key={i}>{item}</li>
                   ))}
                 </ul>
               </div>
             </div>
 
-            <Link href="/contact" className="btn btn-primary" style={{ marginTop: '3rem' }}>{dict.home.about.bioBtn}</Link>
+            <div className="btn-group">
+              <Link href="/contact" className="btn btn-primary">
+                {dict.home.about.bioBtn}
+              </Link>
+              <Link href="/book" className="btn btn-outline">
+                {dict.home.hero.bookBtn}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
     </div>
   );
 }
-

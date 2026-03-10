@@ -19,29 +19,11 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-charcoal)',
-                transition: 'var(--transition-fast)',
-                borderRadius: '50%',
-            }}
             aria-label="Toggle Theme"
             className="theme-toggle-btn"
+            type="button"
         >
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            <style jsx>{`
-                .theme-toggle-btn:hover {
-                    background: var(--bg-soft);
-                    color: var(--primary-teal);
-                    transform: rotate(15deg);
-                }
-            `}</style>
         </button>
     );
 }

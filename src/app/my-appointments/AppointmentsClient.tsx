@@ -1,202 +1,252 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { signIn } from "next-auth/react";
 import { format, isAfter, subHours } from "date-fns";
+import { CalendarCheck2, CalendarClock, CalendarX2, Download, LockKeyhole } from "lucide-react";
+import EmptyState from "@/components/EmptyState";
+import PageIntro from "@/components/PageIntro";
 import { generateICS } from "@/lib/calendar";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Appointment {
-    id: string;
-    dateTime: string;
-    duration: number;
-    status: string;
-    notes?: string | null;
-    user?: { name: string; email: string };
+  id: string;
+  dateTime: string;
+  duration: number;
+  status: string;
+  notes?: string | null;
+  user?: { name: string; email: string };
 }
 
 interface AppointmentsClientProps {
-    session: {
-        user: {
-            id: string;
-            email: string;
-            name: string;
-            role: string;
-        }
-    } | null;
+  session: {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      role: string;
+    };
+  } | null;
 }
 
 export default function AppointmentsClient({ session }: AppointmentsClientProps) {
-    const { dict } = useLanguage();
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState("");
+  const { dict, language } = useLanguage();
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
-    useEffect(() => {
-        if (session) {
-            fetchAppointments();
-        } else {
-            setLoading(false);
-        }
-    }, [session]);
-
-    if (!session) {
-        return (
-            <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
-                <h1 style={{ color: "var(--primary-teal)", marginBottom: '2rem' }}>{dict.myAppointments.title}</h1>
-                <p style={{ marginBottom: '2rem' }}>{dict.myAppointments.loginRequired || "Please log in to view your appointments."}</p>
-                <button
-                    onClick={() => signIn(undefined, { callbackUrl: "/my-appointments" })}
-                    className="btn btn-primary"
-                >
-                    {dict.auth.login.btn || "Log In"}
-                </button>
-            </div>
-        );
+  useEffect(() => {
+    if (session) {
+      fetchAppointments();
+    } else {
+      setLoading(false);
     }
+  }, [session]);
 
-    async function fetchAppointments() {
-        try {
-            const res = await fetch("/api/appointments");
-            if (res.ok) {
-                const data = await res.json();
-                setAppointments(data.appointments);
-            }
-        } catch (err) {
-            console.error("Error fetching appointments:", err);
-        } finally {
-            setLoading(false);
-        }
+  async function fetchAppointments() {
+    try {
+      const res = await fetch("/api/appointments");
+      if (res.ok) {
+        const data = await res.json();
+        setAppointments(data.appointments);
+      }
+    } catch (err) {
+      console.error("Error fetching appointments:", err);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    async function handleCancel(id: string, dateTime: string) {
-        const bookingDate = new Date(dateTime);
-        const now = new Date();
-
-        // Logic: 24h before cancellation
-        if (!isAfter(bookingDate, subHours(now, -24))) {
-            alert(dict.myAppointments.cancelRestriction);
-            return;
-        }
-
-        if (!confirm(dict.myAppointments.cancelConfirm)) return;
-
-        try {
-            const res = await fetch(`/api/appointments?id=${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "CANCELLED" }),
-            });
-
-            if (res.ok) {
-                setMessage(dict.myAppointments.cancelSuccess);
-                fetchAppointments();
-            } else {
-                const data = await res.json();
-                setMessage(data.error || dict.myAppointments.cancelError);
-            }
-        } catch {
-            setMessage("Error occurred.");
-        }
-    }
-
-    async function handleDownload(appt: Appointment) {
-        const ics = generateICS({
-            id: appt.id,
-            dateTime: new Date(appt.dateTime),
-            duration: appt.duration,
-            summary: "Pediatric Appointment: Dr. Manolova",
-            description: `Session: ${appt.notes || "Clinical Consultation"}`
-        });
-
-        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'appointment.ics');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
+  async function handleCancel(id: string, dateTime: string) {
+    const bookingDate = new Date(dateTime);
     const now = new Date();
-    const upcoming = appointments.filter(a => isAfter(new Date(a.dateTime), now) && a.status !== 'CANCELLED');
-    const past = appointments.filter(a => !isAfter(new Date(a.dateTime), now) || a.status === 'CANCELLED');
 
-    if (loading) return <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>Loading...</div>;
+    if (!isAfter(bookingDate, subHours(now, -24))) {
+      alert(dict.myAppointments.cancelRestriction);
+      return;
+    }
 
+    if (!confirm(dict.myAppointments.cancelConfirm)) return;
+
+    try {
+      const res = await fetch(`/api/appointments?id=${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "CANCELLED" }),
+      });
+
+      if (res.ok) {
+        setMessage(dict.myAppointments.cancelSuccess);
+        fetchAppointments();
+      } else {
+        const data = await res.json();
+        setMessage(data.error || dict.myAppointments.cancelError);
+      }
+    } catch {
+      setMessage(language === "bg" ? "Възникна грешка." : "An error occurred.");
+    }
+  }
+
+  function handleDownload(appt: Appointment) {
+    const ics = generateICS({
+      id: appt.id,
+      dateTime: new Date(appt.dateTime),
+      duration: appt.duration,
+      summary: "Pediatric Appointment: Dr. Manolova",
+      description: `Session: ${appt.notes || "Clinical Consultation"}`,
+    });
+
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "appointment.ics");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  const { upcoming, past } = useMemo(() => {
+    const now = new Date();
+    return {
+      upcoming: appointments.filter((appt) => isAfter(new Date(appt.dateTime), now) && appt.status !== "CANCELLED"),
+      past: appointments.filter((appt) => !isAfter(new Date(appt.dateTime), now) || appt.status === "CANCELLED"),
+    };
+  }, [appointments]);
+
+  if (!session) {
     return (
-        <div className="container" style={{ padding: '4rem 0' }}>
-            <h1 style={{ color: "var(--primary-teal)", textAlign: "center", marginBottom: '3rem' }}>{dict.myAppointments.title}</h1>
-
-            {message && <div style={{ padding: '1rem', background: 'var(--bg-soft)', color: 'var(--primary-teal)', borderRadius: '4px', textAlign: 'center', marginBottom: '2rem', border: '1px solid var(--border)' }}>{message}</div>}
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-                <section>
-                    <h2 style={{ fontSize: '1.2rem', color: 'var(--primary-teal)', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        {dict.myAppointments.upcoming}
-                    </h2>
-                    <div style={{ background: 'var(--bg-white)', padding: '1.5rem', borderRadius: '8px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
-                        {upcoming.length === 0 ? (
-                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>{dict.myAppointments.empthy}</p>
-                        ) : (
-                            <div style={{ display: 'grid', gap: '1rem' }}>
-                                {upcoming.map((appt) => (
-                                    <div key={appt.id} className="table-responsive" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '500px' }}>
-                                            <div>
-                                                <div style={{ fontWeight: 'bold', color: 'var(--text-charcoal)' }}>{format(new Date(appt.dateTime), "PPPP")}</div>
-                                                <div style={{ color: 'var(--text-muted)' }}>{format(new Date(appt.dateTime), "p")} - <span style={{ color: '#2e7d32', fontWeight: '700' }}>{dict.myAppointments.confirmed}</span></div>
-                                            </div>
-                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <button
-                                                    onClick={() => handleDownload(appt)}
-                                                    style={{ background: 'var(--bg-header-alt)', color: 'var(--primary-teal)', border: '1px solid var(--primary-teal)', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
-                                                >
-                                                    {dict.myAppointments.download}
-                                                </button>
-                                                <button
-                                                    onClick={() => handleCancel(appt.id, appt.dateTime)}
-                                                    style={{ background: '#fff5f5', color: '#c53030', border: '1px solid #feb2b2', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '800' }}
-                                                >
-                                                    {dict.myAppointments.cancel}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </section>
-
-                <section>
-                    <h2 style={{ fontSize: '1.2rem', color: 'var(--text-muted)', borderBottom: '2px solid var(--bg-soft)', paddingBottom: '0.5rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        {dict.myAppointments.past}
-                    </h2>
-                    <div style={{ background: 'var(--bg-white)', padding: '1.5rem', borderRadius: '8px', boxShadow: 'var(--shadow-sm)', opacity: 0.8, border: '1px solid var(--border)' }}>
-                        {past.length === 0 ? (
-                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>No history found.</p>
-                        ) : (
-                            <div style={{ display: 'grid', gap: '1rem' }}>
-                                {past.map((appt) => (
-                                    <div key={appt.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-                                        <div>
-                                            <div style={{ fontWeight: 'bold', color: 'var(--text-muted)' }}>{format(new Date(appt.dateTime), "PPPP")}</div>
-                                            <div style={{ color: 'var(--text-muted)', opacity: 0.8 }}>
-                                                {format(new Date(appt.dateTime), "p")} -
-                                                <span style={{ color: appt.status === 'CANCELLED' ? '#c53030' : '#4a5568', fontWeight: '700', marginLeft: '0.5rem' }}>
-                                                    {appt.status === 'CANCELLED' ? dict.myAppointments.cancelled : "COMPLETED"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </section>
-            </div>
+      <div className="page-shell page-shell--soft">
+        <div className="container state-shell">
+          <div className="state-shell__panel">
+            <EmptyState
+              icon={LockKeyhole}
+              title={dict.myAppointments.title}
+              description={dict.myAppointments.loginRequired || "Please log in to view your appointments."}
+              action={
+                <button onClick={() => signIn(undefined, { callbackUrl: "/my-appointments" })} className="btn btn-primary" type="button">
+                  {dict.auth.login.btn || "Log In"}
+                </button>
+              }
+            />
+          </div>
         </div>
+      </div>
     );
+  }
+
+  if (loading) {
+    return (
+      <div className="page-shell page-shell--soft">
+        <div className="container state-shell">
+          <div className="state-shell__panel">
+            <div className="spinner" aria-hidden="true" />
+            <p>{language === "bg" ? "Зареждаме часовете Ви..." : "Loading your appointments..."}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page-shell page-shell--soft">
+      <div className="container appointments-layout">
+        <PageIntro
+          eyebrow={dict.userMenu.appointments}
+          title={dict.myAppointments.title}
+          subtitle={language === "bg" ? "Следете предстоящите посещения, сваляйте календарни покани и управлявайте промените навреме." : "Track upcoming visits, download calendar invites, and manage changes before the appointment."}
+        />
+
+        {message ? (
+          <div className="status-banner status-banner--success">
+            <strong>{message}</strong>
+          </div>
+        ) : null}
+
+        <div className="appointments-summary">
+          <div className="appointment-summary-card">
+            <CalendarCheck2 size={18} color="var(--primary-teal)" />
+            <strong>{upcoming.length}</strong>
+            <span>{dict.myAppointments.upcoming}</span>
+          </div>
+          <div className="appointment-summary-card">
+            <CalendarClock size={18} color="var(--primary-teal)" />
+            <strong>{appointments.length}</strong>
+            <span>{language === "bg" ? "общо посещения" : "total visits"}</span>
+          </div>
+          <div className="appointment-summary-card">
+            <CalendarX2 size={18} color="var(--primary-teal)" />
+            <strong>{past.filter((appt) => appt.status === "CANCELLED").length}</strong>
+            <span>{dict.myAppointments.cancelled}</span>
+          </div>
+        </div>
+
+        <section className="appointments-card">
+          <div className="stack-md">
+            <h2>{dict.myAppointments.upcoming}</h2>
+            {upcoming.length === 0 ? (
+              <EmptyState
+                icon={CalendarClock}
+                title={dict.myAppointments.empthy}
+                description={language === "bg" ? "След като запазите час, той ще се появи тук с опции за календар и отказ." : "Once you book, it will appear here with calendar and cancellation options."}
+                compact
+              />
+            ) : (
+              <div className="appointment-list">
+                {upcoming.map((appt) => (
+                  <article key={appt.id} className="appointment-entry">
+                    <div className="appointment-entry__meta">
+                      <strong>{format(new Date(appt.dateTime), "PPPP")}</strong>
+                      <p>
+                        {format(new Date(appt.dateTime), "p")} · {dict.myAppointments.confirmed}
+                      </p>
+                    </div>
+                    <div className="appointment-entry__actions">
+                      <button onClick={() => handleDownload(appt)} className="btn btn-outline" type="button">
+                        <Download size={16} />
+                        {dict.myAppointments.download}
+                      </button>
+                      <button onClick={() => handleCancel(appt.id, appt.dateTime)} className="btn btn-outline" type="button">
+                        {dict.myAppointments.cancel}
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="appointments-card">
+          <div className="stack-md">
+            <h2>{dict.myAppointments.past}</h2>
+            {past.length === 0 ? (
+              <EmptyState
+                icon={CalendarCheck2}
+                title={language === "bg" ? "Все още няма история." : "No history yet."}
+                description={language === "bg" ? "Минали или отменени посещения ще се показват тук." : "Completed or cancelled visits will appear here."}
+                compact
+              />
+            ) : (
+              <div className="appointment-list">
+                {past.map((appt) => (
+                  <article key={appt.id} className="appointment-entry">
+                    <div className="appointment-entry__meta">
+                      <strong>{format(new Date(appt.dateTime), "PPPP")}</strong>
+                      <p>{format(new Date(appt.dateTime), "p")}</p>
+                    </div>
+                    <div className="appointment-entry__actions">
+                      <span className={`status-chip ${appt.status === "CANCELLED" ? "status-chip--error" : "status-chip--info"}`}>
+                        {appt.status === "CANCELLED" ? dict.myAppointments.cancelled : "Completed"}
+                      </span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }

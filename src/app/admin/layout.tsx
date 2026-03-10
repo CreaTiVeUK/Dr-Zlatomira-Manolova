@@ -1,139 +1,90 @@
-
 "use client";
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
-import {
-    LayoutDashboard,
-    Calendar,
-    Users,
-    LogOut,
-    Menu,
-    X,
-    Mic
-} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { Calendar, LayoutDashboard, LogOut, Menu, Mic, Users, X } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    const pathname = usePathname();
-    const { dict } = useLanguage();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const { dict } = useLanguage();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const menuItems = [
-        { name: dict.admin.sidebar.dashboard, icon: LayoutDashboard, href: "/admin/dashboard" },
-        { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
-        { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
-        { name: dict.admin.sidebar.sessions, icon: Mic, href: "/admin/sessions" },
-    ];
+  const menuItems = [
+    { name: dict.admin.sidebar.dashboard, icon: LayoutDashboard, href: "/admin/dashboard" },
+    { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
+    { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
+    { name: dict.admin.sidebar.sessions, icon: Mic, href: "/admin/sessions" },
+  ];
 
-
-    return (
-        <div className="admin-layout">
-            {/* MOBILE HEADER */}
-            <div className="admin-header-mobile">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <div style={{ position: 'relative', width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
-                        <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
-                    </div>
-                    <span style={{ fontWeight: '800', fontSize: '0.8rem', letterSpacing: '0.05em' }}>{dict.header.title.toUpperCase()}</span>
-                </div>
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
-                    {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-            </div>
-
-            {/* SIDEBAR OVERLAY */}
-            <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} onClick={() => setIsSidebarOpen(false)} />
-
-            {/* SIDEBAR */}
-            <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
-                <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <div style={{ position: 'relative', width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', background: 'white' }}>
-                        <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: 'contain', padding: '2px' }} />
-                    </div>
-                    <h1 style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.05em', lineHeight: 1.2 }}>
-                        {dict.header.title.split(' ')[0].toUpperCase()}<br />
-                        {dict.header.title.split(' ').slice(1).join(' ').toUpperCase()}
-                    </h1>
-                </div>
-
-                {/* USER INFO */}
-                <div style={{ padding: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ position: 'relative', width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.2)' }}>
-                        <Image
-                            src="/dr-manolova-avatar.png"
-                            alt="Dr. Manolova"
-                            fill
-                            style={{ objectFit: 'cover' }}
-                        />
-                    </div>
-                    <div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>Dr. Manolova</div>
-                        <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{dict.admin.sidebar.roleAdmin}</div>
-                    </div>
-                </div>
-
-                {/* NAVIGATION */}
-                <nav style={{ flex: 1, padding: '1rem 0' }}>
-                    <ul style={{ listStyle: 'none', padding: 0 }}>
-                        {menuItems.map((item) => {
-                            const isActive = pathname === item.href;
-                            return (
-                                <li key={item.name}>
-                                    <Link
-                                        href={item.href}
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '1rem',
-                                            padding: '1rem 2rem',
-                                            textDecoration: 'none',
-                                            color: 'white',
-                                            background: isActive ? 'rgba(255,255,255,0.15)' : 'transparent',
-                                            borderLeft: isActive ? '4px solid #3182CE' : '4px solid transparent',
-                                            transition: 'all 0.2s'
-                                        }}
-                                    >
-                                        <item.icon size={20} />
-                                        <span style={{ fontSize: '0.9rem', fontWeight: '500' }}>{item.name}</span>
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </nav>
-
-                {/* BOTTOM ACTIONS */}
-                <div style={{ padding: '1rem 0', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <button
-                        onClick={() => signOut({ callbackUrl: '/' })}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            padding: '1rem 2rem',
-                            color: 'white',
-                            opacity: 0.8,
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                            width: '100%'
-                        }}
-                    >
-                        <LogOut size={20} />
-                        <span style={{ fontSize: '0.9rem' }}>{dict.admin.sidebar.logout}</span>
-                    </button>
-                </div>
-            </aside>
-
-            {/* MAIN CONTENT AREA */}
-            <main className="admin-main">
-                {children}
-            </main>
+  return (
+    <div className="admin-layout">
+      <div className="admin-header-mobile">
+        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+          <div style={{ position: "relative", width: "34px", height: "34px", borderRadius: "50%", overflow: "hidden", background: "white" }}>
+            <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: "contain", padding: "3px" }} />
+          </div>
+          <strong style={{ fontFamily: "var(--font-heading)", fontSize: "0.9rem", letterSpacing: "0.05em" }}>
+            {dict.header.title}
+          </strong>
         </div>
-    );
+        <button onClick={() => setIsSidebarOpen((open) => !open)} style={{ background: "none", border: 0, color: "white" }} type="button">
+          {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      <div className={`sidebar-overlay ${isSidebarOpen ? "open" : ""}`} onClick={() => setIsSidebarOpen(false)} />
+
+      <aside className={`admin-sidebar ${isSidebarOpen ? "open" : ""}`}>
+        <div className="admin-sidebar__brand">
+          <div style={{ position: "relative", width: "42px", height: "42px", borderRadius: "50%", overflow: "hidden", background: "white" }}>
+            <Image src="/logo.jpg" alt="Logo" fill style={{ objectFit: "contain", padding: "4px" }} />
+          </div>
+          <div className="admin-sidebar__brand-copy">
+            <strong style={{ fontFamily: "var(--font-heading)", fontSize: "1rem" }}>{dict.header.title}</strong>
+            <span>{dict.admin.sidebar.roleAdmin}</span>
+          </div>
+        </div>
+
+        <div className="admin-sidebar__user">
+          <div style={{ position: "relative", width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.14)" }}>
+            <Image src="/dr-manolova-avatar.png" alt="Dr. Manolova" fill style={{ objectFit: "cover" }} />
+          </div>
+          <div>
+            <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>Dr. Manolova</div>
+            <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.72)" }}>{dict.admin.sidebar.roleAdmin}</div>
+          </div>
+        </div>
+
+        <nav className="admin-sidebar__nav" aria-label="Admin navigation">
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`admin-sidebar__link${isActive ? " admin-sidebar__link--active" : ""}`}
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <item.icon size={18} />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="admin-sidebar__footer">
+          <button onClick={() => signOut({ callbackUrl: "/" })} className="admin-sidebar__logout" type="button">
+            <LogOut size={18} />
+            <span>{dict.admin.sidebar.logout}</span>
+          </button>
+        </div>
+      </aside>
+
+      <main className="admin-main">{children}</main>
+    </div>
+  );
 }

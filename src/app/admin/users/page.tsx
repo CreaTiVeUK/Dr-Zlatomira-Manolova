@@ -1,124 +1,143 @@
-
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { isMissingTableError } from "@/lib/prisma-errors";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic } from "lucide-react";
+import { redirect } from "next/navigation";
+import EmptyState from "@/components/EmptyState";
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { isMissingTableError } from "@/lib/prisma-errors";
 
 export default async function AdminUserList() {
-    const session = await getSession();
-    if (!session?.user || session.user.role !== "ADMIN") redirect("/");
+  const session = await getSession();
+  if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 
-    const [users, childrenAvailable, documentsAvailable] = await Promise.all([
-        prisma.user.findMany({
-            where: { role: "PATIENT" },
-            orderBy: { createdAt: 'desc' },
+  const [users, childrenAvailable, documentsAvailable] = await Promise.all([
+    prisma.user
+      .findMany({
+        where: { role: "PATIENT" },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          _count: {
             select: {
+              children: true,
+              documents: true,
+            },
+          },
+        },
+      })
+      .catch((error) => {
+        if (isMissingTableError(error)) {
+          return prisma.user
+            .findMany({
+              where: { role: "PATIENT" },
+              orderBy: { createdAt: "desc" },
+              select: {
                 id: true,
                 name: true,
                 email: true,
                 createdAt: true,
-                _count: {
-                    select: {
-                        children: true,
-                        documents: true
-                    }
-                }
-            }
-        }).catch((error) => {
-            if (isMissingTableError(error)) {
-                return prisma.user.findMany({
-                    where: { role: "PATIENT" },
-                    orderBy: { createdAt: 'desc' },
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        createdAt: true
-                    }
-                }).then((fallbackUsers) => fallbackUsers.map((user) => ({
-                    ...user,
-                    _count: {
-                        children: 0,
-                        documents: 0
-                    }
-                })));
-            }
+              },
+            })
+            .then((fallbackUsers) =>
+              fallbackUsers.map((user) => ({
+                ...user,
+                _count: { children: 0, documents: 0 },
+              })),
+            );
+        }
 
-            throw error;
-        }),
-        prisma.child.count().then(() => true).catch((error) => {
-            if (isMissingTableError(error)) return false;
-            throw error;
-        }),
-        prisma.patientDocument.count().then(() => true).catch((error) => {
-            if (isMissingTableError(error)) return false;
-            throw error;
-        })
-    ]);
+        throw error;
+      }),
+    prisma.child.count().then(() => true).catch((error) => {
+      if (isMissingTableError(error)) return false;
+      throw error;
+    }),
+    prisma.patientDocument.count().then(() => true).catch((error) => {
+      if (isMissingTableError(error)) return false;
+      throw error;
+    }),
+  ]);
 
-    return (
-        <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
-            <div className="container">
-                <h1 className="section-title">Patient Management</h1>
-                <p style={{ color: '#666', marginBottom: '2rem' }}>Select a patient to view details or upload documents.</p>
-
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead className="bg-gray-50 border-b">
-                            <tr>
-                                <th className="text-left p-4 font-semibold text-gray-600">Patient</th>
-                                <th className="text-left p-4 font-semibold text-gray-600">Joined</th>
-                                <th className="text-center p-4 font-semibold text-gray-600">Children</th>
-                                <th className="text-center p-4 font-semibold text-gray-600">Docs</th>
-                                <th className="text-right p-4 font-semibold text-gray-600">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map(user => (
-                                <tr key={user.id} className="border-b hover:bg-gray-50">
-                                    <td className="p-4">
-                                        <div className="font-bold text-gray-900">{user.name || "No User Name"}</div>
-                                        <div className="text-sm text-gray-500">{user.email}</div>
-                                    </td>
-                                    <td className="p-4 text-gray-600">
-                                        {format(new Date(user.createdAt), "MMM d, yyyy")}
-                                    </td>
-                                    <td className="p-4 text-center">
-                                        {childrenAvailable ? (
-                                            user._count.children > 0 ? <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">{user._count.children}</span> : <span className="text-gray-400">-</span>
-                                        ) : <span className="text-gray-400">-</span>}
-                                    </td>
-                                    <td className="p-4 text-center">
-                                        {documentsAvailable ? (
-                                            user._count.documents > 0 ? <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">{user._count.documents}</span> : <span className="text-gray-400">-</span>
-                                        ) : <span className="text-gray-400">-</span>}
-                                    </td>
-                                    <td className="p-4 text-right">
-                                        <div className="flex items-center justify-end gap-3">
-                                            <Link
-                                                href={`/admin/users/${user.id}#session-recorder`}
-                                                className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
-                                                title="Record Session"
-                                            >
-                                                <Mic size={18} />
-                                            </Link>
-                                            <Link
-                                                href={`/admin/users/${user.id}`}
-                                                className="text-teal-600 hover:text-teal-800 font-bold text-sm"
-                                            >
-                                                View Profile →
-                                            </Link>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  return (
+    <div className="admin-page">
+      <div className="admin-page-header">
+        <div className="admin-page-header__copy">
+          <span className="page-intro__eyebrow">Patient records</span>
+          <h1 className="section-title">Patient management</h1>
+          <p>Review patient accounts, open detailed profiles, and jump straight into session recording when needed.</p>
         </div>
-    );
+      </div>
+
+      {users.length === 0 ? (
+        <EmptyState
+          title="No patients found"
+          description="New patient registrations will appear here."
+        />
+      ) : (
+        <div className="table-card">
+          <div className="table-responsive">
+            <table className="table-modern">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Joined</th>
+                  <th>Children</th>
+                  <th>Documents</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <strong>{user.name || "No name"}</strong>
+                      <p>{user.email}</p>
+                    </td>
+                    <td>{format(new Date(user.createdAt), "MMM d, yyyy")}</td>
+                    <td>
+                      {childrenAvailable ? (
+                        user._count.children > 0 ? (
+                          <span className="status-chip status-chip--info">{user._count.children}</span>
+                        ) : (
+                          <span className="helper-text">-</span>
+                        )
+                      ) : (
+                        <span className="helper-text">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {documentsAvailable ? (
+                        user._count.documents > 0 ? (
+                          <span className="status-chip status-chip--success">{user._count.documents}</span>
+                        ) : (
+                          <span className="helper-text">-</span>
+                        )
+                      ) : (
+                        <span className="helper-text">-</span>
+                      )}
+                    </td>
+                    <td>
+                      <div className="btn-group" style={{ justifyContent: "flex-end" }}>
+                        <Link href={`/admin/users/${user.id}#session-recorder`} className="btn btn-outline" title="Record session">
+                          <Mic size={16} />
+                          Session
+                        </Link>
+                        <Link href={`/admin/users/${user.id}`} className="btn btn-primary">
+                          View profile
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
