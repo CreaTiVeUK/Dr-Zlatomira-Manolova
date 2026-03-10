@@ -11,17 +11,44 @@ export default async function AdminUserList() {
     const session = await getSession();
     if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 
-    const users = await prisma.user.findMany({
-        orderBy: { createdAt: 'desc' },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            createdAt: true
-        }
-    });
+    const [users, childrenAvailable, documentsAvailable] = await Promise.all([
+        prisma.user.findMany({
+            where: { role: "PATIENT" },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                createdAt: true,
+                _count: {
+                    select: {
+                        children: true,
+                        documents: true
+                    }
+                }
+            }
+        }).catch((error) => {
+            if (isMissingTableError(error)) {
+                return prisma.user.findMany({
+                    where: { role: "PATIENT" },
+                    orderBy: { createdAt: 'desc' },
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        createdAt: true
+                    }
+                }).then((fallbackUsers) => fallbackUsers.map((user) => ({
+                    ...user,
+                    _count: {
+                        children: 0,
+                        documents: 0
+                    }
+                })));
+            }
 
-    const [childrenAvailable, documentsAvailable] = await Promise.all([
+            throw error;
+        }),
         prisma.child.count().then(() => true).catch((error) => {
             if (isMissingTableError(error)) return false;
             throw error;
@@ -60,15 +87,19 @@ export default async function AdminUserList() {
                                         {format(new Date(user.createdAt), "MMM d, yyyy")}
                                     </td>
                                     <td className="p-4 text-center">
-                                        {childrenAvailable ? <span className="text-gray-400">0</span> : <span className="text-gray-400">-</span>}
+                                        {childrenAvailable ? (
+                                            user._count.children > 0 ? <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">{user._count.children}</span> : <span className="text-gray-400">-</span>
+                                        ) : <span className="text-gray-400">-</span>}
                                     </td>
                                     <td className="p-4 text-center">
-                                        {documentsAvailable ? <span className="text-gray-400">0</span> : <span className="text-gray-400">-</span>}
+                                        {documentsAvailable ? (
+                                            user._count.documents > 0 ? <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">{user._count.documents}</span> : <span className="text-gray-400">-</span>
+                                        ) : <span className="text-gray-400">-</span>}
                                     </td>
                                     <td className="p-4 text-right">
                                         <div className="flex items-center justify-end gap-3">
                                             <Link
-                                                href={`/admin/users/${user.id}`}
+                                                href={`/admin/users/${user.id}#session-recorder`}
                                                 className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
                                                 title="Record Session"
                                             >

@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Mic, Square, Play, Pause, RefreshCw, Check, AlertCircle, FileAudio, Sparkles } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -12,6 +13,7 @@ interface AudioRecorderProps {
 
 export default function AudioRecorder({ userId, onSuccess }: AudioRecorderProps) {
     const { dict } = useLanguage();
+    const router = useRouter();
     const [isRecording, setIsRecording] = useState(false);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -108,6 +110,7 @@ export default function AudioRecorder({ userId, onSuccess }: AudioRecorderProps)
 
             setStatus('success');
             onSuccess();
+            router.refresh();
             setTimeout(() => resetRecording(), 3000);
         } catch (err: unknown) {
             console.error("Upload/Processing error:", err);

@@ -96,12 +96,12 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                             </div>
                         ) : (
                             <>
-                                <div className="mb-8 p-4 bg-blue-50 rounded border border-blue-100">
+                                <div id="document-upload" className="mb-8 p-4 bg-blue-50 rounded border border-blue-100">
                                     <h3 className="font-bold text-blue-900 mb-2 text-sm">Upload New Document</h3>
                                     <AdminUploadForm userId={user.id} />
                                 </div>
 
-                                <div className="mb-8">
+                                <div id="session-recorder" className="mb-8">
                                     <AudioRecorder userId={user.id} onSuccess={() => { }} />
                                 </div>
                             </>
