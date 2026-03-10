@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminDashboardClient from "./AdminDashboardClient";
@@ -11,6 +12,10 @@ import {
     startOfDay,
     subMonths
 } from "date-fns";
+
+function isMissingTableError(error: unknown) {
+    return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021";
+}
 
 export default async function AdminDashboard() {
     const session = await getSession();
@@ -41,13 +46,18 @@ export default async function AdminDashboard() {
                 _count: {
                     select: {
                         appointments: true,
-                        children: true,
-                        documents: true
+                        children: true
                     }
                 }
             }
         }),
-        prisma.patientDocument.count()
+        prisma.patientDocument.count().catch((error) => {
+            if (isMissingTableError(error)) {
+                return 0;
+            }
+
+            throw error;
+        })
     ]);
 
     const now = new Date();
@@ -104,7 +114,7 @@ export default async function AdminDashboard() {
             name: patient.name || "Unknown Patient",
             joinedLabel: format(new Date(patient.createdAt), "MMM d, yyyy"),
             appointmentsCount: patient._count.appointments,
-            documentsCount: patient._count.documents,
+            documentsCount: 0,
             childrenCount: patient._count.children
         }));
 
