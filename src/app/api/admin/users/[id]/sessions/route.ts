@@ -6,9 +6,15 @@ import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 import { createReadStream } from "fs";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+    if (!process.env.OPENAI_API_KEY) {
+        throw new Error("OPENAI_API_KEY is not configured");
+    }
+
+    return new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
+}
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -20,6 +26,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     try {
         const { id: patientId } = await params;
+        const openai = getOpenAIClient();
 
         // 2. Parse Form Data
         const formData = await req.formData();
@@ -77,7 +84,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
                 fileSize: size,
                 userId: patientId,
                 uploadedById: session.user.id!,
-                // @ts-expect-error - Field added to schema but prisma client not regenerated in this environment
                 summary: summary,
                 transcription: transcription
             }

@@ -2,10 +2,18 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import { FileText, Sparkles } from "lucide-react";
+
+const adminUserArgs = Prisma.validator<Prisma.UserDefaultArgs>()({
+    include: {
+        children: true,
+        documents: { orderBy: { uploadedAt: "desc" } }
+    }
+});
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
     const session = await getSession();
@@ -15,10 +23,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
 
     const user = await prisma.user.findUnique({
         where: { id },
-        include: {
-            children: true,
-            documents: { orderBy: { uploadedAt: 'desc' } }
-        }
+        ...adminUserArgs
     });
 
     if (!user) return <div>User not found</div>;
@@ -71,9 +76,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                                     <li key={doc.id} className="p-4 border rounded-xl hover:bg-gray-50 transition-colors bg-white">
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex items-center gap-3">
-                                                {/* @ts-expect-error - Prisma types delay */}
                                                 <div className={`p-2 rounded-lg ${doc.summary ? 'bg-amber-50 text-amber-600' : 'bg-gray-50 text-gray-400'}`}>
-                                                    {/* @ts-expect-error - Prisma types delay */}
                                                     {doc.summary ? <Sparkles className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
                                                 </div>
                                                 <div>
@@ -92,7 +95,6 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                                             </a>
                                         </div>
 
-                                        {/* @ts-expect-error - Prisma types delay */}
                                         {doc.summary && (
                                             <div className="mt-4 pt-4 border-t border-gray-100">
                                                 <div className="flex items-center gap-2 mb-2 text-amber-700 font-bold text-xs uppercase tracking-wider">
@@ -100,18 +102,15 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                                                     Session Summary
                                                 </div>
                                                 <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap text-sm leading-relaxed bg-amber-50/30 p-3 rounded-lg border border-amber-100/50">
-                                                    {/* @ts-expect-error - Prisma types delay */}
                                                     {doc.summary}
                                                 </div>
 
-                                                {/* @ts-expect-error - Prisma types delay */}
                                                 {doc.transcription && (
                                                     <details className="mt-3">
                                                         <summary className="text-[10px] text-gray-400 font-bold uppercase cursor-pointer hover:text-gray-600 outline-none">
                                                             View Full Transcription
                                                         </summary>
                                                         <div className="mt-2 text-xs text-gray-500 bg-gray-50 p-3 rounded italic border-l-2 border-gray-200">
-                                                            {/* @ts-expect-error - Prisma types delay */}
                                                             {doc.transcription}
                                                         </div>
                                                     </details>

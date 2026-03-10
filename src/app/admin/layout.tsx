@@ -4,15 +4,11 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     LayoutDashboard,
     Calendar,
     Users,
-    FileText,
-    BarChart,
-    Settings,
     LogOut,
     Menu,
     X,
@@ -26,20 +22,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { dict } = useLanguage();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsSidebarOpen(false);
-    }, [pathname]);
-
-
     const menuItems = [
         { name: dict.admin.sidebar.dashboard, icon: LayoutDashboard, href: "/admin/dashboard" },
         { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
         { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
         { name: dict.admin.sidebar.sessions, icon: Mic, href: "/admin/sessions" },
-        { name: dict.admin.sidebar.reports, icon: FileText, href: "/admin/reports" },
-        { name: dict.admin.sidebar.analytics, icon: BarChart, href: "/admin/analytics" },
     ];
 
 
@@ -98,6 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 <li key={item.name}>
                                     <Link
                                         href={item.href}
+                                        onClick={() => setIsSidebarOpen(false)}
                                         style={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -121,13 +109,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {/* BOTTOM ACTIONS */}
                 <div style={{ padding: '1rem 0', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <Link
-                        href="/admin/settings"
-                        style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', color: 'white', opacity: 0.8, textDecoration: 'none' }}
-                    >
-                        <Settings size={20} />
-                        <span style={{ fontSize: '0.9rem' }}>{dict.admin.sidebar.settings}</span>
-                    </Link>
                     <button
                         onClick={() => signOut({ callbackUrl: '/' })}
                         style={{

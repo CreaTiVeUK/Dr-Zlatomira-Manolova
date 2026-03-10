@@ -1,9 +1,26 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic, Sparkles, FileText, ChevronRight, Filter, Plus, MessageSquare } from "lucide-react";
+
+const sessionLogArgs = Prisma.validator<Prisma.PatientDocumentDefaultArgs>()({
+    include: {
+        user: {
+            include: {
+                appointments: {
+                    orderBy: { dateTime: "desc" },
+                    take: 1,
+                    select: { notes: true, dateTime: true }
+                }
+            }
+        }
+    }
+});
+
+type SessionLog = Prisma.PatientDocumentGetPayload<typeof sessionLogArgs>;
 
 export default async function AdminSessionsLog({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
     const session = await getSession();
@@ -18,7 +35,6 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
         orderBy: { name: 'asc' }
     });
 
-    // @ts-expect-error - Prisma types lag
     const sessions = await prisma.patientDocument.findMany({
         where: {
             AND: [
@@ -32,18 +48,8 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
             ]
         },
         orderBy: { uploadedAt: 'desc' },
-        include: {
-            user: {
-                include: {
-                    appointments: {
-                        orderBy: { dateTime: 'desc' },
-                        take: 1,
-                        select: { notes: true, dateTime: true }
-                    }
-                }
-            }
-        }
-    }) as unknown[];
+        ...sessionLogArgs
+    });
 
     return (
         <div className="section-padding bg-soft" style={{ minHeight: '100vh' }}>
@@ -93,8 +99,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                             </p>
                         </div>
                     ) : (
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        sessions.map((sessionLog: any) => {
+                        sessions.map((sessionLog: SessionLog) => {
                             const lastApt = sessionLog.user?.appointments?.[0];
                             return (
                                 <div
