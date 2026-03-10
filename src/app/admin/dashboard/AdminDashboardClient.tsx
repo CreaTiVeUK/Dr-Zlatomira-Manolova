@@ -267,7 +267,7 @@ export default function AdminDashboardClient({
     ];
 
     return (
-        <div className="admin-dashboard-shell">
+        <div className={`admin-dashboard-shell ${isDark ? "theme-dark" : "theme-light"}`}>
             <section className="admin-dashboard-hero">
                 <div>
                     <p className="admin-dashboard-kicker">{copy.greeting}</p>
@@ -531,6 +531,19 @@ export default function AdminDashboardClient({
                     display: grid;
                     gap: 1.5rem;
                     color: var(--text-charcoal);
+                    position: relative;
+                    isolation: isolate;
+                }
+                .admin-dashboard-shell::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    z-index: -1;
+                    background:
+                        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 26%),
+                        radial-gradient(circle at 85% 10%, rgba(245, 158, 11, 0.10), transparent 18%),
+                        radial-gradient(circle at 50% 100%, rgba(14, 165, 233, 0.10), transparent 22%);
+                    pointer-events: none;
                 }
                 .admin-dashboard-hero {
                     position: relative;
@@ -538,14 +551,23 @@ export default function AdminDashboardClient({
                     justify-content: space-between;
                     align-items: flex-start;
                     gap: 1.5rem;
-                    padding: 1.75rem;
-                    border-radius: 28px;
+                    padding: 1.95rem;
+                    border-radius: 30px;
                     background:
-                        radial-gradient(circle at top right, rgba(49, 130, 206, 0.28), transparent 28%),
-                        linear-gradient(135deg, rgba(15, 76, 129, 0.96), rgba(7, 45, 78, 0.96));
+                        radial-gradient(circle at top right, rgba(125, 211, 252, 0.28), transparent 22%),
+                        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.18), transparent 20%),
+                        linear-gradient(135deg, #0f2f4d, #114e75 55%, #0f4c81);
                     color: white;
-                    box-shadow: 0 24px 60px rgba(15, 76, 129, 0.24);
+                    box-shadow: 0 28px 70px rgba(15, 76, 129, 0.28);
                     overflow: visible;
+                    border: 1px solid rgba(255, 255, 255, 0.10);
+                }
+                .theme-dark .admin-dashboard-hero {
+                    background:
+                        radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 24%),
+                        radial-gradient(circle at 20% 18%, rgba(59, 130, 246, 0.16), transparent 22%),
+                        linear-gradient(135deg, #0b1220, #10223b 55%, #12375d);
+                    box-shadow: 0 28px 80px rgba(2, 6, 23, 0.45);
                 }
                 .admin-dashboard-kicker {
                     text-transform: uppercase;
@@ -580,9 +602,17 @@ export default function AdminDashboardClient({
                     padding: 0 0.95rem;
                     border-radius: 999px;
                     border: 1px solid rgba(255, 255, 255, 0.18);
-                    background: rgba(255, 255, 255, 0.1);
+                    background: rgba(255, 255, 255, 0.11);
                     color: white;
                     cursor: pointer;
+                    backdrop-filter: blur(14px);
+                    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+                }
+                .admin-dashboard-lang:hover,
+                .admin-dashboard-alerts-toggle:hover {
+                    transform: translateY(-1px);
+                    background: rgba(255, 255, 255, 0.18);
+                    border-color: rgba(255, 255, 255, 0.24);
                 }
                 .admin-dashboard-alerts-toggle strong {
                     width: 24px;
@@ -603,8 +633,10 @@ export default function AdminDashboardClient({
                     border-radius: 20px;
                     background: var(--bg-white);
                     color: var(--text-charcoal);
-                    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+                    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.20);
                     z-index: 20;
+                    border: 1px solid rgba(148, 163, 184, 0.18);
+                    backdrop-filter: blur(20px);
                 }
                 .admin-dashboard-alerts-header {
                     font-weight: 700;
@@ -632,9 +664,10 @@ export default function AdminDashboardClient({
                     padding: 0 1.1rem;
                     height: 56px;
                     border-radius: 18px;
-                    background: var(--bg-white);
-                    border: 1px solid var(--border);
-                    box-shadow: var(--shadow-sm);
+                    background: color-mix(in srgb, var(--bg-white) 92%, transparent 8%);
+                    border: 1px solid color-mix(in srgb, var(--border) 86%, transparent 14%);
+                    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.06);
+                    backdrop-filter: blur(16px);
                 }
                 .admin-dashboard-search input {
                     width: 100%;
@@ -670,9 +703,10 @@ export default function AdminDashboardClient({
                 .admin-patient-card,
                 .admin-quick-action,
                 .admin-alert-card {
-                    background: var(--bg-white);
-                    border: 1px solid var(--border);
-                    box-shadow: var(--shadow-sm);
+                    background: color-mix(in srgb, var(--bg-white) 94%, transparent 6%);
+                    border: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
+                    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+                    backdrop-filter: blur(18px);
                 }
                 .admin-metric-card {
                     display: grid;
@@ -681,14 +715,15 @@ export default function AdminDashboardClient({
                     gap: 0.9rem;
                     padding: 1rem 1.1rem;
                     border-radius: 20px;
-                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
                 }
                 .admin-metric-card:hover,
                 .admin-patient-card:hover,
                 .admin-quick-action:hover,
                 .admin-alert-card:hover {
-                    transform: translateY(-2px);
-                    box-shadow: var(--shadow-md);
+                    transform: translateY(-4px);
+                    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.10);
+                    border-color: rgba(49, 130, 206, 0.24);
                 }
                 .admin-metric-card p {
                     color: var(--text-muted);
@@ -710,11 +745,12 @@ export default function AdminDashboardClient({
                     color: var(--text-muted);
                 }
                 .admin-panel {
-                    padding: 1.25rem;
-                    border-radius: 24px;
+                    padding: 1.35rem;
+                    border-radius: 26px;
                 }
                 .admin-panel-highlight {
-                    background: linear-gradient(180deg, rgba(15, 76, 129, 0.08), rgba(15, 76, 129, 0.02));
+                    background:
+                        linear-gradient(180deg, rgba(15, 76, 129, 0.10), rgba(15, 76, 129, 0.03));
                 }
                 .admin-panel-header {
                     display: flex;
@@ -759,7 +795,7 @@ export default function AdminDashboardClient({
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    background: rgba(15, 76, 129, 0.08);
+                    background: rgba(15, 76, 129, 0.10);
                     color: #0F4C81;
                 }
                 .admin-quick-action p,
@@ -786,24 +822,25 @@ export default function AdminDashboardClient({
                 }
                 .tone-warning {
                     border-color: rgba(245, 158, 11, 0.35);
-                    background: rgba(245, 158, 11, 0.08);
+                    background: linear-gradient(180deg, rgba(245, 158, 11, 0.10), rgba(245, 158, 11, 0.05));
                 }
                 .tone-success {
                     border-color: rgba(34, 197, 94, 0.35);
-                    background: rgba(34, 197, 94, 0.08);
+                    background: linear-gradient(180deg, rgba(34, 197, 94, 0.09), rgba(34, 197, 94, 0.04));
                 }
                 .tone-info {
                     border-color: rgba(37, 99, 235, 0.22);
-                    background: rgba(37, 99, 235, 0.05);
+                    background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.03));
                 }
                 .admin-timeline-card {
                     display: grid;
                     grid-template-columns: 88px 1fr;
                     gap: 1rem;
-                    padding: 1rem;
-                    border-radius: 20px;
-                    background: ${isDark ? "rgba(255,255,255,0.02)" : "rgba(15,76,129,0.03)"};
-                    border: 1px solid var(--border);
+                    padding: 1.05rem;
+                    border-radius: 22px;
+                    background: ${isDark ? "linear-gradient(180deg, rgba(30,41,59,0.72), rgba(15,23,42,0.64))" : "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(248,250,252,0.96))"};
+                    border: 1px solid ${isDark ? "rgba(148,163,184,0.14)" : "rgba(148,163,184,0.18)"};
+                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
                 }
                 .admin-timeline-time {
                     display: grid;
@@ -839,10 +876,16 @@ export default function AdminDashboardClient({
                     min-height: 36px;
                     padding: 0 0.85rem;
                     border-radius: 999px;
-                    background: rgba(15, 76, 129, 0.08);
+                    background: rgba(15, 76, 129, 0.10);
                     color: #0F4C81;
                     font-weight: 700;
                     font-size: 0.86rem;
+                    transition: transform 0.2s ease, background 0.2s ease;
+                }
+                .admin-timeline-actions a:hover,
+                .admin-compact-item a:hover {
+                    transform: translateY(-1px);
+                    background: rgba(15, 76, 129, 0.16);
                 }
                 .admin-compact-item {
                     display: flex;
@@ -876,7 +919,7 @@ export default function AdminDashboardClient({
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    background: rgba(15, 76, 129, 0.08);
+                    background: rgba(15, 76, 129, 0.10);
                     color: #0F4C81;
                 }
                 .admin-chart-panel {
@@ -898,6 +941,36 @@ export default function AdminDashboardClient({
                     height: 10px;
                     border-radius: 999px;
                 }
+                .theme-dark .admin-dashboard-search,
+                .theme-dark .admin-metric-card,
+                .theme-dark .admin-panel,
+                .theme-dark .admin-patient-card,
+                .theme-dark .admin-quick-action,
+                .theme-dark .admin-alert-card {
+                    box-shadow: 0 18px 44px rgba(2, 6, 23, 0.22);
+                    border-color: rgba(148, 163, 184, 0.12);
+                }
+                .theme-dark .admin-quick-action span,
+                .theme-dark .admin-patient-avatar,
+                .theme-dark .admin-timeline-actions a,
+                .theme-dark .admin-compact-item a {
+                    background: rgba(96, 165, 250, 0.12);
+                    color: #7dd3fc;
+                }
+                .theme-dark .admin-panel-link,
+                .theme-dark .admin-alert-card span,
+                .theme-dark .admin-metric-arrow {
+                    color: #7dd3fc;
+                }
+                .theme-dark .tone-warning {
+                    background: linear-gradient(180deg, rgba(245, 158, 11, 0.10), rgba(120, 53, 15, 0.14));
+                }
+                .theme-dark .tone-success {
+                    background: linear-gradient(180deg, rgba(34, 197, 94, 0.10), rgba(20, 83, 45, 0.14));
+                }
+                .theme-dark .tone-info {
+                    background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), rgba(30, 64, 175, 0.14));
+                }
                 @media (max-width: 1280px) {
                     .admin-dashboard-metrics,
                     .admin-dashboard-bottom-grid {
@@ -912,6 +985,7 @@ export default function AdminDashboardClient({
                     .admin-dashboard-hero {
                         border-radius: 22px;
                         flex-direction: column;
+                        padding: 1.4rem;
                     }
                     .admin-dashboard-controls {
                         width: 100%;
@@ -931,6 +1005,9 @@ export default function AdminDashboardClient({
                     .admin-compact-item {
                         flex-direction: column;
                         align-items: flex-start;
+                    }
+                    .admin-dashboard-shell {
+                        gap: 1rem;
                     }
                 }
             `}</style>

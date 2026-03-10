@@ -879,13 +879,16 @@ textarea.input-focus {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-admin-main);
+  background:
+    radial-gradient(circle at top right, rgba(49, 130, 206, 0.10), transparent 24%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-admin-main) 92%, white 8%), var(--bg-admin-main));
   transition: background-color 0.3s;
 }
 
 .admin-sidebar {
   width: 260px;
-  background: var(--bg-sidebar);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-sidebar) 88%, white 12%), var(--bg-sidebar));
   color: white;
   display: flex;
   flex-direction: column;
@@ -894,13 +897,15 @@ textarea.input-focus {
   left: 0;
   top: 0;
   z-index: 1000;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 30px 0 60px rgba(15, 23, 42, 0.20);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, visibility 0.3s;
 }
 
 .admin-main {
   flex: 1;
   margin-left: 260px;
-  padding: 2rem;
+  padding: 2.25rem;
   max-width: 100%;
   overflow-x: hidden;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -911,11 +916,14 @@ textarea.input-focus {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: var(--bg-sidebar);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--bg-sidebar) 88%, white 12%), var(--bg-sidebar));
   color: white;
   position: sticky;
   top: 0;
   z-index: 999;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
 }
 
 /* Dashboard Grid Utilities */
@@ -988,8 +996,8 @@ textarea.input-focus {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(2, 6, 23, 0.46);
+  backdrop-filter: blur(10px);
   z-index: 998;
 }
 

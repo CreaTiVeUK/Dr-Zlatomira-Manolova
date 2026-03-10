@@ -171,9 +171,9 @@ export default function AdminAppointmentsClient({
     };
 
     return (
-        <div className="section-padding bg-soft" style={{ minHeight: "100vh" }}>
-            <div className="container" style={{ display: "grid", gap: "1.25rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "flex-start", flexWrap: "wrap" }}>
+        <div className="section-padding bg-soft admin-appointments-shell" style={{ minHeight: "100vh" }}>
+            <div className="container admin-appointments-grid">
+                <div className="admin-appointments-header">
                     <div>
                         <h1 className="section-title" style={{ marginBottom: "1rem" }}>{copy.title}</h1>
                         <p style={{ color: "var(--text-muted)", maxWidth: 760 }}>{copy.subtitle}</p>
@@ -190,14 +190,14 @@ export default function AdminAppointmentsClient({
                 </div>
 
                 {message && (
-                    <div style={{ padding: "0.9rem 1rem", borderRadius: 16, border: "1px solid var(--border)", background: "var(--bg-white)" }}>
+                    <div className="admin-appointments-message">
                         {message}
                     </div>
                 )}
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "1rem" }}>
+                <div className="admin-appointments-summary">
                     {summaryCards.map((card) => (
-                        <div key={card.label} style={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 20, padding: "1rem 1.1rem", display: "grid", gap: "0.4rem" }}>
+                        <div key={card.label} className="admin-appointments-summary-card">
                             <span style={{ width: 40, height: 40, borderRadius: 14, display: "inline-flex", alignItems: "center", justifyContent: "center", background: `${card.accent}18`, color: card.accent }}>
                                 <card.icon size={18} />
                             </span>
@@ -207,9 +207,9 @@ export default function AdminAppointmentsClient({
                     ))}
                 </div>
 
-                <div style={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 24, padding: "1rem", display: "grid", gap: "1rem" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) repeat(3, minmax(0, 180px))", gap: "0.75rem" }}>
-                        <label style={{ display: "flex", alignItems: "center", gap: "0.7rem", border: "1px solid var(--border)", borderRadius: 16, padding: "0 0.9rem", minHeight: 50 }}>
+                <div className="admin-appointments-panel">
+                    <div className="admin-appointments-filters">
+                        <label className="admin-appointments-search">
                             <Search size={16} color="var(--text-muted)" />
                             <input
                                 value={query}
@@ -240,14 +240,14 @@ export default function AdminAppointmentsClient({
                         </select>
                     </div>
 
-                    <div style={{ display: "grid", gap: "0.9rem" }}>
+                    <div className="admin-appointments-list">
                         {filteredItems.length === 0 ? (
                             <div style={{ padding: "2rem 1rem", textAlign: "center", color: "var(--text-muted)" }}>{copy.noResults}</div>
                         ) : (
                             filteredItems.map((appointment) => {
                                 const busy = Boolean(pendingId) && pendingId === true;
                                 return (
-                                    <article key={appointment.id} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "1rem", alignItems: "center", padding: "1rem", borderRadius: 20, border: "1px solid var(--border)", background: "var(--bg-soft)" }}>
+                                    <article key={appointment.id} className="admin-appointments-card">
                                         <div style={{ display: "grid", gap: "0.65rem" }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "flex-start", flexWrap: "wrap" }}>
                                                 <div>
@@ -270,7 +270,7 @@ export default function AdminAppointmentsClient({
                                             <p style={{ color: "var(--text-charcoal)" }}>{appointment.notes || copy.notesFallback}</p>
                                         </div>
 
-                                        <div style={{ display: "grid", gap: "0.6rem", justifyItems: "stretch", minWidth: 144 }}>
+                                        <div className="admin-appointments-actions">
                                             <Link href={`/admin/users/${appointment.userId}`} className="btn btn-outline" style={{ minHeight: 40, padding: "0.7rem 1rem" }}>
                                                 {copy.openPatient}
                                             </Link>
@@ -304,6 +304,125 @@ export default function AdminAppointmentsClient({
                     </div>
                 </div>
             </div>
+            <style jsx>{`
+                .admin-appointments-shell {
+                    position: relative;
+                    isolation: isolate;
+                }
+                .admin-appointments-shell::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background:
+                        radial-gradient(circle at top left, rgba(59, 130, 246, 0.08), transparent 22%),
+                        radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 18%);
+                    pointer-events: none;
+                    z-index: 0;
+                }
+                .admin-appointments-grid {
+                    position: relative;
+                    z-index: 1;
+                    display: grid;
+                    gap: 1.25rem;
+                }
+                .admin-appointments-header {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 1rem;
+                    align-items: flex-start;
+                    flex-wrap: wrap;
+                }
+                .admin-appointments-message,
+                .admin-appointments-summary-card,
+                .admin-appointments-panel,
+                .admin-appointments-card {
+                    background: color-mix(in srgb, var(--bg-white) 94%, transparent 6%);
+                    border: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
+                    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+                    backdrop-filter: blur(16px);
+                }
+                .admin-appointments-message {
+                    padding: 0.9rem 1rem;
+                    border-radius: 16px;
+                }
+                .admin-appointments-summary {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 1rem;
+                }
+                .admin-appointments-summary-card {
+                    border-radius: 20px;
+                    padding: 1rem 1.1rem;
+                    display: grid;
+                    gap: 0.4rem;
+                }
+                .admin-appointments-panel {
+                    border-radius: 24px;
+                    padding: 1rem;
+                    display: grid;
+                    gap: 1rem;
+                }
+                .admin-appointments-filters {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 180px));
+                    gap: 0.75rem;
+                }
+                .admin-appointments-search {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.7rem;
+                    border: 1px solid var(--border);
+                    border-radius: 16px;
+                    padding: 0 0.9rem;
+                    min-height: 50px;
+                    background: color-mix(in srgb, var(--bg-white) 92%, transparent 8%);
+                }
+                .admin-appointments-list {
+                    display: grid;
+                    gap: 0.9rem;
+                }
+                .admin-appointments-card {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    gap: 1rem;
+                    align-items: center;
+                    padding: 1rem;
+                    border-radius: 20px;
+                    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-soft) 82%, white 18%), color-mix(in srgb, var(--bg-soft) 96%, transparent 4%));
+                }
+                .admin-appointments-actions {
+                    display: grid;
+                    gap: 0.6rem;
+                    justify-items: stretch;
+                    min-width: 144px;
+                }
+                :global(.dark) .admin-appointments-message,
+                :global(.dark) .admin-appointments-summary-card,
+                :global(.dark) .admin-appointments-panel,
+                :global(.dark) .admin-appointments-card {
+                    box-shadow: 0 20px 48px rgba(2, 6, 23, 0.22);
+                    border-color: rgba(148, 163, 184, 0.12);
+                }
+                @media (max-width: 980px) {
+                    .admin-appointments-summary {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                    .admin-appointments-filters {
+                        grid-template-columns: 1fr;
+                    }
+                    .admin-appointments-card {
+                        grid-template-columns: 1fr;
+                    }
+                    .admin-appointments-actions {
+                        min-width: 0;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .admin-appointments-summary {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
