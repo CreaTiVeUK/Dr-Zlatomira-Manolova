@@ -1,16 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
-
-const display = Outfit({
-  subsets: ["latin"],
-  variable: "--font-display",
-});
-
-const body = Source_Sans_3({
-  subsets: ["latin"],
-  variable: "--font-body",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
@@ -50,7 +39,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${display.variable} ${body.variable}`}>
+      <body>
         <Providers>
           <a href="#main-content" className="skip-link">
             Skip to content

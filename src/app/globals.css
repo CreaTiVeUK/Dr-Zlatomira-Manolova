@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap");
+
 :root {
   --primary-teal: #0f4c81;
   --primary-teal-dark: #0a365c;
@@ -27,8 +29,8 @@
   --radius-md: 18px;
   --radius-lg: 24px;
   --radius-pill: 999px;
-  --font-main: var(--font-body), "Source Sans 3", sans-serif;
-  --font-heading: var(--font-display), "Outfit", sans-serif;
+  --font-main: "Open Sans", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
   --focus-ring: 0 0 0 4px rgba(59, 130, 246, 0.18);
   --bg-header: rgba(255, 255, 255, 0.85);
   --bg-header-alt: rgba(241, 247, 253, 0.92);
