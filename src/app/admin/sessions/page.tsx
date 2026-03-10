@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic, Sparkles, FileText, ChevronRight, Filter, Plus, MessageSquare } from "lucide-react";
+import PatientFilter from "./PatientFilter";
 
 const sessionLogArgs = Prisma.validator<Prisma.PatientDocumentDefaultArgs>()({
     include: {
@@ -81,19 +82,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                     <div className="flex items-center gap-3">
                         <div className="relative">
                             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                            <select
-                                className="pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none"
-                                defaultValue={userId || ""}
-                                onChange={(e) => {
-                                    const val = (e.target as HTMLSelectElement).value;
-                                    window.location.href = val ? `/admin/sessions?userId=${val}` : '/admin/sessions';
-                                }}
-                            >
-                                <option value="">All Patients</option>
-                                {patients.map(p => (
-                                    <option key={p.id} value={p.id}>{p.name}</option>
-                                ))}
-                            </select>
+                            <PatientFilter patients={patients} selectedUserId={userId} />
                         </div>
                         <Link
                             href="/admin/users"

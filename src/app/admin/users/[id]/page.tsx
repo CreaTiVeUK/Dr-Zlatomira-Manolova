@@ -102,7 +102,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                                 </div>
 
                                 <div id="session-recorder" className="mb-8">
-                                    <AudioRecorder userId={user.id} onSuccess={() => { }} />
+                                    <AudioRecorder userId={user.id} />
                                 </div>
                             </>
                         )}

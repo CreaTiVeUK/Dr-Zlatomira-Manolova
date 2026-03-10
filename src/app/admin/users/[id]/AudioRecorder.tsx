@@ -8,10 +8,9 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface AudioRecorderProps {
     userId: string;
-    onSuccess: () => void;
 }
 
-export default function AudioRecorder({ userId, onSuccess }: AudioRecorderProps) {
+export default function AudioRecorder({ userId }: AudioRecorderProps) {
     const { dict } = useLanguage();
     const router = useRouter();
     const [isRecording, setIsRecording] = useState(false);
@@ -109,7 +108,6 @@ export default function AudioRecorder({ userId, onSuccess }: AudioRecorderProps)
             }
 
             setStatus('success');
-            onSuccess();
             router.refresh();
             setTimeout(() => resetRecording(), 3000);
         } catch (err: unknown) {
