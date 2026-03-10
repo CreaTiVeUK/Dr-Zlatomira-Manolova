@@ -294,13 +294,17 @@ export default function AdminDashboardClient({
                             {alerts.length === 0 ? (
                                 <div className="admin-dashboard-alerts-empty">{copy.allAlertsRead}</div>
                             ) : (
-                                alerts.map((alert) => (
-                                    <Link key={alert.id} href={alert.href} className="admin-dashboard-alerts-item" onClick={() => setNotificationsOpen(false)}>
-                                        <strong>{alert.title}</strong>
-                                        <span>{alert.description}</span>
-                                        <em>{alert.cta}</em>
-                                    </Link>
-                                ))
+                                <div className="admin-dashboard-alerts-list">
+                                    {alerts.map((alert) => (
+                                        <Link key={alert.id} href={alert.href} className="admin-dashboard-alerts-link" onClick={() => setNotificationsOpen(false)}>
+                                            <div className="admin-dashboard-alerts-item">
+                                                <strong>{alert.title}</strong>
+                                                <span>{alert.description}</span>
+                                                <em>{alert.cta}</em>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     )}
@@ -643,6 +647,13 @@ export default function AdminDashboardClient({
                     color: var(--text-soft);
                     font-size: 0.82rem;
                 }
+                .admin-dashboard-alerts-list {
+                    display: grid;
+                    gap: 0.65rem;
+                }
+                :global(.admin-dashboard-alerts-link) {
+                    display: block;
+                }
                 .admin-dashboard-alerts-item,
                 .admin-dashboard-alerts-empty {
                     display: grid;
@@ -651,24 +662,28 @@ export default function AdminDashboardClient({
                     border-radius: 16px;
                     border: 1px solid transparent;
                     background: color-mix(in srgb, var(--surface-card-strong) 86%, transparent 14%);
+                    text-align: left;
                 }
-                .admin-dashboard-alerts-item:hover {
+                :global(.admin-dashboard-alerts-link:hover) .admin-dashboard-alerts-item {
                     background: color-mix(in srgb, var(--primary-teal) 5%, var(--surface-card-strong) 95%);
                     border-color: color-mix(in srgb, var(--primary-teal) 14%, transparent 86%);
                 }
                 .admin-dashboard-alerts-item strong {
                     font-size: 0.93rem;
+                    line-height: 1.35;
                 }
                 .admin-dashboard-alerts-item span,
                 .admin-dashboard-alerts-empty {
                     color: var(--text-muted);
                     font-size: 0.88rem;
+                    line-height: 1.5;
                 }
                 .admin-dashboard-alerts-item em {
                     color: var(--primary-teal);
                     font-style: normal;
                     font-weight: 700;
                     font-size: 0.82rem;
+                    letter-spacing: 0.01em;
                 }
                 .admin-dashboard-search {
                     display: flex;
