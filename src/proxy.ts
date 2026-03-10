@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { updateSession } from "@/lib/auth";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     return await updateSession(request);
 }
 
@@ -14,6 +14,6 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          */
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        "/((?!api|_next/static|_next/image|favicon.ico).*)",
     ],
 };
