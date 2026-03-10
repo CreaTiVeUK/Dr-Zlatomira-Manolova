@@ -135,7 +135,7 @@ export default async function AdminDashboard() {
             description: todaySchedule.length > 0
                 ? `Next patient: ${todaySchedule[0].patient} at ${todaySchedule[0].time}`
                 : "No appointments are booked for today.",
-            href: "/admin/appointments",
+            href: "/admin/appointments?scope=TODAY",
             cta: "Open schedule"
         },
         {
@@ -147,7 +147,7 @@ export default async function AdminDashboard() {
             description: unpaidAppointments.length > 0
                 ? "Review upcoming visits that still need payment follow-up."
                 : "No unpaid booked visits need action right now.",
-            href: "/admin/appointments",
+            href: "/admin/appointments?scope=UPCOMING&payment=UNPAID",
             cta: unpaidAppointments.length > 0 ? "Review payments" : "View appointments"
         },
         {
@@ -163,7 +163,7 @@ export default async function AdminDashboard() {
             tone: "success",
             title: `${appointments.filter((appointment) => new Date(appointment.dateTime) >= now && new Date(appointment.dateTime) <= inSevenDays && appointment.status === "BOOKED").length} visits coming in the next 7 days`,
             description: "Use the schedule view to confirm the week and open patient files before each consultation.",
-            href: "/admin/appointments",
+            href: "/admin/appointments?scope=UPCOMING&status=BOOKED",
             cta: "Plan the week"
         }
     ];

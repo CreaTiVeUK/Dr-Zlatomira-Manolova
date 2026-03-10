@@ -101,6 +101,10 @@ type DashboardProps = {
 const CHART_COLORS = ["#0F4C81", "#2C7FB8", "#F59E0B"];
 const emptySubscribe = () => () => {};
 
+function toAppointmentSearch(params: Record<string, string>) {
+    return `/admin/appointments?${new URLSearchParams(params).toString()}`;
+}
+
 export default function AdminDashboardClient({
     adminName,
     stats,
@@ -247,18 +251,18 @@ export default function AdminDashboardClient({
     }, [normalizedQuery, recentActivity]);
 
     const quickActions = [
-        { href: "/admin/appointments", label: copy.viewSchedule, description: copy.todaySchedule, icon: CalendarDays },
+        { href: toAppointmentSearch({ scope: "TODAY" }), label: copy.viewSchedule, description: copy.todaySchedule, icon: CalendarDays },
         { href: "/admin/users", label: copy.viewPatients, description: copy.patientRecords, icon: Users },
         { href: "/admin/sessions", label: copy.openSessions, description: copy.sessionLogs, icon: Stethoscope },
-        { href: "/book", label: copy.bookVisit, description: "Public booking flow", icon: ClipboardList }
+        { href: toAppointmentSearch({ scope: "UPCOMING", payment: "UNPAID" }), label: copy.bookVisit, description: copy.unpaid, icon: ClipboardList }
     ];
 
     const metricCards = [
-        { label: copy.todayAppointments, value: stats.todayAppointments, icon: CalendarDays, href: "/admin/appointments", accent: "#0F4C81" },
-        { label: copy.upcomingAppointments, value: stats.upcomingAppointments, icon: Activity, href: "/admin/appointments", accent: "#2563EB" },
+        { label: copy.todayAppointments, value: stats.todayAppointments, icon: CalendarDays, href: toAppointmentSearch({ scope: "TODAY" }), accent: "#0F4C81" },
+        { label: copy.upcomingAppointments, value: stats.upcomingAppointments, icon: Activity, href: toAppointmentSearch({ scope: "UPCOMING", status: "BOOKED" }), accent: "#2563EB" },
         { label: copy.totalPatients, value: stats.patients, icon: Users, href: "/admin/users", accent: "#0F766E" },
-        { label: copy.unpaid, value: stats.unpaidAppointments, icon: CreditCard, href: "/admin/appointments", accent: "#B45309" },
-        { label: copy.monthRevenue, value: `£${stats.monthRevenue.toFixed(0)}`, icon: CheckCircle2, href: "/admin/appointments", accent: "#15803D" },
+        { label: copy.unpaid, value: stats.unpaidAppointments, icon: CreditCard, href: toAppointmentSearch({ scope: "UPCOMING", payment: "UNPAID" }), accent: "#B45309" },
+        { label: copy.monthRevenue, value: `£${stats.monthRevenue.toFixed(0)}`, icon: CheckCircle2, href: toAppointmentSearch({ status: "COMPLETED", payment: "PAID" }), accent: "#15803D" },
         { label: copy.documents, value: stats.documents, icon: FileText, href: "/admin/sessions", accent: "#7C3AED" }
     ];
 
@@ -364,7 +368,7 @@ export default function AdminDashboardClient({
                 <div className="admin-panel">
                     <div className="admin-panel-header">
                         <h2>{copy.todaySchedule}</h2>
-                        <Link href="/admin/appointments" className="admin-panel-link">{copy.manage}</Link>
+                        <Link href={toAppointmentSearch({ scope: "TODAY" })} className="admin-panel-link">{copy.manage}</Link>
                     </div>
                     <div className="admin-timeline">
                         {filteredTodaySchedule.length === 0 ? (
@@ -389,7 +393,7 @@ export default function AdminDashboardClient({
                                         </div>
                                         <div className="admin-timeline-actions">
                                             <Link href={`/admin/users/${appointment.userId}`}>{copy.openPatient}</Link>
-                                            <Link href="/admin/appointments">{copy.manage}</Link>
+                                            <Link href={toAppointmentSearch({ query: appointment.patient, scope: "TODAY" })}>{copy.manage}</Link>
                                         </div>
                                     </div>
                                 </article>
@@ -402,7 +406,7 @@ export default function AdminDashboardClient({
                     <div className="admin-panel">
                         <div className="admin-panel-header">
                             <h2>{copy.upcoming}</h2>
-                            <Link href="/admin/appointments" className="admin-panel-link">{copy.viewSchedule}</Link>
+                            <Link href={toAppointmentSearch({ scope: "UPCOMING", status: "BOOKED" })} className="admin-panel-link">{copy.viewSchedule}</Link>
                         </div>
                         <div className="admin-compact-list">
                             {filteredUpcoming.length === 0 ? (

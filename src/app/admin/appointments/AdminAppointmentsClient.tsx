@@ -25,7 +25,8 @@ type AppointmentItem = {
 
 export default function AdminAppointmentsClient({
     appointments,
-    summary
+    summary,
+    initialFilters
 }: {
     appointments: AppointmentItem[];
     summary: {
@@ -34,12 +35,19 @@ export default function AdminAppointmentsClient({
         unpaid: number;
         cancelledToday: number;
     };
+    initialFilters: {
+        scope?: string;
+        status?: string;
+        payment?: string;
+        query?: string;
+    };
 }) {
     const { language } = useLanguage();
     const router = useRouter();
-    const [query, setQuery] = useState("");
-    const [statusFilter, setStatusFilter] = useState("ALL");
-    const [scopeFilter, setScopeFilter] = useState("ALL");
+    const [query, setQuery] = useState(initialFilters.query || "");
+    const [statusFilter, setStatusFilter] = useState(initialFilters.status || "ALL");
+    const [scopeFilter, setScopeFilter] = useState(initialFilters.scope || "ALL");
+    const [paymentFilter, setPaymentFilter] = useState(initialFilters.payment || "ALL");
     const [items, setItems] = useState(appointments);
     const [message, setMessage] = useState("");
     const [pendingId, startTransition] = useTransition();
@@ -50,9 +58,11 @@ export default function AdminAppointmentsClient({
         search: "Търсене по пациент, имейл, бележка...",
         allStatuses: "Всички статуси",
         allScopes: "Всички",
+        allPayments: "Всички плащания",
         today: "Днес",
         upcoming: "Предстоящи",
         past: "Минали",
+        payment: "Плащане",
         noResults: "Няма часове за избраните филтри.",
         openPatient: "Пациент",
         complete: "Приключи",
@@ -79,9 +89,11 @@ export default function AdminAppointmentsClient({
         search: "Search patient, email, or note...",
         allStatuses: "All statuses",
         allScopes: "All",
+        allPayments: "All payments",
         today: "Today",
         upcoming: "Upcoming",
         past: "Past",
+        payment: "Payment",
         noResults: "No appointments match the current filters.",
         openPatient: "Patient",
         complete: "Complete",
@@ -113,6 +125,7 @@ export default function AdminAppointmentsClient({
                 : true;
 
             const matchesStatus = statusFilter === "ALL" ? true : appointment.status === statusFilter;
+            const matchesPayment = paymentFilter === "ALL" ? true : appointment.paymentStatus === paymentFilter;
             const matchesScope = scopeFilter === "ALL"
                 ? true
                 : scopeFilter === "TODAY"
@@ -121,9 +134,9 @@ export default function AdminAppointmentsClient({
                         ? !appointment.isPast && appointment.status !== "CANCELLED"
                         : appointment.isPast || appointment.status === "CANCELLED";
 
-            return matchesQuery && matchesStatus && matchesScope;
+            return matchesQuery && matchesStatus && matchesPayment && matchesScope;
         });
-    }, [items, query, scopeFilter, statusFilter]);
+    }, [items, paymentFilter, query, scopeFilter, statusFilter]);
 
     const summaryCards = [
         { label: copy.todaySummary, value: summary.today, icon: CalendarDays, accent: "#0F4C81" },
@@ -195,7 +208,7 @@ export default function AdminAppointmentsClient({
                 </div>
 
                 <div style={{ background: "var(--bg-white)", border: "1px solid var(--border)", borderRadius: 24, padding: "1rem", display: "grid", gap: "1rem" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) repeat(2, minmax(0, 180px))", gap: "0.75rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) repeat(3, minmax(0, 180px))", gap: "0.75rem" }}>
                         <label style={{ display: "flex", alignItems: "center", gap: "0.7rem", border: "1px solid var(--border)", borderRadius: 16, padding: "0 0.9rem", minHeight: 50 }}>
                             <Search size={16} color="var(--text-muted)" />
                             <input
@@ -218,6 +231,12 @@ export default function AdminAppointmentsClient({
                             <option value="TODAY">{copy.today}</option>
                             <option value="UPCOMING">{copy.upcoming}</option>
                             <option value="PAST">{copy.past}</option>
+                        </select>
+
+                        <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} className="input-focus" style={selectStyle}>
+                            <option value="ALL">{copy.allPayments}</option>
+                            <option value="PAID">{copy.paid}</option>
+                            <option value="UNPAID">{copy.unpaid}</option>
                         </select>
                     </div>
 

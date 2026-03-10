@@ -4,11 +4,22 @@ import { prisma } from "@/lib/prisma";
 import { format, isSameDay, startOfDay } from "date-fns";
 import AdminAppointmentsClient from "./AdminAppointmentsClient";
 
-export default async function AdminAppointmentsPage() {
+export default async function AdminAppointmentsPage({
+    searchParams
+}: {
+    searchParams: Promise<{
+        scope?: string;
+        status?: string;
+        payment?: string;
+        query?: string;
+    }>;
+}) {
     const session = await getSession();
     if (!session?.user || session.user.role !== "ADMIN") {
         redirect("/");
     }
+
+    const initialFilters = await searchParams;
 
     const appointments = await prisma.appointment.findMany({
         include: {
@@ -50,5 +61,5 @@ export default async function AdminAppointmentsPage() {
         isPast: new Date(appointment.dateTime) < todayStart
     }));
 
-    return <AdminAppointmentsClient appointments={serializedAppointments} summary={summary} />;
+    return <AdminAppointmentsClient appointments={serializedAppointments} summary={summary} initialFilters={initialFilters} />;
 }
