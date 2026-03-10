@@ -1,6 +1,8 @@
 import PageIntro from "@/components/PageIntro";
 
 export default function PrivacyPage() {
+  const updated = new Date().toLocaleDateString();
+
   return (
     <div className="legal-shell">
       <div className="container">
@@ -9,9 +11,24 @@ export default function PrivacyPage() {
             align="left"
             eyebrow="Privacy"
             title="Privacy Policy"
-            subtitle={`Last updated: ${new Date().toLocaleDateString()}`}
+            subtitle={`Last updated: ${updated}`}
             className="page-intro--left"
           />
+
+          <div className="legal-meta-grid">
+            <div className="legal-meta-card">
+              <strong>Applies to</strong>
+              <p>Website accounts, bookings, contact forms, and shared patient documents.</p>
+            </div>
+            <div className="legal-meta-card">
+              <strong>Framework</strong>
+              <p>GDPR-aligned privacy handling for patient communication and appointment data.</p>
+            </div>
+            <div className="legal-meta-card">
+              <strong>Review cadence</strong>
+              <p>Updated as the clinic&apos;s digital services, integrations, or compliance posture change.</p>
+            </div>
+          </div>
 
           <div className="legal-prose">
             <section>

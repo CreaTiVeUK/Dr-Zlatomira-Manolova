@@ -56,6 +56,9 @@
   --text-warning: #8b5e13;
   --border-warning: rgba(183, 121, 31, 0.22);
   --input-border-focus: var(--accent-blue);
+  --accent-bluish: var(--accent-blue);
+  --bg-white: var(--surface-card-strong);
+  --bg-soft: var(--surface-page);
 }
 
 .dark {
@@ -116,6 +119,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
   overflow-x: hidden;
 }
 
@@ -130,6 +134,8 @@ body {
   line-height: 1.65;
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
@@ -150,10 +156,12 @@ a {
   color: inherit;
   text-decoration: none;
   transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 button:disabled {
@@ -198,11 +206,13 @@ h6 {
   line-height: 1.08;
   letter-spacing: -0.04em;
   color: var(--text-charcoal);
+  text-wrap: balance;
 }
 
 p,
 li {
   color: var(--text-muted);
+  text-wrap: pretty;
 }
 
 strong {
@@ -211,6 +221,7 @@ strong {
 
 main.site-main {
   min-height: calc(100vh - 220px);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .skip-link {
@@ -232,7 +243,7 @@ main.site-main {
 }
 
 .container {
-  width: min(1200px, calc(100% - 3rem));
+  width: min(1200px, calc(100% - clamp(1.5rem, 4vw, 3rem)));
   margin: 0 auto;
 }
 
@@ -390,7 +401,7 @@ main.site-main {
 }
 
 .page-shell {
-  padding: 2rem 0 5rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem) 0 clamp(4rem, 8vw, 5.5rem);
 }
 
 .page-shell--soft {
@@ -406,7 +417,7 @@ main.site-main {
 .page-intro {
   display: grid;
   gap: 1rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
 .page-intro--center {
@@ -454,6 +465,16 @@ main.site-main {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
+}
+
+.page-intro--center .page-intro__copy,
+.page-intro--center .page-intro__actions {
+  justify-items: center;
+  justify-content: center;
+}
+
+.page-intro--left .page-intro__actions {
+  justify-content: flex-start;
 }
 
 .stack-lg {
@@ -1347,6 +1368,7 @@ textarea.input-focus {
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
   box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .article-card__meta {
@@ -1376,6 +1398,7 @@ textarea.input-focus {
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
   box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .sidebar-card--accent {
@@ -1388,6 +1411,52 @@ textarea.input-focus {
 .sidebar-card--accent p,
 .sidebar-card--accent strong {
   color: white;
+}
+
+.contact-item__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.contact-item__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--primary-teal) 10%, transparent 90%);
+  color: var(--primary-teal);
+}
+
+.contact-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.95rem;
+}
+
+.resource-panel-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.faq-list {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.faq-item {
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-card-strong) 78%, transparent 22%);
 }
 
 .contact-layout {
@@ -1403,7 +1472,7 @@ textarea.input-focus {
   border-radius: 24px;
   background: var(--surface-elevated);
   border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .contact-list {
@@ -1416,6 +1485,7 @@ textarea.input-focus {
   border-radius: 18px;
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
   border: 1px solid var(--border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .map-card {
@@ -1438,6 +1508,11 @@ textarea.input-focus {
   width: min(100%, 500px);
   display: grid;
   gap: 1.5rem;
+}
+
+.auth-card .surface-card,
+.profile-card .surface-card {
+  border-radius: 20px;
 }
 
 .auth-divider {
@@ -1621,6 +1696,7 @@ textarea.input-focus {
   border-radius: 22px;
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
   border: 1px solid var(--border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .appointment-entry__meta {
@@ -1669,6 +1745,7 @@ textarea.input-focus {
   border-radius: 18px;
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .react-tel-input .form-control {
@@ -1707,6 +1784,7 @@ textarea.input-focus {
   max-width: 860px;
   margin: 0 auto;
   padding: 2.2rem;
+  box-shadow: var(--shadow-md);
 }
 
 .legal-prose {
@@ -1717,11 +1795,36 @@ textarea.input-focus {
 .legal-prose section {
   display: grid;
   gap: 0.85rem;
+  padding: 1.35rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent 20%);
+  background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .legal-prose h2 {
   font-size: 1.35rem;
   color: var(--primary-teal);
+}
+
+.legal-meta-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 2rem;
+}
+
+.legal-meta-card {
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-card-strong) 78%, transparent 22%);
+}
+
+.legal-meta-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
 }
 
 .legal-prose ul {
@@ -2030,7 +2133,7 @@ textarea.input-focus {
 .admin-main {
   flex: 1;
   margin-left: 284px;
-  padding: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
   overflow-x: hidden;
 }
 
@@ -2042,7 +2145,7 @@ textarea.input-focus {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.9rem 1.25rem;
+  padding: calc(0.9rem + env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) 0.9rem max(1.25rem, env(safe-area-inset-left));
   background: rgba(6, 17, 31, 0.9);
   color: white;
   backdrop-filter: blur(18px);
@@ -2159,6 +2262,30 @@ textarea.input-focus {
   border-radius: 18px;
   background: color-mix(in srgb, var(--surface-page) 84%, transparent 16%);
   border: 1px solid var(--border);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .article-card:hover,
+  .sidebar-card:hover,
+  .contact-item:hover,
+  .child-card:hover,
+  .document-card:hover,
+  .appointment-entry:hover,
+  .legal-prose section:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .admin-toolbar-card {
@@ -2316,6 +2443,9 @@ textarea.input-focus {
     opacity: 0;
     pointer-events: none;
     transform: translateY(-12px);
+    max-height: min(80vh, 640px);
+    overflow-y: auto;
+    backdrop-filter: blur(18px);
   }
 
   .mobile-nav.open {
@@ -2380,7 +2510,7 @@ textarea.input-focus {
 
   .admin-main {
     margin-left: 0;
-    padding: 1.25rem;
+    padding: 1.25rem max(1rem, env(safe-area-inset-right)) 1.25rem max(1rem, env(safe-area-inset-left));
   }
 
   .admin-header-mobile {
@@ -2430,6 +2560,14 @@ textarea.input-focus {
     width: min(100%, 720px);
   }
 
+  .field input,
+  .field select,
+  .field textarea,
+  .input-focus,
+  .react-tel-input .form-control {
+    font-size: 16px !important;
+  }
+
   .hero-actions,
   .btn-group,
   .page-intro__actions,
@@ -2475,6 +2613,15 @@ textarea.input-focus {
     justify-content: flex-start;
   }
 
+  .contact-item__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .service-row-reverse > .order-1-mobile {
     order: 2;
   }
@@ -2486,6 +2633,13 @@ textarea.input-focus {
   .contact-info {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .footer-card,
+  .footer-bottom,
+  .footer-bottom__links {
+    justify-content: center;
+    text-align: center;
   }
 
   .about-image {
@@ -2544,5 +2698,10 @@ textarea.input-focus {
   .admin-panel__body,
   .admin-panel__header {
     border-radius: 20px;
+  }
+
+  .cookie-banner__panel,
+  .mobile-nav {
+    padding: 1rem;
   }
 }

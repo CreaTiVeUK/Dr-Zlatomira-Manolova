@@ -989,7 +989,11 @@ export default function AdminDashboardClient({
                     }
                     .admin-dashboard-controls {
                         width: 100%;
-                        justify-content: flex-start;
+                        justify-content: stretch;
+                        flex-wrap: wrap;
+                    }
+                    .admin-dashboard-search {
+                        width: 100%;
                     }
                     .admin-dashboard-metrics,
                     .admin-dashboard-bottom-grid,
@@ -1008,6 +1012,24 @@ export default function AdminDashboardClient({
                     }
                     .admin-dashboard-shell {
                         gap: 1rem;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .admin-dashboard-alerts-dropdown {
+                        left: 0;
+                        right: 0;
+                        width: 100%;
+                    }
+                    .admin-panel {
+                        padding: 1.05rem;
+                        border-radius: 22px;
+                    }
+                    .admin-metric-card,
+                    .admin-quick-action,
+                    .admin-alert-card,
+                    .admin-timeline-card,
+                    .admin-patient-card {
+                        padding: 0.95rem;
                     }
                 }
             `}</style>

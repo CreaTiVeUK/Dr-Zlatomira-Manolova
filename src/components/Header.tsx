@@ -108,13 +108,15 @@ export default function Header({ user }: HeaderProps) {
                     <button
                         className="mobile-menu-btn"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        aria-label="Toggle Menu"
+                        aria-controls="mobile-primary-nav"
+                        aria-expanded={isMenuOpen}
+                        aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                         type="button"
                     >
                         {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
 
-                    <nav className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+                    <nav id="mobile-primary-nav" className={`mobile-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Mobile navigation">
                         {navItems.map((item) => (
                             <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)}>
                                 {item.label}

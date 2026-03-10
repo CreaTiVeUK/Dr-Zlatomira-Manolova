@@ -1,6 +1,8 @@
 import PageIntro from "@/components/PageIntro";
 
 export default function TermsPage() {
+  const updated = new Date().toLocaleDateString();
+
   return (
     <div className="legal-shell">
       <div className="container">
@@ -9,9 +11,24 @@ export default function TermsPage() {
             align="left"
             eyebrow="Legal"
             title="Terms of Use"
-            subtitle={`Last updated: ${new Date().toLocaleDateString()}`}
+            subtitle={`Last updated: ${updated}`}
             className="page-intro--left"
           />
+
+          <div className="legal-meta-grid">
+            <div className="legal-meta-card">
+              <strong>Scope</strong>
+              <p>Use of the website, patient accounts, bookings, and connected third-party services.</p>
+            </div>
+            <div className="legal-meta-card">
+              <strong>Medical context</strong>
+              <p>Site content supports care access but does not replace direct clinical judgement or emergency care.</p>
+            </div>
+            <div className="legal-meta-card">
+              <strong>Operational rules</strong>
+              <p>Appointments, cancellations, and account responsibilities are governed by the terms below.</p>
+            </div>
+          </div>
 
           <div className="legal-prose">
             <section>

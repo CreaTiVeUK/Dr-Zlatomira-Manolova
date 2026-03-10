@@ -19,6 +19,14 @@ export default function Footer() {
                         <p>
                             {dict.footer.desc}
                         </p>
+                        <div className="btn-group" style={{ marginTop: "1rem" }}>
+                            <Link href="/book" className="btn btn-primary">
+                                {dict.header.nav.book}
+                            </Link>
+                            <Link href="/contact" className="btn btn-outline">
+                                {dict.header.nav.contact}
+                            </Link>
+                        </div>
                     </div>
                     <div className="footer-card">
                         <h4>{dict.footer.links}</h4>

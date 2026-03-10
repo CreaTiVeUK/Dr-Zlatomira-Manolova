@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
@@ -57,6 +58,19 @@ export default function ContactPage() {
           sending: "Sending...",
         };
 
+  const introCards =
+    language === "bg"
+      ? [
+          { value: "24ч", label: "обичаен отговор" },
+          { value: "2", label: "локации за преглед" },
+          { value: "6 дни", label: "седмично обслужване" },
+        ]
+      : [
+          { value: "24h", label: "typical response" },
+          { value: "2", label: "clinic locations" },
+          { value: "6 days", label: "weekly coverage" },
+        ];
+
   return (
     <div className="page-shell page-shell--soft">
       <div className="container">
@@ -64,6 +78,16 @@ export default function ContactPage() {
           eyebrow={dict.contact.clinics}
           title={dict.contact.title}
           subtitle={dict.contact.subtitle}
+          actions={
+            <div className="meta-grid" style={{ width: "100%" }}>
+              {introCards.map((item) => (
+                <div key={item.label} className="meta-card">
+                  <strong>{item.value}</strong>
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </div>
+          }
         />
 
         <div className="contact-layout">
@@ -73,7 +97,7 @@ export default function ContactPage() {
 
               <div className="contact-list">
                 <div className="contact-item">
-                  <div className="btn-group" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div className="contact-item__layout">
                     <div className="stack-md" style={{ gap: "0.5rem" }}>
                       <span className="clinical-badge">
                         <MapPin size={14} />
@@ -86,13 +110,25 @@ export default function ContactPage() {
                         <br />
                         <strong>{dict.contact.email}:</strong> zlatomira.manolova@gmail.com
                       </p>
+                      <div className="contact-item__actions">
+                        <Link href={`tel:${dict.footer.phone}`} className="btn btn-outline">
+                          <Phone size={16} />
+                          {dict.contact.tel}
+                        </Link>
+                        <Link href="mailto:zlatomira.manolova@gmail.com" className="btn btn-primary">
+                          <Mail size={16} />
+                          {dict.contact.email}
+                        </Link>
+                      </div>
                     </div>
-                    <Mail size={18} color="var(--primary-teal)" />
+                    <span className="contact-item__icon" aria-hidden="true">
+                      <Mail size={18} />
+                    </span>
                   </div>
                 </div>
 
                 <div className="contact-item">
-                  <div className="btn-group" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div className="contact-item__layout">
                     <div className="stack-md" style={{ gap: "0.5rem" }}>
                       <span className="clinical-badge">
                         <Phone size={14} />
@@ -103,8 +139,16 @@ export default function ContactPage() {
                         <br />
                         <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
                       </p>
+                      <div className="contact-item__actions">
+                        <Link href={`tel:${dict.footer.phone}`} className="btn btn-outline">
+                          <Phone size={16} />
+                          {language === "bg" ? "Обади се" : "Call now"}
+                        </Link>
+                      </div>
                     </div>
-                    <Phone size={18} color="var(--primary-teal)" />
+                    <span className="contact-item__icon" aria-hidden="true">
+                      <Phone size={18} />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -113,6 +157,11 @@ export default function ContactPage() {
             <div className="surface-card surface-card--accent">
               <h4 style={{ marginBottom: "0.65rem" }}>{dict.contact.admin.title}</h4>
               <p>{dict.contact.admin.text}</p>
+              <div className="contact-item__actions">
+                <Link href="/book" className="btn btn-primary">
+                  {dict.header.nav.book}
+                </Link>
+              </div>
             </div>
 
             <div className="map-card">
@@ -134,6 +183,11 @@ export default function ContactPage() {
               <div>
                 <span className="page-intro__eyebrow">{dict.contact.form.title}</span>
                 <h3 style={{ marginTop: "1rem" }}>{dict.contact.form.title}</h3>
+                <p className="helper-text">
+                  {language === "bg"
+                    ? "Използвайте формата за административни и организационни въпроси. За спешност се обадете директно."
+                    : "Use the form for administrative and scheduling questions. For urgent matters, call directly."}
+                </p>
               </div>
 
               {status === "success" ? (

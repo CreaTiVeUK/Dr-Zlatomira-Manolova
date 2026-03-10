@@ -6,6 +6,11 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ResourcesPage() {
   const { dict } = useLanguage();
+  const introMetrics = [
+    { value: `${dict.resources.articles.length}`, label: dict.resources.latest },
+    { value: `${dict.resources.faq.items.length}`, label: dict.resources.faq.title },
+    { value: "24/7", label: dict.resources.cta.title },
+  ];
 
   return (
     <div className="page-shell page-shell--soft">
@@ -14,11 +19,29 @@ export default function ResourcesPage() {
           eyebrow={dict.header.nav.resources}
           title={dict.resources.title}
           subtitle={dict.resources.subtitle}
+          actions={
+            <div className="meta-grid" style={{ width: "100%" }}>
+              {introMetrics.map((item) => (
+                <div key={item.label} className="meta-card">
+                  <strong>{item.value}</strong>
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </div>
+          }
         />
 
         <div className="resource-layout">
           <div>
-            <h2 style={{ marginBottom: "1.25rem" }}>{dict.resources.latest}</h2>
+            <div className="resource-panel-header">
+              <div>
+                <h2>{dict.resources.latest}</h2>
+                <p>{dict.resources.subtitle}</p>
+              </div>
+              <LinkNext href="/book" className="btn btn-primary">
+                {dict.header.nav.book}
+              </LinkNext>
+            </div>
             <div className="article-list">
               {dict.resources.articles.map((resource, i) => (
                 <article key={i} className="article-card">
@@ -39,9 +62,9 @@ export default function ResourcesPage() {
           <div className="sidebar-stack">
             <div className="sidebar-card">
               <h3 style={{ marginBottom: "1.1rem" }}>{dict.resources.faq.title}</h3>
-              <div className="stack-md">
+              <div className="faq-list">
                 {dict.resources.faq.items.map((item, i) => (
-                  <div key={i}>
+                  <div key={i} className="faq-item">
                     <div style={{ fontWeight: 700, marginBottom: "0.35rem", color: "var(--text-charcoal)" }}>{item.q}</div>
                     <p>{item.a}</p>
                   </div>

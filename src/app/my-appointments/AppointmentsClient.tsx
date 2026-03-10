@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { signIn } from "next-auth/react";
 import { format, isAfter, subHours } from "date-fns";
@@ -155,6 +156,13 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
           eyebrow={dict.userMenu.appointments}
           title={dict.myAppointments.title}
           subtitle={language === "bg" ? "Следете предстоящите посещения, сваляйте календарни покани и управлявайте промените навреме." : "Track upcoming visits, download calendar invites, and manage changes before the appointment."}
+          actions={
+            <div className="btn-group" style={{ width: "100%" }}>
+              <Link href="/book" className="btn btn-primary">
+                {language === "bg" ? "Нов час" : "Book another visit"}
+              </Link>
+            </div>
+          }
         />
 
         {message ? (

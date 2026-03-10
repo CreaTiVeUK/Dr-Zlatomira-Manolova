@@ -40,6 +40,19 @@ export default function ProfilePage() {
   const [childForm, setChildForm] = useState({ name: "", birthDate: "", gender: "M", notes: "" });
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
 
+  const profileMetrics =
+    language === "bg"
+      ? [
+          { value: children.length, label: "детски профила" },
+          { value: documents.length, label: "налични документа" },
+          { value: formData.phone ? "Да" : "Не", label: "телефон за контакт" },
+        ]
+      : [
+          { value: children.length, label: "child profiles" },
+          { value: documents.length, label: "available documents" },
+          { value: formData.phone ? "Yes" : "No", label: "contact phone saved" },
+        ];
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login?callbackUrl=/profile");
@@ -160,6 +173,16 @@ export default function ProfilePage() {
               title={language === "bg" ? "Профил и контактни данни" : "Profile and contact details"}
               subtitle={language === "bg" ? "Поддържайте актуални личните си данни и предпочитания за връзка." : "Keep your personal details and contact preferences up to date."}
               className="page-intro--left"
+              actions={
+                <div className="meta-grid" style={{ width: "100%" }}>
+                  {profileMetrics.map((item) => (
+                    <div key={item.label} className="meta-card">
+                      <strong>{item.value}</strong>
+                      <span>{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              }
             />
 
             {message ? (
