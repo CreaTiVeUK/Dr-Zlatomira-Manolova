@@ -189,12 +189,6 @@ export default function Home() {
             </div>
 
             <div className="hero-copy-block">
-              <h1 className="hero-title">
-                {dict.home.hero.title}
-                <br />
-                <span style={{ color: "#9ed3ff" }}>{dict.home.hero.titleHighlight}</span>
-              </h1>
-
               <p className="hero-subtitle">{dict.home.hero.subtitle}</p>
 
               <div className="hero-actions">
