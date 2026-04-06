@@ -82,12 +82,7 @@ const useRedis =
     Boolean(process.env.UPSTASH_REDIS_REST_URL) &&
     Boolean(process.env.UPSTASH_REDIS_REST_TOKEN);
 
-if (!useRedis && process.env.NODE_ENV === "production") {
-    console.warn(
-        "[RATE LIMIT] UPSTASH_REDIS_REST_URL/TOKEN not set. " +
-        "Using in-memory rate limiting — not safe for multi-instance deployments."
-    );
-}
+let warnedAboutRedis = false;
 
 export async function rateLimit(
     ip: string,
@@ -96,6 +91,13 @@ export async function rateLimit(
 ): Promise<{ success: boolean; remaining: number }> {
     if (useRedis) {
         return upstashRateLimit(ip, limit, windowMs);
+    }
+    if (!warnedAboutRedis && process.env.NODE_ENV === "production") {
+        warnedAboutRedis = true;
+        console.warn(
+            "[RATE LIMIT] UPSTASH_REDIS_REST_URL/TOKEN not set. " +
+            "Using in-memory rate limiting — not safe for multi-instance deployments."
+        );
     }
     return memoryRateLimit(ip, limit, windowMs);
 }
