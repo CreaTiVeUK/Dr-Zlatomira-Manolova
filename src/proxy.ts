@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
 
 // Routes that require any authenticated session
@@ -13,7 +14,7 @@ function generateNonce(): string {
 }
 
 function buildCSP(nonce: string): string {
-  const directives = [
+  return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com`,
     "style-src 'self' 'unsafe-inline'",
@@ -25,19 +26,21 @@ function buildCSP(nonce: string): string {
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
     "upgrade-insecure-requests",
-  ];
-  return directives.join("; ");
+  ].join("; ");
 }
 
-export async function proxy(request: NextRequest) {
+// NextAuth v5 pattern: wrap with auth() so the session is resolved by
+// NextAuth itself (handles JWE decryption) and passed in as request.auth.
+// Calling await auth() inside a plain middleware function causes recursive
+// session resolution and breaks the OAuth redirect flow.
+export const proxy = auth(function proxy(request) {
   const { pathname } = request.nextUrl;
+  const session = request.auth;
 
   const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
 
   if (isAdmin || isProtected) {
-    // Use NextAuth's own session resolver — handles JWE tokens correctly
-    const session = await auth();
     const authenticated = !!session?.user;
     const role = (session?.user as { role?: string } | undefined)?.role ?? "";
 
@@ -52,12 +55,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Nonce-based CSP on every response
+  // Attach nonce-based CSP to every response
   const nonce = generateNonce();
   const response = NextResponse.next({
     request: {
       headers: new Headers({
-        ...Object.fromEntries(request.headers),
+        ...Object.fromEntries((request as NextRequest).headers),
         "x-nonce": nonce,
       }),
     },
@@ -71,7 +74,7 @@ export async function proxy(request: NextRequest) {
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
 
   return response;
-}
+});
 
 export const config = {
   matcher: [
