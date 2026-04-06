@@ -1,6 +1,7 @@
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { encrypt, decrypt } from "@/lib/encryption";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -25,7 +26,11 @@ export async function GET() {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        // Decrypt PII before returning to client
+        return NextResponse.json({
+            ...user,
+            phone: user.phone ? decrypt(user.phone) : null,
+        });
     } catch (error) {
         console.error("Profile fetch error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -48,20 +53,26 @@ export async function PATCH(req: Request) {
             return NextResponse.json({ error: "Name is required" }, { status: 400 });
         }
 
+        const encryptedPhone = phone ? encrypt(phone) : undefined;
+
         const updatedUser = await prisma.user.update({
             where: { id: session.user.id },
             data: {
                 name,
-                phone
+                phone: encryptedPhone,
             },
             select: {
                 name: true,
                 email: true,
-                phone: true
-            }
+                phone: true,
+            },
         });
 
-        return NextResponse.json(updatedUser);
+        // Decrypt before returning so the client sees the plaintext value
+        return NextResponse.json({
+            ...updatedUser,
+            phone: updatedUser.phone ? decrypt(updatedUser.phone) : null,
+        });
     } catch (error) {
         console.error("Profile update error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

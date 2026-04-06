@@ -12,7 +12,7 @@ const contactSchema = z.object({
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") || "unknown";
-    const limiter = rateLimit(ip, 5, 60000); // 5 requests per minute
+    const limiter = await rateLimit(ip, 5, 60000); // 5 requests per minute
 
     if (!limiter.success) {
         return NextResponse.json(

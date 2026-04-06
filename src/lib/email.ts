@@ -49,5 +49,9 @@ export const EMAIL_TEMPLATES = {
     CONTACT_INQUIRY: (fromName: string, fromEmail: string, message: string) => ({
         subject: `New Inquiry from ${fromName}`,
         body: `Name: ${fromName}\nEmail: ${fromEmail}\n\nMessage:\n${message}\n\n--\nSent from your website contact form.`
-    })
+    }),
+    EMAIL_VERIFICATION: (patientName: string, verifyUrl: string) => ({
+        subject: `Verify your email — Dr. Manolova Pediatrics`,
+        body: `Dear ${patientName},\n\nThank you for registering with Dr. Manolova Pediatrics.\n\nPlease verify your email address by clicking the link below (valid for 24 hours):\n\n${verifyUrl}\n\nIf you did not create an account, you can safely ignore this email.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+    }),
 };

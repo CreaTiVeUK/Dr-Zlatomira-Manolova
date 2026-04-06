@@ -2,8 +2,14 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = "secret-key-change-me"; // In prod use env var
-const key = new TextEncoder().encode(secretKey);
+const secretKey = process.env.AUTH_SECRET;
+if (!secretKey && process.env.NODE_ENV === "production") {
+    throw new Error("AUTH_SECRET environment variable is required in production");
+}
+if (!secretKey) {
+    console.warn("[SECURITY] AUTH_SECRET not set. Using insecure fallback for non-production only.");
+}
+const key = new TextEncoder().encode(secretKey || "dev-only-secret-not-for-production-use");
 
 interface Session {
     id: string;

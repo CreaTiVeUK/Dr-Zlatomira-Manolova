@@ -12,7 +12,7 @@ const querySchema = z.object({
 export async function GET(request: NextRequest) {
     // 1. Security: Rate Limiting
     const ip = request.headers.get("x-forwarded-for") || "unknown";
-    const limiter = rateLimit(ip, 20, 60000); // 20 requests per minute
+    const limiter = await rateLimit(ip, 20, 60000); // 20 requests per minute
 
     if (!limiter.success) {
         return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });

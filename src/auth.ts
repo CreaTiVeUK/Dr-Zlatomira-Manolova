@@ -11,17 +11,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         Google({
             clientId: process.env.AUTH_GOOGLE_ID,
             clientSecret: process.env.AUTH_GOOGLE_SECRET,
-            allowDangerousEmailAccountLinking: true,
         }),
         Facebook({
             clientId: process.env.AUTH_FACEBOOK_ID,
             clientSecret: process.env.AUTH_FACEBOOK_SECRET,
-            allowDangerousEmailAccountLinking: true,
         }),
         Apple({
             clientId: process.env.AUTH_APPLE_ID,
             clientSecret: process.env.AUTH_APPLE_SECRET,
-            allowDangerousEmailAccountLinking: true,
         }),
     ],
     session: { strategy: "jwt" },

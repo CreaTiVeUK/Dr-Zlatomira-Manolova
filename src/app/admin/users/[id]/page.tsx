@@ -6,6 +6,7 @@ import AudioRecorder from "./AudioRecorder";
 import EmptyState from "@/components/EmptyState";
 import { getSession } from "@/lib/auth";
 import { getServerDictionary } from "@/lib/i18n/server";
+import { decrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 
@@ -63,7 +64,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             {copy.backToUsers}
           </Link>
           <h1 className="section-title">{user.name}</h1>
-          <p>{user.email} · {user.phone || copy.noPhone}</p>
+          <p>{user.email} · {user.phone ? decrypt(user.phone) : copy.noPhone}</p>
         </div>
       </div>
 

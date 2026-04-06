@@ -6,16 +6,21 @@ const prisma = new PrismaClient()
 async function main() {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
+    // Seed users are pre-verified (no email confirmation needed in dev)
+    const now = new Date();
+
     const admin = await prisma.user.upsert({
         where: { email: 'zlatomira.manolova@gmail.com' },
         update: {
             password: hashedPassword,
+            emailVerified: now,
         },
         create: {
             email: 'zlatomira.manolova@gmail.com',
             name: 'Dr. Zlatomira Manolova',
             password: hashedPassword,
             role: 'ADMIN',
+            emailVerified: now,
         },
     })
 
@@ -24,12 +29,14 @@ async function main() {
         where: { email: 'admin@sunnypediatrics.com' },
         update: {
             password: hashedPassword,
+            emailVerified: now,
         },
         create: {
             email: 'admin@sunnypediatrics.com',
             name: 'Test Admin',
             password: hashedPassword,
             role: 'ADMIN',
+            emailVerified: now,
         },
     })
 
@@ -38,13 +45,15 @@ async function main() {
         update: {
             password: hashedPassword,
             failedAttempts: 0,
-            lockedUntil: null
+            lockedUntil: null,
+            emailVerified: now,
         },
         create: {
             email: 'patient@example.com',
             name: 'John Doe',
             password: hashedPassword,
             role: 'PATIENT',
+            emailVerified: now,
         },
     })
 
@@ -53,13 +62,15 @@ async function main() {
         update: {
             password: hashedPassword,
             failedAttempts: 0,
-            lockedUntil: null
+            lockedUntil: null,
+            emailVerified: now,
         },
         create: {
             email: 'patient2@example.com',
             name: 'Jane Smith',
             password: hashedPassword,
             role: 'PATIENT',
+            emailVerified: now,
         },
     })
 

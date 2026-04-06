@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { en, bg, Dictionary } from "./dictionaries";
 import { useRouter } from "next/navigation";
 
@@ -15,16 +15,23 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>("en");
-    const router = useRouter();
+function getInitialLanguage(): Language {
+    if (typeof window === "undefined") return "en";
+    // 1. Prefer cookie (set by both SSR and client — no useEffect delay)
+    const cookieMatch = document.cookie.match(/(?:^|;\s*)language=([^;]*)/);
+    if (cookieMatch && (cookieMatch[1] === "en" || cookieMatch[1] === "bg")) {
+        return cookieMatch[1] as Language;
+    }
+    // 2. Fallback to localStorage
+    const saved = localStorage.getItem("language");
+    if (saved === "en" || saved === "bg") return saved as Language;
+    return "en";
+}
 
-    useEffect(() => {
-        const savedV = localStorage.getItem("language");
-        if (savedV === "en" || savedV === "bg") {
-            Promise.resolve().then(() => setLanguageState(savedV as Language));
-        }
-    }, []);
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+    // Initializer function runs synchronously — no useEffect needed, no flash
+    const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+    const router = useRouter();
 
     const toggleLanguage = () => {
         const newLang = language === "en" ? "bg" : "en";

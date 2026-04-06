@@ -149,13 +149,6 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        <div className="surface-card surface-card--accent">
-          <strong style={{ display: "block", marginBottom: "0.55rem" }}>
-            {language === "bg" ? "Демо достъп" : "Demo access"}
-          </strong>
-          <p>zlatomira.manolova@gmail.com / password123</p>
-          <p>patient@example.com / password123</p>
-        </div>
       </div>
     </div>
   );

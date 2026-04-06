@@ -16,7 +16,7 @@ const loginSchema = z.object({
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") || "unknown";
-    const limiter = rateLimit(ip, 50, 60000);
+    const limiter = await rateLimit(ip, 10, 60000);
 
     if (!limiter.success) {
         return NextResponse.json(
@@ -50,6 +50,14 @@ export async function POST(request: NextRequest) {
 
         if (!user.password) {
             return NextResponse.json({ error: "Please login with your social account" }, { status: 401 });
+        }
+
+        // Require email verification for credential accounts
+        if (!user.emailVerified) {
+            return NextResponse.json(
+                { error: "Please verify your email before signing in. Check your inbox for the verification link." },
+                { status: 403 }
+            );
         }
 
         const validPassword = await bcrypt.compare(password, user.password);

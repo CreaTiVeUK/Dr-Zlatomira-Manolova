@@ -1,16 +1,36 @@
-// Removed JSDOM dependency to fix Vercel deployment (ESM/CJS interop issues)
-// import DOMPurify from "dompurify";
-// import { JSDOM } from "jsdom";
-
 /**
- * Strips all HTML tags and script elements from a string.
+ * Strips all HTML/script content from a string.
+ * Uses a multi-pass approach to handle obfuscated and nested tags.
  */
 export function sanitizeString(input: string): string {
-    if (!input) return input;
-    // 1. Remove script tags and their content
-    const clean = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
-    // 2. Remove all other HTML tags
-    return clean.replace(/<[^>]*>/g, '').trim();
+    if (!input || typeof input !== "string") return input;
+
+    let clean = input;
+
+    // 1. Decode common HTML entities that might hide tags
+    clean = clean
+        .replace(/&lt;/gi, "<")
+        .replace(/&gt;/gi, ">")
+        .replace(/&#x3C;/gi, "<")
+        .replace(/&#60;/gi, "<")
+        .replace(/&#x3E;/gi, ">")
+        .replace(/&#62;/gi, ">");
+
+    // 2. Remove script/style tags and their full content (handles newlines)
+    clean = clean.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+    clean = clean.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "");
+
+    // 3. Remove all remaining HTML tags (including self-closing)
+    clean = clean.replace(/<[^>]*>/g, "");
+
+    // 4. Remove javascript: and data: URI schemes from any remaining text
+    clean = clean.replace(/javascript\s*:/gi, "");
+    clean = clean.replace(/data\s*:\s*text\s*\/\s*html/gi, "");
+
+    // 5. Encode < and > that survive to prevent any HTML injection in output context
+    clean = clean.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    return clean.trim();
 }
 
 /**

@@ -55,7 +55,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") || "unknown";
-    const limiter = rateLimit(ip, 10, 60000);
+    const limiter = await rateLimit(ip, 10, 60000);
 
     if (!limiter.success) {
         return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
