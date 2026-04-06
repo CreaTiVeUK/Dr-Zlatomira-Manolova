@@ -15,7 +15,8 @@ import {
 import { bg, enUS } from "date-fns/locale";
 
 export default async function AdminDashboard() {
-    const session = await getSession();
+    // Middleware guarantees an authenticated ADMIN session reaches this page
+    const session = (await getSession())!;
     const language = await getServerLanguage();
     const dateLocale = language === "bg" ? bg : enUS;
     const copy = language === "bg"

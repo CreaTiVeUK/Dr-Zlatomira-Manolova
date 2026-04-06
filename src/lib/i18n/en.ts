@@ -1,4 +1,3 @@
-export type Dictionary = typeof en;
 
 export const en = {
     header: {

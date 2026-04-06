@@ -53,3 +53,10 @@ export async function getSession(): Promise<Session | null> {
 
 // logout kept for /api/logout compatibility
 export { signOut as logout } from "@/auth";
+
+const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes
+
+/** Returns true if the session has been idle longer than INACTIVITY_LIMIT. */
+export function isSessionExpired(lastActivity: number): boolean {
+    return Date.now() - lastActivity > INACTIVITY_LIMIT;
+}
