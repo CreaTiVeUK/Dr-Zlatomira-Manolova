@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { randomBytes } from "crypto";
 
 // Routes that require any authenticated session
 const PROTECTED = ["/my-appointments", "/profile", "/book"];
@@ -38,7 +37,7 @@ async function resolveSession(
     }
   }
 
-  // ── 2. Legacy credential cookie (still present until user re-logs in) ────
+  // ── 2. Legacy credential cookie (present until user re-logs in) ──────────
   const legacyCookie = request.cookies.get("session")?.value;
   if (legacyCookie) {
     try {
@@ -67,7 +66,6 @@ async function resolveSession(
 function buildCSP(nonce: string): string {
   const directives = [
     "default-src 'self'",
-    // nonce replaces unsafe-inline + unsafe-eval for scripts
     `script-src 'self' 'nonce-${nonce}' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
@@ -82,7 +80,14 @@ function buildCSP(nonce: string): string {
   return directives.join("; ");
 }
 
-export async function middleware(request: NextRequest) {
+// Use Web Crypto API — Edge Runtime does not support Node's `crypto` module
+function generateNonce(): string {
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
+}
+
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ── Auth guards ───────────────────────────────────────────────────────────
@@ -104,7 +109,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── Nonce-based CSP ───────────────────────────────────────────────────────
-  const nonce = randomBytes(16).toString("base64");
+  const nonce = generateNonce();
   const csp = buildCSP(nonce);
 
   const response = NextResponse.next({
