@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import PageIntro from "@/components/PageIntro";
@@ -56,34 +56,53 @@ function SocialLoginButton({ provider, label, dict }: { provider: string; label:
   );
 }
 
+const ERROR_MESSAGES: Record<string, string> = {
+  CredentialsSignin: "Invalid email or password.",
+  AccountNotLinked: "This email is linked to a different sign-in method.",
+  EmailNotVerified: "Please verify your email before signing in.",
+  AccountLocked: "Account locked due to multiple failed attempts. Try again later.",
+};
+
 export default function LoginPage() {
   const { dict, language } = useLanguage();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/book";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(
+    searchParams.get("error")
+      ? (ERROR_MESSAGES[searchParams.get("error")!] ?? "Sign-in failed. Please try again.")
+      : ""
+  );
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        router.push(data.role === "ADMIN" ? "/admin/dashboard" : "/book");
-        router.refresh();
+      if (result?.error) {
+        setError(
+          ERROR_MESSAGES[result.error] ??
+          (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
+        );
       } else {
-        const data = await res.json();
-        setError(data.error || "Login failed");
+        router.push(callbackUrl);
+        router.refresh();
       }
     } catch {
-      setError(language === "bg" ? "Възникна грешка при вход." : "An error occurred during login");
+      setError(language === "bg" ? "Възникна грешка при вход." : "An error occurred during login.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,6 +134,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="email@example.com"
+              autoComplete="email"
             />
           </div>
           <div className="field">
@@ -127,10 +147,11 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
-          <button type="submit" className="btn btn-primary">
-            {dict.auth.login.btn}
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? "…" : dict.auth.login.btn}
           </button>
         </form>
 
@@ -148,7 +169,6 @@ export default function LoginPage() {
             {dict.auth.login.registerLink}
           </Link>
         </p>
-
       </div>
     </div>
   );

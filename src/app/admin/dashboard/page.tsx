@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
@@ -70,10 +69,6 @@ export default async function AdminDashboard() {
             extended: "Extended",
             doctor: "Doctor",
         };
-
-    if (!session?.user || session.user.role !== "ADMIN") {
-        redirect("/");
-    }
 
     const [appointments, patients, documentsCount] = await Promise.all([
         prisma.appointment.findMany({

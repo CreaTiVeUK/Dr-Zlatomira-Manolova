@@ -1,17 +1,13 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { Mic } from "lucide-react";
-import { redirect } from "next/navigation";
 import EmptyState from "@/components/EmptyState";
-import { getSession } from "@/lib/auth";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 import { bg, enUS } from "date-fns/locale";
 
 export default async function AdminUserList() {
-  const session = await getSession();
-  if (!session?.user || session.user.role !== "ADMIN") redirect("/");
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.usersPage;
   const dateLocale = language === "bg" ? bg : enUS;

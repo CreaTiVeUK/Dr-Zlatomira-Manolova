@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { format, isSameDay, startOfDay } from "date-fns";
@@ -16,10 +14,6 @@ export default async function AdminAppointmentsPage({
         query?: string;
     }>;
 }) {
-    const session = await getSession();
-    if (!session?.user || session.user.role !== "ADMIN") {
-        redirect("/");
-    }
     const language = await getServerLanguage();
     const dateLocale = language === "bg" ? bg : enUS;
     const unknownPatient = language === "bg" ? "Неизвестен пациент" : "Unknown Patient";

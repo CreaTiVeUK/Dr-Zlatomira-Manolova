@@ -2,9 +2,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { ChevronRight, FileText, Filter, MessageSquare, Mic, Plus, Sparkles } from "lucide-react";
 import { Prisma } from "@prisma/client";
-import { redirect } from "next/navigation";
 import EmptyState from "@/components/EmptyState";
-import { getSession } from "@/lib/auth";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
@@ -28,8 +26,6 @@ const sessionLogArgs = Prisma.validator<Prisma.PatientDocumentDefaultArgs>()({
 type SessionLog = Prisma.PatientDocumentGetPayload<typeof sessionLogArgs>;
 
 export default async function AdminSessionsLog({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
-  const session = await getSession();
-  if (!session?.user || session.user.role !== "ADMIN") redirect("/");
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.sessionLogsPage;
   const dateLocale = language === "bg" ? bg : enUS;

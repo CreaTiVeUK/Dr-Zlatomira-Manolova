@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { randomBytes } from "crypto";
 
 // Routes that require any authenticated session
 const PROTECTED = ["/my-appointments", "/profile", "/book"];
@@ -10,14 +11,12 @@ const key = new TextEncoder().encode(
   process.env.AUTH_SECRET || "dev-only-secret-not-for-production-use"
 );
 
-const INACTIVITY_MS = 30 * 60 * 1000; // 30 minutes
+const INACTIVITY_MS = 30 * 60 * 1000;
 
 async function resolveSession(
   request: NextRequest
 ): Promise<{ authenticated: boolean; role: string }> {
-  // ── 1. NextAuth JWT (OAuth / social login) ──────────────────────────────
-  // NextAuth v5 uses __Secure-authjs.session-token in production,
-  // authjs.session-token in development.
+  // ── 1. NextAuth JWT ───────────────────────────────────────────────────────
   const nextAuthCookieName =
     process.env.NODE_ENV === "production"
       ? "__Secure-authjs.session-token"
@@ -35,11 +34,11 @@ async function resolveSession(
         "PATIENT";
       return { authenticated: true, role };
     } catch {
-      // Token invalid or expired — fall through
+      // fall through
     }
   }
 
-  // ── 2. Legacy credential JWT (email/password login) ─────────────────────
+  // ── 2. Legacy credential cookie (still present until user re-logs in) ────
   const legacyCookie = request.cookies.get("session")?.value;
   if (legacyCookie) {
     try {
@@ -58,41 +57,83 @@ async function resolveSession(
         return { authenticated: true, role: parsed.user.role || "PATIENT" };
       }
     } catch {
-      // Token invalid or expired
+      // expired or invalid
     }
   }
 
   return { authenticated: false, role: "" };
 }
 
+function buildCSP(nonce: string): string {
+  const directives = [
+    "default-src 'self'",
+    // nonce replaces unsafe-inline + unsafe-eval for scripts
+    `script-src 'self' 'nonce-${nonce}' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https: blob:",
+    "font-src 'self'",
+    "connect-src 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
+    "frame-src https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
+    "upgrade-insecure-requests",
+  ];
+  return directives.join("; ");
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // ── Auth guards ───────────────────────────────────────────────────────────
   const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
 
-  if (!isAdmin && !isProtected) return NextResponse.next();
+  if (isAdmin || isProtected) {
+    const { authenticated, role } = await resolveSession(request);
 
-  const { authenticated, role } = await resolveSession(request);
+    if (!authenticated) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
 
-  if (!authenticated) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    if (isAdmin && role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
-  if (isAdmin && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // ── Nonce-based CSP ───────────────────────────────────────────────────────
+  const nonce = randomBytes(16).toString("base64");
+  const csp = buildCSP(nonce);
 
-  return NextResponse.next();
+  const response = NextResponse.next({
+    request: {
+      headers: new Headers({
+        ...Object.fromEntries(request.headers),
+        "x-nonce": nonce,
+      }),
+    },
+  });
+
+  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains; preload"
+  );
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  );
+
+  return response;
 }
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/my-appointments/:path*",
-    "/profile/:path*",
-    "/book/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|css|js|woff2?|ttf)).*)",
   ],
 };

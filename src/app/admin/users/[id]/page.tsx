@@ -1,18 +1,14 @@
 import Link from "next/link";
 import { FileText, Sparkles } from "lucide-react";
-import { redirect } from "next/navigation";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import EmptyState from "@/components/EmptyState";
-import { getSession } from "@/lib/auth";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { decrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession();
-  if (!session?.user || session.user.role !== "ADMIN") redirect("/");
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.userDetailPage;
 
