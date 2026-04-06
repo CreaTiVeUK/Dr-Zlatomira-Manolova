@@ -1,66 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+import { auth } from "@/auth";
 
 // Routes that require any authenticated session
 const PROTECTED = ["/my-appointments", "/profile", "/book"];
 // Routes that require ADMIN role
 const ADMIN = ["/admin"];
 
-const key = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-only-secret-not-for-production-use"
-);
-
-const INACTIVITY_MS = 30 * 60 * 1000;
-
-async function resolveSession(
-  request: NextRequest
-): Promise<{ authenticated: boolean; role: string }> {
-  // ── 1. NextAuth JWT ───────────────────────────────────────────────────────
-  const nextAuthCookieName =
-    process.env.NODE_ENV === "production"
-      ? "__Secure-authjs.session-token"
-      : "authjs.session-token";
-  const nextAuthToken = request.cookies.get(nextAuthCookieName)?.value;
-
-  if (nextAuthToken) {
-    try {
-      const { payload } = await jwtVerify(nextAuthToken, key, {
-        algorithms: ["HS256"],
-      });
-      const role =
-        (payload as { role?: string; user?: { role?: string } }).role ||
-        (payload as { role?: string; user?: { role?: string } }).user?.role ||
-        "PATIENT";
-      return { authenticated: true, role };
-    } catch {
-      // fall through
-    }
-  }
-
-  // ── 2. Legacy credential cookie (present until user re-logs in) ──────────
-  const legacyCookie = request.cookies.get("session")?.value;
-  if (legacyCookie) {
-    try {
-      const { payload } = await jwtVerify(legacyCookie, key, {
-        algorithms: ["HS256"],
-      });
-      const parsed = payload as {
-        user?: { role?: string };
-        lastActivity?: number;
-      };
-      if (
-        parsed.user &&
-        typeof parsed.lastActivity === "number" &&
-        Date.now() - parsed.lastActivity <= INACTIVITY_MS
-      ) {
-        return { authenticated: true, role: parsed.user.role || "PATIENT" };
-      }
-    } catch {
-      // expired or invalid
-    }
-  }
-
-  return { authenticated: false, role: "" };
+function generateNonce(): string {
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 function buildCSP(nonce: string): string {
@@ -80,22 +29,17 @@ function buildCSP(nonce: string): string {
   return directives.join("; ");
 }
 
-// Use Web Crypto API — Edge Runtime does not support Node's `crypto` module
-function generateNonce(): string {
-  const bytes = new Uint8Array(16);
-  globalThis.crypto.getRandomValues(bytes);
-  return btoa(String.fromCharCode(...bytes));
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ── Auth guards ───────────────────────────────────────────────────────────
   const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
 
   if (isAdmin || isProtected) {
-    const { authenticated, role } = await resolveSession(request);
+    // Use NextAuth's own session resolver — handles JWE tokens correctly
+    const session = await auth();
+    const authenticated = !!session?.user;
+    const role = (session?.user as { role?: string } | undefined)?.role ?? "";
 
     if (!authenticated) {
       const loginUrl = new URL("/login", request.url);
@@ -108,10 +52,8 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // ── Nonce-based CSP ───────────────────────────────────────────────────────
+  // Nonce-based CSP on every response
   const nonce = generateNonce();
-  const csp = buildCSP(nonce);
-
   const response = NextResponse.next({
     request: {
       headers: new Headers({
@@ -121,18 +63,12 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("Content-Security-Policy", buildCSP(nonce));
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set(
-    "Strict-Transport-Security",
-    "max-age=31536000; includeSubDomains; preload"
-  );
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
-  );
+  response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
 
   return response;
 }
