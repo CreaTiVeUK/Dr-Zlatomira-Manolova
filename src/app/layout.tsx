@@ -1,5 +1,20 @@
 import type { Metadata } from "next";
+import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
+
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "600", "700", "800"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-main",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
@@ -38,7 +53,7 @@ export default async function RootLayout({
   const user = session?.user || null;
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
       <body>
         <Providers>
           <a href="#main-content" className="skip-link">

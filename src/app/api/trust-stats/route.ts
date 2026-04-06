@@ -12,7 +12,7 @@ export async function GET() {
             })
         ]);
 
-        return NextResponse.json({
+        const body = {
             rating: stats?.rating || "5.0/5",
             reviewsCount: stats?.reviewsCount || "14",
             testimonials: reviews.map(r => ({
@@ -21,6 +21,13 @@ export async function GET() {
                 authorEn: r.authorEn,
                 authorBg: r.authorBg
             }))
+        };
+
+        return NextResponse.json(body, {
+            headers: {
+                // Serve cached response for 5 min; CDN may cache for up to 1 hour
+                "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=300",
+            },
         });
     } catch {
         return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });

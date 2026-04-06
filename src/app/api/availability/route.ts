@@ -65,7 +65,12 @@ export async function GET(request: NextRequest) {
             duration: a.duration,
         }));
 
-        return NextResponse.json({ takenSlots });
+        return NextResponse.json({ takenSlots }, {
+            headers: {
+                // Short cache: slots change throughout the day
+                "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+            },
+        });
     } catch (error: unknown) {
         console.error("Availability API Error:", error);
         return NextResponse.json({ error: "Could not fetch availability" }, { status: 500 });

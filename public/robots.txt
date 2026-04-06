@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block private/admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /my-appointments/
+Disallow: /profile/
+
+Sitemap: https://zlatipediatrics.com/sitemap.xml

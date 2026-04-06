@@ -1,0 +1,500 @@
+@media (hover: hover) and (pointer: fine) {
+  .article-card:hover,
+  .sidebar-card:hover,
+  .contact-item:hover,
+  .child-card:hover,
+  .document-card:hover,
+  .appointment-entry:hover,
+  .legal-prose section:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.admin-toolbar-card {
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-filter {
+  min-width: 220px;
+}
+
+.admin-upload-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-file-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px dashed color-mix(in srgb, var(--primary-teal) 28%, transparent 72%);
+  background: color-mix(in srgb, var(--primary-teal) 4%, transparent 96%);
+  color: var(--text-muted);
+}
+
+.admin-file-input::file-selector-button {
+  margin-right: 1rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary-teal) 12%, transparent 88%);
+  color: var(--primary-teal);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.audio-recorder {
+  display: grid;
+  gap: 1rem;
+}
+
+.audio-recorder__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.audio-recorder__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-pill);
+  background: rgba(196, 36, 71, 0.12);
+  color: var(--text-error);
+  border: 1px solid rgba(196, 36, 71, 0.22);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.audio-recorder__pulse {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.audio-recorder__panel {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-page) 82%, transparent 18%);
+}
+
+.audio-recorder__playback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.audio-recorder__loader {
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+  padding: 1.75rem;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--primary-teal) 8%, transparent 92%);
+  border: 1px solid color-mix(in srgb, var(--primary-teal) 18%, transparent 82%);
+  text-align: center;
+}
+
+.audio-recorder__loader-ring {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 999px;
+  border: 3px solid color-mix(in srgb, var(--primary-teal) 20%, transparent 80%);
+  border-top-color: var(--primary-teal);
+  animation: spin 900ms linear infinite;
+}
+
+.audio-recorder__feedback {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  border-radius: 22px;
+  text-align: center;
+}
+
+.audio-recorder__feedback--success {
+  background: var(--bg-success);
+  border: 1px solid var(--border-success);
+}
+
+.audio-recorder__feedback--error {
+  background: var(--bg-error);
+  border: 1px solid var(--border-error);
+}
+
+@media (max-width: 1160px) {
+  .nav-center {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav {
+    position: absolute;
+    inset: calc(100% + 0.25rem) 0 auto;
+    display: grid;
+    gap: 0.6rem;
+    margin: 0 1rem;
+    padding: 1rem;
+    border-radius: 24px;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-card);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px);
+    max-height: min(80vh, 640px);
+    overflow-y: auto;
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-nav.open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  .mobile-nav a {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0.95rem;
+    border-radius: 16px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  .mobile-nav a:hover {
+    background: color-mix(in srgb, var(--primary-teal) 8%, transparent 92%);
+    color: var(--primary-teal);
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-layout {
+    display: block;
+  }
+
+  .trust-panel,
+  .about-grid,
+  .resource-layout,
+  .contact-layout,
+  .profile-layout,
+  .service-row,
+  .admin-grid--two {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-trust-grid,
+  .appointments-summary,
+  .form-grid--two,
+  .qual-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding: 5rem 0 3.75rem;
+  }
+
+  .hero-content {
+    width: min(960px, 100%);
+  }
+
+  .hero-subtitle {
+    max-width: 42ch;
+    font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+  }
+
+  .trust-bar {
+    padding-top: 1.25rem;
+  }
+
+  .trust-panel__cell {
+    padding: 1.15rem;
+  }
+
+  .partner-logo-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .partner-logo:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .date-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    padding: 1.25rem max(1rem, env(safe-area-inset-right)) 1.25rem max(1rem, env(safe-area-inset-left));
+  }
+
+  .admin-header-mobile {
+    display: flex;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(100%, calc(100% - 1.5rem));
+  }
+
+  .section-padding {
+    padding: 4rem 0;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: initial !important;
+  }
+
+  .header-utility-bar {
+    display: none;
+  }
+
+  .header-container {
+    padding: 0.85rem 0;
+  }
+
+  .logo-text {
+    font-size: 1.12rem;
+  }
+
+  .logo-subtext {
+    font-size: 0.74rem;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding: 4.75rem 0 3rem;
+  }
+
+  .hero-content {
+    width: min(100%, 720px);
+    gap: 1.5rem;
+  }
+
+  .hero-copy-block {
+    gap: 1.1rem;
+  }
+
+  .hero-subtitle {
+    max-width: 36ch;
+    font-size: clamp(1.1rem, 3.2vw, 1.3rem);
+    line-height: 1.72;
+  }
+
+  .field input,
+  .field select,
+  .field textarea,
+  .input-focus,
+  .react-tel-input .form-control {
+    font-size: 16px !important;
+  }
+
+  .hero-actions,
+  .btn-group,
+  .page-intro__actions,
+  .cookie-banner__actions {
+    width: 100%;
+  }
+
+  .btn,
+  .page-intro__actions .btn {
+    width: 100%;
+  }
+
+  .hero-trust-grid,
+  .appointments-summary,
+  .qual-grid,
+  .form-grid--two,
+  .footer-grid,
+  .trust-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-trust-card {
+    min-height: unset;
+    padding: 1.2rem 1.1rem;
+  }
+
+  .trust-bar {
+    padding-top: 1rem;
+  }
+
+  .partner-logo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .date-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appointment-entry,
+  .child-card,
+  .document-card,
+  .audio-recorder__playback,
+  .footer-bottom,
+  .cookie-banner__panel,
+  .admin-page-header,
+  .admin-toolbar-card,
+  .admin-record-card__header {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .appointment-entry__actions,
+  .admin-record-card__actions,
+  .footer-bottom__links {
+    justify-content: flex-start;
+  }
+
+  .contact-item__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .service-row-reverse > .order-1-mobile {
+    order: 2;
+  }
+
+  .service-row-reverse > .order-2-mobile {
+    order: 1;
+  }
+
+  .contact-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-card,
+  .footer-bottom,
+  .footer-bottom__links {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .about-image {
+    min-height: 400px;
+  }
+
+  .booking-card,
+  .contact-panel,
+  .form-panel,
+  .auth-card,
+  .profile-card,
+  .appointments-card,
+  .legal-card,
+  .state-shell__panel {
+    padding: 1.35rem;
+  }
+
+  .table-modern {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page-shell {
+    padding-top: 1rem;
+  }
+
+  .section-title,
+  .page-intro__title {
+    font-size: clamp(1.9rem, 9vw, 2.4rem);
+  }
+
+  .hero-subtitle,
+  .page-intro__subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-copy-block {
+    width: 100%;
+  }
+
+  .cookie-banner {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .trust-panel,
+  .booking-card,
+  .premium-card,
+  .surface-card,
+  .auth-card,
+  .profile-card,
+  .appointments-card,
+  .legal-card,
+  .admin-panel__body,
+  .admin-panel__header {
+    border-radius: 20px;
+  }
+
+  .cookie-banner__panel,
+  .mobile-nav {
+    padding: 1rem;
+  }
+}
