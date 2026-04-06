@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
@@ -15,7 +14,9 @@ const credentialsSchema = z.object({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-    adapter: PrismaAdapter(prisma),
+    // No adapter — we use JWT sessions exclusively. With a database adapter present,
+    // NextAuth v5 beta attempts to persist Credentials logins as Account rows which
+    // silently fails and returns null. OAuth user upsert is handled in the jwt callback.
     providers: [
         Credentials({
             credentials: {
@@ -34,7 +35,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 // Lockout check
                 if (user.lockedUntil && user.lockedUntil > new Date()) return null;
 
-                // Email verification required
+                // Email verification required for credential accounts
                 if (!user.emailVerified) return null;
 
                 const valid = await bcrypt.compare(password, user.password);
@@ -74,10 +75,50 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     ],
     session: { strategy: "jwt" },
     secret: process.env.AUTH_SECRET,
+    trustHost: true,
     pages: {
         signIn: "/login",
     },
     callbacks: {
+        async signIn({ user, account, profile }) {
+            // For OAuth providers, upsert the user in our database
+            if (account?.provider && account.provider !== "credentials") {
+                const email = user.email ?? profile?.email as string | undefined;
+                if (!email) return false;
+
+                try {
+                    const existing = await prisma.user.findUnique({ where: { email } });
+
+                    if (!existing) {
+                        const created = await prisma.user.create({
+                            data: {
+                                email,
+                                name: user.name ?? (profile?.name as string | undefined) ?? email,
+                                image: user.image ?? (profile?.picture as string | undefined) ?? null,
+                                emailVerified: new Date(),
+                                role: "PATIENT",
+                            },
+                        });
+                        user.id = created.id;
+                        (user as { role?: string }).role = created.role;
+                    } else {
+                        user.id = existing.id;
+                        (user as { role?: string }).role = existing.role;
+                        // Keep image in sync
+                        if (user.image && user.image !== existing.image) {
+                            await prisma.user.update({
+                                where: { id: existing.id },
+                                data: { image: user.image },
+                            });
+                        }
+                    }
+                } catch (err) {
+                    console.error("[auth] OAuth user upsert failed:", err);
+                    return false;
+                }
+            }
+            return true;
+        },
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
