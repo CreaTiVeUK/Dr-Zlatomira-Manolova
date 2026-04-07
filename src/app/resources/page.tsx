@@ -12,12 +12,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатрични съвети и ЧЗВ — Д-р Манолова Пловдив",
       description: "Практични съвети и отговори на чести въпроси от педиатър в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Педиатрични съвети от д-р Манолова" }],
     },
   };
 }
 
 export default async function ResourcesPage() {
-  const { dict } = await getDictionary();
+  const { dict, lang } = await getDictionary();
 
   const introMetrics = [
     { value: `${dict.resources.articles.length}`, label: dict.resources.latest },
@@ -38,12 +39,22 @@ export default async function ResourcesPage() {
     })),
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Ресурси" : "Resources", item: "https://zlatipediatrics.com/resources" },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="page-shell page-shell--soft">
         <div className="container">
           <PageIntro

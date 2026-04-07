@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детски болести и лечение — Педиатър Пловдив",
       description: "Астма, алергии, гастро, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова.",
       locale: "bg_BG",
+      images: [{ url: "/hero_premium.png", width: 1200, height: 630, alt: "Детски болести и лечение Пловдив" }],
     },
   };
 }
@@ -20,10 +21,21 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function ConditionsPage() {
-  const { dict } = await getDictionary();
+  const { dict, lang } = await getDictionary();
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Заболявания" : "Conditions", item: "https://zlatipediatrics.com/conditions" },
+    ],
+  };
 
   return (
-    <div className="page-shell page-shell--soft">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <div className="page-shell page-shell--soft">
       <div className="container">
         <PageIntro
           eyebrow={dict.header.nav.conditions}
@@ -65,5 +77,6 @@ export default async function ConditionsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

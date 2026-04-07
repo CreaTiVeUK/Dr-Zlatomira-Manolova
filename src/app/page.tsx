@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детски лекар Пловдив — Д-р Манолова",
       description: "Педиатър и алерголог в Пловдив. Прегледи, ваксини, алергии, новородени.",
       locale: "bg_BG",
+      images: [{ url: "/hero_premium.png", width: 1200, height: 630, alt: "Д-р Манолова — Детски лекар Пловдив" }],
     },
   };
 }

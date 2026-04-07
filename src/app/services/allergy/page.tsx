@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детски Алерголог Пловдив — Д-р Манолова",
       description: "Кожно-алергични тестове, астма, хранителни алергии и екзема при деца в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/service_allergy_consultation_1769272828650.png", width: 1200, height: 630, alt: "Детска алергологична консултация Пловдив" }],
     },
   };
 }
@@ -33,6 +34,13 @@ export default async function AllergyPage() {
       "@type": "Physician",
       name: "Д-р Златомира Манолова-Пенева",
       url: "https://zlatipediatrics.com",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5.0",
+        reviewCount: "14",
+        bestRating: "5",
+        worstRating: "1",
+      },
     },
     location: {
       "@type": "MedicalClinic",
@@ -44,6 +52,16 @@ export default async function AllergyPage() {
         addressCountry: "BG",
       },
     },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
+      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Детска алергология" : "Paediatric allergy", item: "https://zlatipediatrics.com/services/allergy" },
+    ],
   };
 
   const faqItems =
@@ -99,6 +117,7 @@ export default async function AllergyPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="page-shell page-shell--soft">
         <div className="container">
           <PageIntro

@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатър за Новородено Пловдив — Д-р Манолова",
       description: "Жълтеница, колики, хранене и ранно развитие — грижа за новородени в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1200, height: 630, alt: "Грижа за новородено Пловдив" }],
     },
   };
 }
@@ -34,6 +35,13 @@ export default async function NewbornPage() {
       "@type": "Physician",
       name: "Д-р Златомира Манолова-Пенева",
       url: "https://zlatipediatrics.com",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5.0",
+        reviewCount: "14",
+        bestRating: "5",
+        worstRating: "1",
+      },
     },
     location: {
       "@type": "MedicalClinic",
@@ -45,6 +53,16 @@ export default async function NewbornPage() {
         addressCountry: "BG",
       },
     },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
+      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Грижа за новородени" : "Newborn care", item: "https://zlatipediatrics.com/services/newborn" },
+    ],
   };
 
   const faqItems =
@@ -102,6 +120,7 @@ export default async function NewbornPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="page-shell page-shell--soft">
         <div className="container">
           <PageIntro

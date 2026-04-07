@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатрични услуги в Пловдив — Д-р Манолова",
       description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1200, height: 630, alt: "Педиатрични услуги Пловдив" }],
     },
   };
 }
@@ -22,10 +23,21 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function ServicesPage() {
-  const { dict } = await getDictionary();
+  const { dict, lang } = await getDictionary();
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
+    ],
+  };
 
   return (
-    <div className="page-shell page-shell--soft">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <div className="page-shell page-shell--soft">
       <div className="container">
         <PageIntro
           eyebrow={dict.home.services.title}
@@ -94,5 +106,6 @@ export default async function ServicesPage() {
         </nav>
       </div>
     </div>
+    </>
   );
 }

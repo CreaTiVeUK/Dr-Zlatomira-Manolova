@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Д-р Златомира Манолова — Педиатър Пловдив",
       description: "Биография, квалификации и опит на д-р Манолова, детски лекар в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Д-р Златомира Манолова — Педиатър Пловдив" }],
     },
   };
 }
@@ -51,6 +52,15 @@ export default async function AboutPage() {
     sameAs: ["https://superdoc.bg/lekar/zlatomira-manolova"],
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "За д-р Манолова" : "About Dr. Manolova", item: "https://zlatipediatrics.com/about" },
+    ],
+  };
+
   const pressLinks = [
     {
       title: lang === "bg"
@@ -81,6 +91,7 @@ export default async function AboutPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianSchema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="page-shell page-shell--soft">
         <div className="container">
           <PageIntro

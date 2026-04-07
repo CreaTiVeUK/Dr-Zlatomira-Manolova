@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Контакти — Педиатър Пловдив Д-р Манолова",
       description: "Адрес, телефон и форма за контакт с педиатъра в Пловдив.",
       locale: "bg_BG",
+      images: [{ url: "/logo.jpg", width: 800, height: 600, alt: "МЦ Д-р Манолова — Пловдив" }],
     },
   };
 }
