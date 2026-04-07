@@ -32,7 +32,7 @@ export const en = {
         location: "LOCATION",
         medicalCenter: "MC 'Dr. Zlatomira Manolova'",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "A11 - \"Zahari Zograf\" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv, Bulgaria",
+        addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         phone: "+359 88 5557110",
         hours: "OPENING HOURS",
@@ -94,7 +94,7 @@ export const en = {
             role: "Head of Second Pediatric Department, MHAT Pazardzhik",
             bio1: "Dr. Zlatomira Manolova-Peneva graduated from the Medical University of Plovdiv in 2018 and acquired a specialty in pediatrics in 2023. From the very start, she has believed that \"Pediatrics doesn't fit in textbooks, it is lived!\".",
             bio2: "Her professional path includes the Intensive Care Sector of the Second Pediatric Department at MHAT Pazardzhik and the Pediatric Clinic of UMHAT 'St. George' Plovdiv, where she gained invaluable experience in emergency and intensive pediatric care.",
-            bio3: "In 2025, Dr. Manolova won the competition to become the titular Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients – an initiative starting with the transformation of the ward by young artists to turn \"children's tears into smiles\".",
+            bio3: "In 2025, Dr. Manolova won an open competitive appointment to become Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients — an initiative that began with the transformation of the ward by young artists, to turn children's tears into smiles.",
             bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
             qualifications: "QUALIFICATIONS & HONORS",
             qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of Bulgarian Pediatric Association"],
@@ -133,7 +133,7 @@ export const en = {
         clinics: "Our Locations",
         medicalCenter: "MC 'Dr. Zlatomira Manolova' (Plovdiv)",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "A11 - \"Zahari Zograf\" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv, Bulgaria",
+        addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         tel: "Tel",
         email: "Email",
@@ -182,7 +182,7 @@ export const en = {
         gastro: { title: "Gastrointestinal", list: ["• Reflux & Vomiting", "• Abdominal Pain", "• Constipation"] },
         allergy: { title: "Allergic", list: ["• Food Allergies", "• Eczema", "• Hay Fever"] },
         neonatal: { title: "Neonatal", list: ["• Colic & Feeding Support", "• Jaundice Monitoring", "• Newborn Growth"] },
-        general: { title: "Acute Conditions", list: ["• High Fever (Febrile stats)", "• Acute Viral Infections", "• Respiratory Distress"] }
+        general: { title: "Acute Conditions", list: ["• High Fever", "• Acute Viral Infections", "• Respiratory Distress"] }
     },
     resources: {
         title: "Knowledge Base",
@@ -196,7 +196,7 @@ export const en = {
                 { q: "Do you offer telemedicine consultations?", a: "Yes, for follow-up appointments and general advice we offer secure video consultations. Contact us for details." },
                 { q: "Do you work with private health insurance?", a: "We work with leading Bulgarian private health insurers including DZI, Allianz and Generali. Please contact us before your appointment to confirm coverage." },
                 { q: "What age range do you accept?", a: "Dr. Manolova sees children from age 0 to 18 — from newborns through to teenagers." },
-                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet (here медицинска книжка) and ID. For infants, a favourite toy helps. Our staff will guide you on arrival." },
+                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
                 { q: "Do you provide vaccinations?", a: "Yes, we carry out all vaccinations on the Bulgarian national immunisation schedule, including routine infant check-ups." },
                 { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood, 52B." }
@@ -313,7 +313,7 @@ export const en = {
         },
         charts: {
             aptTypes: "Appointment Types",
-            monthlyVisits: "Monthly Patients Visit",
+            monthlyVisits: "Monthly Patient Visits",
             noData: "No data"
         },
         sessions: {
