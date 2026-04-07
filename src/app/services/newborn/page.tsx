@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Baby } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { prisma } from "@/lib/prisma";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,7 +25,13 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function NewbornPage() {
-  const { dict, lang } = await getDictionary();
+  const [{ dict, lang }, superdocStats] = await Promise.all([
+    getDictionary(),
+    prisma.superdocStat.findUnique({ where: { id: "singleton" } }).catch(() => null),
+  ]);
+
+  const ratingValue = superdocStats?.rating?.replace("/5", "") ?? "5.0";
+  const reviewCount = superdocStats?.reviewsCount ?? "14";
 
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -37,8 +44,8 @@ export default async function NewbornPage() {
       url: "https://zlatipediatrics.com",
       aggregateRating: {
         "@type": "AggregateRating",
-        ratingValue: "5.0",
-        reviewCount: "14",
+        ratingValue,
+        reviewCount,
         bestRating: "5",
         worstRating: "1",
       },
