@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Dictionary } from "@/lib/i18n/dictionaries";
 
-function SocialLoginButton({ provider, label, dict }: { provider: string; label: string; dict: Dictionary }) {
+function SocialLoginButton({ provider, label, dict, callbackUrl }: { provider: string; label: string; dict: Dictionary; callbackUrl: string }) {
   const icons: Record<string, React.ReactNode> = {
     google: (
       <svg width="18" height="18" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ function SocialLoginButton({ provider, label, dict }: { provider: string; label:
 
   return (
     <button
-      onClick={() => signIn(provider, { callbackUrl: "/book" })}
+      onClick={() => signIn(provider, { callbackUrl })}
       style={{
         background: style.bg,
         color: style.text,
@@ -66,7 +66,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 export default function LoginPage() {
   const { dict, language } = useLanguage();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/book";
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -96,7 +96,12 @@ export default function LoginPage() {
           (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
         );
       } else {
-        router.push(callbackUrl);
+        if (callbackUrl) {
+          router.push(callbackUrl);
+        } else {
+          const session = await getSession();
+          router.push(session?.user?.role === "ADMIN" ? "/admin/dashboard" : "/book");
+        }
         router.refresh();
       }
     } catch {
@@ -158,9 +163,9 @@ export default function LoginPage() {
         <div className="auth-divider">{dict.auth.login.or}</div>
 
         <div className="social-stack">
-          <SocialLoginButton provider="google" label="Google" dict={dict} />
-          <SocialLoginButton provider="facebook" label="Facebook" dict={dict} />
-          <SocialLoginButton provider="apple" label="Apple ID" dict={dict} />
+          <SocialLoginButton provider="google" label="Google" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
+          <SocialLoginButton provider="facebook" label="Facebook" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
+          <SocialLoginButton provider="apple" label="Apple ID" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
         </div>
 
         <p className="text-muted">
