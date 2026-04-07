@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
 
+const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
+
 // Routes that require any authenticated session
 const PROTECTED = ["/my-appointments", "/profile", "/book"];
 // Routes that require ADMIN role
@@ -36,6 +38,19 @@ function buildCSP(nonce: string): string {
 export const proxy = auth(function proxy(request) {
   const { pathname } = request.nextUrl;
   const session = request.auth;
+
+  // Enforce inactivity timeout — redirect to login if session is too old
+  if (session?.user) {
+    const lastActivity = (session.user as { lastActivity?: number }).lastActivity;
+    if (lastActivity && Date.now() - lastActivity > INACTIVITY_LIMIT_MS) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("reason", "inactivity");
+      const res = NextResponse.redirect(loginUrl);
+      res.cookies.delete("authjs.session-token");
+      res.cookies.delete("__Secure-authjs.session-token");
+      return res;
+    }
+  }
 
   const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));

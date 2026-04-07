@@ -5,9 +5,9 @@ import { sanitizeString } from "@/lib/sanitize";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 
 const contactSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Message too long"),
+    name: z.string().min(2, "Name must be at least 2 characters").transform(v => sanitizeString(v)),
+    email: z.string().email("Invalid email address").transform(v => sanitizeString(v).toLowerCase()),
+    message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Message too long").transform(v => sanitizeString(v)),
 });
 
 export async function POST(request: NextRequest) {
@@ -33,11 +33,9 @@ export async function POST(request: NextRequest) {
         }
 
         const { name, email, message } = result.data;
-        const cleanName = sanitizeString(name);
-        const cleanMessage = sanitizeString(message);
 
         // Send email notification using existing utility
-        const emailResult = await sendEmail("zlatomira.manolova@gmail.com", EMAIL_TEMPLATES.CONTACT_INQUIRY(cleanName, email, cleanMessage));
+        const emailResult = await sendEmail("zlatomira.manolova@gmail.com", EMAIL_TEMPLATES.CONTACT_INQUIRY(name, email, message));
 
         if (!emailResult.success) {
             console.error("Failed to send contact email:", emailResult.error);

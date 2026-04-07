@@ -57,7 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     data: { failedAttempts: 0, lockedUntil: null, lastActivity: new Date() },
                 });
 
-                return { id: user.id, email: user.email, name: user.name, role: user.role };
+                return { id: user.id, email: user.email, name: user.name, role: user.role as string };
             },
         }),
         Google({
@@ -124,12 +124,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 token.id = user.id;
                 token.role = (user as { role?: string }).role ?? "PATIENT";
             }
+            // Refresh lastActivity on every token issue/refresh so the proxy can enforce inactivity
+            token.lastActivity = Date.now();
             return token;
         },
         async session({ session, token }) {
             if (session.user && token.id) {
                 session.user.id = token.id as string;
                 session.user.role = token.role as string;
+                (session.user as { lastActivity?: number }).lastActivity = token.lastActivity as number;
             }
             return session;
         },

@@ -2,6 +2,7 @@
 import { writeFile, mkdir } from "fs/promises";
 import { join, extname } from "path";
 import { randomUUID } from "crypto";
+import { fileTypeFromBuffer } from "file-type";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -53,6 +54,14 @@ export async function saveFile(
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
+    // Validate MIME type via magic bytes (not just the client-supplied Content-Type)
+    const detected = await fileTypeFromBuffer(buffer);
+    if (!detected || !ALLOWED_MIME_TYPES.has(detected.mime)) {
+        throw new FileValidationError(
+            `File content does not match allowed types (detected: ${detected?.mime ?? "unknown"}).`
+        );
+    }
 
     // Ensure directory exists — folder name is restricted to alphanumerics/hyphens to prevent path traversal
     const safeFolderName = folderName.replace(/[^a-zA-Z0-9-_]/g, "");

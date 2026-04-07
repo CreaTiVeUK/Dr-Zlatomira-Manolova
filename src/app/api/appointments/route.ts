@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/auth";
 import { format } from "date-fns";
 import { z } from "zod";
@@ -16,7 +17,7 @@ const bookingSchema = z.object({
         message: "Booking must be in the future"
     }),
     duration: z.number().int().min(15, "Duration must be at least 15m").max(120),
-    price: z.number().positive("Price must be greater than zero"),
+    price: z.number().positive("Price must be greater than zero").max(500, "Price exceeds allowed maximum"),
     notes: z.string().max(500).transform(v => sanitizeString(v)).optional(),
     userId: z.string().uuid().optional(),
 });
@@ -159,6 +160,9 @@ export async function POST(request: NextRequest) {
         });
 
     } catch (error: unknown) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+            return NextResponse.json({ error: "That slot was just booked. Please choose another time." }, { status: 409 });
+        }
         logger.error("Booking Transaction Error:", error);
         return NextResponse.json({ error: "Database operation failed" }, { status: 500 });
     }
