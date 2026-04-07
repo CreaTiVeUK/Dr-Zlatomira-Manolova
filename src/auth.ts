@@ -123,6 +123,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (user) {
                 token.id = user.id;
                 token.role = (user as { role?: string }).role ?? "PATIENT";
+                // Assign a stable jti on first issue so it can be blocklisted on logout
+                if (!token.jti) {
+                    token.jti = crypto.randomUUID();
+                }
             }
             // Refresh lastActivity on every token issue/refresh so the proxy can enforce inactivity
             token.lastActivity = Date.now();

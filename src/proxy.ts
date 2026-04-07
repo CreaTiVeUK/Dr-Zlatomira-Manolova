@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { isSessionBlocked } from "@/lib/session-blocklist";
 
 const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -35,16 +36,27 @@ function buildCSP(nonce: string): string {
 // NextAuth itself (handles JWE decryption) and passed in as request.auth.
 // Calling await auth() inside a plain middleware function causes recursive
 // session resolution and breaks the OAuth redirect flow.
-export const proxy = auth(function proxy(request) {
+export const proxy = auth(async function proxy(request) {
   const { pathname } = request.nextUrl;
   const session = request.auth;
 
-  // Enforce inactivity timeout — redirect to login if session is too old
+  // Enforce inactivity timeout and session revocation
   if (session?.user) {
     const lastActivity = (session.user as { lastActivity?: number }).lastActivity;
     if (lastActivity && Date.now() - lastActivity > INACTIVITY_LIMIT_MS) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("reason", "inactivity");
+      const res = NextResponse.redirect(loginUrl);
+      res.cookies.delete("authjs.session-token");
+      res.cookies.delete("__Secure-authjs.session-token");
+      return res;
+    }
+
+    // Check if this token has been explicitly revoked (e.g. on logout)
+    const jti = (session as unknown as { jti?: string }).jti;
+    if (jti && await isSessionBlocked(jti)) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("reason", "revoked");
       const res = NextResponse.redirect(loginUrl);
       res.cookies.delete("authjs.session-token");
       res.cookies.delete("__Secure-authjs.session-token");

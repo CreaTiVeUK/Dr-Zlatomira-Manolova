@@ -7,6 +7,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { encrypt } from "@/lib/encryption";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 
 const passwordSchema = z
     .string()
@@ -89,14 +90,7 @@ export async function POST(request: NextRequest) {
             console.error("Failed to send verification email:", err);
         });
 
-        await prisma.auditLog.create({
-            data: {
-                userId: user.id,
-                action: "REGISTER_SUCCESS",
-                details: "User registered successfully",
-                ip,
-            },
-        });
+        await createAuditLog(user.id, AuditAction.REGISTER_SUCCESS, "User registered successfully", ip);
 
         return NextResponse.json(
             { success: true, message: "Registration successful. Please check your email to verify your account." },

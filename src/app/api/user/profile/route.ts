@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { encrypt, decrypt } from "@/lib/encryption";
 import { NextResponse } from "next/server";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 
 export async function GET() {
     const session = await getSession();
@@ -44,6 +45,8 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const ip = (req as { headers: { get: (k: string) => string | null } }).headers.get("x-forwarded-for") ?? "unknown";
+
     try {
         const body = await req.json();
         const { name, phone } = body;
@@ -67,6 +70,8 @@ export async function PATCH(req: Request) {
                 phone: true,
             },
         });
+
+        await createAuditLog(session.user.id, AuditAction.PROFILE_UPDATE, "Profile updated (name/phone)", ip);
 
         // Decrypt before returning so the client sees the plaintext value
         return NextResponse.json({

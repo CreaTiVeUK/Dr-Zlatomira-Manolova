@@ -1,10 +1,11 @@
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; // still needed for findUnique
 import { NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import { stat } from "fs/promises";
 import { resolve } from "path";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -43,14 +44,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         }
 
         // 4. Audit log — every download is recorded
-        await prisma.auditLog.create({
-            data: {
-                userId: session.user.id!,
-                action: "DOCUMENT_DOWNLOAD",
-                details: `Document ${id} (${document.name}) downloaded`,
-                ip,
-            }
-        });
+        await createAuditLog(session.user.id!, AuditAction.DOCUMENT_DOWNLOAD, `Document ${id} (${document.name}) downloaded`, ip);
 
         // 5. Serve File
         try {

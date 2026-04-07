@@ -2,6 +2,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 
 export async function GET() {
     const session = await getSession();
@@ -29,6 +30,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const ip = (req as { headers: { get: (k: string) => string | null } }).headers.get("x-forwarded-for") ?? "unknown";
+
     try {
         const body = await req.json();
         const { name, birthDate, gender, notes } = body;
@@ -47,6 +50,8 @@ export async function POST(req: Request) {
             }
         });
 
+        await createAuditLog(session.user.id, AuditAction.CHILD_CREATE, `Child record created: ${child.id}`, ip);
+
         return NextResponse.json(child);
     } catch (error) {
         console.error("Child creation error:", error);
@@ -60,6 +65,8 @@ export async function DELETE(req: Request) {
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const ip = (req as { headers: { get: (k: string) => string | null } }).headers.get("x-forwarded-for") ?? "unknown";
 
     try {
         const { searchParams } = new URL(req.url);
@@ -76,6 +83,8 @@ export async function DELETE(req: Request) {
         }
 
         await prisma.child.delete({ where: { id } });
+
+        await createAuditLog(session.user.id, AuditAction.CHILD_DELETE, `Child record deleted: ${id}`, ip);
 
         return NextResponse.json({ success: true });
     } catch (error) {

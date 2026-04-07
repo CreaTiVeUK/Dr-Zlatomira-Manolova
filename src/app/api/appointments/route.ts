@@ -8,6 +8,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 import { logger } from "@/lib/logger";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 
 
 // Removed singleton instance
@@ -132,14 +133,7 @@ export async function POST(request: NextRequest) {
                 }
             });
 
-            await tx.auditLog.create({
-                data: {
-                    userId: session.user.id,
-                    action: "APPOINTMENT_CREATE",
-                    details: `Appointment created for User ${targetUserId} on ${dateTime}`,
-                    ip
-                }
-            });
+            await createAuditLog(session.user.id, AuditAction.APPOINTMENT_CREATE, `Appointment created for User ${targetUserId} on ${dateTime}`, ip);
 
             // Trigger Confirmation Email (Non-blocking)
             if (newAppointment.user?.email) {
@@ -206,14 +200,10 @@ export async function PATCH(request: NextRequest) {
         });
 
         // Audit Log
-        await prisma.auditLog.create({
-            data: {
-                userId: session.user.id,
-                action: `APPOINTMENT_${status}`,
-                details: `Appointment ${id} status updated to ${status}`,
-                ip
-            }
-        });
+        const auditAction = status === "CANCELLED" ? AuditAction.APPOINTMENT_CANCELLED
+            : status === "COMPLETED" ? AuditAction.APPOINTMENT_COMPLETED
+            : AuditAction.APPOINTMENT_CREATE;
+        await createAuditLog(session.user.id, auditAction, `Appointment ${id} status updated to ${status}`, ip);
 
         if (status === 'CANCELLED') {
             await sendEmail(appointment.user?.email || "", EMAIL_TEMPLATES.CANCELLATION(appointment.user?.name || "Patient", format(new Date(appointment.dateTime), "PPP")));
