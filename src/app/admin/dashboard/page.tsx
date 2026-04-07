@@ -23,6 +23,7 @@ export default async function AdminDashboard() {
         ? {
             unknownPatient: "Неизвестен пациент",
             scheduledAppointment: "Насрочен час",
+            completedAppointment: "Приключен час",
             cancelledAppointment: "Отменен час",
             alerts: {
                 todayTitle: (count: number) => `${count} часа са планирани за днес`,
@@ -48,6 +49,7 @@ export default async function AdminDashboard() {
         : {
             unknownPatient: "Unknown Patient",
             scheduledAppointment: "Scheduled appointment",
+            completedAppointment: "Completed appointment",
             cancelledAppointment: "Cancelled appointment",
             alerts: {
                 todayTitle: (count: number) => `${count} appointments scheduled today`,
@@ -166,7 +168,7 @@ export default async function AdminDashboard() {
             id: appointment.id,
             userId: appointment.userId,
             patient: appointment.user.name || copy.unknownPatient,
-            eventLabel: appointment.status === "CANCELLED" ? copy.cancelledAppointment : copy.scheduledAppointment,
+            eventLabel: appointment.status === "CANCELLED" ? copy.cancelledAppointment : appointment.status === "COMPLETED" ? copy.completedAppointment : copy.scheduledAppointment,
             timestampLabel: format(new Date(appointment.dateTime), "MMM d, yyyy • HH:mm", { locale: dateLocale }),
             status: appointment.status
         }));

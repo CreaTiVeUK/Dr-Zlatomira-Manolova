@@ -262,7 +262,7 @@ export default function AdminDashboardClient({
         { label: copy.upcomingAppointments, value: stats.upcomingAppointments, icon: Activity, href: toAppointmentSearch({ scope: "UPCOMING", status: "BOOKED" }), accent: "#2563EB" },
         { label: copy.totalPatients, value: stats.patients, icon: Users, href: "/admin/users", accent: "#0F766E" },
         { label: copy.unpaid, value: stats.unpaidAppointments, icon: CreditCard, href: toAppointmentSearch({ scope: "UPCOMING", payment: "UNPAID" }), accent: "#B45309" },
-        { label: copy.monthRevenue, value: `£${stats.monthRevenue.toFixed(0)}`, icon: CheckCircle2, href: toAppointmentSearch({ status: "COMPLETED", payment: "PAID" }), accent: "#15803D" },
+        { label: copy.monthRevenue, value: `${stats.monthRevenue.toFixed(0)} €`, icon: CheckCircle2, href: toAppointmentSearch({ status: "COMPLETED", payment: "PAID" }), accent: "#15803D" },
         { label: copy.documents, value: stats.documents, icon: FileText, href: "/admin/sessions", accent: "#7C3AED" }
     ];
 

@@ -264,7 +264,7 @@ export default function AdminAppointmentsClient({
                                                 <span>{appointment.dateLabel}</span>
                                                 <span>{appointment.timeLabel}</span>
                                                 <span>{copy.duration}: {appointment.duration} min</span>
-                                                <span>£{appointment.price.toFixed(0)}</span>
+                                                <span>{appointment.price.toFixed(0)} €</span>
                                             </div>
 
                                             <p style={{ color: "var(--text-charcoal)" }}>{appointment.notes || copy.notesFallback}</p>

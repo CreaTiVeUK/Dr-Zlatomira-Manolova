@@ -9,6 +9,8 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
   const { language } = useLanguage();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
   const copy = language === "bg"
     ? {
         uploadFailed: "Качването не бе успешно",
@@ -30,6 +32,7 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
     if (!file) return;
 
     setUploading(true);
+    setFeedback(null);
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -42,11 +45,11 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
       if (!res.ok) throw new Error(copy.uploadFailed);
 
       setFile(null);
+      setFeedback({ type: "success", message: copy.uploadSuccess });
       router.refresh();
-      alert(copy.uploadSuccess);
     } catch (error) {
       console.error(error);
-      alert(copy.uploadError);
+      setFeedback({ type: "error", message: copy.uploadError });
     } finally {
       setUploading(false);
     }
@@ -54,10 +57,18 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
 
   return (
     <form onSubmit={handleUpload} className="admin-upload-form">
+      {feedback && (
+        <div className={`status-banner status-banner--${feedback.type === "success" ? "success" : "error"}`} style={{ marginBottom: "0.75rem" }}>
+          {feedback.message}
+        </div>
+      )}
       <input
         type="file"
         accept=".pdf,.jpg,.jpeg,.png"
-        onChange={(e) => setFile(e.target.files?.[0] || null)}
+        onChange={(e) => {
+          setFile(e.target.files?.[0] || null);
+          setFeedback(null);
+        }}
         className="admin-file-input"
       />
       {file ? (
