@@ -24,7 +24,7 @@ function buildCSP(nonce: string): string {
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
     "connect-src 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
-    "frame-src https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
+    "frame-src https://accounts.google.com https://www.facebook.com https://appleid.apple.com https://maps.google.com https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
