@@ -1,14 +1,26 @@
-"use client";
-
+import type { Metadata } from "next";
 import PageIntro from "@/components/PageIntro";
-import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Детски болести и лечение в Пловдив | Педиатър Д-р Манолова",
+    description: "Лечение на астма, хранителни алергии, рефлукс, висока температура и повече при деца в Пловдив. Д-р Манолова — педиатър специалист. Запазете час.",
+    alternates: { canonical: "https://zlatipediatrics.com/conditions" },
+    openGraph: {
+      title: "Детски болести и лечение — Педиатър Пловдив",
+      description: "Астма, алергии, гастро, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова.",
+      locale: "bg_BG",
+    },
+  };
+}
 
 function stripLeadingBullet(value: string) {
   return value.replace(/^[•\-\s]+/, "").trim();
 }
 
-export default function Conditions() {
-  const { dict } = useLanguage();
+export default async function ConditionsPage() {
+  const { dict } = await getDictionary();
 
   return (
     <div className="page-shell page-shell--soft">
@@ -21,31 +33,31 @@ export default function Conditions() {
 
         <div className="card-grid">
           <div className="premium-card">
-            <h3>{dict.conditions.respiratory.title}</h3>
+            <h2>{dict.conditions.respiratory.title}</h2>
             <ul className="list-checked">
               {dict.conditions.respiratory.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
-            <h3>{dict.conditions.gastro.title}</h3>
+            <h2>{dict.conditions.gastro.title}</h2>
             <ul className="list-checked">
               {dict.conditions.gastro.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
-            <h3>{dict.conditions.allergy.title}</h3>
+            <h2>{dict.conditions.allergy.title}</h2>
             <ul className="list-checked">
               {dict.conditions.allergy.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
-            <h3>{dict.conditions.neonatal.title}</h3>
+            <h2>{dict.conditions.neonatal.title}</h2>
             <ul className="list-checked">
               {dict.conditions.neonatal.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">
-            <h3>{dict.conditions.general.title}</h3>
+            <h2>{dict.conditions.general.title}</h2>
             <ul className="list-checked">
               {dict.conditions.general.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>

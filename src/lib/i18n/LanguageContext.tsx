@@ -17,14 +17,14 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 function getInitialLanguage(): Language {
-    if (typeof window === "undefined") return "en";
+    if (typeof window === "undefined") return "bg";
     const cookieMatch = document.cookie.match(/(?:^|;\s*)language=([^;]*)/);
     if (cookieMatch && (cookieMatch[1] === "en" || cookieMatch[1] === "bg")) {
         return cookieMatch[1] as Language;
     }
     const saved = localStorage.getItem("language");
     if (saved === "en" || saved === "bg") return saved as Language;
-    return "en";
+    return "bg"; // default: Bulgarian — primary audience
 }
 
 function persist(lang: Language) {

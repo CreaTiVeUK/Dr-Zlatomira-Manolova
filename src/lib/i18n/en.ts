@@ -192,9 +192,14 @@ export const en = {
         faq: {
             title: "FREQUENTLY ASKED QUESTIONS",
             items: [
-                { q: "How do I book an emergency appointment?", a: "Emergency slots are released daily at 08:30. Please call our clinic directly." },
-                { q: "Do you offer telemedicine?", a: "Yes, for follow-ups and general advice we offer secure video consultations." },
-                { q: "Do you accept private insurance?", a: "We work with most major UK insurers including Bupa, AXA and Vitality." }
+                { q: "How do I book an emergency appointment?", a: "Emergency slots are released daily at 08:30. Please call our clinic directly on +359 88 5557110." },
+                { q: "Do you offer telemedicine consultations?", a: "Yes, for follow-up appointments and general advice we offer secure video consultations. Contact us for details." },
+                { q: "Do you work with private health insurance?", a: "We work with leading Bulgarian private health insurers including DZI, Allianz and Generali. Please contact us before your appointment to confirm coverage." },
+                { q: "What age range do you accept?", a: "Dr. Manolova sees children from age 0 to 18 — from newborns through to teenagers." },
+                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet (here медицинска книжка) and ID. For infants, a favourite toy helps. Our staff will guide you on arrival." },
+                { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
+                { q: "Do you provide vaccinations?", a: "Yes, we carry out all vaccinations on the Bulgarian national immunisation schedule, including routine infant check-ups." },
+                { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood, 52B." }
             ]
         },
         cta: {

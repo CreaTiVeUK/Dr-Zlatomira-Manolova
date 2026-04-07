@@ -1,175 +1,34 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import {
-  Award,
-  Baby,
-  HeartPulse,
-  MapPin,
-  ShieldCheck,
-  Star,
-  Stethoscope,
-} from "lucide-react";
-import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { Award, Baby, HeartPulse, MapPin, ShieldCheck, Stethoscope } from "lucide-react";
+import HomeClient from "@/components/HomeClient";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
-interface Testimonial {
-  text: string;
-  author: string;
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Детски лекар Пловдив — Д-р Златомира Манолова | Педиатър",
+    description: "Д-р Манолова — педиатър и алерголог в Пловдив. Прегледи за деца 0–18 г., алергологични тестове, грижа за новородени. Запазете час онлайн.",
+    alternates: { canonical: "https://zlatipediatrics.com" },
+    openGraph: {
+      title: "Детски лекар Пловдив — Д-р Манолова",
+      description: "Педиатър и алерголог в Пловдив. Прегледи, ваксини, алергии, новородени.",
+      locale: "bg_BG",
+    },
+  };
 }
 
 function stripLeadingBullet(value: string) {
   return value.replace(/^[•\-\s]+/, "").trim();
 }
 
-function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
-  const [index, setIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+const servicesLead = {
+  bg: "От профилактични прегледи до специализирана диагностика и неонатална подкрепа.",
+  en: "From preventive checkups to specialized diagnostics and newborn support.",
+};
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const step = isMobile ? 1 : 2;
-  const count = testimonials?.length || 0;
-
-  useEffect(() => {
-    if (count === 0) return;
-    const timer = setInterval(() => {
-      setIndex((current) => (current + step >= count ? 0 : current + step));
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [count, step]);
-
-  if (count === 0) return null;
-
-  const visibleReviews = isMobile
-    ? [testimonials[index % count]]
-    : [testimonials[index % count], testimonials[(index + 1) % count]].filter(Boolean);
-
-  return (
-    <div
-      style={{
-        display: "grid",
-        gap: "0.9rem",
-        width: "100%",
-      }}
-    >
-      {visibleReviews.map((rev, i) => (
-        <div
-          key={`rev-${index}-${i}`}
-          className="reveal active"
-          style={{
-            display: "grid",
-            gap: "0.45rem",
-            padding: "0.2rem 0",
-            animation: "fadeInScale 0.7s ease-out",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "0.96rem",
-              color: "var(--text-charcoal)",
-              lineHeight: 1.7,
-            }}
-          >
-            &quot;{rev.text}&quot;
-          </p>
-          <span
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--primary-teal)",
-            }}
-          >
-            {rev.author}
-          </span>
-        </div>
-      ))}
-      <style jsx>{`
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-export default function Home() {
-  const { dict, language } = useLanguage();
-  const [trustStats, setTrustStats] = useState<{
-    rating: string;
-    reviewsCount: string;
-    testimonials: Testimonial[];
-  } | null>(null);
-
-  useEffect(() => {
-    fetch("/api/trust-stats")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
-          const testimonials = data.testimonials.map(
-            (t: { textEn: string; textBg: string; authorEn: string; authorBg: string }) => ({
-              text: language === "en" ? t.textEn : t.textBg,
-              author: language === "en" ? t.authorEn : t.authorBg,
-            }),
-          );
-          setTrustStats({
-            rating: data.rating || dict.home.trust.rating,
-            reviewsCount: data.reviewsCount || dict.home.trust.reviewsCount,
-            testimonials,
-          });
-        }
-      })
-      .catch((err) => console.error("Stats fetch error:", err));
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [dict.home.trust.rating, dict.home.trust.reviewsCount, language]);
-
-  const stats = trustStats || {
-    rating: dict.home.trust.rating,
-    reviewsCount: dict.home.trust.reviewsCount,
-    testimonials: dict.home.trust.testimonials,
-  };
-
-  const homeCopy =
-    language === "bg"
-      ? {
-          reviews: "потвърдени отзива",
-          servicesLead:
-            "От профилактични прегледи до специализирана диагностика и неонатална подкрепа.",
-        }
-      : {
-          reviews: "verified reviews",
-          servicesLead:
-            "From preventive checkups to specialized diagnostics and newborn support.",
-        };
+export default async function Home() {
+  const { dict, lang } = await getDictionary();
 
   return (
     <div>
@@ -189,7 +48,12 @@ export default function Home() {
             </div>
 
             <div className="hero-copy-block">
-              <p className="hero-subtitle">{dict.home.hero.subtitle}</p>
+              <h1 className="hero-subtitle">
+                {lang === "bg"
+                  ? "Детски лекар в Пловдив — Д-р Златомира Манолова"
+                  : "Paediatrician in Plovdiv — Dr. Zlatomira Manolova"}
+              </h1>
+              <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 
               <div className="hero-actions">
                 <Link href="/book" className="btn btn-primary">
@@ -212,8 +76,8 @@ export default function Home() {
             <div className="hero-trust-grid">
               <div className="hero-trust-card">
                 <ShieldCheck size={18} color="white" />
-                <strong>{stats.rating}</strong>
-                <span>{stats.reviewsCount} {homeCopy.reviews}</span>
+                <strong>{dict.home.trust.rating}</strong>
+                <span>{dict.home.trust.reviewsCount} {lang === "bg" ? "потвърдени отзива" : "verified reviews"}</span>
               </div>
               <div className="hero-trust-card">
                 <Stethoscope size={18} color="white" />
@@ -230,52 +94,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="trust-bar reveal">
-        <div className="container">
-          <div className="trust-panel">
-            <a
-              href={dict.home.trust.superdocLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="trust-panel__cell"
-              title={dict.home.trust.superdocTitle}
-            >
-              <div>
-                <div className="trust-rating">{stats.rating}</div>
-                <div className="trust-stars" aria-hidden="true">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={16} fill="currentColor" />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="trust-label">{dict.home.trust.reviewsLabel}</div>
-                <p style={{ marginTop: "0.35rem" }}>{stats.reviewsCount} Superdoc</p>
-              </div>
-            </a>
-
-            <div className="trust-panel__cell trust-panel__cell--column">
-              <div className="trust-label">{dict.home.trust.superdocTitle}</div>
-              <ReviewCarousel testimonials={stats.testimonials} />
-            </div>
-
-            <div className="trust-panel__cell trust-panel__cell--column">
-              <div className="trust-label">{dict.home.trust.partners}</div>
-              <div className="partner-logo-grid">
-                <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
-                  <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={120} height={44} style={{ objectFit: "contain" }} />
-                </a>
-                <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
-                  <Image src="/plovdimed_logo.png" alt="Plovdimed" width={120} height={44} style={{ objectFit: "contain" }} />
-                </a>
-                <a href="https://superdoc.bg/lekar/zlatomira-manolova" target="_blank" rel="noopener noreferrer" className="partner-logo">
-                  <Image src="/superdoc_logo.svg" alt="Superdoc" width={120} height={44} style={{ objectFit: "contain" }} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Client island: live trust stats + ReviewCarousel + IntersectionObserver */}
+      <HomeClient dict={dict} lang={lang} />
 
       <section className="section-padding site-section">
         <div className="container stack-lg">
@@ -283,7 +103,7 @@ export default function Home() {
             <span className="page-intro__eyebrow">{dict.home.services.title}</span>
             <div className="page-intro__copy">
               <h2 className="page-intro__title">{dict.home.services.subtitle}</h2>
-              <p className="page-intro__subtitle">{homeCopy.servicesLead}</p>
+              <p className="page-intro__subtitle">{servicesLead[lang]}</p>
             </div>
           </div>
 
@@ -333,8 +153,7 @@ export default function Home() {
                   minHeight: "240px",
                   display: "grid",
                   placeItems: "center",
-                  background:
-                    "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
+                  background: "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
                 }}
               >
                 <Baby size={76} color="var(--primary-teal)" />
@@ -396,7 +215,7 @@ export default function Home() {
             </div>
 
             <div className="btn-group">
-              <Link href="/contact" className="btn btn-primary">
+              <Link href="/about" className="btn btn-primary">
                 {dict.home.about.bioBtn}
               </Link>
               <Link href="/book" className="btn btn-outline">

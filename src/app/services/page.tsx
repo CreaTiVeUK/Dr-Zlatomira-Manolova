@@ -1,16 +1,28 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
-import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Педиатрични услуги Пловдив | Алергология, Новородени, Спешна педиатрия",
+    description: "Пълен спектър от педиатрични услуги в Пловдив — детска алергология, кожно-алергични тестове, грижа за новородени, профилактични прегледи. Д-р Манолова.",
+    alternates: { canonical: "https://zlatipediatrics.com/services" },
+    openGraph: {
+      title: "Педиатрични услуги в Пловдив — Д-р Манолова",
+      description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
+      locale: "bg_BG",
+    },
+  };
+}
 
 function stripLeadingBullet(value: string) {
   return value.replace(/^[•\-\s]+/, "").trim();
 }
 
-export default function ServicesPage() {
-  const { dict } = useLanguage();
+export default async function ServicesPage() {
+  const { dict } = await getDictionary();
 
   return (
     <div className="page-shell page-shell--soft">
@@ -70,6 +82,16 @@ export default function ServicesPage() {
             </div>
           </article>
         </div>
+
+        {/* Sub-service links for internal SEO navigation */}
+        <nav aria-label="Специализирани услуги" style={{ marginTop: "3rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <Link href="/services/allergy" className="btn btn-outline">
+            {dict.servicesPage.allergy.title} →
+          </Link>
+          <Link href="/services/newborn" className="btn btn-outline">
+            {dict.home.services.newborn.title} →
+          </Link>
+        </nav>
       </div>
     </div>
   );
