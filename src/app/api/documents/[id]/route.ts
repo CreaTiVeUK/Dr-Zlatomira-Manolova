@@ -61,7 +61,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         // Sanitise filename — only safe characters to prevent header injection
         const safeFilename = document.name.replace(/[^\w.\-]/g, "_");
 
-        return new NextResponse(fileBuffer, {
+        return new NextResponse(new Uint8Array(fileBuffer), {
             headers: {
                 "Content-Type": document.fileType,
                 "Content-Disposition": `attachment; filename="${safeFilename}"`,
