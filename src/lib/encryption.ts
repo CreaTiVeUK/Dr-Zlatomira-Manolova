@@ -2,28 +2,35 @@ import crypto from "crypto";
 
 const ALGORITHM = "aes-256-gcm";
 
-// Key is computed lazily to allow test environments to run without env vars.
-let _cachedKey: string | null = null;
+let _cachedKey: Buffer | null = null;
 
-function getEncryptionKey(): string {
+/**
+ * Derives a stable 32-byte AES key from PII_ENCRYPTION_KEY using SHA-256.
+ * - Accepts keys of any length (no silent truncation).
+ * - Throws in ALL environments if the key is not set — there is no insecure
+ *   dev fallback. Use a 32+ character random string in your local .env.
+ */
+function getEncryptionKey(): Buffer {
     if (_cachedKey) return _cachedKey;
+
     const keyStr = process.env.PII_ENCRYPTION_KEY;
     if (!keyStr || keyStr.length < 32) {
-        if (process.env.NODE_ENV === "production") {
-            throw new Error("PII_ENCRYPTION_KEY must be set and at least 32 characters in production");
-        }
-        console.warn("[SECURITY] PII_ENCRYPTION_KEY not set. Using insecure fallback for non-production only.");
-        _cachedKey = "dev-only-insecure-key-change-me!";
-        return _cachedKey;
+        throw new Error(
+            "PII_ENCRYPTION_KEY must be set and at least 32 characters. " +
+            "Generate one with: openssl rand -hex 32"
+        );
     }
-    _cachedKey = keyStr.substring(0, 32);
+
+    // SHA-256 produces a stable 32-byte key from any-length input —
+    // no silent truncation, no padding.
+    _cachedKey = crypto.createHash("sha256").update(keyStr).digest();
     return _cachedKey;
 }
 
 export function encrypt(text: string): string {
     if (!text) return text;
     const iv = crypto.randomBytes(12);
-    const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(getEncryptionKey()), iv);
+    const cipher = crypto.createCipheriv(ALGORITHM, getEncryptionKey(), iv);
 
     let encrypted = cipher.update(text, "utf8", "hex");
     encrypted += cipher.final("hex");
@@ -42,7 +49,7 @@ export function decrypt(hash: string): string {
         const iv = Buffer.from(ivHex, "hex");
         const tag = Buffer.from(tagHex, "hex");
 
-        const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(getEncryptionKey()), iv);
+        const decipher = crypto.createDecipheriv(ALGORITHM, getEncryptionKey(), iv);
         decipher.setAuthTag(tag);
 
         let decrypted = decipher.update(encryptedHex, "hex", "utf8");

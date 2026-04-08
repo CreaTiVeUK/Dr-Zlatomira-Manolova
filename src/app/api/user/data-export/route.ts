@@ -72,8 +72,11 @@ export async function GET(req: Request) {
                     fileType: true,
                     fileSize: true,
                     uploadedAt: true,
-                    // Intentionally omitting fileUrl (internal path) and transcription/summary
-                    // (may contain third-party processed data — export as separate step)
+                    // Include transcription and summary — under GDPR Art. 15 users
+                    // have the right to access all data held about them, including
+                    // AI-processed content. fileUrl is omitted (internal server path).
+                    transcription: true,
+                    summary: true,
                 },
             }),
             prisma.auditLog.findMany({

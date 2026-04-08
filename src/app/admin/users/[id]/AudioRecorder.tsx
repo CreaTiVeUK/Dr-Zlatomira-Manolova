@@ -38,11 +38,22 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Revoke object URL when it changes or component unmounts
   useEffect(() => {
     return () => {
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
   }, [audioUrl]);
+
+  // Release microphone if the component unmounts while recording
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current?.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
+      mediaRecorderRef.current?.stream.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
 
   const startRecording = async () => {
     try {

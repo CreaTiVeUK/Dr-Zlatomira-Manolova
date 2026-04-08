@@ -1,33 +1,32 @@
 /**
- * Strips all HTML/script content from a string.
- * Uses a multi-pass approach to handle obfuscated and nested tags.
+ * Server-safe HTML sanitisation using an allowlist approach.
+ *
+ * The previous implementation decoded HTML entities then stripped tags with
+ * regex, which is susceptible to double-encoding bypass. This version strips
+ * ALL markup without decoding first — safe for storing user-supplied text that
+ * will be displayed as plain text (appointment notes, contact messages, etc.).
+ *
+ * Do NOT use this for rich-text/HTML output. If you ever need to sanitise for
+ * HTML output, use a purpose-built library (DOMPurify in the browser,
+ * sanitize-html on the server).
  */
 export function sanitizeString(input: string): string {
     if (!input || typeof input !== "string") return input;
 
     let clean = input;
 
-    // 1. Decode common HTML entities that might hide tags
-    clean = clean
-        .replace(/&lt;/gi, "<")
-        .replace(/&gt;/gi, ">")
-        .replace(/&#x3C;/gi, "<")
-        .replace(/&#60;/gi, "<")
-        .replace(/&#x3E;/gi, ">")
-        .replace(/&#62;/gi, ">");
-
-    // 2. Remove script/style tags and their full content (handles newlines)
+    // 1. Remove script/style blocks and their full content (handles newlines)
     clean = clean.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
     clean = clean.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "");
 
-    // 3. Remove all remaining HTML tags (including self-closing)
+    // 2. Strip all remaining HTML tags (including self-closing and SVG)
     clean = clean.replace(/<[^>]*>/g, "");
 
-    // 4. Remove javascript: and data: URI schemes from any remaining text
-    clean = clean.replace(/javascript\s*:/gi, "");
-    clean = clean.replace(/data\s*:\s*text\s*\/\s*html/gi, "");
+    // 3. Remove javascript: / vbscript: / data:text/html URI schemes
+    clean = clean.replace(/(?:javascript|vbscript)\s*:/gi, "");
+    clean = clean.replace(/data\s*:\s*(?:text\s*\/\s*html|application\/)/gi, "");
 
-    // 5. Encode < and > that survive to prevent any HTML injection in output context
+    // 4. Encode < and > that remain to prevent injection in output context
     clean = clean.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     return clean.trim();

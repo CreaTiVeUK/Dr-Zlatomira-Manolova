@@ -22,25 +22,32 @@ function memoryIsBlocked(jti: string): boolean {
     return memoryBlocklist.has(jti);
 }
 
-// ─── Redis implementation ─────────────────────────────────────────────────────
+// ─── Redis singleton ──────────────────────────────────────────────────────────
+// Create the client once and reuse it across all calls. Creating a new Redis
+// instance on every request opens a new HTTP connection to Upstash and wastes
+// resources on Vercel's serverless functions.
 
 const BLOCKLIST_PREFIX = "session:blocked:";
 
-async function redisBlock(jti: string, ttlSeconds: number): Promise<void> {
+let _redisClient: import("@upstash/redis").Redis | null = null;
+
+async function getRedisClient(): Promise<import("@upstash/redis").Redis> {
+    if (_redisClient) return _redisClient;
     const { Redis } = await import("@upstash/redis");
-    const redis = new Redis({
+    _redisClient = new Redis({
         url: process.env.UPSTASH_REDIS_REST_URL!,
         token: process.env.UPSTASH_REDIS_REST_TOKEN!,
     });
+    return _redisClient;
+}
+
+async function redisBlock(jti: string, ttlSeconds: number): Promise<void> {
+    const redis = await getRedisClient();
     await redis.set(`${BLOCKLIST_PREFIX}${jti}`, "1", { ex: ttlSeconds });
 }
 
 async function redisIsBlocked(jti: string): Promise<boolean> {
-    const { Redis } = await import("@upstash/redis");
-    const redis = new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL!,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-    });
+    const redis = await getRedisClient();
     const val = await redis.get(`${BLOCKLIST_PREFIX}${jti}`);
     return val !== null;
 }

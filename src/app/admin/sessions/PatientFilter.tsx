@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type PatientOption = {
@@ -15,6 +16,7 @@ export default function PatientFilter({
   selectedUserId?: string;
 }) {
   const { dict } = useLanguage();
+  const router = useRouter();
 
   return (
     <select
@@ -22,7 +24,8 @@ export default function PatientFilter({
       defaultValue={selectedUserId || ""}
       onChange={(event) => {
         const value = event.target.value;
-        window.location.href = value ? `/admin/sessions?userId=${value}` : "/admin/sessions";
+        // Use client-side navigation instead of full-page reload
+        router.push(value ? `/admin/sessions?userId=${value}` : "/admin/sessions");
       }}
     >
       <option value="">{dict.admin.sessionLogsPage.allPatients}</option>

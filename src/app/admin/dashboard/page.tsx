@@ -91,9 +91,21 @@ export default async function AdminDashboard() {
             select: {
                 id: true,
                 name: true,
-                createdAt: true
-            }
-        }),
+                createdAt: true,
+                _count: {
+                    select: {
+                        children: true,
+                        documents: true,
+                    },
+                },
+            },
+        }).catch(() =>
+            // Graceful degradation if newer relations aren't migrated yet
+            prisma.user.findMany({
+                where: { role: "PATIENT" },
+                select: { id: true, name: true, createdAt: true },
+            }).then((rows) => rows.map((r) => ({ ...r, _count: { children: 0, documents: 0 } })))
+        ),
         prisma.patientDocument.count().catch((error) => {
             if (isMissingTableError(error)) {
                 return 0;
@@ -157,12 +169,14 @@ export default async function AdminDashboard() {
             name: patient.name || copy.unknownPatient,
             joinedLabel: format(new Date(patient.createdAt), "MMM d, yyyy", { locale: dateLocale }),
             appointmentsCount: appointments.filter((appointment) => appointment.userId === patient.id).length,
-            documentsCount: 0,
-            childrenCount: 0
+            documentsCount: (patient as { _count?: { documents?: number } })._count?.documents ?? 0,
+            childrenCount: (patient as { _count?: { children?: number } })._count?.children ?? 0,
         }));
 
+    // Sort by when the appointment was created (booked), not when it's scheduled.
+    // This ensures "Recent Activity" shows genuinely recent events.
     const recentActivity = [...appointments]
-        .sort((left, right) => new Date(right.dateTime).getTime() - new Date(left.dateTime).getTime())
+        .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime())
         .slice(0, 6)
         .map((appointment) => ({
             id: appointment.id,

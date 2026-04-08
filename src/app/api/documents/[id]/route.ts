@@ -1,16 +1,17 @@
-
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma"; // still needed for findUnique
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
+import { readEncryptedFile } from "@/lib/storage";
+import { createAuditLog, AuditAction } from "@/lib/audit";
 import { stat } from "fs/promises";
 import { resolve } from "path";
-import { createAuditLog, AuditAction } from "@/lib/audit";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
-    const session = await auth();
+    // Use getSession() — consistent with all other routes; respects inactivity
+    // timeout and blocklist checks enforced by the proxy middleware.
+    const session = await getSession();
 
-    if (!session || !session.user) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -19,16 +20,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     try {
         const { id } = await params;
 
-        // 1. Get Document Record
-        const document = await prisma.patientDocument.findUnique({
-            where: { id }
-        });
+        const document = await prisma.patientDocument.findUnique({ where: { id } });
 
         if (!document) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });
         }
 
-        // 2. Security Check: User must own the doc OR be Admin
+        // User must own the doc OR be Admin
         const isOwner = document.userId === session.user.id;
         const isAdmin = session.user.role === "ADMIN";
 
@@ -36,37 +34,41 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
-        // 3. Path traversal guard — file must be inside the uploads directory
+        // Path traversal guard — file must be inside the uploads directory
         const uploadsDir = resolve(process.cwd(), "uploads");
         const resolvedPath = resolve(document.fileUrl);
         if (!resolvedPath.startsWith(uploadsDir + "/") && resolvedPath !== uploadsDir) {
             return NextResponse.json({ error: "Invalid file path" }, { status: 403 });
         }
 
-        // 4. Audit log — every download is recorded
-        await createAuditLog(session.user.id!, AuditAction.DOCUMENT_DOWNLOAD, `Document ${id} (${document.name}) downloaded`, ip);
+        await createAuditLog(
+            session.user.id,
+            AuditAction.DOCUMENT_DOWNLOAD,
+            `Document ${id} (${document.name}) downloaded`,
+            ip
+        );
 
-        // 5. Serve File
         try {
             await stat(resolvedPath);
         } catch {
             return NextResponse.json({ error: "File missing on server" }, { status: 404 });
         }
 
-        const fileBuffer = await readFile(resolvedPath);
+        // readEncryptedFile transparently decrypts files saved with saveEncryptedFile,
+        // and returns unencrypted files as-is (backward compat).
+        const fileBuffer = await readEncryptedFile(resolvedPath);
 
-        // Sanitise filename: only allow safe characters to prevent header injection
+        // Sanitise filename — only safe characters to prevent header injection
         const safeFilename = document.name.replace(/[^\w.\-]/g, "_");
 
         return new NextResponse(fileBuffer, {
             headers: {
                 "Content-Type": document.fileType,
                 "Content-Disposition": `attachment; filename="${safeFilename}"`,
-                "Content-Length": document.fileSize?.toString() || "",
+                "Content-Length": fileBuffer.length.toString(),
                 "X-Content-Type-Options": "nosniff",
-            }
+            },
         });
-
     } catch (error) {
         console.error("Download error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

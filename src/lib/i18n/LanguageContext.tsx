@@ -29,7 +29,8 @@ function getInitialLanguage(): Language {
 
 function persist(lang: Language) {
     localStorage.setItem("language", lang);
-    document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+    const secure = typeof window !== "undefined" && window.location.protocol === "https:";
+    document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Strict${secure ? "; Secure" : ""}`;
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
