@@ -13,6 +13,8 @@ export default function VerifyEmailPage() {
     const searchParams = useSearchParams();
     const [status, setStatus] = useState<Status>("loading");
     const [message, setMessage] = useState("");
+    const [email, setEmailState] = useState("");
+    const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
 
     const copy = {
         title: language === "bg" ? "Потвърждение на имейл" : "Email Verification",
@@ -24,19 +26,24 @@ export default function VerifyEmailPage() {
         error: language === "bg" ? "Невалидна връзка" : "Invalid link",
         expired: language === "bg" ? "Връзката е изтекла" : "Link expired",
         login: language === "bg" ? "Вход" : "Sign in",
+        resend: language === "bg" ? "Изпрати нова връзка" : "Resend verification link",
+        resending: language === "bg" ? "Изпращане…" : "Sending…",
+        resent: language === "bg" ? "Нова връзка е изпратена. Проверете пощата си." : "A new link has been sent. Check your inbox.",
     };
 
     useEffect(() => {
         const token = searchParams.get("token");
-        const email = searchParams.get("email");
+        const emailParam = searchParams.get("email");
 
-        if (!token || !email) {
+        if (!token || !emailParam) {
             setStatus("error");
             setMessage(language === "bg" ? "Липсват параметри за потвърждение." : "Missing verification parameters.");
             return;
         }
 
-        fetch(`/api/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`)
+        setEmailState(emailParam);
+
+        fetch(`/api/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(emailParam)}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
@@ -55,6 +62,21 @@ export default function VerifyEmailPage() {
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleResend = async () => {
+        if (!email || resendState !== "idle") return;
+        setResendState("sending");
+        try {
+            await fetch("/api/auth/resend-verification", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+        } catch {
+            // ignore — response is always generic
+        }
+        setResendState("sent");
+    };
 
     return (
         <div className="auth-shell">
@@ -85,9 +107,26 @@ export default function VerifyEmailPage() {
                 )}
 
                 {(status === "error" || status === "expired") && (
-                    <div className="status-banner status-banner--error">
-                        <strong>{message}</strong>
-                    </div>
+                    <>
+                        <div className="status-banner status-banner--error">
+                            <strong>{message}</strong>
+                        </div>
+                        {resendState === "sent" ? (
+                            <div className="status-banner status-banner--success" style={{ marginTop: "0.75rem" }}>
+                                {copy.resent}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleResend}
+                                disabled={resendState === "sending"}
+                                className="btn btn-outline"
+                                type="button"
+                                style={{ marginTop: "0.75rem" }}
+                            >
+                                {resendState === "sending" ? copy.resending : copy.resend}
+                            </button>
+                        )}
+                    </>
                 )}
             </div>
         </div>

@@ -394,6 +394,8 @@ export const bg: Dictionary = {
             noDocumentsDescription: "Качете отчет или използвайте запис на сесия, за да генерирате нов запис.",
             unknownSize: "Неизвестен размер",
             download: "Изтегли",
+            delete: "Изтрий",
+            deleteConfirm: "Изтриване на документа за постоянно?",
             sessionSummary: "Резюме на сесията",
             viewFullTranscription: "Виж пълната транскрипция",
         },

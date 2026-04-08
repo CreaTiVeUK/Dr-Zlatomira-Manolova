@@ -397,6 +397,8 @@ export const en = {
             noDocumentsDescription: "Upload reports or use session recording to generate new entries.",
             unknownSize: "Unknown size",
             download: "Download",
+            delete: "Delete",
+            deleteConfirm: "Permanently delete this document?",
             sessionSummary: "Session summary",
             viewFullTranscription: "View full transcription",
         },

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FileText, Sparkles } from "lucide-react";
 import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
+import DeleteDocumentButton from "./DeleteDocumentButton";
 import EmptyState from "@/components/EmptyState";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { decrypt } from "@/lib/encryption";
@@ -137,6 +138,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
                           <a href={`/api/documents/${doc.id}`} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
                             {copy.download}
                           </a>
+                          <DeleteDocumentButton docId={doc.id} userId={user.id} />
                         </div>
                       </div>
 

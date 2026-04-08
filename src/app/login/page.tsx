@@ -70,6 +70,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState(
     searchParams.get("error")
       ? (ERROR_MESSAGES[searchParams.get("error")!] ?? "Sign-in failed. Please try again.")
@@ -95,6 +96,7 @@ export default function LoginPage() {
           ERROR_MESSAGES[result.error] ??
           (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
         );
+        setResendState("idle");
       } else {
         if (callbackUrl) {
           router.push(callbackUrl);
@@ -123,8 +125,36 @@ export default function LoginPage() {
         />
 
         {error ? (
-          <div className="status-banner status-banner--error">
+          <div className="status-banner status-banner--error" style={{ display: "grid", gap: "0.6rem" }}>
             <strong>{error}</strong>
+            {error === ERROR_MESSAGES.EmailNotVerified && (
+              resendState === "sent" ? (
+                <span style={{ fontSize: "0.875rem" }}>
+                  {language === "bg" ? "Нова връзка е изпратена. Проверете пощата си." : "A new verification link has been sent. Check your inbox."}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setResendState("sending");
+                    try {
+                      await fetch("/api/auth/resend-verification", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email }),
+                      });
+                    } catch { /* ignore */ }
+                    setResendState("sent");
+                  }}
+                  disabled={resendState === "sending"}
+                  style={{ fontSize: "0.875rem", background: "none", border: "none", padding: 0, color: "inherit", textDecoration: "underline", cursor: "pointer", textAlign: "left" }}
+                >
+                  {resendState === "sending"
+                    ? (language === "bg" ? "Изпращане…" : "Sending…")
+                    : (language === "bg" ? "Изпрати нова връзка за потвърждение" : "Resend verification link")}
+                </button>
+              )
+            )}
           </div>
         ) : null}
 

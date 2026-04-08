@@ -183,7 +183,7 @@ export default async function AdminDashboard() {
             userId: appointment.userId,
             patient: appointment.user.name || copy.unknownPatient,
             eventLabel: appointment.status === "CANCELLED" ? copy.cancelledAppointment : appointment.status === "COMPLETED" ? copy.completedAppointment : copy.scheduledAppointment,
-            timestampLabel: format(new Date(appointment.dateTime), "MMM d, yyyy • HH:mm", { locale: dateLocale }),
+            timestampLabel: format(new Date(appointment.createdAt), "MMM d, yyyy • HH:mm", { locale: dateLocale }),
             status: appointment.status
         }));
 
