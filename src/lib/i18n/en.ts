@@ -252,7 +252,8 @@ export const en = {
             or: "or",
             continueWith: "Continue with",
             noAccount: "Don't have an account?",
-            registerLink: "Sign up"
+            registerLink: "Sign up",
+            forgotPassword: "Forgot password?"
         },
         register: {
             title: "Registration",
@@ -264,6 +265,31 @@ export const en = {
             hasAccount: "Already have an account?",
             loginLink: "Login here",
             loading: "Registering..."
+        },
+        forgotPassword: {
+            title: "Reset your password",
+            subtitle: "Enter your registered email and we'll send you a secure reset link.",
+            email: "EMAIL ADDRESS",
+            btn: "Send reset link",
+            sending: "Sending…",
+            successTitle: "Check your email",
+            successMessage: "If an account with that address exists, a password reset link has been sent. It expires in 1 hour.",
+            backToLogin: "Back to login",
+        },
+        resetPassword: {
+            title: "Set a new password",
+            subtitle: "Choose a strong password for your account.",
+            password: "NEW PASSWORD",
+            confirmPassword: "CONFIRM NEW PASSWORD",
+            btn: "Set new password",
+            saving: "Saving…",
+            successTitle: "Password updated",
+            successMessage: "Your password has been changed. You can now sign in with your new password.",
+            signIn: "Sign in",
+            errorInvalid: "This reset link is invalid or has expired. Please request a new one.",
+            errorMismatch: "Passwords do not match.",
+            errorWeak: "Password must be at least 8 characters and include an uppercase letter, a number, and a special character.",
+            requestNew: "Request a new link",
         }
     },
     myAppointments: {

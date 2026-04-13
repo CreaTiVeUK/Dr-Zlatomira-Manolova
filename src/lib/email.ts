@@ -54,4 +54,8 @@ export const EMAIL_TEMPLATES = {
         subject: `Verify your email — Dr. Manolova Pediatrics`,
         body: `Dear ${patientName},\n\nThank you for registering with Dr. Manolova Pediatrics.\n\nPlease verify your email address by clicking the link below (valid for 24 hours):\n\n${verifyUrl}\n\nIf you did not create an account, you can safely ignore this email.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
     }),
+    PASSWORD_RESET: (resetUrl: string) => ({
+        subject: `Reset your password — Dr. Manolova Pediatrics`,
+        body: `Hello,\n\nWe received a request to reset the password for your Dr. Manolova Pediatrics account.\n\nClick the link below to set a new password (valid for 1 hour):\n\n${resetUrl}\n\nIf you did not request a password reset, you can safely ignore this email. Your password will not be changed.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+    }),
 };

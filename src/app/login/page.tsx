@@ -173,7 +173,16 @@ export default function LoginPage() {
             />
           </div>
           <div className="field">
-            <label htmlFor="login-password">{dict.auth.login.password}</label>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label htmlFor="login-password">{dict.auth.login.password}</label>
+              <Link
+                href="/forgot-password"
+                style={{ fontSize: "0.8rem", color: "var(--primary-teal)", fontWeight: 600 }}
+                tabIndex={-1}
+              >
+                {dict.auth.login.forgotPassword}
+              </Link>
+            </div>
             <input
               id="login-password"
               type="password"
