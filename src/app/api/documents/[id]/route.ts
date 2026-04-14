@@ -20,7 +20,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     try {
         const { id } = await params;
 
-        const document = await prisma.patientDocument.findUnique({ where: { id } });
+        const document = await prisma.patientDocument.findFirst({
+            where: { id, deletedAt: null },
+        });
 
         if (!document) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });

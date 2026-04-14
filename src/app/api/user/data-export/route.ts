@@ -65,7 +65,7 @@ export async function GET(req: Request) {
                 },
             }),
             prisma.patientDocument.findMany({
-                where: { userId },
+                where: { userId, deletedAt: null },
                 select: {
                     id: true,
                     name: true,

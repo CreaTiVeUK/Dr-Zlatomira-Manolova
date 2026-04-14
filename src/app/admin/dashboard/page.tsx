@@ -95,7 +95,7 @@ export default async function AdminDashboard() {
                 _count: {
                     select: {
                         children: true,
-                        documents: true,
+                        documents: { where: { deletedAt: null } },
                     },
                 },
             },
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
                 select: { id: true, name: true, createdAt: true },
             }).then((rows) => rows.map((r) => ({ ...r, _count: { children: 0, documents: 0 } })))
         ),
-        prisma.patientDocument.count().catch((error) => {
+        prisma.patientDocument.count({ where: { deletedAt: null } }).catch((error) => {
             if (isMissingTableError(error)) {
                 return 0;
             }

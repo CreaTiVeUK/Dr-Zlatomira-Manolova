@@ -13,7 +13,7 @@ export async function GET() {
 
     try {
         const documents = await prisma.patientDocument.findMany({
-            where: { userId: session.user.id },
+            where: { userId: session.user.id, deletedAt: null },
             orderBy: { uploadedAt: 'desc' },
             select: {
                 id: true,

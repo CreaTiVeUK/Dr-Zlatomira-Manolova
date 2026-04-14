@@ -77,8 +77,8 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
             return NextResponse.json({ error: "docId is required" }, { status: 400 });
         }
 
-        const document = await prisma.patientDocument.findUnique({
-            where: { id: docId },
+        const document = await prisma.patientDocument.findFirst({
+            where: { id: docId, deletedAt: null },
             select: { id: true, userId: true, name: true },
         });
 
@@ -90,12 +90,16 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
             return NextResponse.json({ error: "Document does not belong to this patient" }, { status: 403 });
         }
 
-        await prisma.patientDocument.delete({ where: { id: docId } });
+        // Soft-delete — retained for regulatory window, purged by cron
+        await prisma.patientDocument.update({
+            where: { id: docId },
+            data: { deletedAt: new Date() },
+        });
 
         await createAuditLog(
             session.user.id,
             AuditAction.DOCUMENT_DELETE,
-            `Admin deleted document "${document.name}" (${docId}) for patient ${patientId}`,
+            `Admin soft-deleted document "${document.name}" (${docId}) for patient ${patientId}`,
             ip
         );
 

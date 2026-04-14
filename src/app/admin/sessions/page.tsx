@@ -45,6 +45,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
           {
             OR: [{ transcription: { not: null } }, { summary: { not: null } }],
           },
+          { deletedAt: null },
           userId ? { userId } : {},
         ],
       },

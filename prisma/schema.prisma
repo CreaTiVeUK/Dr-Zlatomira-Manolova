@@ -64,11 +64,18 @@ model PatientDocument {
   summary      String?  @db.Text
   transcription String? @db.Text
 
+  // Soft-delete — medical records stay recoverable for retention window before
+  // hard-deletion by the purge cron. Filter `deletedAt: null` in every query.
+  deletedAt    DateTime?
+
   userId     String
   user       User     @relation("PatientDocuments", fields: [userId], references: [id], onDelete: Cascade)
 
   uploadedById String
   uploadedBy   User     @relation("UploadedDocuments", fields: [uploadedById], references: [id])
+
+  @@index([userId, deletedAt])
+  @@index([deletedAt])
 }
 
 model VerificationToken {
@@ -97,12 +104,16 @@ model Appointment {
   paymentMethod String?  // CASH
   notes         String?
 
+  // Idempotency for the 24h reminder cron — set once the email is dispatched
+  reminderSentAt DateTime?
+
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
   createdAt DateTime @default(now())
 
   @@unique([dateTime])
+  @@index([dateTime, status])
 }
 
 model Message {

@@ -33,7 +33,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
       if (isMissingTableError(error)) return [];
       throw error;
     }),
-    prisma.patientDocument.findMany({ where: { userId: id }, orderBy: { uploadedAt: "desc" } }).catch((error) => {
+    prisma.patientDocument.findMany({ where: { userId: id, deletedAt: null }, orderBy: { uploadedAt: "desc" } }).catch((error) => {
       if (isMissingTableError(error)) return [];
       throw error;
     }),

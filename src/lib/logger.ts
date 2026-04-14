@@ -10,6 +10,28 @@ export interface LogEntry {
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Dynamically loaded Sentry module — never a hard dependency
+let sentryImportAttempted = false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let sentry: any = null;
+
+async function loadSentry() {
+    if (sentryImportAttempted) return sentry;
+    sentryImportAttempted = true;
+    if (!process.env.SENTRY_DSN) return null;
+    try {
+        // Indirect import keeps TS from insisting @sentry/nextjs be installed.
+        // The package is optional; users who want Sentry can `npm i @sentry/nextjs`.
+        const moduleName = "@sentry/nextjs";
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mod = await (Function("m", "return import(m)")(moduleName) as Promise<any>).catch(() => null);
+        if (mod) sentry = mod;
+    } catch {
+        /* ignore — optional dependency */
+    }
+    return sentry;
+}
+
 export const logger = {
     info: (message: string, context?: Record<string, unknown>) => {
         log('info', message, context);
@@ -19,6 +41,17 @@ export const logger = {
     },
     error: (message: string, error?: unknown, context?: Record<string, unknown>) => {
         log('error', message, context, error);
+        // Fire-and-forget forward to Sentry. Never await — logging must not block.
+        loadSentry().then((s) => {
+            if (!s) return;
+            try {
+                if (error instanceof Error) {
+                    s.captureException(error, { extra: context });
+                } else {
+                    s.captureMessage(message, { level: "error", extra: { ...context, error } });
+                }
+            } catch { /* swallow */ }
+        }).catch(() => { /* swallow */ });
     },
     debug: (message: string, context?: Record<string, unknown>) => {
         if (!isProduction) {
