@@ -29,6 +29,7 @@ function buildCSP(nonce: string): string {
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
     "upgrade-insecure-requests",
+    "report-uri /api/csp-report",
   ].join("; ");
 }
 

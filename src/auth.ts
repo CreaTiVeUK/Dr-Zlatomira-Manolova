@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
@@ -12,6 +12,14 @@ const credentialsSchema = z.object({
     email: z.string().email().transform((v) => sanitizeString(v).toLowerCase()),
     password: z.string().min(8),
 });
+
+// Custom signin errors — NextAuth v5 exposes `code` on the client via result.error
+class AccountLockedError extends CredentialsSignin {
+    code = "account_locked";
+}
+class EmailNotVerifiedError extends CredentialsSignin {
+    code = "email_not_verified";
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     // No adapter — we use JWT sessions exclusively. With a database adapter present,
@@ -32,23 +40,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 const user = await prisma.user.findUnique({ where: { email } });
                 if (!user || !user.password) return null;
 
-                // Lockout check
-                if (user.lockedUntil && user.lockedUntil > new Date()) return null;
+                // Lockout check — throw specific error so UI can show countdown
+                if (user.lockedUntil && user.lockedUntil > new Date()) {
+                    throw new AccountLockedError();
+                }
 
                 // Email verification required for credential accounts
-                if (!user.emailVerified) return null;
+                if (!user.emailVerified) {
+                    throw new EmailNotVerifiedError();
+                }
 
                 const valid = await bcrypt.compare(password, user.password);
 
                 if (!valid) {
                     const attempts = user.failedAttempts + 1;
+                    const nowLocked = attempts >= 5;
                     await prisma.user.update({
                         where: { id: user.id },
                         data: {
                             failedAttempts: attempts,
-                            lockedUntil: attempts >= 5 ? new Date(Date.now() + 15 * 60_000) : null,
+                            lockedUntil: nowLocked ? new Date(Date.now() + 15 * 60_000) : null,
                         },
                     });
+                    if (nowLocked) throw new AccountLockedError();
                     return null;
                 }
 

@@ -8,18 +8,12 @@ import { sanitizeString } from "@/lib/sanitize";
 import { encrypt } from "@/lib/encryption";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 import { createAuditLog, AuditAction } from "@/lib/audit";
-
-const passwordSchema = z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
+import { checkPasswordStrength } from "@/lib/password-strength";
 
 const registerSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters").transform(v => sanitizeString(v)),
     email: z.string().email("Invalid email address").transform(v => sanitizeString(v).toLowerCase()),
-    password: passwordSchema,
+    password: z.string().min(1, "Password is required").max(128),
     phone: z.string().optional().transform(v => v ? sanitizeString(v) : v),
 });
 
@@ -46,6 +40,12 @@ export async function POST(request: NextRequest) {
         }
 
         const { name, email, password, phone } = result.data;
+
+        // Full strength check — catches weak passwords that pass regex rules
+        const strength = checkPasswordStrength(password, [name, email]);
+        if (!strength.valid) {
+            return NextResponse.json({ error: strength.reason }, { status: 400 });
+        }
 
         // Generic error prevents email enumeration
         const existingUser = await prisma.user.findUnique({ where: { email } });

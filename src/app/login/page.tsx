@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn, getSession } from "next-auth/react";
@@ -60,8 +60,22 @@ const ERROR_MESSAGES: Record<string, string> = {
   CredentialsSignin: "Invalid email or password.",
   AccountNotLinked: "This email is linked to a different sign-in method.",
   EmailNotVerified: "Please verify your email before signing in.",
-  AccountLocked: "Account locked due to multiple failed attempts. Try again later.",
+  email_not_verified: "Please verify your email before signing in.",
+  AccountLocked: "Account locked due to multiple failed attempts.",
+  account_locked: "Account locked due to multiple failed attempts.",
 };
+
+function formatDuration(ms: number, lang: string): string {
+  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  if (lang === "bg") {
+    if (minutes > 0) return `${minutes} мин ${seconds.toString().padStart(2, "0")} сек`;
+    return `${seconds} сек`;
+  }
+  if (minutes > 0) return `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
+  return `${seconds}s`;
+}
 
 export default function LoginPage() {
   const { dict, language } = useLanguage();
@@ -77,7 +91,19 @@ export default function LoginPage() {
       : ""
   );
   const [loading, setLoading] = useState(false);
+  const [lockoutRemainingMs, setLockoutRemainingMs] = useState<number | null>(null);
   const router = useRouter();
+
+  // Tick the lockout countdown every second
+  useEffect(() => {
+    if (lockoutRemainingMs === null) return;
+    if (lockoutRemainingMs <= 0) {
+      setLockoutRemainingMs(null);
+      return;
+    }
+    const id = setTimeout(() => setLockoutRemainingMs((ms) => (ms ?? 0) - 1000), 1000);
+    return () => clearTimeout(id);
+  }, [lockoutRemainingMs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,6 +123,21 @@ export default function LoginPage() {
           (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
         );
         setResendState("idle");
+
+        // If the account is locked, query remaining time so we can show a countdown
+        if (result.error === "account_locked" || result.error === "AccountLocked") {
+          try {
+            const res = await fetch("/api/auth/lockout-status", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (data.locked && typeof data.remainingMs === "number") {
+              setLockoutRemainingMs(data.remainingMs);
+            }
+          } catch { /* ignore */ }
+        }
       } else {
         if (callbackUrl) {
           router.push(callbackUrl);
@@ -127,6 +168,17 @@ export default function LoginPage() {
         {error ? (
           <div className="status-banner status-banner--error" style={{ display: "grid", gap: "0.6rem" }}>
             <strong>{error}</strong>
+            {lockoutRemainingMs !== null && lockoutRemainingMs > 0 && (
+              <span style={{ fontSize: "0.875rem" }}>
+                {language === "bg"
+                  ? `Опитайте отново след ${formatDuration(lockoutRemainingMs, language)}.`
+                  : `Try again in ${formatDuration(lockoutRemainingMs, language)}.`}
+                {" "}
+                <Link href="/forgot-password" style={{ color: "inherit", textDecoration: "underline" }}>
+                  {language === "bg" ? "Или нулирайте паролата си." : "Or reset your password."}
+                </Link>
+              </span>
+            )}
             {error === ERROR_MESSAGES.EmailNotVerified && (
               resendState === "sent" ? (
                 <span style={{ fontSize: "0.875rem" }}>

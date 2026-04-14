@@ -15,21 +15,13 @@ import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { createAuditLog, AuditAction } from "@/lib/audit";
+import { checkPasswordStrength } from "@/lib/password-strength";
 
 const schema = z.object({
     token: z.string().min(1),
     email: z.string().email().transform((v) => sanitizeString(v).toLowerCase()),
-    password: z.string().min(8).max(128),
+    password: z.string().min(1).max(128),
 });
-
-function isStrongPassword(password: string): boolean {
-    return (
-        password.length >= 8 &&
-        /[A-Z]/.test(password) &&
-        /[0-9]/.test(password) &&
-        /[^A-Za-z0-9]/.test(password)
-    );
-}
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
@@ -48,11 +40,9 @@ export async function POST(request: NextRequest) {
 
         const { token, email, password } = result.data;
 
-        if (!isStrongPassword(password)) {
-            return NextResponse.json(
-                { error: "Password must be at least 8 characters and include an uppercase letter, a number, and a special character." },
-                { status: 400 }
-            );
+        const strength = checkPasswordStrength(password, [email]);
+        if (!strength.valid) {
+            return NextResponse.json({ error: strength.reason }, { status: 400 });
         }
 
         // Look up the reset token
