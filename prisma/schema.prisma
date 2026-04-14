@@ -29,6 +29,14 @@ model User {
   lockedUntil    DateTime?
   lastActivity   DateTime? @default(now())
 
+  // TOTP 2FA — enforced for ADMIN accounts when enabled.
+  // `totpSecret` is stored encrypted at rest; `totpEnabledAt` flips when the
+  // user verifies a code for the first time. `totpBackupCodes` stores 10
+  // single-use recovery codes (encrypted JSON array).
+  totpSecret       String?
+  totpEnabledAt    DateTime?
+  totpBackupCodes  String?   @db.Text
+
   appointments   Appointment[]
   sentMessages   Message[]     @relation("SentMessages")
   receivedMessages Message[]   @relation("ReceivedMessages")

@@ -63,6 +63,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   email_not_verified: "Please verify your email before signing in.",
   AccountLocked: "Account locked due to multiple failed attempts.",
   account_locked: "Account locked due to multiple failed attempts.",
+  totp_required: "Enter the 6-digit code from your authenticator app.",
+  totp_invalid: "Invalid authentication code. Try again.",
 };
 
 function formatDuration(ms: number, lang: string): string {
@@ -84,6 +86,8 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [totp, setTotp] = useState("");
+  const [totpRequired, setTotpRequired] = useState(false);
   const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState(
     searchParams.get("error")
@@ -114,6 +118,7 @@ export default function LoginPage() {
       const result = await signIn("credentials", {
         email,
         password,
+        totp: totp || undefined,
         redirect: false,
       });
 
@@ -123,6 +128,13 @@ export default function LoginPage() {
           (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
         );
         setResendState("idle");
+
+        // Server told us a TOTP is required or the one we sent was wrong.
+        if (result.error === "totp_required" || result.error === "totp_invalid") {
+          setTotpRequired(true);
+          // Clear only the code, not the password, so the user can retry.
+          setTotp("");
+        }
 
         // If the account is locked, query remaining time so we can show a countdown
         if (result.error === "account_locked" || result.error === "AccountLocked") {
@@ -246,6 +258,31 @@ export default function LoginPage() {
               autoComplete="current-password"
             />
           </div>
+          {totpRequired && (
+            <div className="field">
+              <label htmlFor="login-totp">
+                {language === "bg" ? "ДВУФАКТОРЕН КОД" : "AUTHENTICATION CODE"}
+              </label>
+              <input
+                id="login-totp"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete="one-time-code"
+                maxLength={10}
+                value={totp}
+                onChange={(e) => setTotp(e.target.value)}
+                placeholder="123456"
+                required
+                autoFocus
+              />
+              <span className="helper-text">
+                {language === "bg"
+                  ? "Въведете 6-цифрения код от вашето приложение или резервен код."
+                  : "Enter the 6-digit code from your authenticator app, or a backup code."}
+              </span>
+            </div>
+          )}
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? "…" : dict.auth.login.btn}
           </button>

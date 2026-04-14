@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { Mic } from "lucide-react";
+import { Download, Mic } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
@@ -70,6 +70,12 @@ export default async function AdminUserList() {
           <span className="page-intro__eyebrow">{copy.eyebrow}</span>
           <h1 className="section-title">{copy.title}</h1>
           <p>{copy.subtitle}</p>
+        </div>
+        <div className="admin-page-actions">
+          <a href="/api/admin/users/export" className="btn btn-outline" download>
+            <Download size={16} />
+            {copy.exportCsv}
+          </a>
         </div>
       </div>
 

@@ -7,10 +7,13 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sanitizeString } from "@/lib/sanitize";
+import { decrypt, encrypt } from "@/lib/encryption";
+import { verifyCode as verifyTotp } from "@/lib/totp";
 
 const credentialsSchema = z.object({
     email: z.string().email().transform((v) => sanitizeString(v).toLowerCase()),
     password: z.string().min(8),
+    totp: z.string().trim().optional(),
 });
 
 // Custom signin errors — NextAuth v5 exposes `code` on the client via result.error
@@ -19,6 +22,12 @@ class AccountLockedError extends CredentialsSignin {
 }
 class EmailNotVerifiedError extends CredentialsSignin {
     code = "email_not_verified";
+}
+class TotpRequiredError extends CredentialsSignin {
+    code = "totp_required";
+}
+class TotpInvalidError extends CredentialsSignin {
+    code = "totp_invalid";
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -30,12 +39,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             credentials: {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
+                totp: { label: "TOTP Code", type: "text" },
             },
             async authorize(credentials) {
                 const parsed = credentialsSchema.safeParse(credentials);
                 if (!parsed.success) return null;
 
-                const { email, password } = parsed.data;
+                const { email, password, totp } = parsed.data;
 
                 const user = await prisma.user.findUnique({ where: { email } });
                 if (!user || !user.password) return null;
@@ -64,6 +74,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     });
                     if (nowLocked) throw new AccountLockedError();
                     return null;
+                }
+
+                // TOTP enforcement — if the user has completed 2FA setup, a valid
+                // code (or backup code) must accompany the password. Password is
+                // already verified here, so these errors do NOT leak a
+                // credential-vs-2FA distinction.
+                if (user.totpEnabledAt && user.totpSecret) {
+                    if (!totp) throw new TotpRequiredError();
+
+                    const secret = decrypt(user.totpSecret);
+                    let ok = verifyTotp(secret, totp);
+
+                    if (!ok && user.totpBackupCodes) {
+                        try {
+                            const codes: string[] = JSON.parse(decrypt(user.totpBackupCodes));
+                            const normalized = totp.trim().toUpperCase();
+                            const idx = codes.indexOf(normalized);
+                            if (idx !== -1) {
+                                // Consume the backup code — single-use.
+                                codes.splice(idx, 1);
+                                await prisma.user.update({
+                                    where: { id: user.id },
+                                    data: { totpBackupCodes: encrypt(JSON.stringify(codes)) },
+                                });
+                                ok = true;
+                            }
+                        } catch {
+                            /* corrupt backup codes — treat as no match */
+                        }
+                    }
+
+                    if (!ok) throw new TotpInvalidError();
                 }
 
                 await prisma.user.update({
