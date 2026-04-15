@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { signIn } from "next-auth/react";
 import { format, isAfter, subHours } from "date-fns";
-import { CalendarCheck2, CalendarClock, CalendarX2, Download, LockKeyhole } from "lucide-react";
+import { CalendarCheck2, CalendarClock, CalendarX2, Download, LockKeyhole, PencilLine } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
 import { generateICS } from "@/lib/calendar";
@@ -35,6 +35,9 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [rescheduleId, setRescheduleId] = useState<string | null>(null);
+  const [rescheduleValue, setRescheduleValue] = useState("");
+  const [rescheduleSaving, setRescheduleSaving] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -85,6 +88,50 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
       }
     } catch {
       setMessage(language === "bg" ? "Възникна грешка." : "An error occurred.");
+    }
+  }
+
+  function openReschedule(appt: Appointment) {
+    const d = new Date(appt.dateTime);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const local = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    setRescheduleId(appt.id);
+    setRescheduleValue(local);
+    setMessage("");
+  }
+
+  async function handleReschedule(id: string, originalDateTime: string) {
+    if (!rescheduleValue) return;
+    const newDate = new Date(rescheduleValue);
+    if (Number.isNaN(newDate.getTime()) || newDate.getTime() <= Date.now()) {
+      setMessage(language === "bg" ? "Моля изберете бъдещ час." : "Please choose a future time.");
+      return;
+    }
+    if (!isAfter(new Date(originalDateTime), subHours(new Date(), -24))) {
+      setMessage(dict.myAppointments.cancelRestriction);
+      return;
+    }
+
+    setRescheduleSaving(true);
+    try {
+      const res = await fetch(`/api/appointments?id=${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dateTime: newDate.toISOString() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error || (language === "bg" ? "Промяната не беше записана." : "Reschedule failed."));
+      } else {
+        setMessage(language === "bg" ? "Часът е преместен успешно." : "Appointment rescheduled.");
+        setRescheduleId(null);
+        setRescheduleValue("");
+        fetchAppointments();
+      }
+    } catch {
+      setMessage(language === "bg" ? "Възникна грешка." : "An error occurred.");
+    } finally {
+      setRescheduleSaving(false);
     }
   }
 
@@ -208,11 +255,33 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
                       <p>
                         {format(new Date(appt.dateTime), "p")} · {dict.myAppointments.confirmed}
                       </p>
+                      {rescheduleId === appt.id ? (
+                        <div className="form-grid" style={{ marginTop: "0.75rem", gap: "0.5rem" }}>
+                          <input
+                            type="datetime-local"
+                            value={rescheduleValue}
+                            onChange={(e) => setRescheduleValue(e.target.value)}
+                            min={(() => { const d = new Date(Date.now() + 60 * 60000); const pad = (n: number) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; })()}
+                          />
+                          <div className="btn-group">
+                            <button type="button" className="btn btn-primary" disabled={rescheduleSaving} onClick={() => handleReschedule(appt.id, appt.dateTime)}>
+                              {rescheduleSaving ? (language === "bg" ? "Запазване..." : "Saving...") : (language === "bg" ? "Потвърди" : "Confirm")}
+                            </button>
+                            <button type="button" className="btn btn-outline" onClick={() => { setRescheduleId(null); setRescheduleValue(""); }}>
+                              {language === "bg" ? "Откажи" : "Cancel"}
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                     <div className="appointment-entry__actions">
                       <button onClick={() => handleDownload(appt)} className="btn btn-outline" type="button">
                         <Download size={16} />
                         {dict.myAppointments.download}
+                      </button>
+                      <button onClick={() => openReschedule(appt)} className="btn btn-outline" type="button">
+                        <PencilLine size={16} />
+                        {language === "bg" ? "Премести" : "Reschedule"}
                       </button>
                       <button onClick={() => handleCancel(appt.id, appt.dateTime)} className="btn btn-outline" type="button">
                         {dict.myAppointments.cancel}

@@ -46,6 +46,10 @@ export const EMAIL_TEMPLATES = {
         subject: `Appointment Cancelled: Dr. Manolova Pediatrics`,
         body: `Dear ${patientName},\n\nThis is to confirm that your appointment on ${date} has been cancelled.\n\nIf you did not request this, please contact us immediately.\n\nDr. Manolova Pediatrics Team`
     }),
+    RESCHEDULE: (patientName: string, oldDate: string, newDate: string, newTime: string) => ({
+        subject: `Appointment Rescheduled: Dr. Manolova Pediatrics`,
+        body: `Dear ${patientName},\n\nYour appointment originally scheduled for ${oldDate} has been rescheduled.\n\nNew date: ${newDate}\nNew time: ${newTime}\n\nIf this change was not requested by you, please contact us immediately.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+    }),
     CONTACT_INQUIRY: (fromName: string, fromEmail: string, message: string) => ({
         subject: `New Inquiry from ${fromName}`,
         body: `Name: ${fromName}\nEmail: ${fromEmail}\n\nMessage:\n${message}\n\n--\nSent from your website contact form.`

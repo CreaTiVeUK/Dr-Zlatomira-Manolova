@@ -125,15 +125,19 @@ model Appointment {
 }
 
 model Message {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   content   String
-  timestamp DateTime @default(now())
+  timestamp DateTime  @default(now())
+  readAt    DateTime?
 
   from   User   @relation("SentMessages", fields: [fromId], references: [id])
   fromId String
 
   to   User   @relation("ReceivedMessages", fields: [toId], references: [id])
   toId String
+
+  @@index([toId, readAt])
+  @@index([fromId, toId, timestamp])
 }
 
 model AuditLog {

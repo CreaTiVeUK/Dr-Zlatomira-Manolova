@@ -19,6 +19,7 @@ export const AuditAction = {
     APPOINTMENT_CREATE: "APPOINTMENT_CREATE",
     APPOINTMENT_CANCELLED: "APPOINTMENT_CANCELLED",
     APPOINTMENT_COMPLETED: "APPOINTMENT_COMPLETED",
+    APPOINTMENT_RESCHEDULED: "APPOINTMENT_RESCHEDULED",
 
     // Documents & sessions
     DOCUMENT_UPLOAD: "DOCUMENT_UPLOAD",
@@ -41,6 +42,9 @@ export const AuditAction = {
 
     // Admin
     ADMIN_USER_VIEW: "ADMIN_USER_VIEW",
+
+    // Messaging
+    MESSAGE_SENT: "MESSAGE_SENT",
 } as const;
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];

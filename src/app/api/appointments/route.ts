@@ -23,9 +23,14 @@ const bookingSchema = z.object({
     userId: z.string().uuid().optional(),
 });
 
-const patchSchema = z.object({
-    status: z.enum(["BOOKED", "CANCELLED", "COMPLETED"]),
-});
+const patchSchema = z.union([
+    z.object({ status: z.enum(["BOOKED", "CANCELLED", "COMPLETED"]) }),
+    z.object({
+        dateTime: z.string().datetime().refine(val => new Date(val) > new Date(), {
+            message: "New time must be in the future"
+        }),
+    }),
+]);
 
 export async function GET() {
     const session = await getSession();
@@ -176,10 +181,8 @@ export async function PATCH(request: NextRequest) {
         const body = await request.json();
         const validation = patchSchema.safeParse(body);
         if (!validation.success) {
-            return NextResponse.json({ error: "Invalid state transition" }, { status: 400 });
+            return NextResponse.json({ error: validation.error.issues[0]?.message || "Invalid payload" }, { status: 400 });
         }
-
-        const { status } = validation.data;
 
         const appointment = await prisma.appointment.findUnique({
             where: { id: id as string },
@@ -194,12 +197,78 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ error: "Forbidden access" }, { status: 403 });
         }
 
+        // Reschedule branch: move an existing booking to a new slot (atomic conflict check).
+        if ("dateTime" in validation.data) {
+            if (appointment.status !== "BOOKED") {
+                return NextResponse.json({ error: "Only active bookings can be rescheduled" }, { status: 409 });
+            }
+
+            const newDate = new Date(validation.data.dateTime);
+            const newEnd = new Date(newDate.getTime() + appointment.duration * 60000);
+
+            const updated = await prisma.$transaction(async (tx) => {
+                const dayStart = new Date(newDate); dayStart.setHours(0, 0, 0, 0);
+                const dayEnd = new Date(newDate); dayEnd.setHours(23, 59, 59, 999);
+
+                const dayAppointments = await tx.appointment.findMany({
+                    where: {
+                        status: "BOOKED",
+                        dateTime: { gte: dayStart, lte: dayEnd },
+                        id: { not: appointment.id },
+                    }
+                });
+
+                const hasConflict = dayAppointments.some((appt) => {
+                    const start = appt.dateTime.getTime();
+                    const end = start + appt.duration * 60000;
+                    return (newDate.getTime() < end && newEnd.getTime() > start);
+                });
+
+                if (hasConflict) {
+                    return { conflict: true as const };
+                }
+
+                const next = await tx.appointment.update({
+                    where: { id: appointment.id },
+                    data: { dateTime: newDate, reminderSentAt: null },
+                });
+                return { conflict: false as const, next };
+            });
+
+            if (updated.conflict) {
+                return NextResponse.json({ error: "Slot unavailable" }, { status: 409 });
+            }
+
+            const oldDate = appointment.dateTime;
+            await createAuditLog(
+                session.user.id,
+                AuditAction.APPOINTMENT_RESCHEDULED,
+                `Appointment ${appointment.id} rescheduled from ${oldDate.toISOString()} to ${newDate.toISOString()}`,
+                ip,
+            );
+
+            if (appointment.user?.email) {
+                sendEmail(
+                    appointment.user.email,
+                    EMAIL_TEMPLATES.RESCHEDULE(
+                        appointment.user.name || "Patient",
+                        format(oldDate, "PPP"),
+                        format(newDate, "PPP"),
+                        format(newDate, "p"),
+                    ),
+                ).catch((err: unknown) => logger.error("Failed to send reschedule email", err, { appointmentId: appointment.id }));
+            }
+
+            return NextResponse.json({ success: true, appointment: updated.next });
+        }
+
+        // Status change branch
+        const { status } = validation.data;
         const updated = await prisma.appointment.update({
             where: { id: id as string },
             data: { status }
         });
 
-        // Audit Log
         const auditAction = status === "CANCELLED" ? AuditAction.APPOINTMENT_CANCELLED
             : status === "COMPLETED" ? AuditAction.APPOINTMENT_COMPLETED
             : AuditAction.APPOINTMENT_CREATE;
@@ -210,7 +279,8 @@ export async function PATCH(request: NextRequest) {
         }
 
         return NextResponse.json({ success: true, appointment: updated });
-    } catch {
+    } catch (error) {
+        logger.error("Appointment PATCH error:", error);
         return NextResponse.json({ error: "Modification blocked" }, { status: 500 });
     }
 }
