@@ -1,3 +1,33 @@
+# [1.1.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.0.0...v1.1.0) (2026-04-15)
+
+
+### Bug Fixes
+
+* correct address zip code to 4000 based on google maps details ([93f2a45](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/93f2a45d4042023ab33aa6baba4c81ba4427e183))
+* proofread and correct copy in BG and EN dictionaries ([3a525ea](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/3a525ea4960604360ac9c73189c724044f48047f))
+* rename remaining medical center entry in BG dictionary ([88d0a0f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/88d0a0f5529cbb80ca3aab447285f82d4b1f4b43))
+* resolve double scrollbar and mobile hero scroll trapping ([96fddab](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/96fddaba50fc8933779c3ce15cef1bac5cb1f9fc))
+* resolve next-auth type errors for build ([7eddb48](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/7eddb48a2cb0d3ef48e78a7e6ab2417cf6bf8015))
+* revert google map pointer to original coordinates 42.136959,24.790681 ([4f5e0ef](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/4f5e0efe8f5f1ca54ef84f21654b210bc27e3d87))
+* **ui:** ensure phone input dropdown visibility and styling ([eda7ab0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/eda7ab08bfb2e1d7b1bc396c94f8e3cba2be416c))
+
+
+### Features
+
+* add phone number input with country code support ([a49b379](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/a49b3798ba4444c6b4d08f6cdf481155931b43b1))
+* auto-translate new Superdoc reviews via DeepL API ([0f405ff](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/0f405ff068aafd486867530c071bdd9bcb9f453d))
+* complete legal compliance (privacy, terms, cookies) and update configs ([0316dfe](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/0316dfe00c28ac174193ffb0e31267805c888fb2))
+* implement audio session recording and AI summarization in admin dashboard ([738360d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/738360de6880e7fb5591ba25d60b2571e9ea196c))
+* implement auth session inactivity middleware and dedicated unit test setup ([39f099f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/39f099f56ce0e1dde88f28e7df8ffd36892a3481))
+* implement dashboard interactivity, dark mode, and new avatar ([5286146](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/528614649cddf242e5a61a1988252be75f5bc94e))
+* implement profile enhancements and document management ([103821d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/103821d8f2ed9d951c580d881e560fef89e3f7e1))
+* implement real email sending for contact form using Resend ([4430e4f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/4430e4f0002865c6d9a2cfc6ed4fd8a8a7e7e81a))
+* implement user profile and sync content ([6d3e5c4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/6d3e5c498ddc8b243dec856db7f2901c8b14a762))
+* integrate patient sessions into admin sidebar and dashboard ([dc29088](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/dc29088cb8a6c71fcdc05de2bc71ca88ababd6db))
+* refine admin dashboard and enhance sessions log with filtering and feedback ([d9648da](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d9648da5b4c2fcd494c68ef1d28d6bdf16656253))
+* unify admin auth and enhance dashboard deep-linking ([d8a4150](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d8a415021ba918a27647176cf9dfc3b35025e75e))
+* update location to Plovdiv, add google map, and sanitize content ([ab87117](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/ab87117660eee9681e3a4dae81d62b1e9415255f))
+
 # 1.0.0 (2026-01-29)
 
 
