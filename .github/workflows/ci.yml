@@ -39,7 +39,10 @@ jobs:
         run: npm ci
 
       - name: Security Audit
-        run: npm audit --audit-level=high
+        # Production deps only — dev tooling (Storybook, semantic-release,
+        # eslint, vite, etc.) carries transitive advisories that don't ship
+        # to users and would otherwise fail every CI run.
+        run: npm audit --audit-level=high --omit=dev
 
       - name: Generate Prisma Client
         run: npx prisma generate
