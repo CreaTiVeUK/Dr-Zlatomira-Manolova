@@ -46,10 +46,15 @@ function parseEnv() {
     const lines = Object.entries(errors).map(([key, msgs]) => `  ${key}: ${msgs?.join(", ")}`);
     const message = `Environment validation failed:\n${lines.join("\n")}`;
 
-    if (process.env.NODE_ENV === "production") {
+    // During `next build` (data collection phase) we don't want to require
+    // runtime secrets like DB URLs to be present — the build container
+    // shouldn't bake those in. Only enforce at actual runtime.
+    const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+
+    if (process.env.NODE_ENV === "production" && !isBuildPhase) {
         throw new Error(message);
     }
-    // In dev, log but don't crash — lets developers run the app while wiring config
+    // In dev or during build, log but don't crash
     console.warn(`⚠️  ${message}`);
     return schema.partial().parse(process.env) as z.infer<typeof schema>;
 }

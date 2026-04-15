@@ -12,6 +12,9 @@ RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
+# Prisma's musl engine links against libssl — must be present at build time
+# (when next collects page data) and at runtime.
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -28,6 +31,7 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
 
 ENV NODE_ENV=production
