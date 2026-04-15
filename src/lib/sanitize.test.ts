@@ -12,8 +12,11 @@ describe('Sanitization Utility', () => {
         expect(sanitizeString(dirty)).toBe("Bold Italic");
     });
 
-    it('should handle obfuscated HTML entities', () => {
-        expect(sanitizeString("&lt;script&gt;bad&lt;/script&gt;content")).toBe("content");
+    it('should leave pre-encoded entities unchanged (no double-decode)', () => {
+        // Decoding entities first would let attackers smuggle tags past the
+        // tag-stripper. We deliberately preserve entities verbatim.
+        expect(sanitizeString("&lt;script&gt;bad&lt;/script&gt;content"))
+            .toBe("&lt;script&gt;bad&lt;/script&gt;content");
     });
 
     it('should remove javascript: URIs', () => {

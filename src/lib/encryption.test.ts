@@ -1,7 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import { encrypt, decrypt } from './encryption';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 describe('Encryption Utility', () => {
+    let encrypt: typeof import('./encryption').encrypt;
+    let decrypt: typeof import('./encryption').decrypt;
+
+    beforeAll(async () => {
+        // 64 hex chars = 32 bytes, satisfies the runtime length check
+        process.env.PII_ENCRYPTION_KEY = "0".repeat(64);
+        ({ encrypt, decrypt } = await import('./encryption'));
+    });
+
     it('should encrypt and decrypt correctly', () => {
         const secret = "Sensitive Data 123";
         const encrypted = encrypt(secret);
