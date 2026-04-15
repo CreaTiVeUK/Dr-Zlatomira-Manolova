@@ -99,6 +99,11 @@ export default function Header({ user }: HeaderProps) {
                                 {utilityLink.label}
                             </Link>
                         ) : null}
+                        {user && user.role !== "ADMIN" ? (
+                            <Link href="/messages" aria-current={pathname === "/messages" ? "page" : undefined}>
+                                {dict.userMenu.messages}
+                            </Link>
+                        ) : null}
                     </nav>
 
                     <div className="header-actions">

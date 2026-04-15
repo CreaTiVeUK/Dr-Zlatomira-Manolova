@@ -431,6 +431,7 @@ export const bg: Dictionary = {
             appointments: "Часове",
             patientRecord: "Пациентски досиета",
             sessions: "Сесии",
+            messages: "Съобщения",
             auditLogs: "Одит логове",
             security: "Сигурност",
             reports: "Отчети",
@@ -536,6 +537,7 @@ export const bg: Dictionary = {
         login: "ВХОД",
         dashboard: "ТАБЛО",
         appointments: "ЧАСОВЕ",
+        messages: "СЪОБЩЕНИЯ",
         logout: "ИЗХОД"
     },
     successPage: {

@@ -434,6 +434,7 @@ export const en = {
             appointments: "Appointments",
             patientRecord: "Patient Records",
             sessions: "Sessions",
+            messages: "Messages",
             auditLogs: "Audit Logs",
             security: "Security",
             reports: "Reports",
@@ -539,6 +540,7 @@ export const en = {
         login: "LOGIN",
         dashboard: "DASHBOARD",
         appointments: "APPOINTMENTS",
+        messages: "MESSAGES",
         logout: "LOGOUT"
     },
     successPage: {

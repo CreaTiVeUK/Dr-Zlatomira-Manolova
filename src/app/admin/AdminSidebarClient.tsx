@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { BarChart3, Calendar, FileText, LayoutDashboard, LogOut, Menu, Mic, ShieldCheck, Users, X } from "lucide-react";
+import { BarChart3, Calendar, FileText, LayoutDashboard, LogOut, Menu, MessageCircle, Mic, ShieldCheck, Users, X } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminSidebarClient() {
@@ -18,6 +18,7 @@ export default function AdminSidebarClient() {
     { name: dict.admin.sidebar.appointments, icon: Calendar, href: "/admin/appointments" },
     { name: dict.admin.sidebar.patientRecord, icon: Users, href: "/admin/users" },
     { name: dict.admin.sidebar.sessions, icon: Mic, href: "/admin/sessions" },
+    { name: dict.admin.sidebar.messages, icon: MessageCircle, href: "/admin/messages" },
     { name: dict.admin.sidebar.analytics, icon: BarChart3, href: "/admin/analytics" },
     { name: dict.admin.sidebar.auditLogs, icon: FileText, href: "/admin/audit-logs" },
     { name: dict.admin.sidebar.security, icon: ShieldCheck, href: "/admin/security" },
