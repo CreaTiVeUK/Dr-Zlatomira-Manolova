@@ -439,6 +439,35 @@ export const bg: Dictionary = {
             logout: "Изход",
             roleAdmin: "Админ"
         },
+        analyticsPage: {
+            eyebrow: "Клинична аналитика",
+            title: "Анализи",
+            subtitle: "Тенденции на посещенията, приходи и растеж на пациентите за последните 12 месеца.",
+            unknownPatient: "Неизвестен пациент",
+            kpi: {
+                totalPatients: "Общо пациенти",
+                newLast30: "Нови пациенти (30д)",
+                completedThisMonth: "Приключени този месец",
+                cancellationRate: "Процент отменени",
+                avgPerPatient: "Средно посещения на пациент",
+                revenue12m: "Приходи (12м)",
+            },
+            charts: {
+                monthlyTitle: "Посещения и приходи — последните 12 месеца",
+                visits: "Посещения",
+                revenue: "Приходи",
+                dowTitle: "Посещения по ден от седмицата",
+            },
+            topPatients: {
+                title: "Най-чести пациенти",
+                subtitle: "Топ 10 по брой посещения през последните 12 месеца.",
+                empty: "Все още няма данни за часове.",
+                columns: {
+                    patient: "Пациент",
+                    visits: "Посещения",
+                },
+            },
+        },
         securityPage: {
             eyebrow: "Сигурност на акаунта",
             title: "Сигурност",

@@ -25,9 +25,9 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
-    const limiter = await rateLimit(ip, 5, 60_000);
+    const ipLimiter = await rateLimit(`reset:ip:${ip}`, 5, 60_000);
 
-    if (!limiter.success) {
+    if (!ipLimiter.success) {
         return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
     }
 
@@ -39,6 +39,13 @@ export async function POST(request: NextRequest) {
         }
 
         const { token, email, password } = result.data;
+
+        // Per-email bucket (10/hour) — protects against a botnet brute-forcing
+        // token guesses for a single victim account across rotating IPs.
+        const emailLimiter = await rateLimit(`reset:email:${email}`, 10, 60 * 60_000);
+        if (!emailLimiter.success) {
+            return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
+        }
 
         const strength = checkPasswordStrength(password, [email]);
         if (!strength.valid) {

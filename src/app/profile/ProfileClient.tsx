@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/high-res.css";
-import { Baby, FileText, Trash2, UserRound } from "lucide-react";
+import { Baby, FileText, Trash2, Upload, UserRound } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -35,6 +35,8 @@ export default function ProfileClient() {
   const [isAddingChild, setIsAddingChild] = useState(false);
   const [childForm, setChildForm] = useState({ name: "", birthDate: "", gender: "M", notes: "" });
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [isUploading, setIsUploading] = useState(false);
+  const [docMessage, setDocMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   const profileMetrics =
     language === "bg"
@@ -109,6 +111,42 @@ export default function ProfileClient() {
       setChildren(children.filter((child) => child.id !== id));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error deleting child");
+    }
+  };
+
+  const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    setDocMessage(null);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/user/documents", { method: "POST", body });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setDocuments([data, ...documents]);
+      setDocMessage({ text: language === "bg" ? "Документът е качен успешно." : "Document uploaded successfully.", type: "success" });
+    } catch (err) {
+      setDocMessage({ text: err instanceof Error ? err.message : "Upload failed", type: "error" });
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleDeleteDocument = async (id: string) => {
+    if (!confirm(language === "bg" ? "Сигурни ли сте, че искате да изтриете този документ?" : "Are you sure you want to delete this document?")) return;
+    try {
+      const res = await fetch(`/api/user/documents?id=${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Delete failed");
+      }
+      setDocuments(documents.filter((d) => d.id !== id));
+      setDocMessage({ text: language === "bg" ? "Документът е изтрит." : "Document deleted.", type: "success" });
+    } catch (err) {
+      setDocMessage({ text: err instanceof Error ? err.message : "Delete failed", type: "error" });
     }
   };
 
@@ -289,15 +327,36 @@ export default function ProfileClient() {
               <span className="page-intro__eyebrow"><FileText size={14} /> {language === "bg" ? "Документи" : "Documents"}</span>
               <div className="page-intro__copy">
                 <h2 style={{ fontSize: "1.7rem" }}>{language === "bg" ? "Медицински документи" : "Medical documents"}</h2>
-                <p className="page-intro__subtitle">{language === "bg" ? "Получените от лекаря файлове и препоръки се показват тук." : "Files and notes shared by your doctor appear here."}</p>
+                <p className="page-intro__subtitle">{language === "bg" ? "Качете собствени файлове или преглеждайте изпратените от лекаря." : "Upload your own files or review ones shared by your doctor."}</p>
               </div>
             </div>
+
+            <div className="btn-group" style={{ marginBottom: "1rem" }}>
+              <label className="btn btn-outline" style={{ cursor: isUploading ? "not-allowed" : "pointer" }}>
+                <Upload size={16} />
+                {isUploading
+                  ? (language === "bg" ? "Качване..." : "Uploading...")
+                  : (language === "bg" ? "Качи документ" : "Upload document")}
+                <input
+                  type="file"
+                  onChange={handleUploadDocument}
+                  disabled={isUploading}
+                  style={{ display: "none" }}
+                />
+              </label>
+            </div>
+
+            {docMessage ? (
+              <div className={`status-banner ${docMessage.type === "success" ? "status-banner--success" : "status-banner--error"}`} style={{ marginBottom: "1rem" }}>
+                <strong>{docMessage.text}</strong>
+              </div>
+            ) : null}
 
             {documents.length === 0 ? (
               <EmptyState
                 icon={UserRound}
                 title={language === "bg" ? "Няма налични документи." : "No documents available."}
-                description={language === "bg" ? "Когато лекарят качи документ, ще можете да го изтеглите оттук." : "Once your doctor uploads a document, you will be able to download it here."}
+                description={language === "bg" ? "Качете файл или изчакайте лекарят да сподели документ с Вас." : "Upload a file, or wait for your doctor to share one with you."}
                 compact
               />
             ) : (
@@ -311,9 +370,14 @@ export default function ProfileClient() {
                         {doc.fileSize ? `${(doc.fileSize / 1024).toFixed(1)} KB` : doc.fileType}
                       </span>
                     </div>
-                    <a href={`/api/documents/${doc.id}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                      {language === "bg" ? "Изтегли" : "Download"}
-                    </a>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <a href={`/api/documents/${doc.id}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                        {language === "bg" ? "Изтегли" : "Download"}
+                      </a>
+                      <button type="button" onClick={() => handleDeleteDocument(doc.id)} className="btn btn-outline" aria-label={language === "bg" ? "Изтрий" : "Delete"}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

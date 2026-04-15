@@ -29,9 +29,9 @@ const GENERIC_RESPONSE = NextResponse.json(
 
 export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
-    const limiter = await rateLimit(ip, 3, 60_000);
+    const ipLimiter = await rateLimit(`forgot:ip:${ip}`, 3, 60_000);
 
-    if (!limiter.success) {
+    if (!ipLimiter.success) {
         return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
     }
 
@@ -41,6 +41,13 @@ export async function POST(request: NextRequest) {
         if (!result.success) return GENERIC_RESPONSE;
 
         const { email } = result.data;
+
+        // Per-email limit (5/hour) — prevents a botnet from exhausting the
+        // reset-link email quota for a single account across rotating IPs.
+        // Still returns the generic response to avoid leaking account
+        // existence, but the side-effect (sending an email) is suppressed.
+        const emailLimiter = await rateLimit(`forgot:email:${email}`, 5, 60 * 60_000);
+        if (!emailLimiter.success) return GENERIC_RESPONSE;
 
         const user = await prisma.user.findUnique({
             where: { email },

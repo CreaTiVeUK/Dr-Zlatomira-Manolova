@@ -26,7 +26,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { signOut } from "@/auth";
 import { NextResponse } from "next/server";
-import { createAuditLog, AuditAction } from "@/lib/audit";
+import { AuditAction } from "@/lib/audit";
 import { unlink } from "fs/promises";
 
 export async function DELETE(req: Request) {

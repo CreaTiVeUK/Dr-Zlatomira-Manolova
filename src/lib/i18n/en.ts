@@ -442,6 +442,35 @@ export const en = {
             logout: "Logout",
             roleAdmin: "Admin"
         },
+        analyticsPage: {
+            eyebrow: "Clinic analytics",
+            title: "Analytics",
+            subtitle: "Visit trends, revenue, and patient growth over the last 12 months.",
+            unknownPatient: "Unknown patient",
+            kpi: {
+                totalPatients: "Total patients",
+                newLast30: "New patients (30d)",
+                completedThisMonth: "Completed this month",
+                cancellationRate: "Cancellation rate",
+                avgPerPatient: "Avg visits per patient",
+                revenue12m: "Revenue (12m)",
+            },
+            charts: {
+                monthlyTitle: "Visits & revenue — last 12 months",
+                visits: "Visits",
+                revenue: "Revenue",
+                dowTitle: "Visits by day of week",
+            },
+            topPatients: {
+                title: "Most frequent patients",
+                subtitle: "Top 10 by visit count in the last 12 months.",
+                empty: "No appointment data yet.",
+                columns: {
+                    patient: "Patient",
+                    visits: "Visits",
+                },
+            },
+        },
         securityPage: {
             eyebrow: "Account security",
             title: "Security",
