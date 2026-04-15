@@ -1,13 +1,11 @@
 /**
  * GET /api/cron/send-reminders
  *
- * Sends a 24-hour reminder email for every BOOKED appointment whose
- * start time falls in the next 22–26 hour window and for which no
- * reminder has been sent yet.
- *
- * The window is deliberately generous (±2h) so that any reasonable
- * cron cadence (hourly, every 4h, daily) catches every appointment
- * exactly once, gated by the `reminderSentAt` idempotency column.
+ * Sends a reminder email for every BOOKED appointment starting in the
+ * next 48 hours that hasn't been reminded yet. Vercel Hobby caps cron
+ * frequency at once-per-day (with ±59 min precision), so we sweep a
+ * full 48h horizon on each run and let `reminderSentAt` keep things
+ * idempotent — every appointment gets exactly one reminder.
  *
  * Protected by CRON_SECRET (fail-closed).
  */
@@ -35,8 +33,8 @@ export async function GET(request: NextRequest) {
     }
 
     const now = new Date();
-    const windowStart = new Date(now.getTime() + 22 * 60 * 60 * 1000);
-    const windowEnd = new Date(now.getTime() + 26 * 60 * 60 * 1000);
+    const windowStart = now;
+    const windowEnd = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
     try {
         const appointments = await prisma.appointment.findMany({
