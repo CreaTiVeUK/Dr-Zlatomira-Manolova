@@ -59,6 +59,8 @@ function SocialLoginButton({ provider, label, dict, callbackUrl }: { provider: s
 const ERROR_MESSAGES: Record<string, string> = {
   CredentialsSignin: "Invalid email or password.",
   AccountNotLinked: "This email is linked to a different sign-in method.",
+  AccessDenied: "Access denied. The OAuth provider rejected the request — check that the app is published (not in testing mode) and redirect URIs are correct in the provider's console.",
+  OAuthCallbackError: "OAuth sign-in failed. Please try again or use email/password.",
   EmailNotVerified: "Please verify your email before signing in.",
   email_not_verified: "Please verify your email before signing in.",
   AccountLocked: "Account locked due to multiple failed attempts.",
@@ -84,6 +86,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
+  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [totp, setTotp] = useState("");
@@ -97,6 +100,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [lockoutRemainingMs, setLockoutRemainingMs] = useState<number | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/auth/providers").then(r => r.json()).then(setAvailableProviders).catch(() => {});
+  }, []);
 
   // Tick the lockout countdown every second
   useEffect(() => {
@@ -288,13 +295,16 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="auth-divider">{dict.auth.login.or}</div>
-
-        <div className="social-stack">
-          <SocialLoginButton provider="google" label="Google" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
-          <SocialLoginButton provider="facebook" label="Facebook" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
-          <SocialLoginButton provider="apple" label="Apple ID" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />
-        </div>
+        {availableProviders.length > 0 && (
+          <>
+            <div className="auth-divider">{dict.auth.login.or}</div>
+            <div className="social-stack">
+              {availableProviders.includes("google") && <SocialLoginButton provider="google" label="Google" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />}
+              {availableProviders.includes("facebook") && <SocialLoginButton provider="facebook" label="Facebook" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />}
+              {availableProviders.includes("apple") && <SocialLoginButton provider="apple" label="Apple ID" dict={dict} callbackUrl={callbackUrl ?? "/auth/redirect"} />}
+            </div>
+          </>
+        )}
 
         <p className="text-muted">
           {dict.auth.login.noAccount}{" "}
