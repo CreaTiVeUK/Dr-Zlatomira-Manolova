@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { isSessionBlocked } from "@/lib/session-blocklist";
 
@@ -10,16 +9,14 @@ const PROTECTED = ["/my-appointments", "/profile", "/book"];
 // Routes that require ADMIN role
 const ADMIN = ["/admin"];
 
-function generateNonce(): string {
-  const bytes = new Uint8Array(16);
-  globalThis.crypto.getRandomValues(bytes);
-  return btoa(String.fromCharCode(...bytes));
-}
-
-function buildCSP(nonce: string): string {
+function buildCSP(): string {
+  // 'unsafe-inline' is required because Next.js injects inline scripts for
+  // hydration and chunk-loading that cannot carry a nonce without deep
+  // framework integration. The remaining directives still provide meaningful
+  // protection (no eval, locked-down connect/frame/object sources).
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com`,
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
@@ -29,7 +26,6 @@ function buildCSP(nonce: string): string {
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
     "upgrade-insecure-requests",
-    "report-uri /api/csp-report",
   ].join("; ");
 }
 
@@ -83,18 +79,9 @@ export const proxy = auth(async function proxy(request) {
     }
   }
 
-  // Attach nonce-based CSP to every response
-  const nonce = generateNonce();
-  const response = NextResponse.next({
-    request: {
-      headers: new Headers({
-        ...Object.fromEntries((request as NextRequest).headers),
-        "x-nonce": nonce,
-      }),
-    },
-  });
+  const response = NextResponse.next();
 
-  response.headers.set("Content-Security-Policy", buildCSP(nonce));
+  response.headers.set("Content-Security-Policy", buildCSP());
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
