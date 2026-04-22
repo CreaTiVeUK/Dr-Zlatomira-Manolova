@@ -55,8 +55,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     throw new AccountLockedError();
                 }
 
-                // Email verification required for credential accounts
-                if (!user.emailVerified) {
+                // Email verification required for patient credential accounts.
+                // Admin accounts are created via the create-admin script (always
+                // pre-verified) so we skip this check for them to avoid lockout
+                // if emailVerified was lost during a schema migration.
+                if (!user.emailVerified && user.role !== "ADMIN") {
                     throw new EmailNotVerifiedError();
                 }
 
