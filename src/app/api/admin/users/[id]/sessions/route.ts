@@ -1,11 +1,11 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { saveEncryptedFile, FileValidationError } from "@/lib/storage";
+import { saveEncryptedFile, readEncryptedFile, FileValidationError } from "@/lib/storage";
 import { getSummaryClient, getTranscriptionClient } from "@/lib/ai";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { createReadStream } from "fs";
+import { toFile } from "openai";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
     // Use getSession() — consistent with all other routes; respects inactivity
@@ -45,11 +45,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         // Save audio encrypted at rest — medical audio is sensitive
         const { filepath, size } = await saveEncryptedFile(file, "patient-sessions");
 
-        // Transcription with Whisper
+        // Decrypt the audio back to plaintext before sending to Whisper
+        const audioBuffer = await readEncryptedFile(filepath);
+
         let transcription = "";
         try {
             const transcriptRes = await transcriptionClient.client.audio.transcriptions.create({
-                file: createReadStream(filepath),
+                file: await toFile(audioBuffer, file.name, { type: file.type }),
                 model: transcriptionClient.model,
             });
             transcription = transcriptRes.text;
