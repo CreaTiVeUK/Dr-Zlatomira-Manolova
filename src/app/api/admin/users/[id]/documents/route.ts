@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { saveFile, FileValidationError } from "@/lib/storage";
+import { saveEncryptedFile, FileValidationError } from "@/lib/storage";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import { NextResponse } from "next/server";
 
@@ -30,7 +30,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
         }
 
-        const { filepath, size } = await saveFile(file, "patient-docs");
+        // Encrypted at rest — these are medical documents
+        const { filepath, size } = await saveEncryptedFile(file, "patient-docs");
 
         const document = await prisma.patientDocument.create({
             data: {

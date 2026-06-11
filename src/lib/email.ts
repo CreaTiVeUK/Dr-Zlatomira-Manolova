@@ -5,9 +5,26 @@ interface EmailTemplate {
     body: string;
 }
 
+/**
+ * Canonical origin for links embedded in emails (verification, password
+ * reset). APP_URL is the production domain; VERCEL_URL is only the
+ * per-deployment hostname (previews!), so it's a fallback, not the config.
+ */
+export function getBaseUrl(): string {
+    const appUrl = process.env.APP_URL;
+    if (appUrl) return appUrl.replace(/\/+$/, "");
+    if (process.env.VERCEL_URL) {
+        console.warn("[email] APP_URL not set — falling back to VERCEL_URL, which points at this specific deployment");
+        return `https://${process.env.VERCEL_URL}`;
+    }
+    return "http://localhost:3000";
+}
+
 export async function sendEmail(to: string, template: EmailTemplate) {
     const isProd = process.env.NODE_ENV === 'production';
-    const fromAddress = 'system@drzlatomiramanolova.vercel.app';
+    // Must be an address on a domain verified in Resend — Resend cannot send
+    // from *.vercel.app, which silently broke ALL production email before.
+    const fromAddress = process.env.EMAIL_FROM ?? 'system@drzlatomiramanolova.vercel.app';
 
     if (!isProd || !process.env.RESEND_API_KEY) {
         console.log(`[CLINIC EMAIL SIMULATION] From: ${fromAddress} To: ${to}`);

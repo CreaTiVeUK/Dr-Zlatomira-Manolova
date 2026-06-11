@@ -2,7 +2,7 @@
 import { getSession } from "@/lib/auth";
 import { isMissingTableError } from "@/lib/prisma-errors";
 import { prisma } from "@/lib/prisma";
-import { saveFile, FileValidationError } from "@/lib/storage";
+import { saveEncryptedFile, FileValidationError } from "@/lib/storage";
 import { AuditAction, createAuditLog } from "@/lib/audit";
 import { rateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
@@ -37,9 +37,10 @@ export async function GET() {
     }
 }
 
-// Patient-facing self-upload. Type and size are validated in saveFile().
-// A rate limit protects the disk/quota against malicious uploads — 10/hour
-// per user is generous for a human patient but blocks automated abuse.
+// Patient-facing self-upload. Type and size are validated in saveEncryptedFile(),
+// which also encrypts the medical document at rest. A rate limit protects the
+// disk/quota against malicious uploads — 10/hour per user is generous for a
+// human patient but blocks automated abuse.
 export async function POST(req: Request) {
     const session = await getSession();
     if (!session?.user?.id) {
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
         }
 
-        const { filepath, size } = await saveFile(file, "patient-docs");
+        const { filepath, size } = await saveEncryptedFile(file, "patient-docs");
 
         const document = await prisma.patientDocument.create({
             data: {

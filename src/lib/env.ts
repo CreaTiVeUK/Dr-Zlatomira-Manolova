@@ -34,6 +34,17 @@ const schema = z.object({
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     SENTRY_DSN: z.string().url().optional(),
 
+    // Email — required in production when RESEND_API_KEY is set.
+    // APP_URL is the canonical site origin used in emailed links; EMAIL_FROM
+    // must live on a domain verified in Resend (NOT *.vercel.app).
+    APP_URL: z.string().url().optional(),
+    EMAIL_FROM: z.string().email().optional(),
+    CONTACT_EMAIL: z.string().email().optional(),
+
+    // File storage — presence switches uploads to Vercel Blob (required on
+    // Vercel, whose runtime filesystem is read-only)
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
+
     // Deployment
     VERCEL_URL: z.string().optional(),
 
@@ -63,6 +74,16 @@ function parseEnv() {
                 "(rate limiting and session revocation do not work across instances without Redis)"
             );
         }
+        // If production email is on, the sender and link origin must be
+        // explicit — VERCEL_URL points at individual deployments and Resend
+        // cannot send from unverified domains.
+        if (enforce && result.data.RESEND_API_KEY && (!result.data.EMAIL_FROM || !result.data.APP_URL)) {
+            throw new Error(
+                "Environment validation failed:\n" +
+                "  EMAIL_FROM / APP_URL: required in production when RESEND_API_KEY is set " +
+                "(EMAIL_FROM must be on a Resend-verified domain; APP_URL is the canonical site origin for emailed links)"
+            );
+        }
         return result.data;
     }
 
@@ -86,6 +107,7 @@ export const features = {
     ai: Boolean(env.OPENAI_API_KEY),
     cron: Boolean(env.CRON_SECRET),
     redis: Boolean(env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN),
+    blobStorage: Boolean(env.BLOB_READ_WRITE_TOKEN),
     piiEncryption: Boolean(env.PII_ENCRYPTION_KEY),
     sentry: Boolean(env.SENTRY_DSN),
     googleOAuth: Boolean(env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET),

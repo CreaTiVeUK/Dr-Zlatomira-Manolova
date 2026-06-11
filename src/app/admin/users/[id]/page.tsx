@@ -28,7 +28,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
     );
   }
 
-  const [children, documents] = await Promise.all([
+  const [children, rawDocuments] = await Promise.all([
     prisma.child.findMany({ where: { parentId: id }, orderBy: { createdAt: "desc" } }).catch((error) => {
       if (isMissingTableError(error)) return [];
       throw error;
@@ -38,6 +38,14 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
       throw error;
     }),
   ]);
+
+  // Transcriptions/summaries are encrypted at rest (legacy plaintext rows
+  // pass through decrypt() unchanged)
+  const documents = rawDocuments.map((doc) => ({
+    ...doc,
+    summary: doc.summary ? decrypt(doc.summary) : doc.summary,
+    transcription: doc.transcription ? decrypt(doc.transcription) : doc.transcription,
+  }));
 
   const childrenAvailable =
     children.length > 0 ||

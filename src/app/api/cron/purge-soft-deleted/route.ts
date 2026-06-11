@@ -10,8 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { unlink } from "fs/promises";
-import { resolve } from "path";
+import { deleteStoredFile } from "@/lib/storage";
 import { env } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +31,6 @@ export async function GET(request: NextRequest) {
     }
 
     const cutoff = new Date(Date.now() - PURGE_AFTER_DAYS * 24 * 60 * 60 * 1000);
-    const uploadsDir = resolve(process.cwd(), "uploads");
 
     try {
         const candidates = await prisma.patientDocument.findMany({
@@ -44,19 +42,13 @@ export async function GET(request: NextRequest) {
         let rowsDeleted = 0;
 
         for (const doc of candidates) {
-            // Best-effort file cleanup with path-traversal guard
+            // Best-effort file cleanup — deleteStoredFile validates the
+            // location (blob URL or uploads dir) and tolerates missing files.
             try {
-                const resolved = resolve(doc.fileUrl);
-                if (resolved.startsWith(uploadsDir + "/")) {
-                    await unlink(resolved);
-                    filesDeleted++;
-                }
+                await deleteStoredFile(doc.fileUrl);
+                filesDeleted++;
             } catch (err) {
-                // ENOENT is fine — file already missing. Log anything else.
-                const error = err as NodeJS.ErrnoException;
-                if (error.code !== "ENOENT") {
-                    console.error(`[purge-soft-deleted] Failed to unlink ${doc.fileUrl}:`, err);
-                }
+                console.error(`[purge-soft-deleted] Failed to delete ${doc.fileUrl}:`, err);
             }
 
             try {

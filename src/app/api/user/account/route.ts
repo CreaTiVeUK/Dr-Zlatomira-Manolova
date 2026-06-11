@@ -28,7 +28,7 @@ import { signOut } from "@/auth";
 import { NextResponse } from "next/server";
 import { AuditAction } from "@/lib/audit";
 import { revokeAllUserSessions } from "@/lib/session-blocklist";
-import { unlink } from "fs/promises";
+import { deleteStoredFile } from "@/lib/storage";
 
 export async function DELETE(req: Request) {
     const session = await getSession();
@@ -83,7 +83,7 @@ export async function DELETE(req: Request) {
 
         // Best-effort file cleanup — don't fail the request if a file is missing
         await Promise.allSettled(
-            documents.map((doc) => unlink(doc.fileUrl))
+            documents.map((doc) => deleteStoredFile(doc.fileUrl))
         );
 
         // Revoke sessions on ALL devices — the anonymised row would otherwise

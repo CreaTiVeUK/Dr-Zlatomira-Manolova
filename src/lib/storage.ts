@@ -1,5 +1,22 @@
-import { writeFile, readFile, mkdir } from "fs/promises";
-import { join, extname } from "path";
+/**
+ * Encrypted file storage with two interchangeable backends:
+ *
+ * - **Vercel Blob** (when BLOB_READ_WRITE_TOKEN is set) — required on Vercel,
+ *   whose runtime filesystem is read-only. Files are AES-256-GCM encrypted
+ *   BEFORE upload, so the unguessable-but-public blob URLs only ever expose
+ *   ciphertext; plaintext is served exclusively through the authorising
+ *   download route.
+ * - **Local filesystem** (`<cwd>/uploads`) — dev, CI, and the Docker stack.
+ *
+ * `fileUrl` values stored in the database are either a blob URL (https://…)
+ * or an absolute path under the uploads directory; every reader/deleter here
+ * validates them with isAllowedStoredFileUrl() before touching them.
+ *
+ * Encrypted file layout: MAGIC "ENCI"(4) | IV(12) | AUTH_TAG(16) | CIPHERTEXT.
+ */
+
+import { writeFile, readFile, mkdir, unlink } from "fs/promises";
+import { join, extname, resolve } from "path";
 import { randomUUID, randomBytes, createCipheriv, createDecipheriv, createHash } from "crypto";
 import { fileTypeFromBuffer } from "file-type";
 
@@ -7,8 +24,9 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALGORITHM = "aes-256-gcm";
 
 // Magic bytes identifying an encrypted file written by saveEncryptedFile.
-// Format: MAGIC(4) | IV(12) | AUTH_TAG(16) | CIPHERTEXT(N)
 const ENCRYPTED_MAGIC = Buffer.from("ENCI");
+
+const BLOB_HOST_SUFFIX = ".public.blob.vercel-storage.com";
 
 const ALLOWED_MIME_TYPES = new Set([
     "application/pdf",
@@ -34,6 +52,38 @@ export class FileValidationError extends Error {
         super(message);
         this.name = "FileValidationError";
     }
+}
+
+export class StoredFileNotFoundError extends Error {
+    constructor(message = "Stored file not found") {
+        super(message);
+        this.name = "StoredFileNotFoundError";
+    }
+}
+
+function blobStorageEnabled(): boolean {
+    return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+function isRemoteFileUrl(fileUrl: string): boolean {
+    return fileUrl.startsWith("https://");
+}
+
+/**
+ * A stored fileUrl may only be a Vercel Blob URL or a path inside the local
+ * uploads directory. Anything else (path traversal, foreign hosts) is refused.
+ */
+export function isAllowedStoredFileUrl(fileUrl: string): boolean {
+    if (isRemoteFileUrl(fileUrl)) {
+        try {
+            return new URL(fileUrl).hostname.endsWith(BLOB_HOST_SUFFIX);
+        } catch {
+            return false;
+        }
+    }
+    const uploadsDir = resolve(process.cwd(), "uploads");
+    const resolved = resolve(fileUrl);
+    return resolved.startsWith(uploadsDir + "/");
 }
 
 function deriveFileKey(): Buffer {
@@ -73,45 +123,40 @@ async function validateFile(file: File): Promise<Buffer> {
     return buffer;
 }
 
-async function ensureDir(folderName: string): Promise<string> {
+function safeFolderName(folderName: string): string {
     // Restrict folder name to alphanumerics/hyphens/underscores to prevent path traversal
-    const safe = folderName.replace(/[^a-zA-Z0-9-_]/g, "");
-    const dir = join(process.cwd(), "uploads", safe);
+    return folderName.replace(/[^a-zA-Z0-9-_]/g, "");
+}
+
+function uniqueFileName(originalName: string): string {
+    return `${randomUUID()}-${originalName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+}
+
+async function storeBuffer(data: Buffer, folderName: string, originalName: string): Promise<{ fileUrl: string; filename: string }> {
+    const folder = safeFolderName(folderName);
+    const filename = uniqueFileName(originalName);
+
+    if (blobStorageEnabled()) {
+        const { put } = await import("@vercel/blob");
+        const blob = await put(`${folder}/${filename}`, data, {
+            access: "public", // ciphertext only — plaintext never leaves the download route
+            contentType: "application/octet-stream",
+            addRandomSuffix: false,
+        });
+        return { fileUrl: blob.url, filename };
+    }
+
+    const dir = join(process.cwd(), "uploads", folder);
     await mkdir(dir, { recursive: true });
-    return dir;
-}
-
-function buildPath(dir: string, originalName: string): string {
-    const uniqueId = randomUUID();
-    const safeName = `${uniqueId}-${originalName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-    return join(dir, safeName);
+    const filepath = join(dir, filename);
+    await writeFile(filepath, data);
+    return { fileUrl: filepath, filename };
 }
 
 /**
- * Save a file to disk without encryption.
- * Use only for non-sensitive files (e.g. public images).
- */
-export async function saveFile(
-    file: File,
-    folderName: string = "docs"
-): Promise<{ filepath: string; filename: string; size: number }> {
-    const buffer = await validateFile(file);
-    const dir = await ensureDir(folderName);
-    const filepath = buildPath(dir, file.name);
-
-    await writeFile(filepath, buffer);
-
-    return { filepath, filename: filepath.split("/").pop()!, size: buffer.length };
-}
-
-/**
- * Save a file to disk with AES-256-GCM encryption.
- * Use for all sensitive uploads (patient audio, medical documents).
- *
- * Encrypted file layout:
- *   MAGIC(4) | IV(12) | AUTH_TAG(16) | CIPHERTEXT(variable)
- *
- * readEncryptedFile() transparently reverses this.
+ * Validate, AES-256-GCM encrypt, and persist an upload.
+ * All patient files (documents, session audio) go through this — there is no
+ * unencrypted save path.
  */
 export async function saveEncryptedFile(
     file: File,
@@ -128,21 +173,36 @@ export async function saveEncryptedFile(
     // ENCI | iv(12) | tag(16) | ciphertext
     const encrypted = Buffer.concat([ENCRYPTED_MAGIC, iv, tag, ciphertext]);
 
-    const dir = await ensureDir(folderName);
-    const filepath = buildPath(dir, file.name);
+    const { fileUrl, filename } = await storeBuffer(encrypted, folderName, file.name);
 
-    await writeFile(filepath, encrypted);
-
-    return { filepath, filename: filepath.split("/").pop()!, size: plaintext.length };
+    return { filepath: fileUrl, filename, size: plaintext.length };
 }
 
 /**
- * Read a file from disk, decrypting it transparently if it was saved
- * with saveEncryptedFile. Unencrypted files are returned as-is
- * for backward compatibility.
+ * Fetch a stored file (blob URL or local path), decrypting it transparently
+ * if it was saved with saveEncryptedFile. Legacy unencrypted files are
+ * returned as-is. Throws StoredFileNotFoundError when the file is gone and
+ * FileValidationError when the fileUrl fails the allowlist.
  */
-export async function readEncryptedFile(filepath: string): Promise<Buffer> {
-    const data = await readFile(filepath);
+export async function readEncryptedFile(fileUrl: string): Promise<Buffer> {
+    if (!isAllowedStoredFileUrl(fileUrl)) {
+        throw new FileValidationError("File location is not allowed");
+    }
+
+    let data: Buffer;
+    if (isRemoteFileUrl(fileUrl)) {
+        const res = await fetch(fileUrl);
+        if (res.status === 404) throw new StoredFileNotFoundError();
+        if (!res.ok) throw new Error(`Blob fetch failed with status ${res.status}`);
+        data = Buffer.from(await res.arrayBuffer());
+    } else {
+        try {
+            data = await readFile(fileUrl);
+        } catch (err) {
+            if ((err as NodeJS.ErrnoException).code === "ENOENT") throw new StoredFileNotFoundError();
+            throw err;
+        }
+    }
 
     if (data.length < ENCRYPTED_MAGIC.length + 12 + 16) {
         return data; // Too short to be encrypted — serve as-is
@@ -162,4 +222,27 @@ export async function readEncryptedFile(filepath: string): Promise<Buffer> {
     decipher.setAuthTag(tag);
 
     return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+}
+
+/**
+ * Best-effort removal of a stored file. Missing files are not an error;
+ * disallowed locations are silently skipped (and logged) rather than touched.
+ */
+export async function deleteStoredFile(fileUrl: string): Promise<void> {
+    if (!isAllowedStoredFileUrl(fileUrl)) {
+        console.warn(`[storage] Refusing to delete disallowed file location: ${fileUrl}`);
+        return;
+    }
+
+    if (isRemoteFileUrl(fileUrl)) {
+        const { del } = await import("@vercel/blob");
+        await del(fileUrl);
+        return;
+    }
+
+    try {
+        await unlink(fileUrl);
+    } catch (err) {
+        if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
+    }
 }

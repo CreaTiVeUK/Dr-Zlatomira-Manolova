@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { encrypt } from "@/lib/encryption";
 import { saveEncryptedFile, readEncryptedFile, FileValidationError } from "@/lib/storage";
 import { getSummaryClient, getTranscriptionClient } from "@/lib/ai";
 import { createAuditLog, AuditAction } from "@/lib/audit";
@@ -80,6 +81,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             return NextResponse.json({ error: "Summarization failed. Please try again." }, { status: 500 });
         }
 
+        // Transcript + summary are the most sensitive derived data in the
+        // system (verbatim medical consultations) — encrypt them at rest like
+        // the audio itself. Readers (admin detail page, data export) decrypt.
         const document = await prisma.patientDocument.create({
             data: {
                 name: `Session Summary - ${new Date().toLocaleDateString()}`,
@@ -88,8 +92,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
                 fileSize: size,
                 userId: patientId,
                 uploadedById: session.user.id,
-                summary,
-                transcription,
+                summary: encrypt(summary),
+                transcription: encrypt(transcription),
             },
         });
 
@@ -100,7 +104,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             ip
         );
 
-        return NextResponse.json(document);
+        // Respond with the plaintext the admin just produced, not the ciphertext
+        return NextResponse.json({ ...document, summary, transcription });
     } catch (error: unknown) {
         if (error instanceof FileValidationError) {
             return NextResponse.json({ error: error.message }, { status: 400 });

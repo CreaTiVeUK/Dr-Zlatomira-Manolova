@@ -23,6 +23,7 @@
     "@types/zxcvbn": "^4.4.5",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
+    "@vercel/blob": "^2.4.0",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
     "file-type": "^22.0.0",

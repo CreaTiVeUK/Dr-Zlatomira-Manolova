@@ -14,7 +14,7 @@ import { randomBytes } from "crypto";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
-import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
+import { sendEmail, getBaseUrl, EMAIL_TEMPLATES } from "@/lib/email";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 
 const schema = z.object({
@@ -67,10 +67,7 @@ export async function POST(request: NextRequest) {
             data: { identifier: email, token, expires },
         });
 
-        const baseUrl = process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : "http://localhost:3000";
-        const resetUrl = `${baseUrl}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+        const resetUrl = `${getBaseUrl()}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
 
         sendEmail(email, EMAIL_TEMPLATES.PASSWORD_RESET(resetUrl)).catch((err) => {
             console.error("[forgot-password] Failed to send email:", err);

@@ -105,7 +105,11 @@ export async function GET(req: Request) {
             },
             appointments,
             children,
-            documents,
+            documents: documents.map((doc) => ({
+                ...doc,
+                summary: doc.summary ? decrypt(doc.summary) : doc.summary,
+                transcription: doc.transcription ? decrypt(doc.transcription) : doc.transcription,
+            })),
             activityLog: auditLogs,
         };
 

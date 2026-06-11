@@ -41,8 +41,14 @@ export function encrypt(text: string): string {
     return `${iv.toString("hex")}:${encrypted}:${tag.toString("hex")}`;
 }
 
+// iv (12 bytes = 24 hex) : ciphertext (hex) : auth tag (16 bytes = 32 hex).
+// Matching the exact shape — not just "contains a colon" — keeps legacy
+// plaintext values that happen to contain colons (summaries, phone notes)
+// from being mangled into "[ENCRYPTED DATA]".
+const ENCRYPTED_FORMAT = /^[0-9a-f]{24}:[0-9a-f]+:[0-9a-f]{32}$/i;
+
 export function decrypt(hash: string): string {
-    if (!hash || !hash.includes(":")) return hash;
+    if (!hash || !ENCRYPTED_FORMAT.test(hash)) return hash;
 
     try {
         const [ivHex, encryptedHex, tagHex] = hash.split(":");

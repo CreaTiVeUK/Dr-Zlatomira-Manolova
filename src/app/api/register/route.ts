@@ -6,7 +6,7 @@ import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { encrypt } from "@/lib/encryption";
-import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
+import { sendEmail, getBaseUrl, EMAIL_TEMPLATES } from "@/lib/email";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import { checkPasswordStrength } from "@/lib/password-strength";
 
@@ -81,10 +81,7 @@ export async function POST(request: NextRequest) {
         });
 
         // Send verification email (non-blocking — registration still succeeds)
-        const baseUrl = process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : "http://localhost:3000";
-        const verifyUrl = `${baseUrl}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
+        const verifyUrl = `${getBaseUrl()}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
 
         sendEmail(email, EMAIL_TEMPLATES.EMAIL_VERIFICATION(name, verifyUrl)).catch((err) => {
             console.error("Failed to send verification email:", err);

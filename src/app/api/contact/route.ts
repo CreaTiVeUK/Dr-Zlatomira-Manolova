@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
         const { name, email, message } = result.data;
 
         // Send email notification using existing utility
-        const emailResult = await sendEmail("zlatomira.manolova@gmail.com", EMAIL_TEMPLATES.CONTACT_INQUIRY(name, email, message));
+        const recipient = process.env.CONTACT_EMAIL ?? "zlatomira.manolova@gmail.com";
+        const emailResult = await sendEmail(recipient, EMAIL_TEMPLATES.CONTACT_INQUIRY(name, email, message));
 
         if (!emailResult.success) {
             console.error("Failed to send contact email:", emailResult.error);

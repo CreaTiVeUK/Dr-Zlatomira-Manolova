@@ -12,7 +12,7 @@ import { randomBytes } from "crypto";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
-import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
+import { sendEmail, getBaseUrl, EMAIL_TEMPLATES } from "@/lib/email";
 
 const schema = z.object({
     email: z.string().email().transform((v) => sanitizeString(v).toLowerCase()),
@@ -56,10 +56,7 @@ export async function POST(request: NextRequest) {
             data: { identifier: email, token, expires },
         });
 
-        const baseUrl = process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : "http://localhost:3000";
-        const verifyUrl = `${baseUrl}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
+        const verifyUrl = `${getBaseUrl()}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
 
         sendEmail(email, EMAIL_TEMPLATES.EMAIL_VERIFICATION(user.name ?? email, verifyUrl)).catch((err) => {
             console.error("[resend-verification] Failed to send email:", err);

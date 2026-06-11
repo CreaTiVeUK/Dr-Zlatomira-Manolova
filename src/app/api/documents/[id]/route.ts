@@ -1,10 +1,8 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { readEncryptedFile } from "@/lib/storage";
+import { readEncryptedFile, isAllowedStoredFileUrl, StoredFileNotFoundError } from "@/lib/storage";
 import { createAuditLog, AuditAction } from "@/lib/audit";
-import { stat } from "fs/promises";
-import { resolve } from "path";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     // Use getSession() — consistent with all other routes; respects inactivity
@@ -36,10 +34,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
-        // Path traversal guard — file must be inside the uploads directory
-        const uploadsDir = resolve(process.cwd(), "uploads");
-        const resolvedPath = resolve(document.fileUrl);
-        if (!resolvedPath.startsWith(uploadsDir + "/") && resolvedPath !== uploadsDir) {
+        // Allowlist guard — fileUrl must be a Vercel Blob URL or live inside
+        // the local uploads directory (covers path traversal + foreign hosts)
+        if (!isAllowedStoredFileUrl(document.fileUrl)) {
             return NextResponse.json({ error: "Invalid file path" }, { status: 403 });
         }
 
@@ -50,15 +47,18 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             ip
         );
 
+        // readEncryptedFile fetches from either backend and transparently
+        // decrypts files saved with saveEncryptedFile (legacy plaintext files
+        // are returned as-is).
+        let fileBuffer: Buffer;
         try {
-            await stat(resolvedPath);
-        } catch {
-            return NextResponse.json({ error: "File missing on server" }, { status: 404 });
+            fileBuffer = await readEncryptedFile(document.fileUrl);
+        } catch (err) {
+            if (err instanceof StoredFileNotFoundError) {
+                return NextResponse.json({ error: "File missing on server" }, { status: 404 });
+            }
+            throw err;
         }
-
-        // readEncryptedFile transparently decrypts files saved with saveEncryptedFile,
-        // and returns unencrypted files as-is (backward compat).
-        const fileBuffer = await readEncryptedFile(resolvedPath);
 
         // Sanitise filename — only safe characters to prevent header injection
         const safeFilename = document.name.replace(/[^\w.\-]/g, "_");
