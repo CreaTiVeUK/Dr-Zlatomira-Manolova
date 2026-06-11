@@ -38,3 +38,6 @@ storybook-static
 
 # patient file uploads (filesystem storage driver)
 uploads/
+
+# local Claude Code settings
+.claude/
