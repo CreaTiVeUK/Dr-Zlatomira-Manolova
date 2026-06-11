@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.1...v1.1.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* **ci:** env.ts non-enforcing path must never throw; build-step AUTH_SECRET ([ed7140a](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/ed7140aa3b008feb11827f153e3365a455e57676))
+
 ## [1.1.1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.0...v1.1.1) (2026-06-11)
 
 
