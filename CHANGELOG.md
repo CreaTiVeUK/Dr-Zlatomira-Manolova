@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.0...v1.1.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** npm audit fix — Next.js 16.1.6 -> 16.2.9 (middleware bypass CVEs) ([5e0985d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/5e0985d03fba6f05c0d7076ac46477bcfe884e9e)), closes [hi#severity](https://github.com/hi/issues/severity)
+
 # [1.1.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.0.0...v1.1.0) (2026-04-15)
 
 
