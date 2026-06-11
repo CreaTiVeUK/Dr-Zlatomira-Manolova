@@ -94,9 +94,13 @@ function parseEnv() {
     if (enforce) {
         throw new Error(message);
     }
-    // In dev or during build, log but don't crash
+    // In dev or during build, log but don't crash. NOTE: .partial() still
+    // validates *present* values (e.g. a too-short AUTH_SECRET in CI), so it
+    // must be a safeParse — this path's contract is "never throw".
     console.warn(`⚠️  ${message}`);
-    return schema.partial().parse(process.env) as z.infer<typeof schema>;
+    const partial = schema.partial().safeParse(process.env);
+    if (partial.success) return partial.data as z.infer<typeof schema>;
+    return process.env as unknown as z.infer<typeof schema>;
 }
 
 export const env = parseEnv();
