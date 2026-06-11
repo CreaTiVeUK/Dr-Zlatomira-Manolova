@@ -67,6 +67,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   account_locked: "Account locked due to multiple failed attempts.",
   totp_required: "Enter the 6-digit code from your authenticator app.",
   totp_invalid: "Invalid authentication code. Try again.",
+  rate_limited: "Too many sign-in attempts. Please wait a minute and try again.",
 };
 
 function formatDuration(ms: number, lang: string): string {

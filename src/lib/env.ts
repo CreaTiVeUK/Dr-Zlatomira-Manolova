@@ -36,22 +36,41 @@ const schema = z.object({
 
     // Deployment
     VERCEL_URL: z.string().optional(),
+
+    // Escape hatch for CI's production-mode test server ONLY: acknowledges
+    // that rate limiting / session revocation fall back to per-instance
+    // memory. Never set this on a real deployment.
+    ALLOW_IN_MEMORY_SECURITY_STORES: z.string().optional(),
 });
 
 function parseEnv() {
+    // During `next build` (data collection phase) we don't want to require
+    // runtime secrets like DB URLs to be present — the build container
+    // shouldn't bake those in. Only enforce at actual runtime.
+    const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+    const enforce = process.env.NODE_ENV === "production" && !isBuildPhase;
+
     const result = schema.safeParse(process.env);
-    if (result.success) return result.data;
+    if (result.success) {
+        // Redis is load-bearing in production: rate limiting AND session
+        // revocation (logout, account deletion, password reset) silently
+        // degrade to per-instance memory without it.
+        const redisRequired = enforce && !result.data.ALLOW_IN_MEMORY_SECURITY_STORES;
+        if (redisRequired && (!result.data.UPSTASH_REDIS_REST_URL || !result.data.UPSTASH_REDIS_REST_TOKEN)) {
+            throw new Error(
+                "Environment validation failed:\n" +
+                "  UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN: required in production " +
+                "(rate limiting and session revocation do not work across instances without Redis)"
+            );
+        }
+        return result.data;
+    }
 
     const errors = result.error.flatten().fieldErrors;
     const lines = Object.entries(errors).map(([key, msgs]) => `  ${key}: ${msgs?.join(", ")}`);
     const message = `Environment validation failed:\n${lines.join("\n")}`;
 
-    // During `next build` (data collection phase) we don't want to require
-    // runtime secrets like DB URLs to be present — the build container
-    // shouldn't bake those in. Only enforce at actual runtime.
-    const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
-
-    if (process.env.NODE_ENV === "production" && !isBuildPhase) {
+    if (enforce) {
         throw new Error(message);
     }
     // In dev or during build, log but don't crash

@@ -9,11 +9,11 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
 
     if (session?.user?.id) {
-        // Blocklist the current jti so the token can't be replayed after logout
-        const jti = (session as unknown as { jti?: string }).jti;
-        if (jti) {
-            // Expire the blocklist entry after 24 hours (well past any reasonable session)
-            await blockSession(jti, 24 * 60 * 60);
+        // Blocklist the current jti so the token can't be replayed after logout.
+        // TTL defaults to the maximum session lifetime, so the entry outlives
+        // any token it needs to block.
+        if (session.jti) {
+            await blockSession(session.jti);
         }
         await createAuditLog(session.user.id, AuditAction.LOGOUT, "User logged out", ip);
     }

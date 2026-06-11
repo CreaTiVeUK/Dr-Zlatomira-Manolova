@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { isSessionBlocked } from "@/lib/session-blocklist";
-
-const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
+import { isSessionBlocked, isUserRevoked } from "@/lib/session-blocklist";
 
 // Routes that require any authenticated session
 const PROTECTED = ["/my-appointments", "/profile", "/book"];
@@ -39,8 +37,12 @@ export const proxy = auth(async function proxy(request) {
 
   // Enforce inactivity timeout and session revocation
   if (session?.user) {
-    const lastActivity = (session.user as { lastActivity?: number }).lastActivity;
-    if (lastActivity && Date.now() - lastActivity > INACTIVITY_LIMIT_MS) {
+    const flags = session as unknown as { invalidated?: string; jti?: string; issuedAt?: number };
+    const userId = (session.user as { id?: string }).id;
+
+    // Inactivity is enforced in the jwt callback (which compares the previous
+    // lastActivity before refreshing it) and surfaced here as a flag.
+    if (flags.invalidated) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("reason", "inactivity");
       const res = NextResponse.redirect(loginUrl);
@@ -49,9 +51,12 @@ export const proxy = auth(async function proxy(request) {
       return res;
     }
 
-    // Check if this token has been explicitly revoked (e.g. on logout)
-    const jti = (session as unknown as { jti?: string }).jti;
-    if (jti && await isSessionBlocked(jti)) {
+    // Per-token revocation (logout) and per-user revocation (account deletion,
+    // password reset — kills sessions on all devices).
+    const blocked =
+      (flags.jti && (await isSessionBlocked(flags.jti))) ||
+      (userId && flags.issuedAt && (await isUserRevoked(userId, flags.issuedAt)));
+    if (blocked) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("reason", "revoked");
       const res = NextResponse.redirect(loginUrl);

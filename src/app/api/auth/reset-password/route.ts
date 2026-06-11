@@ -16,6 +16,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import { checkPasswordStrength } from "@/lib/password-strength";
+import { revokeAllUserSessions } from "@/lib/session-blocklist";
 
 const schema = z.object({
     token: z.string().min(1),
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
 
         const user = await prisma.user.findUnique({
             where: { email },
-            select: { id: true },
+            select: { id: true, emailVerified: true },
         });
 
         if (!user) {
@@ -78,7 +79,9 @@ export async function POST(request: NextRequest) {
 
         const hashedPassword = await hash(password, 12);
 
-        // Update password and reset any lockout state in a single transaction
+        // Update password and reset any lockout state in a single transaction.
+        // Completing the reset proves mailbox ownership, so it also counts as
+        // email verification for accounts that never clicked the verify link.
         await prisma.$transaction([
             prisma.user.update({
                 where: { id: user.id },
@@ -86,10 +89,15 @@ export async function POST(request: NextRequest) {
                     password: hashedPassword,
                     failedAttempts: 0,
                     lockedUntil: null,
+                    emailVerified: user.emailVerified ?? new Date(),
                 },
             }),
             prisma.passwordResetToken.deleteMany({ where: { identifier: email } }),
         ]);
+
+        // Kill sessions on all devices — anyone holding the old credentials
+        // (the reason for most resets) must not keep a live session.
+        await revokeAllUserSessions(user.id);
 
         await createAuditLog(user.id, AuditAction.PASSWORD_RESET_COMPLETE, "Password reset completed", ip);
 

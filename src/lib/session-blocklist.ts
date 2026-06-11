@@ -1,26 +1,32 @@
 /**
  * Session revocation via Redis token blocklist.
  *
- * When a user logs out (or an admin force-revokes a session), the JWT's `jti`
- * (JWT ID) is written to Redis with a TTL matching the token's remaining
- * lifetime. The proxy checks every authenticated request — if the jti is in
- * Redis the request is rejected immediately.
+ * Two mechanisms, both backed by Upstash REST (edge-safe, no Prisma here so
+ * the proxy/middleware can call these):
  *
- * Falls back gracefully when Redis is not configured (in-memory Set).
- * In production with multi-instance deployments (Vercel) Redis is required.
+ * 1. Per-token: when a user logs out, the JWT's `jti` is written to Redis with
+ *    a TTL covering the token's maximum lifetime. The proxy and getSession()
+ *    reject any request bearing a blocked jti.
+ * 2. Per-user: account deletion / password reset call revokeAllUserSessions(),
+ *    which records a revocation timestamp for the user. Any token *issued
+ *    before* that timestamp (token.iat) is rejected — this kills sessions on
+ *    other devices whose jtis we can't enumerate.
+ *
+ * Falls back to process-local memory when Redis is not configured. That is
+ * fine for single-process dev, but on multi-instance deployments (Vercel) the
+ * fallback cannot revoke anything across instances — env.ts therefore requires
+ * the Upstash variables in production.
  */
+
+/** Maximum JWT session lifetime. Used for session.maxAge in the NextAuth
+ *  config and as the TTL for revocation entries so they outlive any token
+ *  they need to block. */
+export const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 // ─── In-memory fallback ───────────────────────────────────────────────────────
 
 const memoryBlocklist = new Set<string>();
-
-function memoryBlock(jti: string): void {
-    memoryBlocklist.add(jti);
-}
-
-function memoryIsBlocked(jti: string): boolean {
-    return memoryBlocklist.has(jti);
-}
+const memoryUserRevocations = new Map<string, number>();
 
 // ─── Redis singleton ──────────────────────────────────────────────────────────
 // Create the client once and reuse it across all calls. Creating a new Redis
@@ -28,6 +34,7 @@ function memoryIsBlocked(jti: string): boolean {
 // resources on Vercel's serverless functions.
 
 const BLOCKLIST_PREFIX = "session:blocked:";
+const USER_REVOKED_PREFIX = "session:user-revoked:";
 
 let _redisClient: import("@upstash/redis").Redis | null = null;
 
@@ -41,33 +48,37 @@ async function getRedisClient(): Promise<import("@upstash/redis").Redis> {
     return _redisClient;
 }
 
-async function redisBlock(jti: string, ttlSeconds: number): Promise<void> {
-    const redis = await getRedisClient();
-    await redis.set(`${BLOCKLIST_PREFIX}${jti}`, "1", { ex: ttlSeconds });
-}
-
-async function redisIsBlocked(jti: string): Promise<boolean> {
-    const redis = await getRedisClient();
-    const val = await redis.get(`${BLOCKLIST_PREFIX}${jti}`);
-    return val !== null;
-}
-
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 const useRedis =
     Boolean(process.env.UPSTASH_REDIS_REST_URL) &&
     Boolean(process.env.UPSTASH_REDIS_REST_TOKEN);
 
+let warnedAboutRedis = false;
+
+function warnIfMemoryFallback(): void {
+    if (!warnedAboutRedis && process.env.NODE_ENV === "production") {
+        warnedAboutRedis = true;
+        console.warn(
+            "[SESSION BLOCKLIST] UPSTASH_REDIS_REST_URL/TOKEN not set. " +
+            "Using in-memory revocation — logout/revocation will NOT work " +
+            "across instances or restarts."
+        );
+    }
+}
+
 /**
  * Add a JWT ID to the blocklist.
- * `ttlSeconds` should be the token's remaining lifetime so the entry
- * auto-expires rather than growing indefinitely.
+ * `ttlSeconds` defaults to the maximum session lifetime so the entry outlives
+ * any token it needs to block, then auto-expires.
  */
-export async function blockSession(jti: string, ttlSeconds: number = 3600): Promise<void> {
+export async function blockSession(jti: string, ttlSeconds: number = SESSION_MAX_AGE_SECONDS): Promise<void> {
     if (useRedis) {
-        await redisBlock(jti, ttlSeconds);
+        const redis = await getRedisClient();
+        await redis.set(`${BLOCKLIST_PREFIX}${jti}`, "1", { ex: ttlSeconds });
     } else {
-        memoryBlock(jti);
+        warnIfMemoryFallback();
+        memoryBlocklist.add(jti);
     }
 }
 
@@ -76,7 +87,40 @@ export async function blockSession(jti: string, ttlSeconds: number = 3600): Prom
  */
 export async function isSessionBlocked(jti: string): Promise<boolean> {
     if (useRedis) {
-        return redisIsBlocked(jti);
+        const redis = await getRedisClient();
+        const val = await redis.get(`${BLOCKLIST_PREFIX}${jti}`);
+        return val !== null;
     }
-    return memoryIsBlocked(jti);
+    return memoryBlocklist.has(jti);
+}
+
+/**
+ * Revoke every session belonging to a user (all devices), by recording a
+ * cutoff timestamp. Tokens issued before the cutoff are rejected by
+ * isUserRevoked(). Call this on account deletion and password reset.
+ */
+export async function revokeAllUserSessions(userId: string, ttlSeconds: number = SESSION_MAX_AGE_SECONDS): Promise<void> {
+    const cutoff = Date.now();
+    if (useRedis) {
+        const redis = await getRedisClient();
+        await redis.set(`${USER_REVOKED_PREFIX}${userId}`, String(cutoff), { ex: ttlSeconds });
+    } else {
+        warnIfMemoryFallback();
+        memoryUserRevocations.set(userId, cutoff);
+    }
+}
+
+/**
+ * Returns true if all of this user's sessions issued at or before
+ * `issuedAtMs` have been revoked.
+ */
+export async function isUserRevoked(userId: string, issuedAtMs: number): Promise<boolean> {
+    if (useRedis) {
+        const redis = await getRedisClient();
+        const val = await redis.get(`${USER_REVOKED_PREFIX}${userId}`);
+        if (val === null || val === undefined) return false;
+        return issuedAtMs <= Number(val);
+    }
+    const cutoff = memoryUserRevocations.get(userId);
+    return cutoff !== undefined && issuedAtMs <= cutoff;
 }

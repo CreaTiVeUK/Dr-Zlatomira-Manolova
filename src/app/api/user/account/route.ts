@@ -27,6 +27,7 @@ import { prisma } from "@/lib/prisma";
 import { signOut } from "@/auth";
 import { NextResponse } from "next/server";
 import { AuditAction } from "@/lib/audit";
+import { revokeAllUserSessions } from "@/lib/session-blocklist";
 import { unlink } from "fs/promises";
 
 export async function DELETE(req: Request) {
@@ -84,6 +85,10 @@ export async function DELETE(req: Request) {
         await Promise.allSettled(
             documents.map((doc) => unlink(doc.fileUrl))
         );
+
+        // Revoke sessions on ALL devices — the anonymised row would otherwise
+        // keep existing JWTs working until they expire.
+        await revokeAllUserSessions(userId);
 
         // Sign the user out — their session is now invalid
         await signOut({ redirect: false });
