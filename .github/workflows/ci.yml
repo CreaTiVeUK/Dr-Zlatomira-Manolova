@@ -101,6 +101,9 @@ jobs:
           AUTH_SECRET: supersecretsupersecretsupersecret
           NEXTAUTH_URL: http://localhost:3000
           AUTH_TRUST_HOST: true
+          # Uploads + phone/TOTP fields are encrypted at rest — the e2e suite
+          # exercises those paths (any 64-hex value works for a throwaway DB)
+          PII_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
           # CI runs `npm run start` (NODE_ENV=production) without Redis.
           # Acknowledge the in-memory fallback explicitly — real production
           # (Vercel) must NOT set this and must configure Upstash instead.

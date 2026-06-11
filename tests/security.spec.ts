@@ -121,6 +121,67 @@ test.describe('Booking integrity', () => {
     });
 });
 
+test.describe('Role escalation', () => {
+    test('patient sessions are rejected by admin endpoints', async ({ page }) => {
+        await login(page, 'patient@example.com');
+
+        const results = await page.evaluate(async () => {
+            const probes: [string, RequestInit?][] = [
+                ['/api/admin/messages'],
+                ['/api/admin/users/export'],
+                ['/api/admin/users/00000000-0000-0000-0000-000000000000/documents', { method: 'POST', body: new FormData() }],
+                ['/api/admin/users/00000000-0000-0000-0000-000000000000/sessions', { method: 'POST', body: new FormData() }],
+            ];
+            const out: Record<string, number> = {};
+            for (const [url, init] of probes) {
+                out[url] = (await fetch(url, init)).status;
+            }
+            return out;
+        });
+
+        for (const [url, status] of Object.entries(results)) {
+            expect(status, `expected 403 from ${url}`).toBe(403);
+        }
+    });
+});
+
+test.describe('Upload validation', () => {
+    test('rejects files whose content does not match the declared type', async ({ page }) => {
+        await login(page, 'patient@example.com');
+
+        const status = await page.evaluate(async () => {
+            // Declared as PDF, actually a script — magic-byte sniffing must catch it
+            const fake = new Blob(['#!/bin/sh\necho pwned'], { type: 'application/pdf' });
+            const form = new FormData();
+            form.append('file', new File([fake], 'results.pdf', { type: 'application/pdf' }));
+            const res = await fetch('/api/user/documents', { method: 'POST', body: form });
+            return res.status;
+        });
+
+        expect(status).toBe(400);
+    });
+
+    test('accepts a real PDF, stores it encrypted, and serves it back intact', async ({ page }) => {
+        await login(page, 'patient@example.com');
+
+        const result = await page.evaluate(async () => {
+            const pdfBytes = '%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n';
+            const form = new FormData();
+            form.append('file', new File([pdfBytes], 'results.pdf', { type: 'application/pdf' }));
+            const upload = await fetch('/api/user/documents', { method: 'POST', body: form });
+            if (upload.status !== 201) return { uploadStatus: upload.status, body: '' };
+            const doc = await upload.json();
+
+            const download = await fetch(`/api/documents/${doc.id}`);
+            return { uploadStatus: upload.status, downloadStatus: download.status, body: await download.text() };
+        });
+
+        expect(result.uploadStatus).toBe(201);
+        expect(result.downloadStatus).toBe(200);
+        expect(result.body).toContain('%PDF-1.4'); // round-trips through encryption
+    });
+});
+
 test.describe('Login hardening', () => {
     test('wrong password against an existing account and a nonexistent account look identical', async ({ page }) => {
         const probe = async (email: string) => {
