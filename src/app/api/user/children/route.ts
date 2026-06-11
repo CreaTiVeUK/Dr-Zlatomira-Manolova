@@ -1,8 +1,21 @@
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sanitizeString } from "@/lib/sanitize";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createAuditLog, AuditAction } from "@/lib/audit";
+
+const childSchema = z.object({
+    name: z.string().min(1, "Name is required").max(100).transform((v) => sanitizeString(v)),
+    birthDate: z
+        .string()
+        .refine((v) => !Number.isNaN(new Date(v).getTime()), "Invalid birth date")
+        .refine((v) => new Date(v) <= new Date(), "Birth date cannot be in the future")
+        .refine((v) => new Date(v) >= new Date("1990-01-01"), "Birth date is unrealistically old"),
+    gender: z.string().max(20).transform((v) => sanitizeString(v)).optional(),
+    notes: z.string().max(2000).transform((v) => sanitizeString(v)).optional(),
+});
 
 export async function GET() {
     const session = await getSession();
@@ -34,11 +47,14 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { name, birthDate, gender, notes } = body;
-
-        if (!name || !birthDate) {
-            return NextResponse.json({ error: "Name and Birth Date are required" }, { status: 400 });
+        const parsed = childSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: parsed.error.issues[0]?.message ?? "Invalid input" },
+                { status: 400 }
+            );
         }
+        const { name, birthDate, gender, notes } = parsed.data;
 
         const child = await prisma.child.create({
             data: {

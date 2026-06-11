@@ -25,7 +25,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sanitizeString } from "@/lib/sanitize";
 import { decrypt, encrypt } from "@/lib/encryption";
-import { verifyCode as verifyTotp } from "@/lib/totp";
+import { verifyCodeWithCounter } from "@/lib/totp";
+import { claimOnce } from "@/lib/session-blocklist";
 import { rateLimit } from "@/lib/rate-limit";
 
 export const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
@@ -137,8 +138,18 @@ export async function authorizeUser(credentials: unknown): Promise<AuthorizedUse
     if (user.totpEnabledAt && user.totpSecret) {
         if (!totp) throw new TotpRequiredError();
 
-        const secret = decrypt(user.totpSecret);
-        let ok = verifyTotp(secret, totp);
+        let secret: string;
+        try {
+            secret = decrypt(user.totpSecret);
+        } catch {
+            // Undecryptable secret (key rotation/corruption) — fail closed
+            throw new TotpInvalidError();
+        }
+
+        const counter = verifyCodeWithCounter(secret, totp);
+        // Replay protection: each verified time-step counter is single-use.
+        // TTL covers the ±1-step acceptance window.
+        let ok = counter !== null && (await claimOnce(`totp:${user.id}:${counter}`, 120));
 
         if (!ok && user.totpBackupCodes) {
             try {

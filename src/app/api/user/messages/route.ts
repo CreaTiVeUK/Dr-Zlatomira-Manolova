@@ -7,9 +7,10 @@ import { sanitizeString } from "@/lib/sanitize";
 import { AuditAction, createAuditLog } from "@/lib/audit";
 import { logger } from "@/lib/logger";
 
-// Patients only talk to the clinic, never to each other. Every thread is
-// (patient, admin), so on send we resolve the admin recipient by looking up
-// the oldest ADMIN user — treating the doctor as the singular clinic inbox.
+// Patients only talk to the clinic, never to each other. The "clinic inbox"
+// is role-based: a patient's thread includes messages to/from ANY admin, so
+// replies from a second admin account are never invisible. New messages are
+// addressed to the oldest admin as the canonical inbox owner.
 async function resolveAdminRecipient() {
     return prisma.user.findFirst({
         where: { role: "ADMIN" },
@@ -29,14 +30,11 @@ export async function GET() {
     }
 
     try {
-        const admin = await resolveAdminRecipient();
-        if (!admin) return NextResponse.json({ messages: [] });
-
         const messages = await prisma.message.findMany({
             where: {
                 OR: [
-                    { fromId: session.user.id, toId: admin.id },
-                    { fromId: admin.id, toId: session.user.id },
+                    { fromId: session.user.id, to: { role: "ADMIN" } },
+                    { toId: session.user.id, from: { role: "ADMIN" } },
                 ],
             },
             orderBy: { timestamp: "asc" },
@@ -46,7 +44,7 @@ export async function GET() {
         // Mark inbound messages read on fetch — patients don't get an unread view
         // of their own replies so there's no other place to clear the flag.
         await prisma.message.updateMany({
-            where: { fromId: admin.id, toId: session.user.id, readAt: null },
+            where: { from: { role: "ADMIN" }, toId: session.user.id, readAt: null },
             data: { readAt: new Date() },
         });
 

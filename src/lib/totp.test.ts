@@ -91,3 +91,16 @@ describe('backup codes', () => {
         for (const c of codes) expect(c).toMatch(/^[0-9A-F]{5}-[0-9A-F]{5}$/);
     });
 });
+
+describe('verifyCodeWithCounter', () => {
+    it('returns the matched time-step counter for replay tracking', async () => {
+        const { generateSecret, generateCode, verifyCodeWithCounter } = await import('./totp');
+        const secret = generateSecret();
+        const when = new Date('2026-06-15T10:00:15Z');
+        const code = generateCode(secret, when);
+
+        const counter = verifyCodeWithCounter(secret, code, when);
+        expect(counter).toBe(Math.floor(when.getTime() / 1000 / 30));
+        expect(verifyCodeWithCounter(secret, '000000', when)).toBeNull();
+    });
+});

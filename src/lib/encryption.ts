@@ -47,6 +47,19 @@ export function encrypt(text: string): string {
 // from being mangled into "[ENCRYPTED DATA]".
 const ENCRYPTED_FORMAT = /^[0-9a-f]{24}:[0-9a-f]+:[0-9a-f]{32}$/i;
 
+export class DecryptionError extends Error {
+    constructor(message = "Decryption failed — wrong key or corrupted ciphertext") {
+        super(message);
+        this.name = "DecryptionError";
+    }
+}
+
+/**
+ * Decrypt a value produced by encrypt(). Legacy plaintext (anything not in
+ * the iv:cipher:tag shape) passes through unchanged. THROWS DecryptionError
+ * on auth failure — silently returning a placeholder would let corrupted
+ * data (or a placeholder itself) be re-saved over the real value.
+ */
 export function decrypt(hash: string): string {
     if (!hash || !ENCRYPTED_FORMAT.test(hash)) return hash;
 
@@ -64,6 +77,19 @@ export function decrypt(hash: string): string {
         return decrypted;
     } catch (err) {
         console.error("Decryption failed:", err);
-        return "[ENCRYPTED DATA]";
+        throw new DecryptionError();
+    }
+}
+
+/**
+ * Display-oriented variant: returns null instead of throwing, for read paths
+ * where a corrupt value should render as missing rather than break the page.
+ * Never feed the result back into a write.
+ */
+export function tryDecrypt(hash: string): string | null {
+    try {
+        return decrypt(hash);
+    } catch {
+        return null;
     }
 }

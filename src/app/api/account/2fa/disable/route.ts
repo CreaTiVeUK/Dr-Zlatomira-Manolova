@@ -11,7 +11,8 @@ import bcrypt from "bcryptjs";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { decrypt } from "@/lib/encryption";
-import { verifyCode } from "@/lib/totp";
+import { verifyCodeWithCounter } from "@/lib/totp";
+import { claimOnce } from "@/lib/session-blocklist";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 
 const schema = z.object({
@@ -46,8 +47,17 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Invalid password." }, { status: 400 });
     }
 
-    const secret = decrypt(user.totpSecret);
-    let ok = verifyCode(secret, parsed.data.code);
+    let secret: string;
+    try {
+        secret = decrypt(user.totpSecret);
+    } catch {
+        // Secret is undecryptable anyway — password alone may not disable 2FA,
+        // but a backup code still can (checked below).
+        secret = "";
+    }
+
+    const counter = secret ? verifyCodeWithCounter(secret, parsed.data.code) : null;
+    let ok = counter !== null && (await claimOnce(`totp:${session.user.id}:${counter}`, 120));
 
     // Fall back to a backup code
     if (!ok && user.totpBackupCodes) {

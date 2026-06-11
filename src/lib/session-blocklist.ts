@@ -110,6 +110,36 @@ export async function revokeAllUserSessions(userId: string, ttlSeconds: number =
     }
 }
 
+// ─── Single-use claims ────────────────────────────────────────────────────────
+
+const memoryClaims = new Map<string, number>(); // key → expiry epoch ms
+
+/**
+ * Atomically claim a key for single use (Redis SET NX). Returns true on the
+ * first claim and false for any repeat within the TTL. Used for TOTP replay
+ * protection: a verified code's time-step counter is claimed so the same
+ * code cannot authenticate twice.
+ */
+export async function claimOnce(key: string, ttlSeconds: number): Promise<boolean> {
+    if (useRedis) {
+        const redis = await getRedisClient();
+        const result = await redis.set(`claim:${key}`, "1", { nx: true, ex: ttlSeconds });
+        return result === "OK";
+    }
+    warnIfMemoryFallback();
+    const now = Date.now();
+    const existing = memoryClaims.get(key);
+    if (existing !== undefined && existing > now) return false;
+    memoryClaims.set(key, now + ttlSeconds * 1000);
+    // Opportunistic cleanup to avoid unbounded growth in long-lived processes
+    if (memoryClaims.size > 1000) {
+        for (const [k, expiry] of memoryClaims) {
+            if (expiry <= now) memoryClaims.delete(k);
+        }
+    }
+    return true;
+}
+
 /**
  * Returns true if all of this user's sessions issued at or before
  * `issuedAtMs` have been revoked.

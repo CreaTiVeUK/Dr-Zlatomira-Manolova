@@ -12,7 +12,8 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { decrypt, encrypt } from "@/lib/encryption";
-import { generateBackupCodes, verifyCode } from "@/lib/totp";
+import { generateBackupCodes, verifyCodeWithCounter } from "@/lib/totp";
+import { claimOnce } from "@/lib/session-blocklist";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 
 const schema = z.object({
@@ -44,9 +45,20 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "2FA is already enabled." }, { status: 400 });
     }
 
-    const secret = decrypt(user.totpSecret);
-    if (!verifyCode(secret, parsed.data.code)) {
+    let secret: string;
+    try {
+        secret = decrypt(user.totpSecret);
+    } catch {
+        return NextResponse.json({ error: "TOTP setup is corrupted. Run /setup again." }, { status: 400 });
+    }
+
+    const counter = verifyCodeWithCounter(secret, parsed.data.code);
+    if (counter === null) {
         return NextResponse.json({ error: "Invalid code. Try again." }, { status: 400 });
+    }
+    // Single-use: the setup code cannot be replayed (e.g. as the first login)
+    if (!(await claimOnce(`totp:${session.user.id}:${counter}`, 120))) {
+        return NextResponse.json({ error: "Code already used. Wait for the next one." }, { status: 400 });
     }
 
     const backupCodes = generateBackupCodes(10);

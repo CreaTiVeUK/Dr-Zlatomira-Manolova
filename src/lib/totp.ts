@@ -83,18 +83,23 @@ export function generateCode(secret: string, when: Date = new Date()): string {
 /**
  * Verify a user-supplied 6-digit code using constant-time comparison.
  * Accepts codes from the current step and ±1 step window to tolerate
- * minor clock drift.
+ * minor clock drift. Returns the matched time-step counter so callers can
+ * enforce single use (replay protection), or null when no step matches.
  */
-export function verifyCode(secret: string, submitted: string, when: Date = new Date()): boolean {
+export function verifyCodeWithCounter(secret: string, submitted: string, when: Date = new Date()): number | null {
     const clean = submitted.replace(/\s+/g, "");
-    if (!/^\d{6}$/.test(clean)) return false;
+    if (!/^\d{6}$/.test(clean)) return null;
 
     const baseCounter = Math.floor(when.getTime() / 1000 / PERIOD);
     for (let offset = -WINDOW; offset <= WINDOW; offset++) {
         const candidate = hotp(secret, baseCounter + offset);
-        if (constantTimeEqual(candidate, clean)) return true;
+        if (constantTimeEqual(candidate, clean)) return baseCounter + offset;
     }
-    return false;
+    return null;
+}
+
+export function verifyCode(secret: string, submitted: string, when: Date = new Date()): boolean {
+    return verifyCodeWithCounter(secret, submitted, when) !== null;
 }
 
 function constantTimeEqual(a: string, b: string): boolean {

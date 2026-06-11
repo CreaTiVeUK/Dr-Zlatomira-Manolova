@@ -8,7 +8,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { decrypt } from "@/lib/encryption";
+import { tryDecrypt } from "@/lib/encryption";
 import { AuditAction, createAuditLog } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -70,7 +70,7 @@ export async function GET(req: Request) {
         u.email,
         // Phones are encrypted at rest — exporting ciphertext would hand the
         // doctor an unusable column
-        u.phone ? decrypt(u.phone) : "",
+        u.phone ? tryDecrypt(u.phone) ?? "" : "",
         u.emailVerified ? "yes" : "no",
         u.createdAt.toISOString(),
         u.lastActivity ? u.lastActivity.toISOString() : "",

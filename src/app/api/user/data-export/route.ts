@@ -9,7 +9,7 @@
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { decrypt } from "@/lib/encryption";
+import { tryDecrypt } from "@/lib/encryption";
 import { NextResponse } from "next/server";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 
@@ -101,14 +101,14 @@ export async function GET(req: Request) {
             exportedAt: new Date().toISOString(),
             profile: {
                 ...user,
-                phone: user.phone ? decrypt(user.phone) : null,
+                phone: user.phone ? tryDecrypt(user.phone) : null,
             },
             appointments,
             children,
             documents: documents.map((doc) => ({
                 ...doc,
-                summary: doc.summary ? decrypt(doc.summary) : doc.summary,
-                transcription: doc.transcription ? decrypt(doc.transcription) : doc.transcription,
+                summary: doc.summary ? tryDecrypt(doc.summary) : doc.summary,
+                transcription: doc.transcription ? tryDecrypt(doc.transcription) : doc.transcription,
             })),
             activityLog: auditLogs,
         };

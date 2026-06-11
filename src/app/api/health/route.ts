@@ -26,7 +26,10 @@ async function checkDatabase(): Promise<CheckResult> {
         await prisma.$queryRaw`SELECT 1`;
         return { ok: true, latencyMs: Date.now() - start };
     } catch (err) {
-        return { ok: false, error: err instanceof Error ? err.message : "unknown" };
+        // Public endpoint — never echo driver messages (they can contain
+        // connection-string hosts). Details go to the server log only.
+        console.error("[health] database check failed:", err);
+        return { ok: false, error: "unavailable" };
     }
 }
 
@@ -42,7 +45,8 @@ async function checkRedis(): Promise<CheckResult> {
         await redis.ping();
         return { ok: true, latencyMs: Date.now() - start };
     } catch (err) {
-        return { ok: false, error: err instanceof Error ? err.message : "unknown" };
+        console.error("[health] redis check failed:", err);
+        return { ok: false, error: "unavailable" };
     }
 }
 

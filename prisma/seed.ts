@@ -3,7 +3,35 @@ import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
+/**
+ * DEV/CI SEED ONLY. This upserts well-known accounts with the shared password
+ * 'password123' — including resetting the real admin account's password.
+ * Running it against a production database would backdoor the live admin, so
+ * it refuses to run unless the database is clearly local (or ALLOW_SEED=1 is
+ * set explicitly, e.g. by CI service containers).
+ */
+function assertSafeTarget(): void {
+    if (process.env.ALLOW_SEED === '1') return
+
+    const url = process.env.POSTGRES_PRISMA_URL ?? ''
+    const host = (() => {
+        try { return new URL(url).hostname } catch { return '' }
+    })()
+    const localHosts = ['localhost', '127.0.0.1', 'db', 'postgres']
+
+    if (process.env.NODE_ENV === 'production' || !localHosts.includes(host)) {
+        console.error(
+            `[seed] Refusing to seed non-local database host "${host}". ` +
+            'This seed sets known passwords on admin accounts. ' +
+            'Set ALLOW_SEED=1 only if you are certain this is a disposable database.'
+        )
+        process.exit(1)
+    }
+}
+
 async function main() {
+    assertSafeTarget()
+
     const hashedPassword = await bcrypt.hash('password123', 10)
 
     // Seed users are pre-verified (no email confirmation needed in dev)

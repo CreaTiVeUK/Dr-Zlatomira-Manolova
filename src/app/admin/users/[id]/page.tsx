@@ -5,7 +5,7 @@ import AudioRecorder from "./AudioRecorder";
 import DeleteDocumentButton from "./DeleteDocumentButton";
 import EmptyState from "@/components/EmptyState";
 import { getServerDictionary } from "@/lib/i18n/server";
-import { decrypt } from "@/lib/encryption";
+import { tryDecrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 
@@ -43,8 +43,8 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
   // pass through decrypt() unchanged)
   const documents = rawDocuments.map((doc) => ({
     ...doc,
-    summary: doc.summary ? decrypt(doc.summary) : doc.summary,
-    transcription: doc.transcription ? decrypt(doc.transcription) : doc.transcription,
+    summary: doc.summary ? tryDecrypt(doc.summary) : doc.summary,
+    transcription: doc.transcription ? tryDecrypt(doc.transcription) : doc.transcription,
   }));
 
   const childrenAvailable =
@@ -69,7 +69,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             {copy.backToUsers}
           </Link>
           <h1 className="section-title">{user.name}</h1>
-          <p>{user.email} · {user.phone ? decrypt(user.phone) : copy.noPhone}</p>
+          <p>{user.email} · {user.phone ? (tryDecrypt(user.phone) ?? copy.noPhone) : copy.noPhone}</p>
         </div>
       </div>
 

@@ -10,11 +10,12 @@ const ADMIN = ["/admin"];
 function buildCSP(): string {
   // 'unsafe-inline' is required because Next.js injects inline scripts for
   // hydration and chunk-loading that cannot carry a nonce without deep
-  // framework integration. The remaining directives still provide meaningful
-  // protection (no eval, locked-down connect/frame/object sources).
-  return [
+  // framework integration. 'unsafe-eval' is NOT included — production Next.js
+  // bundles don't eval (only dev tooling does). Violations are reported to
+  // /api/csp-report so regressions surface in the logs.
+  const directives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com",
+    "script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
@@ -24,7 +25,13 @@ function buildCSP(): string {
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
     "upgrade-insecure-requests",
-  ].join("; ");
+    "report-uri /api/csp-report",
+  ];
+  if (process.env.NODE_ENV !== "production") {
+    // next dev relies on eval'd source maps / react-refresh
+    directives[1] += " 'unsafe-eval'";
+  }
+  return directives.join("; ");
 }
 
 // NextAuth v5 pattern: wrap with auth() so the session is resolved by

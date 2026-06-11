@@ -28,12 +28,14 @@ export async function GET(req: Request) {
     const patientId = searchParams.get("patientId");
 
     try {
+        // The clinic inbox is role-based: every admin sees the same threads,
+        // regardless of which admin account sent or received a message.
         if (patientId) {
             const messages = await prisma.message.findMany({
                 where: {
                     OR: [
-                        { fromId: patientId, toId: gate.session.user.id },
-                        { fromId: gate.session.user.id, toId: patientId },
+                        { fromId: patientId, to: { role: "ADMIN" } },
+                        { from: { role: "ADMIN" }, toId: patientId },
                     ],
                 },
                 orderBy: { timestamp: "asc" },
@@ -41,7 +43,7 @@ export async function GET(req: Request) {
             });
 
             await prisma.message.updateMany({
-                where: { fromId: patientId, toId: gate.session.user.id, readAt: null },
+                where: { fromId: patientId, to: { role: "ADMIN" }, readAt: null },
                 data: { readAt: new Date() },
             });
 
@@ -49,9 +51,10 @@ export async function GET(req: Request) {
         }
 
         // List all patient threads with last message + unread count
-        const adminId = gate.session.user.id;
+        const adminUsers = await prisma.user.findMany({ where: { role: "ADMIN" }, select: { id: true } });
+        const adminIds = new Set(adminUsers.map((a) => a.id));
         const latest = await prisma.message.findMany({
-            where: { OR: [{ fromId: adminId }, { toId: adminId }] },
+            where: { OR: [{ from: { role: "ADMIN" } }, { to: { role: "ADMIN" } }] },
             orderBy: { timestamp: "desc" },
             select: { id: true, content: true, timestamp: true, fromId: true, toId: true, readAt: true },
         });
@@ -59,16 +62,19 @@ export async function GET(req: Request) {
         // Reduce to per-patient latest + unread counter
         const threads = new Map<string, { patientId: string; lastMessage: string; lastAt: Date; unread: number }>();
         for (const m of latest) {
-            const patientId = m.fromId === adminId ? m.toId : m.fromId;
+            const fromAdmin = adminIds.has(m.fromId);
+            // Skip admin↔admin notes — threads are keyed by the patient party
+            if (fromAdmin && adminIds.has(m.toId)) continue;
+            const patientId = fromAdmin ? m.toId : m.fromId;
             const existing = threads.get(patientId);
             if (!existing) {
                 threads.set(patientId, {
                     patientId,
                     lastMessage: m.content,
                     lastAt: m.timestamp,
-                    unread: m.fromId !== adminId && m.readAt === null ? 1 : 0,
+                    unread: !fromAdmin && m.readAt === null ? 1 : 0,
                 });
-            } else if (m.fromId !== adminId && m.readAt === null) {
+            } else if (!fromAdmin && m.readAt === null) {
                 existing.unread += 1;
             }
         }
