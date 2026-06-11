@@ -110,6 +110,9 @@ model Appointment {
   dateTime      DateTime
   duration      Int      // 30 or 60
   price         Float
+  // BOOKED | CANCELLED | COMPLETED — value set enforced by zod in the API.
+  // Kept as String (not a native enum) so code deploys aren't coupled to a
+  // manual `prisma db push` against the production database.
   status        String   @default("BOOKED")
   paymentStatus String   @default("UNPAID")
   paymentMethod String?  // CASH
@@ -123,7 +126,10 @@ model Appointment {
 
   createdAt DateTime @default(now())
 
-  @@unique([dateTime])
+  // NOTE: deliberately NO unique constraint on dateTime — it would span
+  // CANCELLED rows too, permanently blocking a slot once anyone cancels it.
+  // Overlap safety is enforced by hasConflict() under a Serializable
+  // transaction (src/lib/booking.ts).
   @@index([dateTime, status])
 }
 

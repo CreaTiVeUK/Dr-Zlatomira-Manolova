@@ -38,6 +38,12 @@ export async function GET(request: NextRequest) {
     if (validation.data.start && validation.data.end) {
         startDate = new Date(validation.data.start);
         endDate = new Date(validation.data.end);
+
+        // Bound the range — an unbounded query would scan the whole table.
+        const MAX_RANGE_MS = 90 * 24 * 60 * 60 * 1000;
+        if (endDate <= startDate || endDate.getTime() - startDate.getTime() > MAX_RANGE_MS) {
+            return NextResponse.json({ error: "Invalid date range" }, { status: 400 });
+        }
     } else {
         // Default: Next 7 days + buffer if not specified
         startDate = startOfDay(new Date());

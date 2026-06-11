@@ -47,6 +47,80 @@ test.describe('Session revocation', () => {
     });
 });
 
+test.describe('Booking integrity', () => {
+    // 10:00 UTC = 12:00/13:00 Sofia — inside clinic hours year-round.
+    function futureSlot(daysAhead: number): string {
+        const d = new Date();
+        d.setUTCDate(d.getUTCDate() + daysAhead);
+        d.setUTCHours(10, 0, 0, 0);
+        return d.toISOString();
+    }
+
+    async function bookViaApi(page: Page, dateTime: string, extra: Record<string, unknown> = {}) {
+        return page.evaluate(
+            async ({ dateTime, extra }) => {
+                const res = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-forwarded-for': Math.random().toString(), // per-IP rate-limit bypass for tests
+                    },
+                    body: JSON.stringify({ dateTime, duration: 30, notes: 'security spec', ...extra }),
+                });
+                return { status: res.status, body: await res.json() };
+            },
+            { dateTime, extra }
+        );
+    }
+
+    test('a cancelled slot can be rebooked (no permanent slot poisoning)', async ({ page }) => {
+        await login(page, 'patient@example.com');
+        const slot = futureSlot(25);
+
+        const first = await bookViaApi(page, slot);
+        expect(first.status).toBe(200);
+
+        const cancel = await page.evaluate(async (id: string) => {
+            const res = await fetch(`/api/appointments?id=${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'CANCELLED' }),
+            });
+            return res.status;
+        }, first.body.appointment.id);
+        expect(cancel).toBe(200);
+
+        // Previously the @@unique([dateTime]) constraint (spanning CANCELLED
+        // rows) made this 409 forever.
+        const rebook = await bookViaApi(page, slot);
+        expect(rebook.status).toBe(200);
+    });
+
+    test('patients cannot mark their own appointment COMPLETED', async ({ page }) => {
+        await login(page, 'patient@example.com');
+        const created = await bookViaApi(page, futureSlot(26));
+        expect(created.status).toBe(200);
+
+        const complete = await page.evaluate(async (id: string) => {
+            const res = await fetch(`/api/appointments?id=${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'COMPLETED' }),
+            });
+            return res.status;
+        }, created.body.appointment.id);
+        expect(complete).toBe(403);
+    });
+
+    test('client-supplied price is ignored — server derives it from duration', async ({ page }) => {
+        await login(page, 'patient@example.com');
+
+        const result = await bookViaApi(page, futureSlot(27), { price: 1 });
+        expect(result.status).toBe(200);
+        expect(result.body.appointment.price).toBe(25); // 30-minute standard visit
+    });
+});
+
 test.describe('Login hardening', () => {
     test('wrong password against an existing account and a nonexistent account look identical', async ({ page }) => {
         const probe = async (email: string) => {

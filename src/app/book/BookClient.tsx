@@ -94,7 +94,7 @@ export default function BookClient({ session }: BookClientProps) {
         body: JSON.stringify({
           dateTime: slot.toISOString(),
           duration: selectedService.duration,
-          price: selectedService.price,
+          // price is display-only — the server derives it from the duration
           notes: `Service: ${selectedService.name}`,
         }),
       });
