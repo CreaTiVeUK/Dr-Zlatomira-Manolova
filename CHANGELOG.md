@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.4...v1.1.5) (2026-06-12)
+
+
+### Bug Fixes
+
+* **proxy:** stale sessions no longer redirect public routes to /login ([ff0dd5c](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/ff0dd5cc59399aae93554097b7545ad1e44d9eda))
+
 ## [1.1.4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.3...v1.1.4) (2026-06-12)
 
 
