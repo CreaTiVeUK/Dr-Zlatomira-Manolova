@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.3...v1.1.4) (2026-06-12)
+
+
+### Bug Fixes
+
+* **proxy:** break the /login self-redirect loop on invalidated sessions (prod 503) ([f0b2f41](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/f0b2f41a6387cf156e5dd1d7da0b4a5f4695da6b))
+
 ## [1.1.3](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.2...v1.1.3) (2026-06-12)
 
 
