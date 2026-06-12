@@ -74,6 +74,9 @@ export const proxy = auth(async function proxy(request) {
   const { pathname } = request.nextUrl;
   const session = request.auth;
 
+  const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
+  const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
+
   // Enforce inactivity timeout and session revocation
   if (session?.user) {
     const flags = session as unknown as { invalidated?: string; jti?: string; issuedAt?: number };
@@ -90,26 +93,25 @@ export const proxy = auth(async function proxy(request) {
         ? "revoked"
         : null;
 
-    // Never redirect /login to itself, and never bounce the NextAuth
-    // endpoints the login page depends on — a dead session must not be able
-    // to lock the user out of logging back in, whatever state the cookie is
-    // in. Clear the cookie and let those requests through instead.
-    if (reason && pathname !== "/login" && !pathname.startsWith("/api/auth")) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("reason", reason);
-      const res = NextResponse.redirect(loginUrl);
+    if (reason) {
+      // Only routes that actually require a session get bounced to /login
+      // with an explanation. Public routes — including /login itself and the
+      // /api/auth endpoints the login flow depends on — just get the dead
+      // cookie cleared and render normally as logged-out: a stale session
+      // must never redirect a public page (that's how the /login self-
+      // redirect loop happened) or lock the user out of logging back in.
+      let res: NextResponse;
+      if (isAdmin || isProtected) {
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("reason", reason);
+        res = NextResponse.redirect(loginUrl);
+      } else {
+        res = applySecurityHeaders(NextResponse.next());
+      }
       expireSessionCookies(res);
       return res;
     }
-    if (reason) {
-      const response = applySecurityHeaders(NextResponse.next());
-      expireSessionCookies(response);
-      return response;
-    }
   }
-
-  const isAdmin = ADMIN.some((p) => pathname.startsWith(p));
-  const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
 
   if (isAdmin || isProtected) {
     const authenticated = !!session?.user;
