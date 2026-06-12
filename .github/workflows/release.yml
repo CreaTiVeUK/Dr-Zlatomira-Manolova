@@ -1,9 +1,12 @@
 name: Release
 
+# Gate releases on the CI workflow: only cut a version once CI has passed on
+# main. (Release commits are tagged [skip ci], so they never re-trigger CI or
+# this workflow — no release loop.)
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
 
 permissions:
   contents: write # to be able to publish a GitHub release
@@ -15,10 +18,14 @@ jobs:
   release:
     name: Semantic Release
     runs-on: ubuntu-latest
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0 # required for semantic-release to check commit history
           persist-credentials: false # required for semantic-release/git (we use a token)
 
