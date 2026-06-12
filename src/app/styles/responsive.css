@@ -152,7 +152,7 @@
   border: 1px solid var(--border-error);
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 1280px) {
   .nav-center {
     display: none;
   }

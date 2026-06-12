@@ -127,8 +127,9 @@
   align-items: center;
   justify-content: center;
   min-height: 42px;
-  padding: 0.7rem 0.95rem;
+  padding: 0.7rem 0.7rem;
   border-radius: 12px;
+  white-space: nowrap;
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 700;
