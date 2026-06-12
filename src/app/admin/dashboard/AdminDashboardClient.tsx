@@ -1028,11 +1028,15 @@ export default function AdminDashboardClient({
                     .admin-dashboard-search {
                         width: 100%;
                     }
-                    .admin-dashboard-metrics,
                     .admin-dashboard-bottom-grid,
                     .admin-quick-actions,
                     .admin-patient-grid {
                         grid-template-columns: 1fr;
+                    }
+                    /* metric cards are compact — two-up still reads well on
+                       tablets and large phones */
+                    .admin-dashboard-metrics {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
                     }
                     .admin-timeline-card {
                         grid-template-columns: 1fr;
@@ -1045,6 +1049,11 @@ export default function AdminDashboardClient({
                     }
                     .admin-dashboard-shell {
                         gap: 1rem;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .admin-dashboard-metrics {
+                        grid-template-columns: 1fr;
                     }
                 }
                 @media (max-width: 640px) {
