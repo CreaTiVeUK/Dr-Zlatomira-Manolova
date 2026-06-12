@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.2...v1.1.3) (2026-06-12)
+
+
+### Bug Fixes
+
+* **header:** account links move into an avatar dropdown — nav no longer overflows when logged in ([d043947](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d0439471ca4c095b537e911bce031aeaad24e790))
+
 ## [1.1.2](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.1...v1.1.2) (2026-06-11)
 
 
