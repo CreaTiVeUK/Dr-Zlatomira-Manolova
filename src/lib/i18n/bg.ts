@@ -538,6 +538,7 @@ export const bg: Dictionary = {
         dashboard: "ТАБЛО",
         appointments: "ЧАСОВЕ",
         messages: "СЪОБЩЕНИЯ",
+        profile: "ПРОФИЛ",
         logout: "ИЗХОД"
     },
     successPage: {

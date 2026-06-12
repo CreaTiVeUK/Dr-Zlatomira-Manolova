@@ -541,6 +541,7 @@ export const en = {
         dashboard: "DASHBOARD",
         appointments: "APPOINTMENTS",
         messages: "MESSAGES",
+        profile: "PROFILE",
         logout: "LOGOUT"
     },
     successPage: {

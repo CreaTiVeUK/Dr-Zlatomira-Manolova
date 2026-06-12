@@ -149,6 +149,7 @@
 }
 
 .user-menu {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -158,10 +159,89 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.45rem;
+  padding: 0.45rem 0.7rem 0.45rem 0.45rem;
   border-radius: 16px;
   background: color-mix(in srgb, var(--surface-card-strong) 72%, transparent 28%);
   border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.user-menu__profile:hover {
+  border-color: color-mix(in srgb, var(--primary-teal) 22%, transparent 78%);
+}
+
+.user-menu__chevron {
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.user-menu__chevron--open {
+  transform: rotate(180deg);
+}
+
+.user-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 80;
+  min-width: 13rem;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 18px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(18px);
+}
+
+.user-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.user-menu__item:hover {
+  background: color-mix(in srgb, var(--primary-teal) 9%, transparent 91%);
+  color: var(--primary-teal);
+}
+
+.user-menu__item--logout {
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 12px 12px;
+}
+
+.user-menu--inline {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.user-menu--inline a {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.user-menu--inline a:hover {
+  background: color-mix(in srgb, var(--primary-teal) 8%, transparent 92%);
+  color: var(--primary-teal);
 }
 
 .user-menu__avatar {

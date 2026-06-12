@@ -33,12 +33,6 @@ export default function Header({ user }: HeaderProps) {
         { href: "/contact", label: dict.header.nav.contact },
     ];
 
-    const utilityLink = user
-        ? user.role === "ADMIN"
-            ? { href: "/admin/dashboard", label: dict.userMenu.dashboard }
-            : { href: "/my-appointments", label: dict.userMenu.appointments }
-        : null;
-
     return (
         <>
             <div className="header-utility-bar">
@@ -94,16 +88,6 @@ export default function Header({ user }: HeaderProps) {
                                 {item.label}
                             </Link>
                         ))}
-                        {utilityLink ? (
-                            <Link href={utilityLink.href} aria-current={pathname === utilityLink.href ? "page" : undefined}>
-                                {utilityLink.label}
-                            </Link>
-                        ) : null}
-                        {user && user.role !== "ADMIN" ? (
-                            <Link href="/messages" aria-current={pathname === "/messages" ? "page" : undefined}>
-                                {dict.userMenu.messages}
-                            </Link>
-                        ) : null}
                     </nav>
 
                     <div className="header-actions">
@@ -127,18 +111,13 @@ export default function Header({ user }: HeaderProps) {
                                 {item.label}
                             </Link>
                         ))}
-                        {utilityLink ? (
-                            <Link href={utilityLink.href} onClick={() => setIsMenuOpen(false)}>
-                                {utilityLink.label}
-                            </Link>
-                        ) : null}
                         <div className="utility-controls" style={{ paddingTop: '0.25rem' }}>
                             <button onClick={toggleLanguage} className="lang-toggle" type="button">
                                 {language === 'en' ? 'BG / Български' : 'EN / English'}
                             </button>
                             <ThemeToggle />
                         </div>
-                        <UserMenu user={user} />
+                        <UserMenu user={user} inline />
                     </nav>
                 </div>
             </header>
