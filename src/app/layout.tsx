@@ -173,7 +173,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <Providers>
+        <Providers initialLanguage={lang}>
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>

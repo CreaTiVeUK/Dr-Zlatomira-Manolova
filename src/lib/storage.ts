@@ -2,10 +2,9 @@
  * Encrypted file storage with two interchangeable backends:
  *
  * - **Vercel Blob** (when BLOB_READ_WRITE_TOKEN is set) — required on Vercel,
- *   whose runtime filesystem is read-only. Files are AES-256-GCM encrypted
- *   BEFORE upload, so the unguessable-but-public blob URLs only ever expose
- *   ciphertext; plaintext is served exclusively through the authorising
- *   download route.
+ *   whose runtime filesystem is read-only. Blobs are PRIVATE (token-gated
+ *   reads via the SDK) and additionally AES-256-GCM encrypted BEFORE upload;
+ *   plaintext is served exclusively through the authorising download route.
  * - **Local filesystem** (`<cwd>/uploads`) — dev, CI, and the Docker stack.
  *
  * `fileUrl` values stored in the database are either a blob URL (https://…)
@@ -26,7 +25,8 @@ const ALGORITHM = "aes-256-gcm";
 // Magic bytes identifying an encrypted file written by saveEncryptedFile.
 const ENCRYPTED_MAGIC = Buffer.from("ENCI");
 
-const BLOB_HOST_SUFFIX = ".public.blob.vercel-storage.com";
+// Covers both public and private store hostnames (*.public.… / *.private.…)
+const BLOB_HOST_SUFFIX = ".blob.vercel-storage.com";
 
 const ALLOWED_MIME_TYPES = new Set([
     "application/pdf",
@@ -139,7 +139,7 @@ async function storeBuffer(data: Buffer, folderName: string, originalName: strin
     if (blobStorageEnabled()) {
         const { put } = await import("@vercel/blob");
         const blob = await put(`${folder}/${filename}`, data, {
-            access: "public", // ciphertext only — plaintext never leaves the download route
+            access: "private", // token-gated reads; content is ciphertext anyway
             contentType: "application/octet-stream",
             addRandomSuffix: false,
         });
@@ -191,10 +191,14 @@ export async function readEncryptedFile(fileUrl: string): Promise<Buffer> {
 
     let data: Buffer;
     if (isRemoteFileUrl(fileUrl)) {
-        const res = await fetch(fileUrl);
-        if (res.status === 404) throw new StoredFileNotFoundError();
-        if (!res.ok) throw new Error(`Blob fetch failed with status ${res.status}`);
-        data = Buffer.from(await res.arrayBuffer());
+        // SDK get() handles private-blob authentication with the store token
+        const { get } = await import("@vercel/blob");
+        const result = await get(fileUrl, { access: "private" });
+        if (result === null) throw new StoredFileNotFoundError();
+        if (result.statusCode !== 200 || !result.stream) {
+            throw new Error(`Blob fetch returned status ${result.statusCode}`);
+        }
+        data = Buffer.from(await new Response(result.stream).arrayBuffer());
     } else {
         try {
             data = await readFile(fileUrl);

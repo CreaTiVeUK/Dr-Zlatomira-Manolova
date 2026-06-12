@@ -9,7 +9,9 @@ test.describe('Authentication & Access Control', () => {
 
         // Wait for potential redirect
         await page.waitForURL(/admin\/dashboard/);
-        await expect(page.getByRole('heading', { level: 1, name: 'Practice Control Center' })).toBeVisible();
+        // The dashboard hero shows the signed-in admin's name as the H1
+        await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+        await expect(page.getByRole('heading', { level: 1 }).first()).toContainText('Test Admin');
     });
 
     test('Patient should reach home but not admin dashboard', async ({ page }) => {
@@ -31,7 +33,7 @@ test.describe('Authentication & Access Control', () => {
         await page.fill('input[name="password"]', 'wrongpass');
         await page.click('button:has-text("Login")');
 
-        const errorLoc = page.getByText(/Invalid credentials|Security verification failed/);
+        const errorLoc = page.getByText(/Invalid email or password|Невалиден имейл или парола/);
         await expect(errorLoc.first()).toBeVisible({ timeout: 15000 });
     });
 });

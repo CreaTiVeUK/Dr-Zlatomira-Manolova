@@ -103,7 +103,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/auth/providers").then(r => r.json()).then(setAvailableProviders).catch(() => {});
+    fetch("/api/available-providers").then(r => r.json()).then(setAvailableProviders).catch(() => {});
   }, []);
 
   // Tick the lockout countdown every second
@@ -131,21 +131,26 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
+        // NextAuth v5 surfaces our custom CredentialsSignin `code`
+        // (email_not_verified, totp_required, account_locked, …) in
+        // result.code; result.error is the generic "CredentialsSignin".
+        // Prefer the specific code so the user sees the right guidance.
+        const reason = (result as { code?: string }).code || result.error;
         setError(
-          ERROR_MESSAGES[result.error] ??
+          ERROR_MESSAGES[reason] ??
           (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
         );
         setResendState("idle");
 
         // Server told us a TOTP is required or the one we sent was wrong.
-        if (result.error === "totp_required" || result.error === "totp_invalid") {
+        if (reason === "totp_required" || reason === "totp_invalid") {
           setTotpRequired(true);
           // Clear only the code, not the password, so the user can retry.
           setTotp("");
         }
 
         // If the account is locked, query remaining time so we can show a countdown
-        if (result.error === "account_locked" || result.error === "AccountLocked") {
+        if (reason === "account_locked" || reason === "AccountLocked") {
           try {
             const res = await fetch("/api/auth/lockout-status", {
               method: "POST",

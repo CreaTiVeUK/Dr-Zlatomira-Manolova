@@ -12,6 +12,24 @@ export default defineConfig({
         baseURL: 'http://localhost:3000',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
+        // The product defaults to Bulgarian (primary audience); the suite is
+        // written against English copy, so pin the language cookie. Tests
+        // that exercise the BG default override storageState locally.
+        storageState: {
+            cookies: [
+                {
+                    name: 'language',
+                    value: 'en',
+                    domain: 'localhost',
+                    path: '/',
+                    expires: -1,
+                    httpOnly: false,
+                    secure: false,
+                    sameSite: 'Strict' as const,
+                },
+            ],
+            origins: [],
+        },
     },
     projects: [
         {

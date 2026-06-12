@@ -21,10 +21,12 @@ test.describe('My appointments', () => {
         ).toBeVisible({ timeout: 15000 });
     });
 
-    test('Unauthenticated visit shows login prompt', async ({ page }) => {
+    test('Unauthenticated visit redirects to the login page', async ({ page }) => {
         await page.goto('/my-appointments');
+        // The proxy redirects unauthenticated visitors to /login
+        await page.waitForURL(/\/login/, { timeout: 15000 });
         await expect(
-            page.getByRole('button', { name: /Log In|Влезте/i })
+            page.getByRole('button', { name: /Login|Вход/i })
         ).toBeVisible({ timeout: 15000 });
     });
 });

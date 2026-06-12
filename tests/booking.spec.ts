@@ -18,8 +18,8 @@ test.describe('Booking Flow', () => {
         await page.click('button:has-text("Specialized Consultation")');
 
         // Select Tomorrow to ensure slots are available regardless of CI run time
-        // The date buttons are in a flex container with overflow-x: auto
-        const nextDay = page.locator('div[style*="overflow-x: auto"] button').nth(1);
+        // (date pills live in the .date-strip container)
+        const nextDay = page.locator('.date-strip button').nth(1);
         await nextDay.click();
 
         // Pick first available slot by time pattern (HH:mm)

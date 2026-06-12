@@ -23,8 +23,10 @@ test.describe('Registration funnel', () => {
         const password = 'Sup3r#Secure!42x';
 
         try {
-            // 1. Register
+            // 1. Register. Unique X-Forwarded-For so the per-IP register rate
+            // limit can't be exhausted by other tests / retries sharing "unknown".
             const registerRes = await page.request.post('/api/register', {
+                headers: { 'x-forwarded-for': `10.0.${Date.now() % 256}.${(Date.now() >> 8) % 256}` },
                 data: { name: 'E2E Funnel', email, password },
             });
             expect(registerRes.status()).toBe(201);
@@ -52,7 +54,12 @@ test.describe('Registration funnel', () => {
             await page.click('button:has-text("Login")');
             await page.waitForURL((url: URL) => ['/', '/book'].includes(url.pathname), { timeout: 15000 });
         } finally {
-            await prisma.user.deleteMany({ where: { email } });
+            // Audit logs reference the user — clear them first (FK constraint)
+            const created = await prisma.user.findUnique({ where: { email }, select: { id: true } });
+            if (created) {
+                await prisma.auditLog.deleteMany({ where: { userId: created.id } });
+                await prisma.user.delete({ where: { id: created.id } });
+            }
             await prisma.verificationToken.deleteMany({ where: { identifier: email } });
             await prisma.$disconnect();
         }

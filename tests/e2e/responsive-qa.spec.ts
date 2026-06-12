@@ -68,7 +68,7 @@ for (const device of devices) {
         await page.goto(route);
         await dismissCookieBannerIfNeeded(page);
         await expect(page.locator("main.site-main")).toBeVisible();
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("load");
 
         if (route === "/") {
           await openMobileMenuIfNeeded(page);
@@ -93,13 +93,13 @@ for (const device of devices) {
       for (const route of patientRoutes) {
         await page.goto(route);
         await expect(page.locator("main.site-main")).toBeVisible();
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("load");
         await expect(page).toHaveURL(new RegExp(`${route.replace("/", "\\/")}(\\?|$)`), { timeout: 10000 });
         await expectNoHorizontalOverflow(page);
       }
 
       await page.goto("/profile");
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
       await page.screenshot({
         path: testInfo.outputPath(`${device.name}-patient-profile.png`),
         fullPage: true,
@@ -114,13 +114,13 @@ for (const device of devices) {
       for (const route of adminRoutes) {
         await page.goto(route);
         await expect(page.locator("body")).toContainText(/admin|patient|session|appointment/i);
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("load");
         await expect(page).toHaveURL(new RegExp(`${route.replace("/", "\\/")}(\\?|$)`), { timeout: 10000 });
         await expectNoHorizontalOverflow(page);
       }
 
       await page.goto("/admin/dashboard");
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
       await page.screenshot({
         path: testInfo.outputPath(`${device.name}-admin-dashboard.png`),
         fullPage: true,

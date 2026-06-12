@@ -62,6 +62,7 @@ describe("storage (filesystem driver)", () => {
     it("only accepts blob URLs and uploads-dir paths as stored locations", () => {
         expect(isAllowedStoredFileUrl(join(process.cwd(), "uploads", "docs", "a.pdf"))).toBe(true);
         expect(isAllowedStoredFileUrl("https://abc123.public.blob.vercel-storage.com/docs/a.pdf")).toBe(true);
+        expect(isAllowedStoredFileUrl("https://abc123.private.blob.vercel-storage.com/docs/a.pdf")).toBe(true);
 
         expect(isAllowedStoredFileUrl("/etc/passwd")).toBe(false);
         expect(isAllowedStoredFileUrl(join(process.cwd(), "uploads", "..", ".env"))).toBe(false);

@@ -5,10 +5,10 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 import { ThemeProvider } from "./ThemeProvider";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, initialLanguage }: { children: React.ReactNode; initialLanguage?: "en" | "bg" }) {
     return (
         <SessionProvider>
-            <LanguageProvider>
+            <LanguageProvider initialLanguage={initialLanguage}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"

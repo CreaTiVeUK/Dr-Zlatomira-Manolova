@@ -1,82 +1,72 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Localization & Internationalization', () => {
+/**
+ * The product default is Bulgarian (primary audience) — server, <html lang>,
+ * and client provider must all agree (they used to disagree, which made every
+ * page flash English before settling on Bulgarian).
+ *
+ * The rest of the suite pins language=en via storageState in
+ * playwright.config.ts; the default-language tests below clear it.
+ */
 
-    test('should default to English and contain no VISIBLE Cyrillic', async ({ page }) => {
+test.describe('Default language (no cookie)', () => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+
+    test('defaults to Bulgarian with no English flash', async ({ page }) => {
         await page.goto('/');
 
-        // Header verification
-        await expect(page.locator('.logo-text')).toContainText('Dr. Zlatomira Manolova');
+        await expect(page.locator('html')).toHaveAttribute('lang', 'bg');
+        await expect(page.locator('h1').first()).toContainText('Детски лекар в Пловдив');
 
-        // Hero H1 verification
-        await expect(page.locator('h1').first()).toContainText('Elite Medical Care');
+        // The header settles in Bulgarian — and must not be left in English
+        // by a late-arriving client dictionary
+        await expect(page.locator('.logo-text').first()).toContainText('Д-р Златомира Манолова');
 
-        // Subtitle verification
-        await expect(page.getByText('Dedicated to Children.').first()).toBeVisible();
-
-        // Strict Check: Ensure specific Bulgarian strings are NOT present in the visible body text
         const bodyText = await page.evaluate(() => document.body.innerText);
-        expect(bodyText).not.toContain('Елитна медицинска помощ');
-        expect(bodyText).not.toContain('Специализирана педиатрична помощ');
+        expect(bodyText).not.toContain('Paediatrician in Plovdiv');
     });
 
-    test('should switch to Bulgarian and display Cyrillic', async ({ page }) => {
+    test('switches to English via the header toggle', async ({ page }) => {
         await page.goto('/');
 
-        // Click language switcher
-        await page.getByTitle('Switch to Bulgarian').click();
+        // In Bulgarian the toggle offers English
+        await page.getByTitle('Switch to English').click();
+        await expect(page.getByTitle('Switch to Bulgarian')).toBeVisible();
 
-        // Wait for change to reflect
-        await expect(page.getByTitle('Switch to English')).toBeVisible();
-
-        // Expect Bulgarian text
-        await expect(page.locator('.logo-text')).toContainText('Д-р Златомира Манолова');
-        await expect(page.locator('h1').first()).toContainText('Елитна медицинска помощ');
+        await expect(page.locator('h1').first()).toContainText('Paediatrician in Plovdiv');
+        await expect(page.locator('.logo-text').first()).toContainText('Dr. Zlatomira Manolova');
     });
 
-    test('should persist language across navigation', async ({ page }) => {
+    test('language choice persists across navigation', async ({ page }) => {
         await page.goto('/');
-        await page.getByTitle('Switch to Bulgarian').click();
+        await page.getByTitle('Switch to English').click();
+        await expect(page.getByTitle('Switch to Bulgarian')).toBeVisible();
 
-        // Wait for change
-        await expect(page.getByTitle('Switch to English')).toBeVisible();
-
-        // Check Services link text
         const servicesLink = page.locator('.nav-center a[href="/services"]');
-        await expect(servicesLink).toContainText('УСЛУГИ');
-
+        await expect(servicesLink).toContainText('SERVICES');
         await servicesLink.click();
 
         await expect(page).toHaveURL(/.*services/);
-        // Verify Services page H1 in BG
-        await expect(page.locator('h1')).toContainText('Нашите педиатрични услуги');
+        await expect(page.locator('h1').first()).toContainText('Our Pediatric Services');
     });
+});
 
-    test('should verify Contact page localization', async ({ page }) => {
+test.describe('English (suite default cookie)', () => {
+    test('Contact page renders English and can switch to Bulgarian', async ({ page }) => {
         await page.goto('/contact');
-        // Default EN
-        await expect(page.locator('h1')).toContainText('Book an Appointment');
+        await expect(page.locator('h1').first()).toContainText('Book an Appointment');
 
-        // Switch
         await page.getByTitle('Switch to Bulgarian').click();
-
-        // Wait for change
         await expect(page.getByTitle('Switch to English')).toBeVisible();
-
-        await expect(page.locator('h1')).toContainText('Запишете час');
+        await expect(page.locator('h1').first()).toContainText('Запишете час');
     });
 
-    test('should verify Login page localization', async ({ page }) => {
+    test('Login page renders English and can switch to Bulgarian', async ({ page }) => {
         await page.goto('/login');
-        // Default EN
-        await expect(page.getByRole('heading', { level: 2 })).toContainText('Login');
+        await expect(page.getByRole('heading', { level: 1 }).first()).toContainText('Login');
 
-        // Switch
         await page.getByTitle('Switch to Bulgarian').click();
-
-        // Wait for change
         await expect(page.getByTitle('Switch to English')).toBeVisible();
-
-        await expect(page.getByRole('heading', { level: 2 })).toContainText('Вход');
+        await expect(page.getByRole('heading', { level: 1 }).first()).toContainText('Вход');
     });
 });

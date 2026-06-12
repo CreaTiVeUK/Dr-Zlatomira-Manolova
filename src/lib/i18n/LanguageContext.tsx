@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import type { Dictionary } from "./en";
 import { en } from "./en";
+import { bg } from "./bg";
 import { useRouter } from "next/navigation";
 
 type Language = "en" | "bg";
@@ -16,15 +17,19 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-function getInitialLanguage(): Language {
-    if (typeof window === "undefined") return "bg";
+function dictFor(lang: Language): Dictionary {
+    return lang === "en" ? en : bg;
+}
+
+function getClientLanguage(): Language | null {
+    if (typeof window === "undefined") return null;
     const cookieMatch = document.cookie.match(/(?:^|;\s*)language=([^;]*)/);
     if (cookieMatch && (cookieMatch[1] === "en" || cookieMatch[1] === "bg")) {
         return cookieMatch[1] as Language;
     }
     const saved = localStorage.getItem("language");
     if (saved === "en" || saved === "bg") return saved as Language;
-    return "bg"; // default: Bulgarian — primary audience
+    return null;
 }
 
 function persist(lang: Language) {
@@ -33,19 +38,41 @@ function persist(lang: Language) {
     document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Strict${secure ? "; Secure" : ""}`;
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>(getInitialLanguage);
-    const [dict, setDict] = useState<Dictionary>(en);
+export function LanguageProvider({
+    children,
+    initialLanguage,
+}: {
+    children: React.ReactNode;
+    /** Cookie-derived language resolved on the SERVER — keeps SSR markup and
+     *  hydration in agreement. Default: Bulgarian (primary audience). */
+    initialLanguage?: Language;
+}) {
+    // The server-resolved value wins so server- and client-rendered content
+    // agree; the client sniff only covers legacy localStorage-only visitors.
+    const [language, setLanguageState] = useState<Language>(
+        () => initialLanguage ?? getClientLanguage() ?? "bg"
+    );
+    // Both dictionaries are imported statically so the initial render is
+    // already in the right language — the previous lazy import made every
+    // page flash English before settling on Bulgarian.
+    const [dict, setDict] = useState<Dictionary>(() => dictFor(initialLanguage ?? getClientLanguage() ?? "bg"));
     const router = useRouter();
 
-    // Lazy-load the inactive language bundle
     useEffect(() => {
-        if (language === "en") {
-            setDict(en);
-        } else {
-            import("./bg").then((m) => setDict(m.bg));
-        }
+        setDict(dictFor(language));
     }, [language]);
+
+    // Legacy visitors who chose a language before the cookie existed have it
+    // only in localStorage — honour it once and persist the cookie.
+    useEffect(() => {
+        const clientPref = getClientLanguage();
+        if (clientPref && clientPref !== language) {
+            setLanguageState(clientPref);
+            persist(clientPref);
+            router.refresh();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const toggleLanguage = () => {
         const next = language === "en" ? "bg" : "en";

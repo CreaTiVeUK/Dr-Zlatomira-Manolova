@@ -41,3 +41,7 @@ uploads/
 
 # local Claude Code settings
 .claude/
+
+# Playwright artifacts
+test-results/
+playwright-report/
