@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import {
     Bar,
     BarChart,
@@ -15,6 +16,8 @@ import {
 type Monthly = { key: string; label: string; visits: number; revenue: number };
 type Dow = { label: string; visits: number };
 
+const emptySubscribe = () => () => {};
+
 export default function AnalyticsCharts({
     monthly,
     byDayOfWeek,
@@ -29,6 +32,11 @@ export default function AnalyticsCharts({
         dowTitle: string;
     };
 }) {
+    // ResponsiveContainer measures its parent; during SSR/hydration there is
+    // nothing to measure yet and it logs width(-1)/height(-1). Render charts
+    // client-side only, same as the dashboard.
+    const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+
     return (
         <div className="admin-grid admin-grid--two" style={{ marginTop: "1.5rem" }}>
             <div className="admin-panel">
@@ -36,6 +44,7 @@ export default function AnalyticsCharts({
                     <strong style={{ fontFamily: "var(--font-heading)" }}>{labels.monthlyTitle}</strong>
                 </div>
                 <div className="admin-panel__body" style={{ height: 320 }}>
+                    {mounted ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={monthly}>
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
@@ -47,6 +56,7 @@ export default function AnalyticsCharts({
                             <Line yAxisId="right" type="monotone" dataKey="revenue" name={labels.monthlyRevenue} stroke="var(--accent-gold)" strokeWidth={2} dot={{ r: 3 }} />
                         </LineChart>
                     </ResponsiveContainer>
+                    ) : null}
                 </div>
             </div>
 
@@ -55,6 +65,7 @@ export default function AnalyticsCharts({
                     <strong style={{ fontFamily: "var(--font-heading)" }}>{labels.dowTitle}</strong>
                 </div>
                 <div className="admin-panel__body" style={{ height: 320 }}>
+                    {mounted ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={byDayOfWeek}>
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
@@ -64,6 +75,7 @@ export default function AnalyticsCharts({
                             <Bar dataKey="visits" fill="var(--primary-teal)" radius={[6, 6, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
+                    ) : null}
                 </div>
             </div>
         </div>

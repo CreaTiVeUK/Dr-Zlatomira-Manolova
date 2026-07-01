@@ -23,6 +23,8 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
         micDenied: "Достъпът до микрофона е отказан или възникна грешка.",
         processingFailed: "Обработката не бе успешна",
         processingError: "Възникна грешка по време на обработката.",
+        emptyRecording: "Записът е празен — не бяха записани аудио данни. Опитайте отново.",
+        playbackFailed: "Записът не може да бъде възпроизведен в този браузър. Можете да го изпратите за обработка или да запишете отново.",
         discard: "Изтрий и запиши отново",
         reset: "Нулирай",
       }
@@ -30,6 +32,8 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
         micDenied: "Microphone access denied or an error occurred.",
         processingFailed: "Processing failed",
         processingError: "An error occurred during processing.",
+        emptyRecording: "The recording is empty — no audio data was captured. Please try again.",
+        playbackFailed: "This recording can't be played back in this browser. You can still submit it for processing, or record again.",
         discard: "Discard and retake",
         reset: "Reset",
       };
@@ -58,7 +62,15 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      // Chrome/Firefox record webm/opus; Safari (macOS + every iOS browser)
+      // records audio/mp4 and cannot play webm at all. Hardcoding webm made
+      // Safari label its mp4 data as webm and refuse its own recording with
+      // NotSupportedError. Ask for a supported container, then trust what the
+      // recorder says it actually produced.
+      const preferred = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find(
+        (t) => typeof MediaRecorder.isTypeSupported === "function" && MediaRecorder.isTypeSupported(t)
+      );
+      const mediaRecorder = preferred ? new MediaRecorder(stream, { mimeType: preferred }) : new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
@@ -69,7 +81,15 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        if (audioChunksRef.current.length === 0) {
+          setStatus("error");
+          setErrorMessage(copy.emptyRecording);
+          return;
+        }
+        // Strip any ";codecs=..." suffix — the upload validator matches MIME
+        // types exactly, and playback only needs the container type.
+        const type = (mediaRecorder.mimeType || preferred || "audio/webm").split(";")[0];
+        const blob = new Blob(audioChunksRef.current, { type });
         setAudioBlob(blob);
         setAudioUrl(URL.createObjectURL(blob));
         setStatus("stopped");
@@ -117,8 +137,12 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
 
     setStatus("uploading");
     try {
+      const ext =
+        { "audio/webm": "webm", "audio/mp4": "mp4", "audio/ogg": "ogg", "audio/mpeg": "mp3", "audio/wav": "wav" }[
+          audioBlob.type.split(";")[0]
+        ] ?? "webm";
       const formData = new FormData();
-      formData.append("file", audioBlob, `session-${Date.now()}.webm`);
+      formData.append("file", audioBlob, `session-${Date.now()}.${ext}`);
 
       setStatus("processing");
       const res = await fetch(`/api/admin/users/${userId}/sessions`, {
@@ -179,7 +203,19 @@ export default function AudioRecorder({ userId }: AudioRecorderProps) {
       {status === "stopped" ? (
         <div className="stack-md">
           <div className="audio-recorder__panel">
-            <audio ref={audioRef} src={audioUrl || ""} onEnded={() => setIsPlaying(false)} className="hidden" />
+            {audioUrl ? (
+              <audio
+                ref={audioRef}
+                src={audioUrl}
+                onEnded={() => setIsPlaying(false)}
+                onError={() => {
+                  setIsPlaying(false);
+                  setStatus("error");
+                  setErrorMessage(copy.playbackFailed);
+                }}
+                className="hidden"
+              />
+            ) : null}
             <div className="audio-recorder__playback">
               <div className="btn-group">
                 <button onClick={togglePlayback} className="btn btn-outline" type="button">
