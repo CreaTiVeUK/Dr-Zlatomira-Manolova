@@ -7,6 +7,7 @@
  */
 
 import type { Ratelimit as RatelimitType } from "@upstash/ratelimit";
+import { withRedisFallback, REDIS_RETRY } from "@/lib/redis-guard";
 
 // ─── In-memory fallback ────────────────────────────────────────────────────────
 
@@ -65,6 +66,7 @@ async function upstashRateLimit(
             redis: new Redis({
                 url: process.env.UPSTASH_REDIS_REST_URL!,
                 token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+                retry: REDIS_RETRY,
             }),
             limiter: Ratelimit.slidingWindow(limit, `${windowSeconds} s`),
             analytics: false,
@@ -90,7 +92,14 @@ export async function rateLimit(
     windowMs: number = 60_000
 ): Promise<{ success: boolean; remaining: number }> {
     if (useRedis) {
-        return upstashRateLimit(ip, limit, windowMs);
+        // A Redis outage must not 500 every rate-limited route. Degrade to the
+        // per-instance counter — weaker (an attacker can spread attempts across
+        // instances) but far better than the whole API returning 500.
+        return withRedisFallback(
+            "rate-limit",
+            () => upstashRateLimit(ip, limit, windowMs),
+            () => memoryRateLimit(ip, limit, windowMs)
+        );
     }
     if (!warnedAboutRedis && process.env.NODE_ENV === "production") {
         warnedAboutRedis = true;

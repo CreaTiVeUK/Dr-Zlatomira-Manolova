@@ -16,7 +16,15 @@
  * fine for single-process dev, but on multi-instance deployments (Vercel) the
  * fallback cannot revoke anything across instances — env.ts therefore requires
  * the Upstash variables in production.
+ *
+ * Every Redis call goes through withRedisFallback: if the store is unreachable
+ * the call degrades to the process-local structures below rather than throwing.
+ * The read paths deliberately fail *open* — an unreachable blocklist must not
+ * sign every user out — so revocation is best-effort during an outage. See
+ * redis-guard.ts.
  */
+
+import { withRedisFallback, REDIS_RETRY } from "@/lib/redis-guard";
 
 /** Maximum JWT session lifetime. Used for session.maxAge in the NextAuth
  *  config and as the TTL for revocation entries so they outlive any token
@@ -44,6 +52,7 @@ async function getRedisClient(): Promise<import("@upstash/redis").Redis> {
     _redisClient = new Redis({
         url: process.env.UPSTASH_REDIS_REST_URL!,
         token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+        retry: REDIS_RETRY,
     });
     return _redisClient;
 }
@@ -74,12 +83,21 @@ function warnIfMemoryFallback(): void {
  */
 export async function blockSession(jti: string, ttlSeconds: number = SESSION_MAX_AGE_SECONDS): Promise<void> {
     if (useRedis) {
-        const redis = await getRedisClient();
-        await redis.set(`${BLOCKLIST_PREFIX}${jti}`, "1", { ex: ttlSeconds });
-    } else {
-        warnIfMemoryFallback();
-        memoryBlocklist.add(jti);
+        await withRedisFallback(
+            "blockSession",
+            async () => {
+                const redis = await getRedisClient();
+                await redis.set(`${BLOCKLIST_PREFIX}${jti}`, "1", { ex: ttlSeconds });
+            },
+            // Best effort: block it on this instance. The caller clears the
+            // cookie regardless, so the user is still logged out here; what is
+            // lost is cross-instance replay protection for a stolen token.
+            () => { memoryBlocklist.add(jti); }
+        );
+        return;
     }
+    warnIfMemoryFallback();
+    memoryBlocklist.add(jti);
 }
 
 /**
@@ -87,9 +105,17 @@ export async function blockSession(jti: string, ttlSeconds: number = SESSION_MAX
  */
 export async function isSessionBlocked(jti: string): Promise<boolean> {
     if (useRedis) {
-        const redis = await getRedisClient();
-        const val = await redis.get(`${BLOCKLIST_PREFIX}${jti}`);
-        return val !== null;
+        return withRedisFallback(
+            "isSessionBlocked",
+            async () => {
+                const redis = await getRedisClient();
+                const val = await redis.get(`${BLOCKLIST_PREFIX}${jti}`);
+                return val !== null;
+            },
+            // Fail open. Treating an unreachable blocklist as "everything is
+            // revoked" would sign every user out and break sign-in entirely.
+            () => memoryBlocklist.has(jti)
+        );
     }
     return memoryBlocklist.has(jti);
 }
@@ -102,31 +128,25 @@ export async function isSessionBlocked(jti: string): Promise<boolean> {
 export async function revokeAllUserSessions(userId: string, ttlSeconds: number = SESSION_MAX_AGE_SECONDS): Promise<void> {
     const cutoff = Date.now();
     if (useRedis) {
-        const redis = await getRedisClient();
-        await redis.set(`${USER_REVOKED_PREFIX}${userId}`, String(cutoff), { ex: ttlSeconds });
-    } else {
-        warnIfMemoryFallback();
-        memoryUserRevocations.set(userId, cutoff);
+        await withRedisFallback(
+            "revokeAllUserSessions",
+            async () => {
+                const redis = await getRedisClient();
+                await redis.set(`${USER_REVOKED_PREFIX}${userId}`, String(cutoff), { ex: ttlSeconds });
+            },
+            () => { memoryUserRevocations.set(userId, cutoff); }
+        );
+        return;
     }
+    warnIfMemoryFallback();
+    memoryUserRevocations.set(userId, cutoff);
 }
 
 // ─── Single-use claims ────────────────────────────────────────────────────────
 
 const memoryClaims = new Map<string, number>(); // key → expiry epoch ms
 
-/**
- * Atomically claim a key for single use (Redis SET NX). Returns true on the
- * first claim and false for any repeat within the TTL. Used for TOTP replay
- * protection: a verified code's time-step counter is claimed so the same
- * code cannot authenticate twice.
- */
-export async function claimOnce(key: string, ttlSeconds: number): Promise<boolean> {
-    if (useRedis) {
-        const redis = await getRedisClient();
-        const result = await redis.set(`claim:${key}`, "1", { nx: true, ex: ttlSeconds });
-        return result === "OK";
-    }
-    warnIfMemoryFallback();
+function memoryClaimOnce(key: string, ttlSeconds: number): boolean {
     const now = Date.now();
     const existing = memoryClaims.get(key);
     if (existing !== undefined && existing > now) return false;
@@ -141,15 +161,49 @@ export async function claimOnce(key: string, ttlSeconds: number): Promise<boolea
 }
 
 /**
+ * Atomically claim a key for single use (Redis SET NX). Returns true on the
+ * first claim and false for any repeat within the TTL. Used for TOTP replay
+ * protection: a verified code's time-step counter is claimed so the same
+ * code cannot authenticate twice.
+ */
+export async function claimOnce(key: string, ttlSeconds: number): Promise<boolean> {
+    if (useRedis) {
+        return withRedisFallback(
+            "claimOnce",
+            async () => {
+                const redis = await getRedisClient();
+                const result = await redis.set(`claim:${key}`, "1", { nx: true, ex: ttlSeconds });
+                return result === "OK";
+            },
+            // Fail open. Refusing every claim would block all TOTP logins; the
+            // replay window this reopens is bounded by the claim's own TTL.
+            () => memoryClaimOnce(key, ttlSeconds)
+        );
+    }
+    warnIfMemoryFallback();
+    return memoryClaimOnce(key, ttlSeconds);
+}
+
+/**
  * Returns true if all of this user's sessions issued at or before
  * `issuedAtMs` have been revoked.
  */
 export async function isUserRevoked(userId: string, issuedAtMs: number): Promise<boolean> {
     if (useRedis) {
-        const redis = await getRedisClient();
-        const val = await redis.get(`${USER_REVOKED_PREFIX}${userId}`);
-        if (val === null || val === undefined) return false;
-        return issuedAtMs <= Number(val);
+        return withRedisFallback(
+            "isUserRevoked",
+            async () => {
+                const redis = await getRedisClient();
+                const val = await redis.get(`${USER_REVOKED_PREFIX}${userId}`);
+                if (val === null || val === undefined) return false;
+                return issuedAtMs <= Number(val);
+            },
+            // Fail open, as isSessionBlocked does.
+            () => {
+                const cutoff = memoryUserRevocations.get(userId);
+                return cutoff !== undefined && issuedAtMs <= cutoff;
+            }
+        );
     }
     const cutoff = memoryUserRevocations.get(userId);
     return cutoff !== undefined && issuedAtMs <= cutoff;

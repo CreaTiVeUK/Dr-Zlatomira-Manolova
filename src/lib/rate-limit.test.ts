@@ -66,3 +66,45 @@ describe('rateLimit (in-memory fallback)', () => {
         expect(reset.remaining).toBe(0);
     });
 });
+
+describe('rateLimit (Redis unreachable)', () => {
+    beforeEach(() => {
+        vi.unstubAllEnvs();
+        vi.stubEnv('UPSTASH_REDIS_REST_URL', 'https://dead-host.upstash.io');
+        vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', 'token');
+        vi.resetModules();
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        vi.unstubAllEnvs();
+        vi.restoreAllMocks();
+        vi.doUnmock('@upstash/ratelimit');
+    });
+
+    // Regression: on 2026-08-25 the Upstash database behind the production URL
+    // stopped resolving and this rejection propagated out of every route that
+    // rate-limits — availability, booking, contact, register, credential login
+    // — turning a dead cache into a site-wide 500.
+    it('degrades to the in-memory limiter instead of throwing', async () => {
+        vi.doMock('@upstash/ratelimit', () => ({
+            Ratelimit: class {
+                static slidingWindow() { return {}; }
+                async limit(): Promise<never> {
+                    throw Object.assign(new Error('fetch failed'), { code: 'ENOTFOUND' });
+                }
+            },
+        }));
+
+        const { rateLimit } = await import('./rate-limit');
+
+        const first = await rateLimit('9.9.9.9', 2, 60_000);
+        expect(first).toEqual({ success: true, remaining: 1 });
+
+        // And the fallback still limits — it does not fail fully open.
+        await rateLimit('9.9.9.9', 2, 60_000);
+        const blocked = await rateLimit('9.9.9.9', 2, 60_000);
+        expect(blocked.success).toBe(false);
+    });
+});

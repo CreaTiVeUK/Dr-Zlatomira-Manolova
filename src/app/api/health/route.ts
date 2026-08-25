@@ -11,6 +11,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { features } from "@/lib/env";
+import { redisCircuitOpen, REDIS_RETRY } from "@/lib/redis-guard";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,9 @@ interface CheckResult {
     ok: boolean;
     latencyMs?: number;
     error?: string;
+    /** True when the app has stopped calling Redis and is serving from the
+     *  per-instance fallbacks — rate limits and revocation are degraded. */
+    circuitOpen?: boolean;
 }
 
 async function checkDatabase(): Promise<CheckResult> {
@@ -41,12 +45,13 @@ async function checkRedis(): Promise<CheckResult> {
         const redis = new Redis({
             url: process.env.UPSTASH_REDIS_REST_URL!,
             token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+            retry: REDIS_RETRY,
         });
         await redis.ping();
         return { ok: true, latencyMs: Date.now() - start };
     } catch (err) {
         console.error("[health] redis check failed:", err);
-        return { ok: false, error: "unavailable" };
+        return { ok: false, error: "unavailable", circuitOpen: redisCircuitOpen() };
     }
 }
 
