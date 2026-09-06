@@ -34,7 +34,7 @@ export async function sendEmail(to: string, template: EmailTemplate) {
     try {
         const resend = new Resend(process.env.RESEND_API_KEY);
         const { data, error } = await resend.emails.send({
-            from: `Dr. Manolova Pediatrics <${fromAddress}>`,
+            from: `Dr. Manolova-Peneva Pediatrics <${fromAddress}>`,
             to: [to],
             subject: template.subject,
             text: template.body
@@ -54,31 +54,31 @@ export async function sendEmail(to: string, template: EmailTemplate) {
 
 export const EMAIL_TEMPLATES = {
     CONFIRMATION: (patientName: string, date: string, time: string) => ({
-        subject: `Appointment Confirmed: Dr. Manolova Pediatrics`,
-        body: `Dear ${patientName},\n\nYour appointment with Dr. Zlatomira Manolova has been successfully scheduled.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+        subject: `Appointment Confirmed: Dr. Manolova-Peneva Pediatrics`,
+        body: `Dear ${patientName},\n\nYour appointment with Dr. Zlatomira Manolova-Peneva has been successfully scheduled.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
     CANCELLATION: (patientName: string, date: string) => ({
-        subject: `Appointment Cancelled: Dr. Manolova Pediatrics`,
-        body: `Dear ${patientName},\n\nThis is to confirm that your appointment on ${date} has been cancelled.\n\nIf you did not request this, please contact us immediately.\n\nDr. Manolova Pediatrics Team`
+        subject: `Appointment Cancelled: Dr. Manolova-Peneva Pediatrics`,
+        body: `Dear ${patientName},\n\nThis is to confirm that your appointment on ${date} has been cancelled.\n\nIf you did not request this, please contact us immediately.\n\nDr. Manolova-Peneva Pediatrics Team`
     }),
     RESCHEDULE: (patientName: string, oldDate: string, newDate: string, newTime: string) => ({
-        subject: `Appointment Rescheduled: Dr. Manolova Pediatrics`,
-        body: `Dear ${patientName},\n\nYour appointment originally scheduled for ${oldDate} has been rescheduled.\n\nNew date: ${newDate}\nNew time: ${newTime}\n\nIf this change was not requested by you, please contact us immediately.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+        subject: `Appointment Rescheduled: Dr. Manolova-Peneva Pediatrics`,
+        body: `Dear ${patientName},\n\nYour appointment originally scheduled for ${oldDate} has been rescheduled.\n\nNew date: ${newDate}\nNew time: ${newTime}\n\nIf this change was not requested by you, please contact us immediately.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
     CONTACT_INQUIRY: (fromName: string, fromEmail: string, message: string) => ({
         subject: `New Inquiry from ${fromName}`,
         body: `Name: ${fromName}\nEmail: ${fromEmail}\n\nMessage:\n${message}\n\n--\nSent from your website contact form.`
     }),
     EMAIL_VERIFICATION: (patientName: string, verifyUrl: string) => ({
-        subject: `Verify your email — Dr. Manolova Pediatrics`,
-        body: `Dear ${patientName},\n\nThank you for registering with Dr. Manolova Pediatrics.\n\nPlease verify your email address by clicking the link below (valid for 24 hours):\n\n${verifyUrl}\n\nIf you did not create an account, you can safely ignore this email.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+        subject: `Verify your email — Dr. Manolova-Peneva Pediatrics`,
+        body: `Dear ${patientName},\n\nThank you for registering with Dr. Manolova-Peneva Pediatrics.\n\nPlease verify your email address by clicking the link below (valid for 24 hours):\n\n${verifyUrl}\n\nIf you did not create an account, you can safely ignore this email.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
     REMINDER_24H: (patientName: string, date: string, time: string) => ({
-        subject: `Reminder: Your appointment tomorrow with Dr. Manolova`,
-        body: `Dear ${patientName},\n\nThis is a friendly reminder of your appointment with Dr. Zlatomira Manolova tomorrow.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot. If you need to cancel or reschedule, please do so at least 24 hours in advance through your patient portal.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+        subject: `Reminder: Your appointment tomorrow with Dr. Manolova-Peneva`,
+        body: `Dear ${patientName},\n\nThis is a friendly reminder of your appointment with Dr. Zlatomira Manolova-Peneva tomorrow.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot. If you need to cancel or reschedule, please do so at least 24 hours in advance through your patient portal.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
     PASSWORD_RESET: (resetUrl: string) => ({
-        subject: `Reset your password — Dr. Manolova Pediatrics`,
-        body: `Hello,\n\nWe received a request to reset the password for your Dr. Manolova Pediatrics account.\n\nClick the link below to set a new password (valid for 1 hour):\n\n${resetUrl}\n\nIf you did not request a password reset, you can safely ignore this email. Your password will not be changed.\n\nWarm regards,\nDr. Manolova Pediatrics Team`
+        subject: `Reset your password — Dr. Manolova-Peneva Pediatrics`,
+        body: `Hello,\n\nWe received a request to reset the password for your Dr. Manolova-Peneva Pediatrics account.\n\nClick the link below to set a new password (valid for 1 hour):\n\n${resetUrl}\n\nIf you did not request a password reset, you can safely ignore this email. Your password will not be changed.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
 };

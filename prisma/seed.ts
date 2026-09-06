@@ -45,7 +45,7 @@ async function main() {
         },
         create: {
             email: 'zlatomira.manolova@gmail.com',
-            name: 'Dr. Zlatomira Manolova',
+            name: 'Dr. Zlatomira Manolova-Peneva',
             password: hashedPassword,
             role: 'ADMIN',
             emailVerified: now,

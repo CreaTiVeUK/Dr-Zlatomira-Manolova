@@ -1,6 +1,6 @@
-# Zlati Pediatrics - Dr. Zlatomira Manolova
+# Zlati Pediatrics - Dr. Zlatomira Manolova-Peneva
 
-A modern, enterprise-grade appointment booking and management platform for Dr. Zlatomira Manolova's pediatric practice.
+A modern, enterprise-grade appointment booking and management platform for Dr. Zlatomira Manolova-Peneva's pediatric practice.
 
 ## 🚀 Built With
 
@@ -106,4 +106,4 @@ hosts: it resets known accounts to a shared password. Set `ALLOW_SEED=1` only
 for disposable databases.
 
 ---
-*Developed with ❤️  for Dr. Manolova.*
+*Developed with ❤️  for Dr. Manolova-Peneva.*

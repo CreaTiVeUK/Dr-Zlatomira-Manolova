@@ -41,7 +41,7 @@ export const LoggedInPatient: Story = {
 export const LoggedInAdmin: Story = {
     args: {
         user: {
-            name: 'Dr. Manolova',
+            name: 'Dr. Manolova-Peneva',
             email: 'admin@example.com',
             role: 'admin',
         },

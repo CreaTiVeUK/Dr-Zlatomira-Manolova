@@ -140,7 +140,7 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
       id: appt.id,
       dateTime: new Date(appt.dateTime),
       duration: appt.duration,
-      summary: "Pediatric Appointment: Dr. Manolova",
+      summary: "Pediatric Appointment: Dr. Manolova-Peneva",
       description: `Session: ${appt.notes || "Clinical Consultation"}`,
     });
 

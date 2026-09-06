@@ -73,11 +73,11 @@ describe('otpauth URL', () => {
         const url = buildOtpAuthUrl({
             secret: 'JBSWY3DPEHPK3PXP',
             accountName: 'admin@example.com',
-            issuer: 'Dr. Manolova Clinic',
+            issuer: 'Dr. Manolova-Peneva Clinic',
         });
         expect(url).toMatch(/^otpauth:\/\/totp\//);
         expect(url).toContain('secret=JBSWY3DPEHPK3PXP');
-        expect(url).toContain('issuer=Dr.+Manolova+Clinic');
+        expect(url).toContain('issuer=Dr.+Manolova-Peneva+Clinic');
         expect(url).toContain('digits=6');
         expect(url).toContain('period=30');
     });

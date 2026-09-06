@@ -20,7 +20,7 @@ test.describe('Default language (no cookie)', () => {
 
         // The header settles in Bulgarian — and must not be left in English
         // by a late-arriving client dictionary
-        await expect(page.locator('.logo-text').first()).toContainText('Д-р Златомира Манолова');
+        await expect(page.locator('.logo-text').first()).toContainText('Д-р Златомира Манолова-Пенева');
 
         const bodyText = await page.evaluate(() => document.body.innerText);
         expect(bodyText).not.toContain('Paediatrician in Plovdiv');
@@ -34,7 +34,7 @@ test.describe('Default language (no cookie)', () => {
         await expect(page.getByTitle('Switch to Bulgarian')).toBeVisible();
 
         await expect(page.locator('h1').first()).toContainText('Paediatrician in Plovdiv');
-        await expect(page.locator('.logo-text').first()).toContainText('Dr. Zlatomira Manolova');
+        await expect(page.locator('.logo-text').first()).toContainText('Dr. Zlatomira Manolova-Peneva');
     });
 
     test('language choice persists across navigation', async ({ page }) => {

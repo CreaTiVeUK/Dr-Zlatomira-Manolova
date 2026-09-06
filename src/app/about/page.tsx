@@ -7,14 +7,14 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "За д-р Манолова | Педиатър и Алерголог Пловдив",
+    title: "За д-р Манолова-Пенева | Педиатър и Алерголог Пловдив",
     description: "Д-р Златомира Манолова-Пенева — педиатър и алерголог в Пловдив. Началник на Второ педиатрично отделение в МБАЛ Пазарджик. Специалист по детска алергология.",
     alternates: { canonical: `${getSiteUrl()}/about` },
     openGraph: {
-      title: "Д-р Златомира Манолова — Педиатър Пловдив",
-      description: "Биография, квалификации и опит на д-р Манолова, детски лекар в Пловдив.",
+      title: "Д-р Златомира Манолова-Пенева — Педиатър Пловдив",
+      description: "Биография, квалификации и опит на д-р Манолова-Пенева, детски лекар в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Д-р Златомира Манолова — Педиатър Пловдив" }],
+      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Д-р Златомира Манолова-Пенева — Педиатър Пловдив" }],
     },
   };
 }
@@ -36,7 +36,7 @@ export default async function AboutPage() {
     award: "Ти си нашето бъдеще — БЛС (2023)",
     worksFor: {
       "@type": "MedicalOrganization",
-      name: "МЦ 'Д-р Златомира Манолова'",
+      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",
@@ -58,7 +58,7 @@ export default async function AboutPage() {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "За д-р Манолова" : "About Dr. Manolova", item: `${getSiteUrl()}/about` },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "За д-р Манолова-Пенева" : "About Dr. Manolova-Peneva", item: `${getSiteUrl()}/about` },
     ],
   };
 
@@ -178,7 +178,7 @@ export default async function AboutPage() {
           {/* CTA */}
           <div className="surface-card surface-card--accent" style={{ textAlign: "center", padding: "3rem 2rem" }}>
             <h2 style={{ marginBottom: "0.75rem" }}>
-              {lang === "bg" ? "Запазете час при д-р Манолова" : "Book an appointment with Dr. Manolova"}
+              {lang === "bg" ? "Запазете час при д-р Манолова-Пенева" : "Book an appointment with Dr. Manolova-Peneva"}
             </h2>
             <p style={{ marginBottom: "1.5rem", opacity: 0.9 }}>
               {lang === "bg"

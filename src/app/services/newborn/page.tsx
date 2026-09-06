@@ -9,11 +9,11 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Педиатър за Новородено Пловдив | Неонатална Грижа — Д-р Манолова",
-    description: "Специализирана грижа за новородени в Пловдив — жълтеница, колики, хранене, проследяване на развитието. Д-р Манолова, неонатолог и педиатър. Запазете час.",
+    title: "Педиатър за Новородено Пловдив | Неонатална Грижа — Д-р Манолова-Пенева",
+    description: "Специализирана грижа за новородени в Пловдив — жълтеница, колики, хранене, проследяване на развитието. Д-р Манолова-Пенева, неонатолог и педиатър. Запазете час.",
     alternates: { canonical: `${getSiteUrl()}/services/newborn` },
     openGraph: {
-      title: "Педиатър за Новородено Пловдив — Д-р Манолова",
+      title: "Педиатър за Новородено Пловдив — Д-р Манолова-Пенева",
       description: "Жълтеница, колики, хранене и ранно развитие — грижа за новородени в Пловдив.",
       locale: "bg_BG",
       images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1200, height: 630, alt: "Грижа за новородено Пловдив" }],
@@ -53,7 +53,7 @@ export default async function NewbornPage() {
     },
     location: {
       "@type": "MedicalClinic",
-      name: "МЦ 'Д-р Златомира Манолова'",
+      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",
@@ -78,7 +78,7 @@ export default async function NewbornPage() {
       ? [
           {
             q: "Кога трябва да запазим първи преглед на новороденото?",
-            a: "Препоръчва се първи педиатричен преглед в рамките на 3–5 дни след изписване от родилното. Д-р Манолова приема новородени от 0 дни.",
+            a: "Препоръчва се първи педиатричен преглед в рамките на 3–5 дни след изписване от родилното. Д-р Манолова-Пенева приема новородени от 0 дни.",
           },
           {
             q: "Каква е нормалната жълтеница при новородено?",
@@ -86,7 +86,7 @@ export default async function NewbornPage() {
           },
           {
             q: "Колко често трябва да се храни новороденото?",
-            a: "Новородените обикновено се хранят на всеки 2–3 часа (8–12 пъти за 24 часа). Д-р Манолова предоставя индивидуален съвет при консултация.",
+            a: "Новородените обикновено се хранят на всеки 2–3 часа (8–12 пъти за 24 часа). Д-р Манолова-Пенева предоставя индивидуален съвет при консултация.",
           },
           {
             q: "Какво е включено в профилактичните прегледи на кърмачето?",
@@ -96,7 +96,7 @@ export default async function NewbornPage() {
       : [
           {
             q: "When should we book the first newborn check?",
-            a: "A first paediatric check is recommended within 3–5 days of discharge from hospital. Dr. Manolova accepts newborns from day 0.",
+            a: "A first paediatric check is recommended within 3–5 days of discharge from hospital. Dr. Manolova-Peneva accepts newborns from day 0.",
           },
           {
             q: "What is normal jaundice in a newborn?",
@@ -104,7 +104,7 @@ export default async function NewbornPage() {
           },
           {
             q: "How often should a newborn feed?",
-            a: "Newborns typically feed every 2–3 hours (8–12 times per 24 hours). Dr. Manolova provides individualised feeding advice at consultation.",
+            a: "Newborns typically feed every 2–3 hours (8–12 times per 24 hours). Dr. Manolova-Peneva provides individualised feeding advice at consultation.",
           },
           {
             q: "What is included in routine infant checks?",

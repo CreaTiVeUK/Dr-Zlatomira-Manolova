@@ -23,20 +23,20 @@ const SITE_URL = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Детски лекар Пловдив — Д-р Златомира Манолова | Педиатър",
-    template: "%s | Д-р Манолова — Педиатър Пловдив",
+    default: "Детски лекар Пловдив — Д-р Златомира Манолова-Пенева | Педиатър",
+    template: "%s | Д-р Манолова-Пенева — Педиатър Пловдив",
   },
-  description: "Частен педиатър в Пловдив. Д-р Златомира Манолова — специалист педиатрия, детска алергология, грижа за новородени. МЦ кв. Тракия. Запазете час онлайн.",
+  description: "Частен педиатър в Пловдив. Д-р Златомира Манолова-Пенева — специалист педиатрия, детска алергология, грижа за новородени. МЦ кв. Тракия. Запазете час онлайн.",
   keywords: [
-    "педиатър Пловдив", "детски лекар Пловдив", "д-р Манолова", "частен педиатър",
+    "педиатър Пловдив", "детски лекар Пловдив", "д-р Манолова-Пенева", "д-р Манолова", "частен педиатър",
     "детска алергология Пловдив", "грижа за новородени Пловдив", "детски специалист Пловдив",
     "pediatrician Plovdiv", "pediatric specialist Bulgaria",
   ],
   openGraph: {
-    title: "Детски лекар Пловдив — Д-р Златомира Манолова",
+    title: "Детски лекар Пловдив — Д-р Златомира Манолова-Пенева",
     description: "Частен педиатър в Пловдив. Детска алергология, спешна педиатрия, грижа за новородени. Запазете час онлайн.",
-    siteName: "Педиатрия Манолова",
-    images: [{ url: "/logo.jpg", width: 800, height: 600, alt: "Д-р Манолова — Педиатър Пловдив" }],
+    siteName: "Педиатрия Манолова-Пенева",
+    images: [{ url: "/logo.jpg", width: 800, height: 600, alt: "Д-р Манолова-Пенева — Педиатър Пловдив" }],
     locale: "bg_BG",
     type: "website",
     url: SITE_URL,
@@ -73,8 +73,12 @@ function buildStructuredData(ratingValue: string, reviewCount: string) {
       {
         "@type": ["MedicalBusiness", "LocalBusiness"],
         "@id": `${SITE_URL}/#practice`,
-        "name": "МЦ 'Д-р Златомира Манолова'",
-        "alternateName": ["Manolova Pediatrics", "Педиатрия Манолова"],
+        "name": "МЦ 'Д-р Златомира Манолова-Пенева'",
+        "alternateName": [
+          "Manolova-Peneva Pediatrics", "Педиатрия Манолова-Пенева",
+          // Short forms patients actually search for and older references use.
+          "Manolova Pediatrics", "Педиатрия Манолова", "Д-р Златомира Манолова",
+        ],
         "url": SITE_URL,
         "logo": `${SITE_URL}/logo.jpg`,
         "image": `${SITE_URL}/logo.jpg`,
@@ -125,7 +129,7 @@ function buildStructuredData(ratingValue: string, reviewCount: string) {
         "@id": `${SITE_URL}/#doctor`,
         "name": "Д-р Златомира Манолова-Пенева",
         "givenName": "Златомира",
-        "familyName": "Манолова",
+        "familyName": "Манолова-Пенева",
         "honorificPrefix": "Д-р",
         "jobTitle": "Началник на Второ педиатрично отделение, МБАЛ Пазарджик",
         "description": "Специалист педиатрия, завършила МУ Пловдив (2018), специалност (2023). Началник отделение от 2025 г. Носител на отличие 'Ти си нашето бъдеще' от БЛС.",

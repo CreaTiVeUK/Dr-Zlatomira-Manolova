@@ -8,14 +8,14 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Детски лекар Пловдив — Д-р Златомира Манолова | Педиатър",
-    description: "Д-р Манолова — педиатър и алерголог в Пловдив. Прегледи за деца 0–18 г., алергологични тестове, грижа за новородени. Запазете час онлайн.",
+    title: "Детски лекар Пловдив — Д-р Златомира Манолова-Пенева | Педиатър",
+    description: "Д-р Манолова-Пенева — педиатър и алерголог в Пловдив. Прегледи за деца 0–18 г., алергологични тестове, грижа за новородени. Запазете час онлайн.",
     alternates: { canonical: getSiteUrl() },
     openGraph: {
-      title: "Детски лекар Пловдив — Д-р Манолова",
+      title: "Детски лекар Пловдив — Д-р Манолова-Пенева",
       description: "Педиатър и алерголог в Пловдив. Прегледи, ваксини, алергии, новородени.",
       locale: "bg_BG",
-      images: [{ url: "/hero_premium.png", width: 1200, height: 630, alt: "Д-р Манолова — Детски лекар Пловдив" }],
+      images: [{ url: "/hero_premium.png", width: 1200, height: 630, alt: "Д-р Манолова-Пенева — Детски лекар Пловдив" }],
     },
   };
 }
@@ -52,8 +52,8 @@ export default async function Home() {
             <div className="hero-copy-block">
               <h1 className="hero-subtitle">
                 {lang === "bg"
-                  ? "Детски лекар в Пловдив — Д-р Златомира Манолова"
-                  : "Paediatrician in Plovdiv — Dr. Zlatomira Manolova"}
+                  ? "Детски лекар в Пловдив — Д-р Златомира Манолова-Пенева"
+                  : "Paediatrician in Plovdiv — Dr. Zlatomira Manolova-Peneva"}
               </h1>
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 

@@ -66,10 +66,10 @@ export default function AdminSidebarClient() {
 
         <div className="admin-sidebar__user">
           <div style={{ position: "relative", width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.14)" }}>
-            <Image src="/dr-manolova-avatar.png" alt="Dr. Manolova" fill style={{ objectFit: "cover" }} />
+            <Image src="/dr-manolova-avatar.png" alt="Dr. Manolova-Peneva" fill style={{ objectFit: "cover" }} />
           </div>
           <div>
-            <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>Dr. Manolova</div>
+            <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>Dr. Manolova-Peneva</div>
             <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.72)" }}>{dict.admin.sidebar.roleAdmin}</div>
           </div>
         </div>

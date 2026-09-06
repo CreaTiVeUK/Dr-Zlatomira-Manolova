@@ -17,7 +17,7 @@ export function generateICS(appointment: {
     const icsContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Manolova Pediatrics//EN',
+        'PRODID:-//Manolova-Peneva Pediatrics//EN',
         'BEGIN:VEVENT',
         `UID:${appointment.id}`,
         `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}`,
@@ -25,7 +25,7 @@ export function generateICS(appointment: {
         `DTEND:${end}`,
         `SUMMARY:${appointment.summary}`,
         `DESCRIPTION:${appointment.description || ''}`,
-        'LOCATION:MC "Dr. Zlatomira Manolova", A11 - "Zahari Zograf" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv',
+        'LOCATION:MC "Dr. Zlatomira Manolova-Peneva", A11 - "Zahari Zograf" NeighbourhoodTrakia, Zh.K.Trakiya 52B, 4023 Plovdiv',
         'END:VEVENT',
         'END:VCALENDAR'
     ].join('\r\n');

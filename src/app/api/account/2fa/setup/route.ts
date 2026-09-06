@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const otpauth = buildOtpAuthUrl({
         secret,
         accountName: user.email,
-        issuer: "Dr. Manolova Clinic",
+        issuer: "Dr. Manolova-Peneva Clinic",
     });
 
     await createAuditLog(session.user.id, AuditAction.PROFILE_UPDATE, "Generated TOTP secret (pending verification)", ip).catch(() => {});

@@ -3,7 +3,7 @@ export const en = {
     header: {
         utility: "Specialized pediatric care in Plovdiv",
         ageGroup: "Ages 0-18 years",
-        title: "Dr. Zlatomira Manolova",
+        title: "Dr. Zlatomira Manolova-Peneva",
         subtitle: "PEDIATRIC SPECIALIST",
         contact: {
             tel: "TEL",
@@ -26,11 +26,11 @@ export const en = {
         }
     },
     footer: {
-        title: "Manolova Pediatrics",
+        title: "Manolova-Peneva Pediatrics",
         desc: "Providing expert and compassionate pediatric care for children of all ages. Based in Plovdiv.",
         links: "QUICK LINKS",
         location: "LOCATION",
-        medicalCenter: "MC 'Dr. Zlatomira Manolova'",
+        medicalCenter: "MC 'Dr. Zlatomira Manolova-Peneva'",
         partnerHospital: "MHAT Pazardzhik",
         addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
@@ -41,7 +41,7 @@ export const en = {
             saturday: "Sat: 10:00 - 14:00",
             sunday: "Sun: Emergencies only"
         },
-        rights: "Dr. Zlatomira Manolova. All rights reserved.",
+        rights: "Dr. Zlatomira Manolova-Peneva. All rights reserved.",
         privacy: "Privacy Policy",
         terms: "Terms of Use"
     },
@@ -62,9 +62,9 @@ export const en = {
             superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
             testimonials: [
                 { text: "Wonderful attitude and professionalism! The examination proceeded with attention and ended with adequate advice.", author: "Verified Patient" },
-                { text: "Great specialist! Dr. Manolova answered all our questions in detail and gave us valuable advice with great warmth.", author: "Verified Patient" },
+                { text: "Great specialist! Dr. Manolova-Peneva answered all our questions in detail and gave us valuable advice with great warmth.", author: "Verified Patient" },
                 { text: "A great professional! She always manages to approach my daughter so she doesn't experience unnecessary stress.", author: "Verified Patient" },
-                { text: "Wonderful attitude, competence and professionalism! I am always calm when I turn to Dr. Manolova.", author: "Verified Patient" },
+                { text: "Wonderful attitude, competence and professionalism! I am always calm when I turn to Dr. Manolova-Peneva.", author: "Verified Patient" },
                 { text: "Great attitude and high professionalism! We are very grateful for the attention.", author: "Verified Patient" },
                 { text: "Wonderful attitude. Competence and adequate treatment. I highly recommend her!", author: "Verified Patient" }
             ]
@@ -94,21 +94,21 @@ export const en = {
             role: "Head of Second Pediatric Department, MHAT Pazardzhik",
             bio1: "Dr. Zlatomira Manolova-Peneva graduated from the Medical University of Plovdiv in 2018 and acquired a specialty in pediatrics in 2023. From the very start, she has believed that \"Pediatrics doesn't fit in textbooks, it is lived!\".",
             bio2: "Her professional path includes the Intensive Care Sector of the Second Pediatric Department at MHAT Pazardzhik and the Pediatric Clinic of UMHAT 'St. George' Plovdiv, where she gained invaluable experience in emergency and intensive pediatric care.",
-            bio3: "In 2025, Dr. Manolova won an open competitive appointment to become Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients — an initiative that began with the transformation of the ward by young artists, to turn children's tears into smiles.",
-            bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
+            bio3: "In 2025, Dr. Manolova-Peneva won an open competitive appointment to become Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients — an initiative that began with the transformation of the ward by young artists, to turn children's tears into smiles.",
+            bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova-Peneva views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
             qualifications: "QUALIFICATIONS & HONORS",
             qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of Bulgarian Pediatric Association"],
             specialties: "EXPERTISE",
             specList: ["• Pediatric Intensive Care", "• Emergency Conditions", "• Pediatric Pulmonology", "• Early Child Development"],
             bioBtn: "Read Full Interview",
-            imageAlt: "Dr. Manolova with patient"
+            imageAlt: "Dr. Manolova-Peneva with patient"
         },
-        heroImageAlt: "Clinical Consultation with Dr. Manolova",
+        heroImageAlt: "Clinical Consultation with Dr. Manolova-Peneva",
         partnerImageAlt: "Partner Hospital Logos"
     },
     booking: {
         title: "Online Booking",
-        subtitle: "Book your consultation with Dr. Manolova in a few easy steps.",
+        subtitle: "Book your consultation with Dr. Manolova-Peneva in a few easy steps.",
         step1: "1. Select Service",
         step2: "2. Select Date",
         step3: "3. Available Slots",
@@ -129,9 +129,9 @@ export const en = {
     },
     contact: {
         title: "Book an Appointment",
-        subtitle: "Contact Dr. Manolova for expert pediatric care and clinical diagnostics.",
+        subtitle: "Contact Dr. Manolova-Peneva for expert pediatric care and clinical diagnostics.",
         clinics: "Our Locations",
-        medicalCenter: "MC 'Dr. Zlatomira Manolova' (Plovdiv)",
+        medicalCenter: "MC 'Dr. Zlatomira Manolova-Peneva' (Plovdiv)",
         partnerHospital: "MHAT Pazardzhik",
         addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
@@ -154,7 +154,7 @@ export const en = {
         subtitle: "We provide a full spectrum of pediatric care - from routine preventative checks to specialized diagnostic clinics.",
         general: {
             title: "Emergency & General Pediatrics",
-            desc: "Drawing on her intensive care experience, Dr. Manolova provides competent assessment for acute conditions as well as precise preventative care.",
+            desc: "Drawing on her intensive care experience, Dr. Manolova-Peneva provides competent assessment for acute conditions as well as precise preventative care.",
             list: [
                 "• Emergency condition & fever assessment",
                 "• Treatment of respiratory infections",
@@ -177,7 +177,7 @@ export const en = {
     },
     conditions: {
         title: "Treated Conditions",
-        subtitle: "Dr. Manolova provides expert assessment and management of a wide range of pediatric conditions - from common childhood illnesses to complex chronic diseases.",
+        subtitle: "Dr. Manolova-Peneva provides expert assessment and management of a wide range of pediatric conditions - from common childhood illnesses to complex chronic diseases.",
         respiratory: { title: "Respiratory", list: ["• Asthma & Wheezing", "• Chronic Cough", "• Chest Infections"] },
         gastro: { title: "Gastrointestinal", list: ["• Reflux & Vomiting", "• Abdominal Pain", "• Constipation"] },
         allergy: { title: "Allergic", list: ["• Food Allergies", "• Eczema", "• Hay Fever"] },
@@ -186,7 +186,7 @@ export const en = {
     },
     resources: {
         title: "Knowledge Base",
-        subtitle: "Expert medical insights and practical advice for parents, prepared by Dr. Manolova.",
+        subtitle: "Expert medical insights and practical advice for parents, prepared by Dr. Manolova-Peneva.",
         latest: "LATEST RESOURCES",
         readArticle: "READ ARTICLE →",
         faq: {
@@ -195,7 +195,7 @@ export const en = {
                 { q: "How do I book an emergency appointment?", a: "Emergency slots are released daily at 08:30. Please call our clinic directly on +359 88 5557110." },
                 { q: "Do you offer telemedicine consultations?", a: "Yes, for follow-up appointments and general advice we offer secure video consultations. Contact us for details." },
                 { q: "Do you work with private health insurance?", a: "We work with leading Bulgarian private health insurers including DZI, Allianz and Generali. Please contact us before your appointment to confirm coverage." },
-                { q: "What age range do you accept?", a: "Dr. Manolova sees children from age 0 to 18 — from newborns through to teenagers." },
+                { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
                 { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
                 { q: "Do you provide vaccinations?", a: "Yes, we carry out all vaccinations on the Bulgarian national immunisation schedule, including routine infant check-ups." },
@@ -226,7 +226,7 @@ export const en = {
             {
                 title: "The biggest motivation is the children",
                 category: "VISION • 2024",
-                excerpt: "Dr. Manolova on her ambitions to completely renovate the look of pediatric care and the role of modern diagnostics.",
+                excerpt: "Dr. Manolova-Peneva on her ambitions to completely renovate the look of pediatric care and the role of modern diagnostics.",
                 link: "https://pa1-media.bg/%D0%B4-%D1%80-%D0%B7%D0%BB%D0%B0%D1%82%D0%BE%D0%BC%D0%B8%D1%80%D0%B0-%D0%BC%D0%B0%D0%BD%D0%BE%D0%BB%D0%BE%D0%B2%D0%B0-%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%BD%D0%B8%D0%BA-%D0%BD%D0%B0-%D0%B2%D1%82%D0%BE/"
             },
             {

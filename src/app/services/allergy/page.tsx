@@ -8,11 +8,11 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Детски Алерголог Пловдив | Алергологични Тестове — Д-р Манолова",
-    description: "Детски алерголог в Пловдив. Кожно-алергични тестове (резултати в същия ден), лечение на астма, хранителни алергии и екзема при деца. Д-р Манолова.",
+    title: "Детски Алерголог Пловдив | Алергологични Тестове — Д-р Манолова-Пенева",
+    description: "Детски алерголог в Пловдив. Кожно-алергични тестове (резултати в същия ден), лечение на астма, хранителни алергии и екзема при деца. Д-р Манолова-Пенева.",
     alternates: { canonical: `${getSiteUrl()}/services/allergy` },
     openGraph: {
-      title: "Детски Алерголог Пловдив — Д-р Манолова",
+      title: "Детски Алерголог Пловдив — Д-р Манолова-Пенева",
       description: "Кожно-алергични тестове, астма, хранителни алергии и екзема при деца в Пловдив.",
       locale: "bg_BG",
       images: [{ url: "/service_allergy_consultation_1769272828650.png", width: 1200, height: 630, alt: "Детска алергологична консултация Пловдив" }],
@@ -52,7 +52,7 @@ export default async function AllergyPage() {
     },
     location: {
       "@type": "MedicalClinic",
-      name: "МЦ 'Д-р Златомира Манолова'",
+      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",
@@ -77,7 +77,7 @@ export default async function AllergyPage() {
       ? [
           {
             q: "На каква възраст може да се прави алергологичен тест при деца?",
-            a: "Кожно-алергичните тестове могат да се извършват при деца от 2-годишна възраст. При малки деца д-р Манолова може да препоръча кръвен тест (специфични IgE антитела) като алтернатива.",
+            a: "Кожно-алергичните тестове могат да се извършват при деца от 2-годишна възраст. При малки деца д-р Манолова-Пенева може да препоръча кръвен тест (специфични IgE антитела) като алтернатива.",
           },
           {
             q: "Колко трае алергологичният преглед?",
@@ -85,17 +85,17 @@ export default async function AllergyPage() {
           },
           {
             q: "Трябва ли детето да спре антихистамини преди теста?",
-            a: "Да — антихистамините трябва да се спрат минимум 5–7 дни преди кожните тестове. Д-р Манолова ще даде конкретни инструкции при запазването на час.",
+            a: "Да — антихистамините трябва да се спрат минимум 5–7 дни преди кожните тестове. Д-р Манолова-Пенева ще даде конкретни инструкции при запазването на час.",
           },
           {
             q: "Лекуват ли се хранителни алергии?",
-            a: "Д-р Манолова разработва индивидуален план за управление, включващ диета, спешни протоколи и при необходимост — имунотерапия.",
+            a: "Д-р Манолова-Пенева разработва индивидуален план за управление, включващ диета, спешни протоколи и при необходимост — имунотерапия.",
           },
         ]
       : [
           {
             q: "At what age can allergy testing be done?",
-            a: "Skin prick tests can be performed from age 2. For younger children, Dr. Manolova may recommend a blood test (specific IgE) as an alternative.",
+            a: "Skin prick tests can be performed from age 2. For younger children, Dr. Manolova-Peneva may recommend a blood test (specific IgE) as an alternative.",
           },
           {
             q: "How long does an allergy appointment take?",
@@ -103,11 +103,11 @@ export default async function AllergyPage() {
           },
           {
             q: "Does my child need to stop antihistamines before testing?",
-            a: "Yes — antihistamines must be stopped at least 5–7 days before skin prick tests. Dr. Manolova will provide specific instructions when booking.",
+            a: "Yes — antihistamines must be stopped at least 5–7 days before skin prick tests. Dr. Manolova-Peneva will provide specific instructions when booking.",
           },
           {
             q: "Can food allergies be treated?",
-            a: "Dr. Manolova develops an individualised management plan including dietary guidance, emergency protocols, and immunotherapy where appropriate.",
+            a: "Dr. Manolova-Peneva develops an individualised management plan including dietary guidance, emergency protocols, and immunotherapy where appropriate.",
           },
         ];
 
