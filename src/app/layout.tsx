@@ -73,7 +73,7 @@ function buildStructuredData(ratingValue: string, reviewCount: string) {
       {
         "@type": ["MedicalBusiness", "LocalBusiness"],
         "@id": `${SITE_URL}/#practice`,
-        "name": "МЦ 'Д-р Златомира Манолова-Пенева'",
+        "name": "МЦ „Д-р Златомира Манолова-Пенева“",
         "alternateName": [
           "Manolova-Peneva Pediatrics", "Педиатрия Манолова-Пенева",
           // Short forms patients actually search for and older references use.

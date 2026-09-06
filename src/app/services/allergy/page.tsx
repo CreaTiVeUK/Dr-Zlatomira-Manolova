@@ -52,7 +52,7 @@ export default async function AllergyPage() {
     },
     location: {
       "@type": "MedicalClinic",
-      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
+      name: "МЦ „Д-р Златомира Манолова-Пенева“",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",

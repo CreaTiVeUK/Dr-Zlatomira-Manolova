@@ -36,7 +36,7 @@ export default async function AboutPage() {
     award: "Ти си нашето бъдеще — БЛС (2023)",
     worksFor: {
       "@type": "MedicalOrganization",
-      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
+      name: "МЦ „Д-р Златомира Манолова-Пенева“",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",

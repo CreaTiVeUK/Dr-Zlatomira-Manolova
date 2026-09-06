@@ -53,7 +53,7 @@ export default async function NewbornPage() {
     },
     location: {
       "@type": "MedicalClinic",
-      name: "МЦ 'Д-р Златомира Манолова-Пенева'",
+      name: "МЦ „Д-р Златомира Манолова-Пенева“",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Пловдив",
