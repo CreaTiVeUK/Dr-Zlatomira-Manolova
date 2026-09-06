@@ -79,7 +79,7 @@ function buildStructuredData(ratingValue: string, reviewCount: string) {
         "logo": `${SITE_URL}/logo.jpg`,
         "image": `${SITE_URL}/logo.jpg`,
         "description": "Частна педиатрична практика в Пловдив. Специализирана помощ за деца от 0 до 18 години — обща педиатрия, детска алергология, грижа за новородени.",
-        "telephone": "+35988555710",
+        "telephone": "+359885557110",
         "email": "zlatomira.manolova@gmail.com",
         "address": {
           "@type": "PostalAddress",
