@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { getSiteUrl } from '@/lib/site-url';
 
 interface EmailTemplate {
     subject: string;
@@ -11,13 +12,10 @@ interface EmailTemplate {
  * per-deployment hostname (previews!), so it's a fallback, not the config.
  */
 export function getBaseUrl(): string {
-    const appUrl = process.env.APP_URL;
-    if (appUrl) return appUrl.replace(/\/+$/, "");
-    if (process.env.VERCEL_URL) {
+    if (!process.env.APP_URL && process.env.VERCEL_URL) {
         console.warn("[email] APP_URL not set — falling back to VERCEL_URL, which points at this specific deployment");
-        return `https://${process.env.VERCEL_URL}`;
     }
-    return "http://localhost:3000";
+    return getSiteUrl();
 }
 
 export async function sendEmail(to: string, template: EmailTemplate) {

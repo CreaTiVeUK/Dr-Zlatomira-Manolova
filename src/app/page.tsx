@@ -4,12 +4,13 @@ import Image from "next/image";
 import { Award, Baby, HeartPulse, MapPin, ShieldCheck, Stethoscope } from "lucide-react";
 import HomeClient from "@/components/HomeClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Детски лекар Пловдив — Д-р Златомира Манолова | Педиатър",
     description: "Д-р Манолова — педиатър и алерголог в Пловдив. Прегледи за деца 0–18 г., алергологични тестове, грижа за новородени. Запазете час онлайн.",
-    alternates: { canonical: "https://zlatipediatrics.com" },
+    alternates: { canonical: getSiteUrl() },
     openGraph: {
       title: "Детски лекар Пловдив — Д-р Манолова",
       description: "Педиатър и алерголог в Пловдив. Прегледи, ваксини, алергии, новородени.",

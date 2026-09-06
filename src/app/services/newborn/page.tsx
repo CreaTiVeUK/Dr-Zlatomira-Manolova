@@ -5,12 +5,13 @@ import { Baby } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Педиатър за Новородено Пловдив | Неонатална Грижа — Д-р Манолова",
     description: "Специализирана грижа за новородени в Пловдив — жълтеница, колики, хранене, проследяване на развитието. Д-р Манолова, неонатолог и педиатър. Запазете час.",
-    alternates: { canonical: "https://zlatipediatrics.com/services/newborn" },
+    alternates: { canonical: `${getSiteUrl()}/services/newborn` },
     openGraph: {
       title: "Педиатър за Новородено Пловдив — Д-р Манолова",
       description: "Жълтеница, колики, хранене и ранно развитие — грижа за новородени в Пловдив.",
@@ -41,7 +42,7 @@ export default async function NewbornPage() {
     provider: {
       "@type": "Physician",
       name: "Д-р Златомира Манолова-Пенева",
-      url: "https://zlatipediatrics.com",
+      url: getSiteUrl(),
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue,
@@ -66,9 +67,9 @@ export default async function NewbornPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
-      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Грижа за новородени" : "Newborn care", item: "https://zlatipediatrics.com/services/newborn" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: `${getSiteUrl()}/services` },
+      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Грижа за новородени" : "Newborn care", item: `${getSiteUrl()}/services/newborn` },
     ],
   };
 

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Детски болести и лечение в Пловдив | Педиатър Д-р Манолова",
     description: "Лечение на астма, хранителни алергии, рефлукс, висока температура и повече при деца в Пловдив. Д-р Манолова — педиатър специалист. Запазете час.",
-    alternates: { canonical: "https://zlatipediatrics.com/conditions" },
+    alternates: { canonical: `${getSiteUrl()}/conditions` },
     openGraph: {
       title: "Детски болести и лечение — Педиатър Пловдив",
       description: "Астма, алергии, гастро, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова.",
@@ -27,8 +28,8 @@ export default async function ConditionsPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Заболявания" : "Conditions", item: "https://zlatipediatrics.com/conditions" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Заболявания" : "Conditions", item: `${getSiteUrl()}/conditions` },
     ],
   };
 

@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { getSiteUrl } from '@/lib/site-url';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://zlatipediatrics.com';
+    const baseUrl = getSiteUrl();
     // Use static dates — new Date() causes every page to appear modified on every build
     const now = new Date('2026-04-07');
     const evergreen = new Date('2025-10-01');

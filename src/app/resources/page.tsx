@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Съвети за родители и ЧЗВ | Педиатър Пловдив — Д-р Манолова",
     description: "Експертни педиатрични съвети, ЧЗВ и статии от д-р Манолова. Температура при бебета, ваксини, алергии, хранене — практични отговори за родители.",
-    alternates: { canonical: "https://zlatipediatrics.com/resources" },
+    alternates: { canonical: `${getSiteUrl()}/resources` },
     openGraph: {
       title: "Педиатрични съвети и ЧЗВ — Д-р Манолова Пловдив",
       description: "Практични съвети и отговори на чести въпроси от педиатър в Пловдив.",
@@ -43,8 +44,8 @@ export default async function ResourcesPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Ресурси" : "Resources", item: "https://zlatipediatrics.com/resources" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Ресурси" : "Resources", item: `${getSiteUrl()}/resources` },
     ],
   };
 

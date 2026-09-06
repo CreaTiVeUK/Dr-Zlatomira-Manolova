@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "За д-р Манолова | Педиатър и Алерголог Пловдив",
     description: "Д-р Златомира Манолова-Пенева — педиатър и алерголог в Пловдив. Началник на Второ педиатрично отделение в МБАЛ Пазарджик. Специалист по детска алергология.",
-    alternates: { canonical: "https://zlatipediatrics.com/about" },
+    alternates: { canonical: `${getSiteUrl()}/about` },
     openGraph: {
       title: "Д-р Златомира Манолова — Педиатър Пловдив",
       description: "Биография, квалификации и опит на д-р Манолова, детски лекар в Пловдив.",
@@ -28,7 +29,7 @@ export default async function AboutPage() {
   const physicianSchema = {
     "@context": "https://schema.org",
     "@type": "Physician",
-    "@id": "https://zlatipediatrics.com/#doctor",
+    "@id": `${getSiteUrl()}/#doctor`,
     name: "Д-р Златомира Манолова-Пенева",
     jobTitle: lang === "bg" ? "Педиатър и Алерголог" : "Paediatrician & Allergologist",
     description: dict.home.about.bio1,
@@ -48,7 +49,7 @@ export default async function AboutPage() {
       name: "Медицински университет Пловдив",
     },
     knowsAbout: ["Педиатрия", "Детска алергология", "Неонатология", "Спешна педиатрия"],
-    url: "https://zlatipediatrics.com/about",
+    url: `${getSiteUrl()}/about`,
     sameAs: ["https://superdoc.bg/lekar/zlatomira-manolova"],
   };
 
@@ -56,8 +57,8 @@ export default async function AboutPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "За д-р Манолова" : "About Dr. Manolova", item: "https://zlatipediatrics.com/about" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "За д-р Манолова" : "About Dr. Manolova", item: `${getSiteUrl()}/about` },
     ],
   };
 

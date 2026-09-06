@@ -4,12 +4,13 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import ContactFormClient from "@/components/ContactFormClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Контакти | Педиатър Пловдив — Д-р Манолова",
     description: "Свържете се с д-р Манолова в Пловдив. Адрес: Ж.К. Тракия, А11, кв. Захари Зограф 52Б. Тел: +359 88 5557110. Запазете час онлайн.",
-    alternates: { canonical: "https://zlatipediatrics.com/contact" },
+    alternates: { canonical: `${getSiteUrl()}/contact` },
     openGraph: {
       title: "Контакти — Педиатър Пловдив Д-р Манолова",
       description: "Адрес, телефон и форма за контакт с педиатъра в Пловдив.",

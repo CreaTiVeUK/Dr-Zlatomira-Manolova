@@ -18,7 +18,7 @@ const openSans = Open_Sans({
   display: "swap",
 });
 
-const SITE_URL = "https://zlatipediatrics.com";
+const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -149,6 +149,7 @@ import EmergencyBanner from "@/components/EmergencyBanner";
 import CookieConsent from "@/components/CookieConsent";
 import { getSession } from "@/lib/auth";
 import { Providers } from "@/components/Providers";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default async function RootLayout({
   children,

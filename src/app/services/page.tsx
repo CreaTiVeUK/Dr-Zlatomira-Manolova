@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Педиатрични услуги Пловдив | Алергология, Новородени, Спешна педиатрия",
     description: "Пълен спектър от педиатрични услуги в Пловдив — детска алергология, кожно-алергични тестове, грижа за новородени, профилактични прегледи. Д-р Манолова.",
-    alternates: { canonical: "https://zlatipediatrics.com/services" },
+    alternates: { canonical: `${getSiteUrl()}/services` },
     openGraph: {
       title: "Педиатрични услуги в Пловдив — Д-р Манолова",
       description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
@@ -29,8 +30,8 @@ export default async function ServicesPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: `${getSiteUrl()}/services` },
     ],
   };
 

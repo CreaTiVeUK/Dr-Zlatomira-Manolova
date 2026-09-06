@@ -4,12 +4,13 @@ import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Детски Алерголог Пловдив | Алергологични Тестове — Д-р Манолова",
     description: "Детски алерголог в Пловдив. Кожно-алергични тестове (резултати в същия ден), лечение на астма, хранителни алергии и екзема при деца. Д-р Манолова.",
-    alternates: { canonical: "https://zlatipediatrics.com/services/allergy" },
+    alternates: { canonical: `${getSiteUrl()}/services/allergy` },
     openGraph: {
       title: "Детски Алерголог Пловдив — Д-р Манолова",
       description: "Кожно-алергични тестове, астма, хранителни алергии и екзема при деца в Пловдив.",
@@ -40,7 +41,7 @@ export default async function AllergyPage() {
     provider: {
       "@type": "Physician",
       name: "Д-р Златомира Манолова-Пенева",
-      url: "https://zlatipediatrics.com",
+      url: getSiteUrl(),
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue,
@@ -65,9 +66,9 @@ export default async function AllergyPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: "https://zlatipediatrics.com" },
-      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: "https://zlatipediatrics.com/services" },
-      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Детска алергология" : "Paediatric allergy", item: "https://zlatipediatrics.com/services/allergy" },
+      { "@type": "ListItem", position: 1, name: lang === "bg" ? "Начало" : "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 2, name: lang === "bg" ? "Услуги" : "Services", item: `${getSiteUrl()}/services` },
+      { "@type": "ListItem", position: 3, name: lang === "bg" ? "Детска алергология" : "Paediatric allergy", item: `${getSiteUrl()}/services/allergy` },
     ],
   };
 
