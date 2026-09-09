@@ -7,7 +7,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Педиатрични услуги Пловдив | Алергология, Новородени, Спешна педиатрия",
+    title: "Педиатрични услуги в Пловдив",
     description: "Пълен спектър от педиатрични услуги в Пловдив — детска алергология, кожно-алергични тестове, грижа за новородени, профилактични прегледи. Д-р Манолова-Пенева.",
     alternates: { canonical: `${getSiteUrl()}/services` },
     openGraph: {

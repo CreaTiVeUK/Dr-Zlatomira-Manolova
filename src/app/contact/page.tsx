@@ -8,7 +8,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Контакти | Педиатър Пловдив — Д-р Манолова-Пенева",
+    title: "Контакти и запазване на час",
     description: "Свържете се с д-р Манолова-Пенева в Пловдив. Адрес: Ж.К. Тракия, А11, кв. Захари Зограф 52Б. Тел: +359 88 5557110. Запазете час онлайн.",
     alternates: { canonical: `${getSiteUrl()}/contact` },
     openGraph: {
@@ -84,6 +84,18 @@ export default async function ContactPage() {
                           <Mail size={16} />
                           {dict.contact.email}
                         </Link>
+                        {/* The map below is an embed, so this is the only way a
+                            parent can open turn-by-turn navigation — and the
+                            only way a directions click can be measured. */}
+                        <a
+                          href="https://www.google.com/maps/dir/?api=1&destination=42.136959,24.790681"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline"
+                        >
+                          <MapPin size={16} />
+                          {lang === "bg" ? "Навигация" : "Directions"}
+                        </a>
                       </div>
                     </div>
                     <span className="contact-item__icon" aria-hidden="true">

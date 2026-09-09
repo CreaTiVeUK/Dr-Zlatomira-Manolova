@@ -3,19 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
-import { prisma } from "@/lib/prisma";
 import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Детски Алерголог Пловдив | Алергологични Тестове — Д-р Манолова-Пенева",
-    description: "Детски алерголог в Пловдив. Кожно-алергични тестове (резултати в същия ден), лечение на астма, хранителни алергии и екзема при деца. Д-р Манолова-Пенева.",
+    title: "Детска алергология в Пловдив",
+    description: "Детска алергология в Пловдив при педиатър д-р Манолова-Пенева. Кожно-алергични тестове (резултати в същия ден), астма, хранителни алергии и екзема при деца.",
     alternates: { canonical: `${getSiteUrl()}/services/allergy` },
     openGraph: {
-      title: "Детски Алерголог Пловдив — Д-р Манолова-Пенева",
+      title: "Детска алергология в Пловдив — Д-р Манолова-Пенева",
       description: "Кожно-алергични тестове, астма, хранителни алергии и екзема при деца в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/service_allergy_consultation_1769272828650.png", width: 1200, height: 630, alt: "Детска алергологична консултация Пловдив" }],
+      images: [{ url: "/service_allergy_consultation_1769272828650.png", width: 1024, height: 1024, alt: "Детска алергологична консултация Пловдив" }],
     },
   };
 }
@@ -25,40 +24,19 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function AllergyPage() {
-  const [{ dict, lang }, superdocStats] = await Promise.all([
-    getDictionary(),
-    prisma.superdocStat.findUnique({ where: { id: "singleton" } }).catch(() => null),
-  ]);
-
-  const ratingValue = superdocStats?.rating?.replace("/5", "") ?? "5.0";
-  const reviewCount = superdocStats?.reviewsCount ?? "14";
+  const { dict, lang } = await getDictionary();
 
   const serviceSchema = {
     "@context": "https://schema.org",
-    "@type": "MedicalProcedure",
-    name: lang === "bg" ? "Детска алергология — кожно-алергични тестове" : "Paediatric allergy testing",
+    "@type": "Service",
+    serviceType: lang === "bg" ? "Детска алергология — кожно-алергични тестове" : "Paediatric allergy testing",
     description: dict.servicesPage.allergy.desc,
-    provider: {
-      "@type": "Physician",
-      name: "Д-р Златомира Манолова-Пенева",
-      url: getSiteUrl(),
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue,
-        reviewCount,
-        bestRating: "5",
-        worstRating: "1",
-      },
-    },
-    location: {
-      "@type": "MedicalClinic",
-      name: "МЦ „Д-р Златомира Манолова-Пенева“",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Пловдив",
-        postalCode: "4023",
-        addressCountry: "BG",
-      },
+    provider: { "@id": `${getSiteUrl()}/#practice` },
+    areaServed: { "@type": "City", name: "Пловдив" },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: `${getSiteUrl()}/contact`,
+      servicePhone: { "@type": "ContactPoint", telephone: "+359885557110", contactType: "reservations" },
     },
   };
 

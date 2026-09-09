@@ -4,19 +4,18 @@ import Image from "next/image";
 import { Baby } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
-import { prisma } from "@/lib/prisma";
 import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Педиатър за Новородено Пловдив | Неонатална Грижа — Д-р Манолова-Пенева",
-    description: "Специализирана грижа за новородени в Пловдив — жълтеница, колики, хранене, проследяване на развитието. Д-р Манолова-Пенева, неонатолог и педиатър. Запазете час.",
+    title: "Грижа за новородени в Пловдив",
+    description: "Грижа за новородени в Пловдив при педиатър д-р Манолова-Пенева — жълтеница, колики, хранене, проследяване на развитието. Запазете час.",
     alternates: { canonical: `${getSiteUrl()}/services/newborn` },
     openGraph: {
-      title: "Педиатър за Новородено Пловдив — Д-р Манолова-Пенева",
+      title: "Грижа за новородени в Пловдив — Д-р Манолова-Пенева",
       description: "Жълтеница, колики, хранене и ранно развитие — грижа за новородени в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1200, height: 630, alt: "Грижа за новородено Пловдив" }],
+      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1024, height: 1024, alt: "Грижа за новородено Пловдив" }],
     },
   };
 }
@@ -26,40 +25,19 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function NewbornPage() {
-  const [{ dict, lang }, superdocStats] = await Promise.all([
-    getDictionary(),
-    prisma.superdocStat.findUnique({ where: { id: "singleton" } }).catch(() => null),
-  ]);
-
-  const ratingValue = superdocStats?.rating?.replace("/5", "") ?? "5.0";
-  const reviewCount = superdocStats?.reviewsCount ?? "14";
+  const { dict, lang } = await getDictionary();
 
   const serviceSchema = {
     "@context": "https://schema.org",
-    "@type": "MedicalProcedure",
-    name: lang === "bg" ? "Неонатална педиатрична грижа" : "Neonatal & newborn paediatric care",
+    "@type": "Service",
+    serviceType: lang === "bg" ? "Неонатална педиатрична грижа" : "Neonatal & newborn paediatric care",
     description: dict.home.services.newborn.desc,
-    provider: {
-      "@type": "Physician",
-      name: "Д-р Златомира Манолова-Пенева",
-      url: getSiteUrl(),
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue,
-        reviewCount,
-        bestRating: "5",
-        worstRating: "1",
-      },
-    },
-    location: {
-      "@type": "MedicalClinic",
-      name: "МЦ „Д-р Златомира Манолова-Пенева“",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Пловдив",
-        postalCode: "4023",
-        addressCountry: "BG",
-      },
+    provider: { "@id": `${getSiteUrl()}/#practice` },
+    areaServed: { "@type": "City", name: "Пловдив" },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: `${getSiteUrl()}/contact`,
+      servicePhone: { "@type": "ContactPoint", telephone: "+359885557110", contactType: "reservations" },
     },
   };
 

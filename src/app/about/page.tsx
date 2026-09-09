@@ -7,14 +7,14 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "За д-р Манолова-Пенева | Педиатър и Алерголог Пловдив",
-    description: "Д-р Златомира Манолова-Пенева — педиатър и алерголог в Пловдив. Началник на Второ педиатрично отделение в МБАЛ Пазарджик. Специалист по детска алергология.",
+    title: { absolute: "Д-р Златомира Манолова-Пенева — педиатър в Пловдив" },
+    description: "Д-р Златомира Манолова-Пенева — педиатър в Пловдив. Специалност по педиатрия (2023), началник на Второ педиатрично отделение в МБАЛ Пазарджик. Детска алергология и грижа за новородени.",
     alternates: { canonical: `${getSiteUrl()}/about` },
     openGraph: {
       title: "Д-р Златомира Манолова-Пенева — Педиатър Пловдив",
       description: "Биография, квалификации и опит на д-р Манолова-Пенева, детски лекар в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Д-р Златомира Манолова-Пенева — Педиатър Пловдив" }],
+      images: [{ url: "/dr_manolova.jpg", width: 802, height: 1000, alt: "Д-р Златомира Манолова-Пенева — Педиатър Пловдив" }],
     },
   };
 }
@@ -26,31 +26,12 @@ function stripLeadingBullet(value: string) {
 export default async function AboutPage() {
   const { dict, lang } = await getDictionary();
 
-  const physicianSchema = {
+  const profileSchema = {
     "@context": "https://schema.org",
-    "@type": "Physician",
-    "@id": `${getSiteUrl()}/#doctor`,
-    name: "Д-р Златомира Манолова-Пенева",
-    jobTitle: lang === "bg" ? "Педиатър и Алерголог" : "Paediatrician & Allergologist",
-    description: dict.home.about.bio1,
-    award: "Ти си нашето бъдеще — БЛС (2023)",
-    worksFor: {
-      "@type": "MedicalOrganization",
-      name: "МЦ „Д-р Златомира Манолова-Пенева“",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Пловдив",
-        postalCode: "4023",
-        addressCountry: "BG",
-      },
-    },
-    alumniOf: {
-      "@type": "EducationalOrganization",
-      name: "Медицински университет Пловдив",
-    },
-    knowsAbout: ["Педиатрия", "Детска алергология", "Неонатология", "Спешна педиатрия"],
+    "@type": "ProfilePage",
     url: `${getSiteUrl()}/about`,
-    sameAs: ["https://superdoc.bg/lekar/zlatomira-manolova"],
+    inLanguage: lang,
+    mainEntity: { "@id": `${getSiteUrl()}/#doctor` },
   };
 
   const breadcrumbSchema = {
@@ -90,7 +71,7 @@ export default async function AboutPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileSchema) }}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="page-shell page-shell--soft">

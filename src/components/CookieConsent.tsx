@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { CONSENT_EVENT, CONSENT_KEY } from "@/lib/consent";
 
 export default function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
     const { dict } = useLanguage();
 
     useEffect(() => {
-        const consent = localStorage.getItem("cookieConsent");
+        const consent = localStorage.getItem(CONSENT_KEY);
         if (consent === null) {
             // Defer state update to next tick to avoid "set-state-in-effect" lint error
             setTimeout(() => setIsVisible(true), 0);
@@ -17,12 +18,14 @@ export default function CookieConsent() {
     }, []);
 
     const handleAccept = () => {
-        localStorage.setItem("cookieConsent", "true");
+        localStorage.setItem(CONSENT_KEY, "true");
+        window.dispatchEvent(new Event(CONSENT_EVENT));
         setIsVisible(false);
     };
 
     const handleReject = () => {
-        localStorage.setItem("cookieConsent", "false");
+        localStorage.setItem(CONSENT_KEY, "false");
+        window.dispatchEvent(new Event(CONSENT_EVENT));
         setIsVisible(false);
     };
 

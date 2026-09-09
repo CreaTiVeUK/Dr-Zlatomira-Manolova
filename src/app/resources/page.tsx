@@ -6,7 +6,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Съвети за родители и ЧЗВ | Педиатър Пловдив — Д-р Манолова-Пенева",
+    title: "Съвети за родители и ЧЗВ",
     description: "Експертни педиатрични съвети, ЧЗВ и статии от д-р Манолова-Пенева. Температура при бебета, ваксини, алергии, хранене — практични отговори за родители.",
     alternates: { canonical: `${getSiteUrl()}/resources` },
     openGraph: {

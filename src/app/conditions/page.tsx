@@ -5,7 +5,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Детски болести и лечение в Пловдив | Педиатър Д-р Манолова-Пенева",
+    title: "Детски болести и лечение в Пловдив",
     description: "Лечение на астма, хранителни алергии, рефлукс, висока температура и повече при деца в Пловдив. Д-р Манолова-Пенева — педиатър специалист. Запазете час.",
     alternates: { canonical: `${getSiteUrl()}/conditions` },
     openGraph: {
