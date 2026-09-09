@@ -44,9 +44,13 @@ export default async function Home() {
         />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="hero-content reveal">
+            {/* Only credentials she holds. The template's UK letters (MBBS,
+                MRCPCH, FRCP…) sat here on the live site until 2026-09-09. */}
             <div className="clinical-badge">
               <Award size={14} />
-              MBBS, DCH, MRCPCH, FRCP
+              {lang === "bg"
+                ? "Специалист по педиатрия · Началник отделение"
+                : "Paediatric specialist · Head of department"}
             </div>
 
             <div className="hero-copy-block">
