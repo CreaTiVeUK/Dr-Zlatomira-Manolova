@@ -8,6 +8,7 @@ import { CalendarDays, Clock3, LockKeyhole, ShieldCheck } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { hoursForDay } from "@/lib/clinic-hours";
 
 interface BookClientProps {
   session: {
@@ -32,7 +33,15 @@ export default function BookClient({ session }: BookClientProps) {
     [dict],
   );
 
-  const [selectedDate, setSelectedDate] = useState<Date>(startOfDay(new Date()));
+  // Open on the next consultation day rather than "today", which is closed
+  // four days out of seven.
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    for (let i = 0; i < 7; i++) {
+      const day = startOfDay(addDays(new Date(), i));
+      if (hoursForDay(day.getDay())) return day;
+    }
+    return startOfDay(new Date());
+  });
   const [selectedService, setSelectedService] = useState(services[0]);
   const [slots, setSlots] = useState<Date[]>([]);
   const [bookedSlots, setBookedSlots] = useState<{ dateTime: string; duration: number }[]>([]);
@@ -67,8 +76,13 @@ export default function BookClient({ session }: BookClientProps) {
   useEffect(() => {
     setTempSelectedSlot(null);
     const generatedSlots = [];
+    const hours = hoursForDay(selectedDate.getDay());
+    if (!hours) {
+      setSlots([]);
+      return;
+    }
 
-    for (let hour = 9; hour < 17; hour += 1) {
+    for (let hour = hours.open; hour < hours.close; hour += 1) {
       const onTheHour = new Date(selectedDate);
       onTheHour.setHours(hour, 0, 0, 0);
       generatedSlots.push(onTheHour);
@@ -212,11 +226,16 @@ export default function BookClient({ session }: BookClientProps) {
             <div className="date-strip">
               {days.map((day) => {
                 const isActive = startOfDay(day).getTime() === selectedDate.getTime();
+                const isClosed = !hoursForDay(day.getDay());
                 return (
                   <button
                     key={day.toISOString()}
                     onClick={() => setSelectedDate(startOfDay(day))}
                     className={`date-pill${isActive ? " date-pill--active" : ""}`}
+                    style={isClosed ? { opacity: 0.4 } : undefined}
+                    aria-disabled={isClosed}
+                    disabled={isClosed}
+                    title={isClosed ? dict.booking.closedDay : undefined}
                     type="button"
                   >
                     <span style={{ fontFamily: "var(--font-heading)", fontSize: "0.82rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -238,6 +257,12 @@ export default function BookClient({ session }: BookClientProps) {
             {message ? (
               <div className="status-banner status-banner--warning">
                 <strong>{message}</strong>
+              </div>
+            ) : null}
+
+            {slots.length === 0 ? (
+              <div className="status-banner status-banner--warning">
+                <strong>{dict.booking.closedDay}</strong>
               </div>
             ) : null}
 

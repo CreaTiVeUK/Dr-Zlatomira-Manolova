@@ -516,4 +516,30 @@
   .mobile-nav {
     padding: 1rem;
   }
+
+  /* Consent banner: keep it to a few lines so it does not cover the page's
+     own calls to action on a phone. */
+  .cookie-banner__panel {
+    padding: 0.85rem 1rem;
+    gap: 0.6rem;
+    border-radius: 16px;
+  }
+  .cookie-banner__panel h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .cookie-banner__panel p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+  }
+  .cookie-banner__actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .cookie-banner__actions .btn {
+    width: auto;
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+  }
 }

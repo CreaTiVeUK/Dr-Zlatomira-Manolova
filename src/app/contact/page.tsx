@@ -9,7 +9,7 @@ import { getSiteUrl } from "@/lib/site-url";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Контакти и запазване на час",
-    description: "Свържете се с д-р Манолова-Пенева в Пловдив. Адрес: Ж.К. Тракия, А11, кв. Захари Зограф 52Б. Тел: +359 88 5557110. Запазете час онлайн.",
+    description: "Свържете се с д-р Манолова-Пенева в Пловдив. Адрес: А11, кв. „Захари Зограф“, ж.к. Тракия. Тел: +359 88 5557110. Приемни дни вторник, четвъртък и събота. Запазете час онлайн.",
     alternates: { canonical: `${getSiteUrl()}/contact` },
     openGraph: {
       title: "Контакти — Педиатър Пловдив Д-р Манолова-Пенева",
@@ -108,23 +108,13 @@ export default async function ContactPage() {
                   <div className="contact-item__layout">
                     <div className="stack-md" style={{ gap: "0.5rem" }}>
                       <span className="clinical-badge">
-                        <Phone size={14} />
+                        <MapPin size={14} />
                         {dict.contact.partnerHospital}
                       </span>
-                      <p>
-                        {dict.contact.addressSecond}
-                        <br />
-                        <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
-                      </p>
-                      <div className="contact-item__actions">
-                        <Link href={`tel:${dict.footer.phone}`} className="btn btn-outline">
-                          <Phone size={16} />
-                          {lang === "bg" ? "Обади се" : "Call now"}
-                        </Link>
-                      </div>
+                      <p>{dict.contact.addressSecond}</p>
                     </div>
                     <span className="contact-item__icon" aria-hidden="true">
-                      <Phone size={18} />
+                      <MapPin size={18} />
                     </span>
                   </div>
                 </div>

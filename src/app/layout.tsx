@@ -76,10 +76,10 @@ const structuredData = {
       "email": "zlatomira.manolova@gmail.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "A11 - кв. Захари Зограф, Ж.К. Тракия 52Б",
+        "streetAddress": "А11, кв. „Захари Зограф“, ж.к. Тракия",
         "addressLocality": "Пловдив",
         "addressRegion": "Пловдивска област",
-        "postalCode": "4023",
+        "postalCode": "4000",
         "addressCountry": "BG",
       },
       "geo": {
@@ -93,10 +93,11 @@ const structuredData = {
       ],
       "medicalSpecialty": "https://schema.org/Pediatric",
       "inLanguage": ["bg", "en"],
-      // Must stay identical to the footer's hoursDetails.
+      // Must stay identical to CLINIC_SCHEDULE (clinic-hours.ts) and the footer.
       "openingHoursSpecification": [
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:30", "closes": "16:30" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "14:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "14:00", "closes": "18:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "18:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "14:00" },
       ],
       "hasMap": "https://maps.google.com/maps?q=42.136959,24.790681",
       "sameAs": ["https://superdoc.bg/lekar/zlatomira-manolova"],
@@ -127,6 +128,10 @@ const structuredData = {
         "name": "Медицински университет – Пловдив",
       },
       "award": "Ти си нашето бъдеще — Български лекарски съюз (2023)",
+      "memberOf": [
+        { "@type": "Organization", "name": "Българска педиатрична асоциация" },
+        { "@type": "Organization", "name": "Български лекарски съюз" },
+      ],
       "sameAs": [
         "https://superdoc.bg/lekar/zlatomira-manolova",
         "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/",

@@ -53,9 +53,10 @@ export default function Footer() {
                     <div className="footer-card">
                         <h4>{dict.footer.hours}</h4>
                         <div>
-                            {dict.footer.hoursDetails.weekdays}<br />
-                            {dict.footer.hoursDetails.saturday}<br />
-                            {dict.footer.hoursDetails.sunday}
+                            {dict.footer.hoursDetails.lines.map((line) => (
+                                <span key={line}>{line}<br /></span>
+                            ))}
+                            <small style={{ opacity: 0.8 }}>{dict.footer.hoursDetails.note}</small>
                         </div>
                     </div>
                 </div>

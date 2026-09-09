@@ -20,33 +20,55 @@ describe("SERVICE_PRICES", () => {
 });
 
 describe("isWithinBusinessHours (clinic time = Europe/Sofia)", () => {
-    // 2026-06-15 is summer: Sofia = UTC+3. 2026-01-15 is winter: UTC+2.
-    it("accepts 09:00 Sofia in summer (06:00Z)", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T06:00:00.000Z"))).toBe(true);
+    // Schedule (clinic-hours.ts): Tue 14–18, Thu 9–18, Sat 9–14. Fixtures use
+    // explicit offsets: +03:00 in summer, +02:00 in winter. 2026-06-16 is a
+    // Tuesday, 06-18 a Thursday, 06-20 a Saturday, 06-15 Monday, 06-21 Sunday.
+
+    it("accepts Tuesday 14:00, the first Tuesday slot", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:00:00+03:00"))).toBe(true);
     });
 
-    it("accepts 09:00 Sofia in winter (07:00Z)", () => {
-        expect(isWithinBusinessHours(new Date("2026-01-15T07:00:00.000Z"))).toBe(true);
+    it("rejects Tuesday 13:30 — the day opens at 14:00", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T13:30:00+03:00"))).toBe(false);
     });
 
-    it("accepts the last slot of the day, 16:30 Sofia", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T13:30:00.000Z"))).toBe(true);
+    it("accepts the last Tuesday slot, 17:30, and rejects 18:00", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T17:30:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-16T18:00:00+03:00"))).toBe(false);
     });
 
-    it("rejects starts before opening (08:30 Sofia)", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T05:30:00.000Z"))).toBe(false);
+    it("accepts Thursday 09:00 in summer and in winter", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-18T09:00:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-01-15T09:00:00+02:00"))).toBe(true);
     });
 
-    it("rejects starts at/after 17:00 Sofia", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T14:00:00.000Z"))).toBe(false);
+    it("rejects Thursday 08:30", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-18T08:30:00+03:00"))).toBe(false);
     });
 
-    it("rejects off-grid minutes (09:15)", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T06:15:00.000Z"))).toBe(false);
+    it("accepts Saturday 13:30 (last slot) and rejects 14:00", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-20T13:30:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-20T14:00:00+03:00"))).toBe(false);
+    });
+
+    it("rejects any time on a closed day (Monday, Sunday)", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-15T10:00:00+03:00"))).toBe(false);
+        expect(isWithinBusinessHours(new Date("2026-06-21T10:00:00+03:00"))).toBe(false);
+    });
+
+    it("evaluates the weekday in clinic time, not UTC", () => {
+        // 23:30Z Monday is 02:30 Tuesday in Sofia — but 02:30 is outside hours,
+        // so it is rejected for the hour, not the day. Conversely 21:00Z on a
+        // Tuesday is 00:00 Wednesday in Sofia: closed.
+        expect(isWithinBusinessHours(new Date("2026-06-16T21:00:00Z"))).toBe(false);
+    });
+
+    it("rejects off-grid minutes (14:15)", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:15:00+03:00"))).toBe(false);
     });
 
     it("rejects non-zero seconds", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-15T06:00:30.000Z"))).toBe(false);
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:00:30+03:00"))).toBe(false);
     });
 });
 

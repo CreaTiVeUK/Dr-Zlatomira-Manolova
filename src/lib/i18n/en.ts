@@ -32,14 +32,14 @@ export const en = {
         location: "LOCATION",
         medicalCenter: "MC “Dr. Zlatomira Manolova-Peneva”",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
+        addressMain: "A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         phone: "+359 88 5557110",
         hours: "OPENING HOURS",
+        // Must match CLINIC_SCHEDULE in src/lib/clinic-hours.ts and the JSON-LD in layout.tsx.
         hoursDetails: {
-            weekdays: "Mon - Fri: 08:30 - 16:30",
-            saturday: "Sat: 10:00 - 14:00",
-            sunday: "Sun: Emergencies only"
+            lines: ["Tue: 14:00 – 18:00", "Thu: 09:00 – 18:00", "Sat: 09:00 – 14:00"],
+            note: "Hours can vary — please confirm when booking."
         },
         rights: "Dr. Zlatomira Manolova-Peneva. All rights reserved.",
         privacy: "Privacy Policy",
@@ -97,7 +97,7 @@ export const en = {
             bio3: "In 2025, Dr. Manolova-Peneva won an open competitive appointment to become Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients — an initiative that began with the transformation of the ward by young artists, to turn children's tears into smiles.",
             bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova-Peneva views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
             qualifications: "QUALIFICATIONS & HONORS",
-            qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of Bulgarian Pediatric Association"],
+            qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of the Bulgarian Paediatric Association", "• Member of the Bulgarian Medical Association"],
             specialties: "EXPERTISE",
             specList: ["• Pediatric Intensive Care", "• Emergency Conditions", "• Pediatric Pulmonology", "• Early Child Development"],
             bioBtn: "Read Full Interview",
@@ -123,6 +123,7 @@ export const en = {
             loading: "BOOKING..."
         },
         taken: "TAKEN",
+        closedDay: "No consultations on this day. Consultation days: Tuesday, Thursday and Saturday.",
         success: "Booking Successful!",
         error: "Booking failed.",
         loginRequired: "Please log in to book an appointment."
@@ -133,7 +134,7 @@ export const en = {
         clinics: "Our Locations",
         medicalCenter: "MC “Dr. Zlatomira Manolova-Peneva” (Plovdiv)",
         partnerHospital: "MHAT Pazardzhik",
-        addressMain: "A11, Zahari Zograf Neighbourhood, Zh.K. Trakiya 52B, 4023 Plovdiv, Bulgaria",
+        addressMain: "A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
         tel: "Tel",
         email: "Email",
@@ -192,14 +193,12 @@ export const en = {
         faq: {
             title: "FREQUENTLY ASKED QUESTIONS",
             items: [
-                { q: "How do I book an emergency appointment?", a: "Emergency slots are released daily at 08:30. Please call our clinic directly on +359 88 5557110." },
                 { q: "Do you offer telemedicine consultations?", a: "Yes, for follow-up appointments and general advice we offer secure video consultations. Contact us for details." },
-                { q: "Do you work with private health insurance?", a: "We work with leading Bulgarian private health insurers including DZI, Allianz and Generali. Please contact us before your appointment to confirm coverage." },
                 { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
                 { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
                 { q: "Do you provide vaccinations?", a: "Yes, we carry out all vaccinations on the Bulgarian national immunisation schedule, including routine infant check-ups." },
-                { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood, 52B." }
+                { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood." }
             ]
         },
         cta: {
@@ -552,7 +551,7 @@ export const en = {
     },
     cookies: {
         title: "We respect your privacy",
-        desc: "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking 'Accept', you consent to our use of cookies.",
+        desc: "We use cookies for traffic analytics and to improve the site. You can decline.",
         learnMore: "Learn More",
         accept: "Accept Cookies",
         reject: "Decline"
