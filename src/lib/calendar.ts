@@ -5,7 +5,7 @@
 
 /** Practice address, emitted as the event LOCATION. */
 const PRACTICE_LOCATION =
-    "MC “Dr. Zlatomira Manolova-Peneva”, A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv";
+    "Dr. Zlatomira Manolova-Peneva — Paediatric Practice, A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv";
 
 /**
  * Escape a value for an iCalendar TEXT property (RFC 5545 §3.3.11).
