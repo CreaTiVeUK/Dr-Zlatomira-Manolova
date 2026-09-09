@@ -21,7 +21,7 @@ export default function robots(): MetadataRoute.Robots {
                     "/auth/",
                     "/profile",
                     "/my-appointments",
-                    "/book/success",
+                    "/book",
                 ],
             },
         ],
