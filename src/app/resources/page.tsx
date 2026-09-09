@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатрични съвети и ЧЗВ — Д-р Манолова-Пенева Пловдив",
       description: "Практични съвети и отговори на чести въпроси от педиатър в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/dr_manolova.jpg", width: 1200, height: 630, alt: "Педиатрични съвети от д-р Манолова-Пенева" }],
+      images: [{ url: "/dr_manolova.jpg", width: 802, height: 1000, alt: "Педиатрични съвети от д-р Манолова-Пенева" }],
     },
   };
 }
