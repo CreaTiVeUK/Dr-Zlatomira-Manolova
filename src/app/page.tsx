@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: getSiteUrl() },
     openGraph: {
       title: "Детски лекар Пловдив — Д-р Манолова-Пенева",
-      description: "Педиатър в Пловдив. Прегледи, ваксини, детска алергология, новородени.",
+      description: "Педиатър в Пловдив. Прегледи, детска алергология, новородени, съвети за ваксини.",
       locale: "bg_BG",
       images: [{ url: "/hero_premium.png", width: 1200, height: 630, alt: "Д-р Манолова-Пенева — Детски лекар Пловдив" }],
     },

@@ -68,7 +68,7 @@ export default async function NewbornPage() {
           },
           {
             q: "Какво е включено в профилактичните прегледи на кърмачето?",
-            a: "Прегледите включват измерване на тегло и ръст, оценка на развитието, ваксинации по националния имунизационен календар и съвети за хранене и сън.",
+            a: "Прегледите включват измерване на тегло и ръст, оценка на развитието, консултация по националния имунизационен календар и съвети за хранене и сън.",
           },
         ]
       : [
@@ -86,7 +86,7 @@ export default async function NewbornPage() {
           },
           {
             q: "What is included in routine infant checks?",
-            a: "Checks include weight and length measurement, developmental assessment, vaccinations on the national immunisation schedule, and feeding and sleep guidance.",
+            a: "Checks include weight and length measurement, developmental assessment, advice on the national immunisation schedule, and feeding and sleep guidance.",
           },
         ];
 
@@ -143,7 +143,7 @@ export default async function NewbornPage() {
                     lang === "bg" ? "Мониторинг на жълтеница" : "Jaundice monitoring",
                     lang === "bg" ? "Подкрепа при хранене — кърмене и адаптирано мляко" : "Feeding support — breastfeeding and formula",
                     lang === "bg" ? "Оценка на растеж и развитие" : "Growth and developmental assessment",
-                    lang === "bg" ? "Профилактични прегледи и ваксини (0–12 м.)" : "Preventive checks and vaccines (0–12 months)",
+                    lang === "bg" ? "Профилактични прегледи и съвети за ваксини (0–12 м.)" : "Preventive checks and vaccine advice (0–12 months)",
                     lang === "bg" ? "Консултация при колики и нарушения на съня" : "Colic and sleep disorder consultation",
                   ].map((item, i) => (
                     <li key={i}>{item}</li>

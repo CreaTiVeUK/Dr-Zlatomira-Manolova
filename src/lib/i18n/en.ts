@@ -74,7 +74,7 @@ export const en = {
             subtitle: "From routine checkups to specialized diagnostic clinics, we provide a full spectrum of pediatric care.",
             general: {
                 title: "General Pediatrics",
-                desc: "Expert management of acute childhood illnesses, routine health checks, and clinical vaccinations.",
+                desc: "Expert management of acute childhood illnesses, routine health checks, and immunisation-schedule advice.",
                 btn: "VIEW SERVICE →"
             },
             allergy: {
@@ -159,7 +159,7 @@ export const en = {
             list: [
                 "• Emergency condition & fever assessment",
                 "• Treatment of respiratory infections",
-                "• Routine checkups & vaccinations",
+                "• Routine checkups & immunisation advice",
                 "• Consultations for frequent illnesses"
             ],
             btn: "Book this appointment"
@@ -197,7 +197,7 @@ export const en = {
                 { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
                 { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
-                { q: "Do you provide vaccinations?", a: "Yes, we carry out all vaccinations on the Bulgarian national immunisation schedule, including routine infant check-ups." },
+                { q: "Are vaccinations given at the practice?", a: "Vaccines are not administered at the practice. Dr. Manolova-Peneva advises parents on the Bulgarian national immunisation schedule — timing, recommended vaccines and preparing the child." },
                 { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood." }
             ]
         },
