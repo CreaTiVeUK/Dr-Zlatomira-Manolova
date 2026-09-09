@@ -62,8 +62,10 @@ const structuredData = {
     {
       "@type": "MedicalClinic",
       "@id": PRACTICE_ID,
-      "name": "АИПСМП „Д-р Златомира Манолова-Пенева“",
+      // Identical to the Google Business Profile name — Google cross-checks them.
+      "name": "АИПСМП по Педиатрия „Д-р Златомира Манолова-Пенева“",
       "alternateName": [
+        "АИПСМП „Д-р Златомира Манолова-Пенева“",
         "Manolova-Peneva Pediatrics", "Педиатрия Манолова-Пенева",
         // Short forms patients actually search for and older references use.
         "Manolova Pediatrics", "Педиатрия Манолова", "Д-р Златомира Манолова",
