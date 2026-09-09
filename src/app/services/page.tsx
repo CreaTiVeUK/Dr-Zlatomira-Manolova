@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатрични услуги в Пловдив — Д-р Манолова-Пенева",
       description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1024, height: 1024, alt: "Педиатрични услуги Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "Педиатрични услуги Пловдив" }],
     },
   };
 }

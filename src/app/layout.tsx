@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Детски лекар Пловдив — Д-р Златомира Манолова-Пенева",
     description: "Частен педиатър в Пловдив. Детска алергология, спешна педиатрия, грижа за новородени. Запазете час онлайн.",
     siteName: "Педиатрия Манолова-Пенева",
-    images: [{ url: "/logo.jpg", width: 500, height: 500, alt: "Д-р Манолова-Пенева — Педиатър Пловдив" }],
+    images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "Д-р Манолова-Пенева — Педиатър Пловдив" }],
     locale: "bg_BG",
     type: "website",
     url: SITE_URL,

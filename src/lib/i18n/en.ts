@@ -193,9 +193,9 @@ export const en = {
         faq: {
             title: "FREQUENTLY ASKED QUESTIONS",
             items: [
-                { q: "Do you offer telemedicine consultations?", a: "Yes, for follow-up appointments and general advice we offer secure video consultations. Contact us for details." },
+                { q: "Do you offer video consultations?", a: "No. For follow-up questions after a visit, registered patients can message Dr. Manolova-Peneva through the secure messages in their account on this site." },
                 { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
-                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
+                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
                 { q: "Are vaccinations given at the practice?", a: "Vaccines are not administered at the practice. Dr. Manolova-Peneva advises parents on the Bulgarian national immunisation schedule — timing, recommended vaccines and preparing the child." },
                 { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood." }

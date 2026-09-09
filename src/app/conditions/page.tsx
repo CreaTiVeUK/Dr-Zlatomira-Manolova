@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детски болести и лечение — Педиатър Пловдив",
       description: "Астма, алергии, гастро, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова-Пенева.",
       locale: "bg_BG",
-      images: [{ url: "/hero_premium.png", width: 1024, height: 1024, alt: "Детски болести и лечение Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "Детски болести и лечение Пловдив" }],
     },
   };
 }

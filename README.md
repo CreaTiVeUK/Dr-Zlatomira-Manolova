@@ -8,7 +8,6 @@ A modern, enterprise-grade appointment booking and management platform for Dr. Z
 - **Database**: [Prisma](https://www.prisma.io) with PostgreSQL
 - **Authentication**: [Auth.js v5 (NextAuth)](https://authjs.dev) + Custom Credentials
 - **Styling**: Vanilla CSS for bespoke, high-performance design
-- **Observability**: Elasticsearch & Grafana (COP Stack)
 - **Documentation**: Storybook + Automated GitHub Pages
 
 ## ✨ Key Features
@@ -22,18 +21,18 @@ A modern, enterprise-grade appointment booking and management platform for Dr. Z
 - **Dynamic Dashboard**: Complete overview of practice metrics and daily schedule.
 - **Role-Based Access**: Strict separation between `PATIENT` and `ADMIN` roles.
 - **Security Hardening**:
-    - IP-based Rate Limiting (20 req/min)
+    - Rate limiting and session revocation backed by Upstash Redis (required in production; per-instance fallback with a circuit breaker if Redis is unreachable)
     - Automated CodeQL Security Scanning
     - Audit Logging for all sensitive actions
 
 ## 🛠️ Getting Started
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+
 - Docker & Docker Compose (optional, for full stack)
 
 ### ⚡ Quick Start (Docker)
-The easiest way to run the entire stack (App + DB + Observability + Backups):
+The easiest way to run the entire stack (App + DB + daily Postgres backups):
 ```bash
 docker-compose up -d
 ```

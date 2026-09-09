@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Контакти — Педиатър Пловдив Д-р Манолова-Пенева",
       description: "Адрес, телефон и форма за контакт с педиатъра в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/logo.jpg", width: 500, height: 500, alt: "АИПСМП Д-р Манолова-Пенева — Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "АИПСМП Д-р Манолова-Пенева — Пловдив" }],
     },
   };
 }
