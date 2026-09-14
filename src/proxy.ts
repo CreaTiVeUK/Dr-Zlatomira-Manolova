@@ -13,14 +13,26 @@ function buildCSP(): string {
   // framework integration. 'unsafe-eval' is NOT included — production Next.js
   // bundles don't eval (only dev tooling does). Violations are reported to
   // /api/csp-report so regressions surface in the logs.
+  // Google tag (gtag.js for Ads/GA4) hosts — only when the tag is configured,
+  // so a deployment without NEXT_PUBLIC_GA_ID allows nothing extra.
+  const googleTag = process.env.NEXT_PUBLIC_GA_ID
+    ? {
+        script: " https://www.googletagmanager.com",
+        connect:
+          " https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com" +
+          " https://analytics.google.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net" +
+          " https://www.googleadservices.com https://www.google.com",
+        frame: " https://td.doubleclick.net",
+      }
+    : { script: "", connect: "", frame: "" };
   const directives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com",
+    "script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.apple.com" + googleTag.script,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
-    "connect-src 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",
-    "frame-src https://accounts.google.com https://www.facebook.com https://appleid.apple.com https://maps.google.com https://www.google.com",
+    "connect-src 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com" + googleTag.connect,
+    "frame-src https://accounts.google.com https://www.facebook.com https://appleid.apple.com https://maps.google.com https://www.google.com" + googleTag.frame,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self' https://accounts.google.com https://www.facebook.com https://appleid.apple.com",

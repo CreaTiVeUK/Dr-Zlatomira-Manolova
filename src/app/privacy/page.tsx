@@ -1,5 +1,6 @@
 import PageIntro from "@/components/PageIntro";
 import { getServerLanguage } from "@/lib/i18n/server";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 export default async function PrivacyPage() {
   const language = await getServerLanguage();
@@ -17,7 +18,7 @@ export default async function PrivacyPage() {
         ],
         sections: {
           introTitle: "1. Въведение",
-          introText: "Добре дошли в Zlati Pediatrics. Ние се ангажираме да защитаваме личната Ви информация и правото Ви на поверителност. Ако имате въпроси относно тази политика или начина, по който обработваме данни, свържете се с нас.",
+          introText: "Добре дошли в сайта на АИПСМП по Педиатрия „Д-р Златомира Манолова-Пенева“. Ние се ангажираме да защитаваме личната Ви информация и правото Ви на поверителност. Ако имате въпроси относно тази политика или начина, по който обработваме данни, свържете се с нас.",
           collectTitle: "2. Каква информация събираме",
           collectText: "Събираме лични данни, които доброволно ни предоставяте при регистрация, запитване, записване на час или при друга комуникация с нас.",
           collectList: [
@@ -40,10 +41,19 @@ export default async function PrivacyPage() {
           superdocText: "Възможно е да използваме услуги на SuperDoc.bg за записване на часове, рейтинг и отзиви. При използване на тези функции част от данните Ви може да се обработва съгласно правилата на Superdoc AD.",
           superdocLinkPrefix: "Когато използвате тези функционалности, част от данните Ви може да бъде обработвана съгласно тяхната ",
           superdocLink: "Политика за поверителност",
-          rightsTitle: "5. Вашите права по GDPR",
+          cookiesTitle: "5. Бисквитки, анализ и реклама",
+          cookiesIntro: "При първото посещение сайтът Ви пита дали приемате бисквитки за анализ и реклама. Докато не отговорите — или ако откажете — не се зареждат инструменти за проследяване и не се поставят такива бисквитки. Ако браузърът Ви изпраща сигнал „Do Not Track“ или „Global Privacy Control“, го третираме като отказ.",
+          cookiesList: [
+            "Необходими бисквитки — за вход в профила и защита на сесията. Поставят се винаги; без тях сайтът не работи.",
+            "Vercel Web Analytics — обобщена статистика за посещенията, без бисквитки и без лични идентификатори. Активира се само след „Приемам“.",
+            "Google (Google Ads и Google Analytics 4) — измерва посещения и резултати от рекламни кампании и може да поставя бисквитки като _ga и _gcl_au. Зарежда се само след „Приемам“ и работи в Google Consent Mode v2, така че отказът Ви се предава на Google. Обработката е съгласно политиката за поверителност на Google.",
+          ],
+          cookiesChange: "Можете да промените избора си по всяко време — банерът ще се покаже отново и всички инструменти ще спрат до нов отговор.",
+          cookiesButton: "Промяна на избора за бисквитки",
+          rightsTitle: "6. Вашите права по GDPR",
           rightsText: "Ако сте жител на Европейското икономическо пространство или Обединеното кралство, имате право на достъп, корекция, изтриване, ограничаване на обработката и преносимост на данните, когато това е приложимо.",
-          contactTitle: "6. Контакт",
-          contactText: "При въпроси или коментари относно тази политика, пишете ни на privacy@zlati-pediatrics.com.",
+          contactTitle: "7. Контакт",
+          contactText: "При въпроси или коментари относно тази политика, пишете ни на zlatomira.manolova@gmail.com.",
         },
       }
     : {
@@ -57,7 +67,7 @@ export default async function PrivacyPage() {
         ],
         sections: {
           introTitle: "1. Introduction",
-          introText: "Welcome to Zlati Pediatrics. We are committed to protecting your personal information and your right to privacy. If you have questions about this policy or our data practices, please contact us.",
+          introText: "Welcome to the website of Dr. Zlatomira Manolova-Peneva — Paediatric Practice. We are committed to protecting your personal information and your right to privacy. If you have questions about this policy or our data practices, please contact us.",
           collectTitle: "2. Information We Collect",
           collectText: "We collect personal information you voluntarily provide when you register, make an enquiry, book an appointment, or otherwise contact us.",
           collectList: [
@@ -80,10 +90,19 @@ export default async function PrivacyPage() {
           superdocText: "We may use services from SuperDoc.bg for appointment scheduling, ratings, or reviews. When these features are used, some of your data may be processed under Superdoc AD policies.",
           superdocLinkPrefix: "When you use these features, some of your data may be processed according to their ",
           superdocLink: "Privacy Policy",
-          rightsTitle: "5. Your Privacy Rights (GDPR)",
+          cookiesTitle: "5. Cookies, Analytics and Advertising",
+          cookiesIntro: "On your first visit the site asks whether you accept cookies for analytics and advertising. Until you answer — or if you decline — no tracking tools load and no such cookies are set. A browser Do Not Track or Global Privacy Control signal is treated as a refusal.",
+          cookiesList: [
+            "Essential cookies — sign-in and session protection. Always set; the site cannot work without them.",
+            "Vercel Web Analytics — aggregate visit statistics with no cookies and no personal identifiers. Enabled only after you accept.",
+            "Google (Google Ads and Google Analytics 4) — measures visits and advertising campaign results and may set cookies such as _ga and _gcl_au. Loaded only after you accept, and runs under Google Consent Mode v2 so your refusal is passed to Google. Processing is governed by Google's privacy policy.",
+          ],
+          cookiesChange: "You can change your choice at any time — the banner will appear again and every tool stops until you answer.",
+          cookiesButton: "Change cookie settings",
+          rightsTitle: "6. Your Privacy Rights (GDPR)",
           rightsText: "If you are located in the European Economic Area or the United Kingdom, you may have rights to access, correct, erase, restrict processing of, or port your personal data where applicable.",
-          contactTitle: "6. Contact Us",
-          contactText: "If you have questions or comments about this policy, email us at privacy@zlati-pediatrics.com.",
+          contactTitle: "7. Contact Us",
+          contactText: "If you have questions or comments about this policy, email us at zlatomira.manolova@gmail.com.",
         },
       };
 
@@ -140,6 +159,16 @@ export default async function PrivacyPage() {
                 </a>
                 .
               </p>
+            </section>
+
+            <section>
+              <h2>{copy.sections.cookiesTitle}</h2>
+              <p>{copy.sections.cookiesIntro}</p>
+              <ul>
+                {copy.sections.cookiesList.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+              <p>{copy.sections.cookiesChange}</p>
+              <CookieSettingsButton label={copy.sections.cookiesButton} />
             </section>
 
             <section>

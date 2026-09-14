@@ -147,6 +147,8 @@ import Footer from "@/components/Footer";
 import EmergencyBanner from "@/components/EmergencyBanner";
 import CookieConsent from "@/components/CookieConsent";
 import ConsentedAnalytics from "@/components/ConsentedAnalytics";
+import GoogleConsentDefaults from "@/components/GoogleConsentDefaults";
+import GoogleTag from "@/components/GoogleTag";
 import { getSession } from "@/lib/auth";
 import { Providers } from "@/components/Providers";
 import { getSiteUrl } from "@/lib/site-url";
@@ -163,6 +165,8 @@ export default async function RootLayout({
   return (
     <html lang={lang} className={`${montserrat.variable} ${openSans.variable}`}>
       <head>
+        {/* Consent Mode defaults must precede everything else that could load a tag. */}
+        <GoogleConsentDefaults />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -181,6 +185,7 @@ export default async function RootLayout({
           <Footer />
           <CookieConsent />
           <ConsentedAnalytics />
+          <GoogleTag />
         </Providers>
       </body>
     </html>

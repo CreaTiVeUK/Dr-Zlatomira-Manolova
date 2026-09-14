@@ -10,11 +10,16 @@ export default function CookieConsent() {
     const { dict } = useLanguage();
 
     useEffect(() => {
-        const consent = localStorage.getItem(CONSENT_KEY);
-        if (consent === null) {
+        // Show whenever there is no stored answer — on first visit, and again
+        // after the privacy page's "change cookie settings" clears it.
+        const sync = () => {
+            const consent = localStorage.getItem(CONSENT_KEY);
             // Defer state update to next tick to avoid "set-state-in-effect" lint error
-            setTimeout(() => setIsVisible(true), 0);
-        }
+            setTimeout(() => setIsVisible(consent === null), 0);
+        };
+        sync();
+        window.addEventListener(CONSENT_EVENT, sync);
+        return () => window.removeEventListener(CONSENT_EVENT, sync);
     }, []);
 
     const handleAccept = () => {
