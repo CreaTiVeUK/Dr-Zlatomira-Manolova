@@ -74,6 +74,9 @@ export default function Footer() {
                         </div>
                     </Link>
                 </div>
+                <p className="footer-emergency">
+                    <a href="tel:112" className="emergency-link">{dict.emergency}</a>
+                </p>
                 <div className="footer-bottom">
                     <p>&copy; {new Date().getFullYear()} {dict.footer.rights}</p>
                     <div className="footer-bottom__links">

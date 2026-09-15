@@ -957,6 +957,38 @@
   color: white;
 }
 
+.footer-emergency {
+  margin-top: 1rem;
+}
+
+.emergency-link {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  border-radius: 8px;
+  touch-action: manipulation;
+}
+
+.emergency-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.emergency-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.emergency-link--contact {
+  color: var(--text-error);
+  background: var(--bg-error);
+  border-inline-start: 3px solid currentColor;
+}
+
 .footer-bottom {
   position: relative;
   display: flex;

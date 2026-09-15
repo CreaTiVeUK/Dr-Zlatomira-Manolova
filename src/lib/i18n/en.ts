@@ -1,5 +1,6 @@
 
 export const en = {
+    emergency: "In an emergency, call 112",
     header: {
         utility: "Specialized pediatric care in Plovdiv",
         ageGroup: "Ages 0-18 years",
@@ -134,6 +135,7 @@ export const en = {
             text: "For administrative questions, call during consultation days (Tuesday, Thursday and Saturday) or message Dr. Manolova-Peneva through your account."
         },
         form: {
+            helper: "Use the form for administrative and scheduling questions.",
             title: "Inquiry Form",
             name: "FULL NAME",
             email: "EMAIL ADDRESS",

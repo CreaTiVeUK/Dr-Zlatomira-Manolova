@@ -60,18 +60,13 @@ export default function ContactFormClient({ dict, lang }: Props) {
           sending: "Sending...",
         };
 
-  const helperText =
-    lang === "bg"
-      ? "Използвайте формата за административни и организационни въпроси. За спешност се обадете директно."
-      : "Use the form for administrative and scheduling questions. For urgent matters, call directly.";
-
   return (
     <div className="form-panel">
       <div className="stack-md">
         <div>
           <span className="page-intro__eyebrow">{dict.contact.form.title}</span>
           <h2 style={{ marginTop: "1rem" }}>{dict.contact.form.title}</h2>
-          <p className="helper-text">{helperText}</p>
+          <p className="helper-text">{dict.contact.form.helper}</p>
         </div>
 
         {status === "success" ? (

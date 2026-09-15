@@ -57,6 +57,9 @@ export default async function ContactPage() {
                         <Phone size={20} aria-hidden="true" />
                         {dict.footer.phone}
                       </a>
+                      <a href="tel:112" className="emergency-link emergency-link--contact">
+                        {dict.emergency}
+                      </a>
                       <div className="contact-item__actions">
                         <a href="#contact-form" className="btn btn-outline">
                           <Mail size={16} />
