@@ -14,7 +14,11 @@
   --surface-accent: linear-gradient(135deg, rgba(15, 76, 129, 0.08), rgba(59, 130, 246, 0.03));
   --text-charcoal: #10233b;
   --text-muted: #596b80;
-  --text-soft: #7a8898;
+  /* #7a8898 measured 3.62:1 on white — below the 4.5:1 AA minimum for normal
+     text (it's used for .helper-text, .trust-label, and other secondary
+     copy, not just decorative fills). Darkened to clear AA (~4.76:1) while
+     keeping the same blue-gray hue. */
+  --text-soft: #64748b;
   --border: rgba(16, 35, 59, 0.12);
   --border-strong: rgba(16, 35, 59, 0.2);
   --shadow-sm: 0 10px 30px rgba(8, 31, 61, 0.06);

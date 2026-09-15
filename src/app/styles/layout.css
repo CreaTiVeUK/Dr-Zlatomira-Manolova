@@ -28,6 +28,13 @@
   content: "";
   position: absolute;
   inset: 0;
+  /* Without an explicit z-index this sits at the same auto/0 stacking level
+     as the hero photo <img> (also position:absolute) — and, being a pseudo
+     generated before any real children, loses that tie and paints *under*
+     the photo, so it darkened nothing. z-index:1 lifts it above the photo;
+     .hero-content is also z-index:1 but wins ties on DOM order (it comes
+     later), so it still stacks above this. */
+  z-index: 1;
   background:
     linear-gradient(180deg, rgba(6, 18, 31, 0.18), rgba(6, 18, 31, 0.5)),
     radial-gradient(circle at 50% 16%, rgba(158, 211, 255, 0.2), transparent 34%);
@@ -376,7 +383,10 @@
 }
 
 .sidebar-card--accent {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--primary-teal) 22%, transparent 78%), color-mix(in srgb, var(--accent-blue) 8%, transparent 92%));
+  /* Was a near-transparent 22%/8% tint — barely darker than the page behind
+     it, so the white text below measured ~1.3:1. Solid dark-to-darker teal
+     keeps white text at a comfortable AA contrast across the whole gradient. */
+  background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
   color: white;
   border-color: rgba(255, 255, 255, 0.12);
 }
@@ -474,7 +484,10 @@
 .state-shell {
   display: grid;
   place-items: center;
-  min-height: calc(100vh - 240px);
+  /* Shrinking this by the cookie banner's reserved height (see
+     CookieConsent.tsx) re-centers the card above the banner instead of
+     letting it sit, uncentered, half behind a fixed bottom overlay. */
+  min-height: calc(100vh - 240px - var(--cookie-banner-space, 0px));
   padding: 3rem 0;
 }
 
@@ -887,6 +900,15 @@
   color: var(--text-footer-muted);
 }
 
+/* The global `strong { color: var(--text-charcoal) }` rule (dark navy, meant
+   for light backgrounds) otherwise wins over this section's inherited light
+   color for any <strong> nested in it — direct rules on an element always
+   beat an ancestor's color, regardless of the ancestor selector's
+   specificity — rendering near-invisible dark-on-near-black text. */
+.footer strong {
+  color: white;
+}
+
 .footer-list a:hover {
   color: white;
 }
@@ -992,25 +1014,29 @@
 
 .emergency-banner__title {
   font-family: var(--font-heading);
-  font-size: 0.8rem;
+  /* Safety-critical text (readable-font-size): was 0.8rem/12.8px. */
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-emergency);
 }
 
 .emergency-banner__subtitle {
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
 
 /* ── Hero legibility (WCAG AA over a photograph) ────────────────────────── */
 /* Body copy sits on a photo: force light text and a scrim dark enough that
-   the ratio no longer depends on what the picture happens to show. */
+   the ratio no longer depends on what the picture happens to show. Measured
+   against the photo's lighter (cream-wall) regions, 0.6/0.82 let white text
+   drop to ~3.6-3.9:1 (below the 4.5:1 AA minimum); even 0.72/0.88 still
+   measured ~3.7-3.8:1 there, so this is pushed further for a real margin. */
 .hero-section::before {
   background:
-    linear-gradient(180deg, rgba(6, 18, 31, 0.6), rgba(6, 18, 31, 0.82)),
+    linear-gradient(180deg, rgba(6, 18, 31, 0.68), rgba(6, 18, 31, 0.85)),
     radial-gradient(circle at 50% 16%, rgba(158, 211, 255, 0.12), transparent 34%);
 }
 .hero-content p,
@@ -1042,7 +1068,9 @@
 .emergency-banner__title {
   flex: 1 1 auto;
   min-width: 0;
-  font-size: 0.78rem;
+  /* Overrides the 1rem base above back down — was 0.78rem/12.5px, below the
+     16px minimum for this safety-critical line (readable-font-size). */
+  font-size: 1rem;
   line-height: 1.3;
   margin: 0;
 }
@@ -1056,7 +1084,9 @@
 }
 .emergency-banner__subtitle {
   font-weight: 400;
-  opacity: 0.85;
+  /* var(--text-muted) alone measured borderline (~4.1-4.3:1, need 4.5:1) over
+     this banner's light pink tint; darkened for a clear margin. */
+  color: color-mix(in srgb, var(--text-muted) 75%, black 25%);
 }
 .emergency-banner__close {
   flex: 0 0 44px;

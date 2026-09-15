@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { CONSENT_EVENT, CONSENT_KEY } from "@/lib/consent";
@@ -8,6 +8,7 @@ import { CONSENT_EVENT, CONSENT_KEY } from "@/lib/consent";
 export default function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
     const { dict } = useLanguage();
+    const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // Show whenever there is no stored answer — on first visit, and again
@@ -21,6 +22,32 @@ export default function CookieConsent() {
         window.addEventListener(CONSENT_EVENT, sync);
         return () => window.removeEventListener(CONSENT_EVENT, sync);
     }, []);
+
+    useEffect(() => {
+        // The banner is fixed to the bottom of the viewport, which on short
+        // mobile screens can fully cover whatever the page put there first —
+        // a form's submit button, a hero CTA. Reserve that much space at the
+        // bottom of the page while the banner is up so nothing renders (or
+        // scrolls a keyboard focus) underneath it.
+        const root = document.documentElement;
+        if (!isVisible || !panelRef.current) {
+            root.style.setProperty("--cookie-banner-space", "0px");
+            return;
+        }
+        const el = panelRef.current;
+        const update = () => {
+            root.style.setProperty("--cookie-banner-space", `${el.offsetHeight + 24}px`);
+        };
+        update();
+        const observer = new ResizeObserver(update);
+        observer.observe(el);
+        window.addEventListener("resize", update);
+        return () => {
+            observer.disconnect();
+            window.removeEventListener("resize", update);
+            root.style.setProperty("--cookie-banner-space", "0px");
+        };
+    }, [isVisible]);
 
     const handleAccept = () => {
         localStorage.setItem(CONSENT_KEY, "true");
@@ -38,10 +65,10 @@ export default function CookieConsent() {
 
     return (
         <div className="cookie-banner" role="dialog" aria-live="polite" aria-label={dict.cookies?.title || "Cookie consent"}>
-            <div className="cookie-banner__panel">
+            <div className="cookie-banner__panel" ref={panelRef}>
                 <div className="stack-md">
-                    <h3>{dict.cookies?.title || "We respect your privacy"}</h3>
-                    <p>
+                    <h3 className="cookie-banner__title">{dict.cookies?.title || "We respect your privacy"}</h3>
+                    <p className="cookie-banner__desc">
                     {dict.cookies?.desc || "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking 'Accept', you consent to our use of cookies."}
                     {" "}
                     <Link href="/privacy" style={{ color: 'var(--primary-teal)', textDecoration: 'underline' }}>

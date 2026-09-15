@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import {} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/en";
 
 interface Testimonial {
@@ -10,9 +10,12 @@ interface Testimonial {
   author: string;
 }
 
-function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
+function ReviewCarousel({ testimonials, lang }: { testimonials: Testimonial[]; lang: "en" | "bg" }) {
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -21,16 +24,36 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const step = isMobile ? 1 : 2;
   const count = testimonials?.length || 0;
 
+  const advance = (dir: 1 | -1) => {
+    setIndex((current) => {
+      const next = current + dir * step;
+      if (next < 0) return Math.max(0, count - step);
+      if (next >= count) return 0;
+      return next;
+    });
+  };
+
   useEffect(() => {
-    if (count === 0) return;
-    const timer = setInterval(() => {
-      setIndex((current) => (current + step >= count ? 0 : current + step));
-    }, 4500);
+    // Auto-advance is decorative, not the only way to browse reviews (prev/next
+    // below always work) — so it stops entirely, rather than just speeding
+    // through, whenever reduced motion is requested, and pauses on
+    // hover/focus so it never yanks a review out from under a reading user.
+    if (count === 0 || paused || reducedMotion) return;
+    const timer = setInterval(() => advance(1), 4500);
     return () => clearInterval(timer);
-  }, [count, step]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count, step, paused, reducedMotion]);
 
   if (count === 0) return null;
 
@@ -38,8 +61,22 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
     ? [testimonials[index % count]]
     : [testimonials[index % count], testimonials[(index + 1) % count]].filter(Boolean);
 
+  const labels =
+    lang === "bg"
+      ? { prev: "Предишен отзив", next: "Следващ отзив", pause: "Пауза на превъртането", play: "Пусни превъртането" }
+      : { prev: "Previous review", next: "Next review", pause: "Pause auto-advance", play: "Resume auto-advance" };
+
   return (
-    <div style={{ display: "grid", gap: "0.9rem", width: "100%" }}>
+    <div
+      ref={containerRef}
+      style={{ display: "grid", gap: "0.9rem", width: "100%" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={(e) => {
+        if (!containerRef.current?.contains(e.relatedTarget as Node)) setPaused(false);
+      }}
+    >
       {visibleReviews.map((rev, i) => (
         <div
           key={`rev-${index}-${i}`}
@@ -48,10 +85,10 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
             display: "grid",
             gap: "0.45rem",
             padding: "0.2rem 0",
-            animation: "fadeInScale 0.7s ease-out",
+            animation: reducedMotion ? "none" : "fadeInScale 0.7s ease-out",
           }}
         >
-          <p style={{ fontSize: "0.96rem", color: "var(--text-charcoal)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: "1rem", color: "var(--text-charcoal)", lineHeight: 1.7 }}>
             &quot;{rev.text}&quot;
           </p>
           <span
@@ -68,10 +105,45 @@ function ReviewCarousel({ testimonials }: { testimonials: Testimonial[] }) {
           </span>
         </div>
       ))}
+      {count > step ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <button type="button" aria-label={labels.prev} onClick={() => advance(-1)} className="review-carousel__btn">
+            <ChevronLeft size={16} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label={paused ? labels.play : labels.pause}
+            aria-pressed={paused}
+            onClick={() => setPaused((p) => !p)}
+            className="review-carousel__btn"
+          >
+            {paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+          </button>
+          <button type="button" aria-label={labels.next} onClick={() => advance(1)} className="review-carousel__btn">
+            <ChevronRight size={16} aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
       <style jsx>{`
         @keyframes fadeInScale {
           from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        .review-carousel__btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
+          color: var(--text-muted);
+          cursor: pointer;
+        }
+        .review-carousel__btn:hover {
+          color: var(--primary-teal);
+          border-color: color-mix(in srgb, var(--primary-teal) 35%, var(--border) 65%);
         }
       `}</style>
     </div>
@@ -144,7 +216,7 @@ export default function HomeClient({ dict, lang }: Props) {
 
           <div className="trust-panel__cell trust-panel__cell--column">
             <div className="trust-label">{dict.home.trust.superdocTitle}</div>
-            <ReviewCarousel testimonials={stats.testimonials} />
+            <ReviewCarousel testimonials={stats.testimonials} lang={lang} />
           </div>
 
           <div className="trust-panel__cell trust-panel__cell--column">

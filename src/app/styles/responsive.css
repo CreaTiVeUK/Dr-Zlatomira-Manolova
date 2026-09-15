@@ -527,17 +527,23 @@
   /* Consent banner: keep it to a few lines so it does not cover the page's
      own calls to action on a phone. */
   .cookie-banner__panel {
-    padding: 0.85rem 1rem;
-    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    gap: 0.4rem;
     border-radius: 16px;
   }
-  .cookie-banner__panel h3 {
-    font-size: 1rem;
-    margin: 0;
+  /* The dialog already has an aria-label carrying this same title, so on a
+     short mobile viewport it's dropped visually (not just shrunk) to buy
+     back the height a fixed bottom bar is most likely to eat into a page's
+     own content — see focus-not-obscured / cookie-banner-space. */
+  .cookie-banner__title {
+    display: none;
   }
-  .cookie-banner__panel p {
-    font-size: 0.85rem;
-    line-height: 1.4;
+  .cookie-banner__desc {
+    /* 16px minimum (readable-font-size) — kept compact with tighter line-height
+       and less padding around it so the banner doesn't grow taller than it
+       has to. */
+    font-size: 1rem;
+    line-height: 1.3;
     margin: 0;
   }
   .cookie-banner__actions {

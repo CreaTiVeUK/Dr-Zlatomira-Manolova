@@ -7,6 +7,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 7rem;
+  scroll-padding-bottom: var(--cookie-banner-space, 0px);
   overflow-x: hidden;
 }
 
@@ -94,6 +95,10 @@ h6 {
   letter-spacing: -0.04em;
   color: var(--text-charcoal);
   text-wrap: balance;
+  /* A single long word (long Cyrillic compounds especially) must wrap
+     rather than get sliced off by an ancestor's overflow:hidden (e.g.
+     .premium-card) with no visual indication anything is missing. */
+  overflow-wrap: anywhere;
 }
 
 p,
@@ -108,7 +113,8 @@ strong {
 
 main.site-main {
   min-height: calc(100vh - 220px);
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--cookie-banner-space, 0px));
+  transition: padding-bottom var(--transition-fast);
 }
 
 .skip-link {
@@ -523,7 +529,8 @@ textarea.input-focus {
 }
 
 .helper-text {
-  font-size: 0.86rem;
+  /* Was 0.86rem/13.76px — below the 16px minimum for body text. */
+  font-size: 1rem;
   color: var(--text-soft);
 }
 

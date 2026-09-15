@@ -41,7 +41,7 @@ export default async function NotFound() {
           <Link href="/" className="btn btn-outline">{copy.home}</Link>
           <Link href="/contact" className="btn btn-primary">{copy.book}</Link>
         </div>
-        <p className="text-muted" style={{ marginTop: "3rem", fontSize: "0.875rem" }}>
+        <p className="text-muted" style={{ marginTop: "3rem", fontSize: "1rem" }}>
           {dict.footer.phone}
         </p>
       </div>
