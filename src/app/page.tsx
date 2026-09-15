@@ -9,11 +9,11 @@ import { getSiteUrl } from "@/lib/site-url";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { absolute: "Детски лекар Пловдив — Д-р Златомира Манолова-Пенева | Педиатър" },
-    description: "Д-р Манолова-Пенева — педиатър и алерголог в Пловдив. Прегледи за деца 0–18 г., алергологични тестове, грижа за новородени. Запазете час онлайн.",
+    description: "Д-р Манолова-Пенева — педиатър в Пловдив. Прегледи за деца 0–18 г., грижа за новородени, профилактични прегледи. Запазете час онлайн.",
     alternates: { canonical: getSiteUrl() },
     openGraph: {
       title: "Детски лекар Пловдив — Д-р Манолова-Пенева",
-      description: "Педиатър в Пловдив. Прегледи, детска алергология, новородени, съвети за ваксини.",
+      description: "Педиатър в Пловдив. Прегледи, новородени, профилактика, съвети за ваксини.",
       locale: "bg_BG",
       images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "Д-р Манолова-Пенева — Детски лекар Пловдив" }],
     },
@@ -56,8 +56,8 @@ export default async function Home() {
             <div className="hero-copy-block">
               <h1 className="hero-subtitle">
                 {lang === "bg"
-                  ? "Грижа за детското здраве – от първите дни до юношеството"
-                  : "Children's health care – from the first days to adolescence"}
+                  ? "Грижа за детското здраве в Пловдив – от първите дни до юношеството"
+                  : "Children's health care in Plovdiv – from the first days to adolescence"}
               </h1>
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 

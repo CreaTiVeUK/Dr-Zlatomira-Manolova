@@ -199,9 +199,6 @@ export default async function NewbornPage() {
             <Link href="/services" className="btn btn-outline">
               ← {lang === "bg" ? "Всички услуги" : "All services"}
             </Link>
-            <Link href="/services/allergy" className="btn btn-outline">
-              {lang === "bg" ? "Детска алергология →" : "Paediatric allergy →"}
-            </Link>
             <Link href="/book" className="btn btn-primary">
               {dict.home.hero.bookBtn}
             </Link>

@@ -77,11 +77,6 @@ export const en = {
                 desc: "Expert management of acute childhood illnesses and routine health checks.",
                 btn: "VIEW SERVICE →"
             },
-            allergy: {
-                title: "Allergy & Asthma",
-                desc: "Specialized diagnostic testing and long-term treatment plans for complex childhood allergies.",
-                btn: "VIEW SERVICE →"
-            },
             newborn: {
                 title: "Newborn Care",
                 desc: "Specialized support for newborn health, feeding issues, and early development screening.",
@@ -164,24 +159,12 @@ export const en = {
             ],
             btn: "Book this appointment"
         },
-        allergy: {
-            title: "Pediatric Allergy",
-            desc: "Specialized diagnostic tests and long-term treatment plans for children suffering from complex allergies.",
-            list: [
-                "• Skin prick testing (same day results)",
-                "• Food allergy management",
-                "• Eczema and skin condition treatment",
-                "• Asthma and hay fever care"
-            ],
-            btn: "Book this appointment"
-        }
     },
     conditions: {
         title: "Treated Conditions",
         subtitle: "Dr. Manolova-Peneva provides expert assessment and management of a wide range of pediatric conditions - from common childhood illnesses to complex chronic diseases.",
-        respiratory: { title: "Respiratory", list: ["• Asthma & Wheezing", "• Chronic Cough", "• Chest Infections"] },
+        respiratory: { title: "Respiratory", list: ["• Wheezing", "• Chronic Cough", "• Chest Infections"] },
         gastro: { title: "Gastrointestinal", list: ["• Reflux & Vomiting", "• Abdominal Pain", "• Constipation"] },
-        allergy: { title: "Allergic", list: ["• Food Allergies", "• Eczema", "• Hay Fever"] },
         neonatal: { title: "Neonatal", list: ["• Colic", "• Breastfeeding and feeding support", "• Regurgitation and gastro-oesophageal reflux", "• Insufficient weight gain", "• Weaning and introducing solid foods", "• Jaundice monitoring", "• Umbilical stump care", "• Skin changes and rashes", "• Sleep disturbances and prolonged crying", "• Changes in stools (constipation or diarrhoea)"] },
         general: { title: "Acute Conditions", list: ["• High Fever", "• Acute Viral Infections", "• Respiratory Distress"] }
     },
@@ -197,7 +180,7 @@ export const en = {
                 { q: "Do you work with private health insurance?", a: "We issue an invoice for the consultation, which you can submit to your health insurer for reimbursement." },
                 { q: "Do you offer video consultations?", a: "No. For follow-up questions after a visit, registered patients can message Dr. Manolova-Peneva through the secure messages in their account on this site." },
                 { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
-                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's medical records and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
+                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's medical records and a form of ID. For infants, a favourite toy can help keep them calm." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
                 { q: "Do you provide vaccinations on the national immunisation schedule?", a: "Vaccinations are administered by the child's general practitioner (GP). I can advise and give guidance on immunisations, but I do not carry out the vaccination itself." },
                 { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood." }
@@ -205,7 +188,7 @@ export const en = {
         },
         cta: {
             title: "Need advice?",
-            text: "Send a direct inquiry to our clinical team.",
+            text: "Send a direct inquiry to Dr. Manolova-Peneva.",
             btn: "CONTACT US"
         },
         // Leaving article content static/mixed as they are links to external BG media mostly.

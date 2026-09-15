@@ -6,11 +6,11 @@ import { getSiteUrl } from "@/lib/site-url";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Детски болести и лечение в Пловдив",
-    description: "Лечение на астма, хранителни алергии, рефлукс, висока температура и повече при деца в Пловдив. Д-р Манолова-Пенева — педиатър специалист. Запазете час.",
+    description: "Лечение на респираторни инфекции, рефлукс, висока температура и повече при деца в Пловдив. Д-р Манолова-Пенева — педиатър специалист. Запазете час.",
     alternates: { canonical: `${getSiteUrl()}/conditions` },
     openGraph: {
       title: "Детски болести и лечение — Педиатър Пловдив",
-      description: "Астма, алергии, гастро, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова-Пенева.",
+      description: "Респираторни, гастроинтестинални, неонатални и спешни педиатрични заболявания. Лечение в Пловдив при д-р Манолова-Пенева.",
       locale: "bg_BG",
       images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "Детски болести и лечение Пловдив" }],
     },
@@ -55,12 +55,6 @@ export default async function ConditionsPage() {
             <h2>{dict.conditions.gastro.title}</h2>
             <ul className="list-checked">
               {dict.conditions.gastro.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
-            </ul>
-          </div>
-          <div className="premium-card">
-            <h2>{dict.conditions.allergy.title}</h2>
-            <ul className="list-checked">
-              {dict.conditions.allergy.list.map((item, i) => <li key={i}>{stripLeadingBullet(item)}</li>)}
             </ul>
           </div>
           <div className="premium-card">

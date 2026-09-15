@@ -8,11 +8,11 @@ import { getSiteUrl } from "@/lib/site-url";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Педиатрични услуги в Пловдив",
-    description: "Пълен спектър от педиатрични услуги в Пловдив — детска алергология, кожно-алергични тестове, грижа за новородени, профилактични прегледи. Д-р Манолова-Пенева.",
+    description: "Пълен спектър от педиатрични услуги в Пловдив — спешна и обща педиатрия, грижа за новородени, профилактични прегледи. Д-р Манолова-Пенева.",
     alternates: { canonical: `${getSiteUrl()}/services` },
     openGraph: {
       title: "Педиатрични услуги в Пловдив — Д-р Манолова-Пенева",
-      description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
+      description: "Спешна и обща педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
       locale: "bg_BG",
       images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "Педиатрични услуги Пловдив" }],
     },
@@ -50,7 +50,7 @@ export default async function ServicesPage() {
           <article className="service-row">
             <div className="service-media">
               <Image
-                src="/photo-consulting-room.jpg"
+                src="/photo-exam-couch.jpg"
                 alt={dict.servicesPage.general.title}
                 fill
                 style={{ objectFit: "cover" }}
@@ -70,37 +70,10 @@ export default async function ServicesPage() {
               </Link>
             </div>
           </article>
-
-          <article className="service-row service-row-reverse">
-            <div className="service-copy order-1-mobile">
-              <span className="page-intro__eyebrow">{dict.home.services.allergy.title}</span>
-              <h2>{dict.servicesPage.allergy.title}</h2>
-              <p>{dict.servicesPage.allergy.desc}</p>
-              <ul>
-                {dict.servicesPage.allergy.list.map((item, i) => (
-                  <li key={i}>{stripLeadingBullet(item)}</li>
-                ))}
-              </ul>
-              <Link href="/book" className="btn btn-outline">
-                {dict.servicesPage.allergy.btn}
-              </Link>
-            </div>
-            <div className="service-media order-2-mobile">
-              <Image
-                src="/photo-exam-couch.jpg"
-                alt={dict.servicesPage.allergy.title}
-                fill
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-          </article>
         </div>
 
         {/* Sub-service links for internal SEO navigation */}
         <nav aria-label="Специализирани услуги" style={{ marginTop: "3rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          <Link href="/services/allergy" className="btn btn-outline">
-            {dict.servicesPage.allergy.title} →
-          </Link>
           <Link href="/services/newborn" className="btn btn-outline">
             {dict.home.services.newborn.title} →
           </Link>
