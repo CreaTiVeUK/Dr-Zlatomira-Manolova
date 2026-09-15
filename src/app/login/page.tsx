@@ -46,9 +46,8 @@ function SocialLoginButton({ provider, label, dict, callbackUrl }: { provider: s
         background: style.bg,
         color: style.text,
         borderColor: style.border,
-        boxShadow: provider === "google" ? "0 1px 2px rgba(60,64,67,0.3), 0 1px 3px rgba(60,64,67,0.15)" : undefined,
       }}
-      className="social-btn btn-outline"
+      className={`btn social-btn btn-outline${provider === "google" ? " social-btn--google" : ""}`}
       type="button"
     >
       <span style={{ display: "flex", alignItems: "center" }}>{icons[provider]}</span>

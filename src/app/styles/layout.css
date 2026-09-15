@@ -533,6 +533,21 @@
   border-radius: 16px;
 }
 
+/* Google's brand shadow, as a class rather than an inline style: an inline
+   box-shadow always wins over the stylesheet's :focus-visible ring
+   (inline beats any non-!important selector), so the Google button never
+   showed a focus ring when tabbed to. The :focus-visible override below
+   has higher specificity (class + pseudo-class) than either the plain
+   class rule here or the generic :focus-visible rule in base.css, so it
+   wins regardless of source order. */
+.social-btn--google {
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px rgba(60, 64, 67, 0.15);
+}
+
+.social-btn--google:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
 .booking-card {
   max-width: 1080px;
   margin: 0 auto;
