@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Award, Baby, HeartPulse, MapPin, ShieldCheck, Stethoscope } from "lucide-react";
+import { Award, Baby, HeartPulse, MapPin, Stethoscope } from "lucide-react";
 import HomeClient from "@/components/HomeClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
@@ -81,11 +81,12 @@ export default async function Home() {
 
             <div className="hero-trust-grid">
               <div className="hero-trust-card">
-                {/* The Superdoc rating this tile used to show has no verifiable
-                    source (her profile URL is dead), so it states a fact instead. */}
-                <ShieldCheck size={18} color="white" />
-                <strong>{lang === "bg" ? "Вт · Чт · Сб" : "Tue · Thu · Sat"}</strong>
-                <span>{lang === "bg" ? "приемни дни · деца 0–18 г." : "consultation days · ages 0–18"}</span>
+                {/* A schedule chip sat here — logistics, not a trust signal, and
+                    thin next to the other two cards' credentials. This is her
+                    one verified award not yet represented in the trust bar. */}
+                <Award size={18} color="white" />
+                <strong>{lang === "bg" ? "„Ти си нашето бъдеще“" : "“You are our future”"}</strong>
+                <span>{lang === "bg" ? "Номинация от Българския лекарски съюз (2023)" : "Bulgarian Medical Association nomination (2023)"}</span>
               </div>
               <div className="hero-trust-card">
                 <Stethoscope size={18} color="white" />
