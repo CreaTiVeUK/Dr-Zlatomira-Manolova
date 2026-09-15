@@ -133,8 +133,8 @@ export default async function NewbornPage() {
                 </span>
                 <h2>
                   {lang === "bg"
-                    ? "Специализирана грижа от 0 до 12 месеца"
-                    : "Specialist care from birth to 12 months"}
+                    ? "Чести състояния и грижи през първите месеци"
+                    : "Common conditions and care in the first months"}
                 </h2>
                 <p>{dict.home.services.newborn.desc}</p>
                 <ul>

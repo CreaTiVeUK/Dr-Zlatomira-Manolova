@@ -49,7 +49,7 @@ export const en = {
         hero: {
             title: "Elite Medical Care",
             titleHighlight: "A Mission for Children.",
-            subtitle: "Head of Second Pediatric Department, MHAT Pazardzhik. Recipient of 'You are our future' award by BMA. Expert diagnostics and compassionate care.",
+            subtitle: "I see the youngest patients from the neonatal period and follow their health through infancy, childhood and adolescence. I diagnose and treat acute respiratory infections and other common childhood illnesses, and provide preventive check-ups, consultations and monitoring of the child's physical and neuro-psychological development.",
             bookBtn: "Book Consultation",
             servicesBtn: "View Services",
         },
@@ -74,7 +74,7 @@ export const en = {
             subtitle: "From routine checkups to specialized diagnostic clinics, we provide a full spectrum of pediatric care.",
             general: {
                 title: "General Pediatrics",
-                desc: "Expert management of acute childhood illnesses, routine health checks, and immunisation-schedule advice.",
+                desc: "Expert management of acute childhood illnesses and routine health checks.",
                 btn: "VIEW SERVICE →"
             },
             allergy: {
@@ -99,7 +99,7 @@ export const en = {
             qualifications: "QUALIFICATIONS & HONORS",
             qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of the Bulgarian Paediatric Association", "• Member of the Bulgarian Medical Association"],
             specialties: "EXPERTISE",
-            specList: ["• Pediatric Intensive Care", "• Emergency Conditions", "• Pediatric Pulmonology", "• Early Child Development"],
+            specList: ["• Experience in paediatric intensive care and emergency conditions in children", "• Diagnosis and treatment of acute upper and lower respiratory tract illnesses", "• Preventive check-ups and monitoring of physical and neuro-psychological development"],
             bioBtn: "Read Full Interview",
             imageAlt: "Dr. Manolova-Peneva with patient"
         },
@@ -132,7 +132,7 @@ export const en = {
         title: "Book an Appointment",
         subtitle: "Contact Dr. Manolova-Peneva for expert pediatric care and clinical diagnostics.",
         clinics: "Our Locations",
-        medicalCenter: "Dr. Zlatomira Manolova-Peneva — Paediatric Practice (Plovdiv)",
+        medicalCenter: "Dr. Zlatomira Manolova-Peneva — Paediatric Practice",
         partnerHospital: "MHAT Pazardzhik",
         addressMain: "A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv, Bulgaria",
         addressSecond: "Pazardzhik, Bulgaria",
@@ -152,14 +152,14 @@ export const en = {
     },
     servicesPage: {
         title: "Our Pediatric Services",
-        subtitle: "We provide a full spectrum of pediatric care - from routine preventative checks to specialized diagnostic clinics.",
+        subtitle: "Children's health care at every stage – from the earliest age to adolescence.",
         general: {
             title: "Emergency & General Pediatrics",
             desc: "Drawing on her intensive care experience, Dr. Manolova-Peneva provides competent assessment for acute conditions as well as precise preventative care.",
             list: [
                 "• Emergency condition & fever assessment",
                 "• Treatment of respiratory infections",
-                "• Routine checkups & immunisation advice",
+                "• Routine check-ups",
                 "• Consultations for frequent illnesses"
             ],
             btn: "Book this appointment"
@@ -182,7 +182,7 @@ export const en = {
         respiratory: { title: "Respiratory", list: ["• Asthma & Wheezing", "• Chronic Cough", "• Chest Infections"] },
         gastro: { title: "Gastrointestinal", list: ["• Reflux & Vomiting", "• Abdominal Pain", "• Constipation"] },
         allergy: { title: "Allergic", list: ["• Food Allergies", "• Eczema", "• Hay Fever"] },
-        neonatal: { title: "Neonatal", list: ["• Colic & Feeding Support", "• Jaundice Monitoring", "• Newborn Growth"] },
+        neonatal: { title: "Neonatal", list: ["• Colic", "• Breastfeeding and feeding support", "• Regurgitation and gastro-oesophageal reflux", "• Insufficient weight gain", "• Weaning and introducing solid foods", "• Jaundice monitoring", "• Umbilical stump care", "• Skin changes and rashes", "• Sleep disturbances and prolonged crying", "• Changes in stools (constipation or diarrhoea)"] },
         general: { title: "Acute Conditions", list: ["• High Fever", "• Acute Viral Infections", "• Respiratory Distress"] }
     },
     resources: {
@@ -193,11 +193,13 @@ export const en = {
         faq: {
             title: "FREQUENTLY ASKED QUESTIONS",
             items: [
+                { q: "How do I book an urgent appointment?", a: "You can call the practice directly on +359 88 5557110, or book online through SuperDoc or through our online booking platform." },
+                { q: "Do you work with private health insurance?", a: "We issue an invoice for the consultation, which you can submit to your health insurer for reimbursement." },
                 { q: "Do you offer video consultations?", a: "No. For follow-up questions after a visit, registered patients can message Dr. Manolova-Peneva through the secure messages in their account on this site." },
                 { q: "What age range do you accept?", a: "Dr. Manolova-Peneva sees children from age 0 to 18 — from newborns through to teenagers." },
-                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's health booklet and a form of ID. For infants, a favourite toy can help keep them calm." },
+                { q: "How do I prepare my child for their first appointment?", a: "Please bring your child's medical records and a form of ID. For infants, a favourite toy can help keep them calm. Our staff will guide you on arrival." },
                 { q: "What should I do if my baby under 3 months has a fever?", a: "Any temperature above 38°C in a baby under 3 months requires immediate medical assessment. Call the clinic directly or contact emergency services (112)." },
-                { q: "Are vaccinations given at the practice?", a: "Vaccines are not administered at the practice. Dr. Manolova-Peneva advises parents on the Bulgarian national immunisation schedule — timing, recommended vaccines and preparing the child." },
+                { q: "Do you provide vaccinations on the national immunisation schedule?", a: "Vaccinations are administered by the child's general practitioner (GP). I can advise and give guidance on immunisations, but I do not carry out the vaccination itself." },
                 { q: "Is parking available near the clinic?", a: "The clinic is located in Zh.K. Trakiya, with ample parking near address A11, Zahari Zograf neighbourhood." }
             ]
         },

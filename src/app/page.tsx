@@ -56,8 +56,8 @@ export default async function Home() {
             <div className="hero-copy-block">
               <h1 className="hero-subtitle">
                 {lang === "bg"
-                  ? "Детски лекар в Пловдив — Д-р Златомира Манолова-Пенева"
-                  : "Paediatrician in Plovdiv — Dr. Zlatomira Manolova-Peneva"}
+                  ? "Грижа за детското здраве – от първите дни до юношеството"
+                  : "Children's health care – from the first days to adolescence"}
               </h1>
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 
@@ -130,25 +130,6 @@ export default async function Home() {
               <p>{dict.home.services.general.desc}</p>
               <Link href="/services" className="btn btn-outline">
                 {dict.home.services.general.btn}
-              </Link>
-            </article>
-
-            <article className="premium-card reveal delay-2">
-              <div className="service-media" style={{ minHeight: "240px" }}>
-                <Image
-                  src="/photo-exam-couch.jpg"
-                  alt={dict.home.services.allergy.title}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="icon-badge">
-                <ShieldCheck size={18} />
-              </div>
-              <h3>{dict.home.services.allergy.title}</h3>
-              <p>{dict.home.services.allergy.desc}</p>
-              <Link href="/services" className="btn btn-outline">
-                {dict.home.services.allergy.btn}
               </Link>
             </article>
 

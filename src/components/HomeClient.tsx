@@ -170,9 +170,6 @@ export default function HomeClient({ dict, lang }: Props) {
               <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
                 <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={120} height={44} style={{ objectFit: "contain" }} />
               </a>
-              <a href="https://plovdimed.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
-                <Image src="/plovdimed_logo.png" alt="Plovdimed" width={120} height={44} style={{ objectFit: "contain" }} />
-              </a>
               <a href="https://superdoc.bg/lekar/zlatomira-manolova" target="_blank" rel="noopener noreferrer" className="partner-logo">
                 <Image src="/superdoc_logo.svg" alt="Superdoc" width={120} height={44} style={{ objectFit: "contain" }} />
               </a>
