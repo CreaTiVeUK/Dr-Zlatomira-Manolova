@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { ChevronRight, FileText, Filter, MessageSquare, Mic, Plus, Sparkles } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import EmptyState from "@/components/EmptyState";
+import StatusBanner from "@/components/StatusBanner";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
@@ -63,10 +64,12 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
   return (
     <div className="admin-page">
       {sessionsUnavailable ? (
-        <div className="status-banner status-banner--warning">
+        // Ambient, page-load notice — not the result of anything the viewer
+        // did, so it must not steal focus from wherever the browser puts it.
+        <StatusBanner variant="warning">
           <strong>{copy.unavailableTitle}</strong>
           <p>{copy.unavailableDescription}</p>
-        </div>
+        </StatusBanner>
       ) : null}
 
       <div className="admin-page-header">

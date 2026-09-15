@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type Status = "loading" | "success" | "error" | "expired";
@@ -90,16 +91,18 @@ export default function VerifyEmailPage() {
                 />
 
                 {status === "loading" && (
-                    <div className="status-banner status-banner--info">
+                    // Transient — about to be replaced by the actual result;
+                    // nothing worth interrupting the user to announce yet.
+                    <StatusBanner variant="info">
                         {copy.loading}
-                    </div>
+                    </StatusBanner>
                 )}
 
                 {status === "success" && (
                     <>
-                        <div className="status-banner status-banner--success">
+                        <StatusBanner variant="success" focus>
                             <strong>{copy.success}</strong> {copy.successSub}
-                        </div>
+                        </StatusBanner>
                         <Link href="/login" className="btn btn-primary" style={{ marginTop: "1rem", display: "inline-block" }}>
                             {copy.login}
                         </Link>
@@ -108,13 +111,13 @@ export default function VerifyEmailPage() {
 
                 {(status === "error" || status === "expired") && (
                     <>
-                        <div className="status-banner status-banner--error">
+                        <StatusBanner variant="error" focus>
                             <strong>{message}</strong>
-                        </div>
+                        </StatusBanner>
                         {resendState === "sent" ? (
-                            <div className="status-banner status-banner--success" style={{ marginTop: "0.75rem" }}>
+                            <StatusBanner variant="success" focus style={{ marginTop: "0.75rem" }}>
                                 {copy.resent}
-                            </div>
+                            </StatusBanner>
                         ) : (
                             <button
                                 onClick={handleResend}

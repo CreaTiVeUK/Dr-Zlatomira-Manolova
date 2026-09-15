@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn, getSession } from "next-auth/react";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -191,7 +192,7 @@ export default function LoginPage() {
         />
 
         {error ? (
-          <div className="status-banner status-banner--error" style={{ display: "grid", gap: "0.6rem" }}>
+          <StatusBanner variant="error" focus style={{ display: "grid", gap: "0.6rem" }}>
             <strong>{error}</strong>
             {lockoutRemainingMs !== null && lockoutRemainingMs > 0 && (
               <span style={{ fontSize: "0.875rem" }}>
@@ -232,7 +233,7 @@ export default function LoginPage() {
                 </button>
               )
             )}
-          </div>
+          </StatusBanner>
         ) : null}
 
         <form onSubmit={handleSubmit} className="form-grid">

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Send } from "lucide-react";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Thread {
@@ -195,9 +196,9 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
             </div>
 
             {error ? (
-                <div className="status-banner status-banner--error">
+                <StatusBanner variant="error" focus>
                     <strong>{error}</strong>
-                </div>
+                </StatusBanner>
             ) : null}
         </div>
     );

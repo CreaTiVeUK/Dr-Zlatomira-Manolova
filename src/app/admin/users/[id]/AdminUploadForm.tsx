@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminUploadForm({ userId }: { userId: string }) {
@@ -58,9 +59,9 @@ export default function AdminUploadForm({ userId }: { userId: string }) {
   return (
     <form onSubmit={handleUpload} className="admin-upload-form">
       {feedback && (
-        <div className={`status-banner status-banner--${feedback.type === "success" ? "success" : "error"}`} style={{ marginBottom: "0.75rem" }}>
+        <StatusBanner variant={feedback.type === "success" ? "success" : "error"} focus style={{ marginBottom: "0.75rem" }}>
           {feedback.message}
-        </div>
+        </StatusBanner>
       )}
       <input
         type="file"

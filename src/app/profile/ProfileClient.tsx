@@ -6,6 +6,7 @@ import "react-phone-input-2/lib/high-res.css";
 import { Baby, FileText, Trash2, Upload, UserRound } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Child {
@@ -213,9 +214,9 @@ export default function ProfileClient() {
             />
 
             {message ? (
-              <div className={`status-banner ${message.type === "success" ? "status-banner--success" : "status-banner--error"}`}>
+              <StatusBanner variant={message.type === "success" ? "success" : "error"} focus>
                 <strong>{message.text}</strong>
-              </div>
+              </StatusBanner>
             ) : null}
 
             <form onSubmit={handleSubmit} className="form-grid">
@@ -347,9 +348,9 @@ export default function ProfileClient() {
             </div>
 
             {docMessage ? (
-              <div className={`status-banner ${docMessage.type === "success" ? "status-banner--success" : "status-banner--error"}`} style={{ marginBottom: "1rem" }}>
+              <StatusBanner variant={docMessage.type === "success" ? "success" : "error"} focus style={{ marginBottom: "1rem" }}>
                 <strong>{docMessage.text}</strong>
-              </div>
+              </StatusBanner>
             ) : null}
 
             {documents.length === 0 ? (

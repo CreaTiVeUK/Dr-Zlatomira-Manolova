@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import StatusBanner from "@/components/StatusBanner";
 
 type SetupState =
   | { stage: "idle" }
@@ -109,7 +110,7 @@ export default function TwoFactorManager({ enabled, language }: Props) {
             required
           />
         </div>
-        {error && <div className="status-banner status-banner--error">{error}</div>}
+        {error && <StatusBanner variant="error" focus>{error}</StatusBanner>}
         <button type="submit" className="btn btn-outline" disabled={loading}>
           {loading ? "…" : t("Изключи 2FA", "Disable 2FA")}
         </button>
@@ -120,7 +121,7 @@ export default function TwoFactorManager({ enabled, language }: Props) {
   if (setupState.stage === "verified") {
     return (
       <div style={{ display: "grid", gap: "1rem", maxWidth: "32rem" }}>
-        <div className="status-banner status-banner--success">
+        <StatusBanner variant="success" focus>
           <strong>{t("2FA е активирана.", "2FA enabled.")}</strong>
           <p>
             {t(
@@ -128,7 +129,7 @@ export default function TwoFactorManager({ enabled, language }: Props) {
               "Save these backup codes somewhere safe. Each works exactly once.",
             )}
           </p>
-        </div>
+        </StatusBanner>
         <pre
           style={{
             background: "var(--surface-page)",
@@ -199,7 +200,7 @@ export default function TwoFactorManager({ enabled, language }: Props) {
             autoFocus
           />
         </div>
-        {error && <div className="status-banner status-banner--error">{error}</div>}
+        {error && <StatusBanner variant="error" focus>{error}</StatusBanner>}
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? "…" : t("Потвърди и активирай", "Confirm and enable")}
         </button>
@@ -215,7 +216,7 @@ export default function TwoFactorManager({ enabled, language }: Props) {
           "Two-factor authentication adds an extra layer of security to your admin account.",
         )}
       </p>
-      {error && <div className="status-banner status-banner--error" style={{ marginTop: "1rem" }}>{error}</div>}
+      {error && <StatusBanner variant="error" focus style={{ marginTop: "1rem" }}>{error}</StatusBanner>}
       <button type="button" className="btn btn-primary" onClick={startSetup} disabled={loading} style={{ marginTop: "1rem" }}>
         {loading ? "…" : t("Активирай 2FA", "Enable 2FA")}
       </button>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ResetPasswordPage() {
@@ -133,7 +134,7 @@ export default function ResetPasswordPage() {
         />
 
         {error ? (
-          <div className="status-banner status-banner--error" style={{ display: "grid", gap: "0.6rem" }}>
+          <StatusBanner variant="error" focus style={{ display: "grid", gap: "0.6rem" }}>
             <strong>{error}</strong>
             {(error === copy.errorInvalid) && (
               <Link
@@ -143,7 +144,7 @@ export default function ResetPasswordPage() {
                 {copy.requestNew}
               </Link>
             )}
-          </div>
+          </StatusBanner>
         ) : null}
 
         <form onSubmit={handleSubmit} className="form-grid">

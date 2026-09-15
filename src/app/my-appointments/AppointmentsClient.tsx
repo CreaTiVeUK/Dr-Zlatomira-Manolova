@@ -7,6 +7,7 @@ import { format, isAfter, subHours } from "date-fns";
 import { CalendarCheck2, CalendarClock, CalendarX2, Download, LockKeyhole, PencilLine } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { generateICS } from "@/lib/calendar";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -213,9 +214,9 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
         />
 
         {message ? (
-          <div className="status-banner status-banner--success">
+          <StatusBanner variant="success" focus>
             <strong>{message}</strong>
-          </div>
+          </StatusBanner>
         ) : null}
 
         <div className="appointments-summary">

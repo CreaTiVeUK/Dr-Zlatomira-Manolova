@@ -7,6 +7,7 @@ import { addDays, endOfDay, format, startOfDay } from "date-fns";
 import { CalendarDays, Clock3, LockKeyhole, ShieldCheck } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { hoursForDay } from "@/lib/clinic-hours";
 
@@ -255,15 +256,19 @@ export default function BookClient({ session }: BookClientProps) {
             </div>
 
             {message ? (
-              <div className="status-banner status-banner--warning">
+              // Result of the booking attempt the user just made — focus it.
+              <StatusBanner variant="warning" focus>
                 <strong>{message}</strong>
-              </div>
+              </StatusBanner>
             ) : null}
 
             {slots.length === 0 ? (
-              <div className="status-banner status-banner--warning">
+              // Appears passively as the user browses dates — never steal
+              // focus off the date strip mid-browse; the live region still
+              // announces it.
+              <StatusBanner variant="warning">
                 <strong>{dict.booking.closedDay}</strong>
-              </div>
+              </StatusBanner>
             ) : null}
 
             <div className="slot-grid">

@@ -4,6 +4,7 @@ import AdminUploadForm from "./AdminUploadForm";
 import AudioRecorder from "./AudioRecorder";
 import DeleteDocumentButton from "./DeleteDocumentButton";
 import EmptyState from "@/components/EmptyState";
+import StatusBanner from "@/components/StatusBanner";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { tryDecrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
@@ -103,10 +104,11 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
           </div>
           <div className="admin-panel__body admin-section-stack">
             {!documentsAvailable ? (
-              <div className="status-banner status-banner--warning">
+              // Ambient, page-load notice — no focus steal; see admin/sessions.
+              <StatusBanner variant="warning">
                 <strong>{copy.documentsUnavailableTitle}</strong>
                 <p>{copy.documentsUnavailableDescription}</p>
-              </div>
+              </StatusBanner>
             ) : (
               <>
                 <div className="surface-card surface-card--accent">

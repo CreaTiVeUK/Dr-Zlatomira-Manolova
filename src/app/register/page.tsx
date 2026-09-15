@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function RegisterPage() {
@@ -54,9 +55,9 @@ export default function RegisterPage() {
         />
 
         {error ? (
-          <div className="status-banner status-banner--error">
+          <StatusBanner variant="error" focus>
             <strong>{error}</strong>
-          </div>
+          </StatusBanner>
         ) : null}
 
         <form onSubmit={handleSubmit} className="form-grid">

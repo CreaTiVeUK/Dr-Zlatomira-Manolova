@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import EmptyState from "@/components/EmptyState";
+import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Message {
@@ -126,9 +127,9 @@ export default function MessagesClient({ currentUserId }: { currentUserId: strin
                 </div>
 
                 {error ? (
-                    <div className="status-banner status-banner--error" style={{ marginTop: "1rem" }}>
+                    <StatusBanner variant="error" focus style={{ marginTop: "1rem" }}>
                         <strong>{error}</strong>
-                    </div>
+                    </StatusBanner>
                 ) : null}
             </div>
         </div>

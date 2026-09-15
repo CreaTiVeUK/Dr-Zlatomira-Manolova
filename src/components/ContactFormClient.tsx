@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/en";
+import StatusBanner from "@/components/StatusBanner";
 
 interface Props {
   dict: Dictionary;
@@ -74,7 +75,7 @@ export default function ContactFormClient({ dict, lang }: Props) {
         </div>
 
         {status === "success" ? (
-          <div className="status-banner status-banner--success">
+          <StatusBanner variant="success" focus>
             <strong>{successCopy.title}</strong>
             <p>{successCopy.body}</p>
             <button
@@ -91,13 +92,13 @@ export default function ContactFormClient({ dict, lang }: Props) {
             >
               {successCopy.reset}
             </button>
-          </div>
+          </StatusBanner>
         ) : (
           <form onSubmit={handleSubmit} className="form-grid">
             {status === "error" && (
-              <div className="status-banner status-banner--error">
+              <StatusBanner variant="error" focus>
                 <strong>{errorMsg}</strong>
-              </div>
+              </StatusBanner>
             )}
 
             <div className="field">
