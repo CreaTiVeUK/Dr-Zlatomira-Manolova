@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детска алергология в Пловдив — Д-р Манолова-Пенева",
       description: "Кожно-алергични тестове, астма, хранителни алергии и екзема при деца в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/service_allergy_consultation_1769272828650.png", width: 1024, height: 1024, alt: "Детска алергологична консултация Пловдив" }],
+      images: [{ url: "/photo-exam-couch.jpg", width: 1448, height: 1086, alt: "Детска алергологична консултация Пловдив" }],
     },
   };
 }
@@ -116,7 +116,7 @@ export default async function AllergyPage() {
             <article className="service-row">
               <div className="service-media">
                 <Image
-                  src="/service_allergy_consultation_1769272828650.png"
+                  src="/photo-exam-couch.jpg"
                   alt={dict.servicesPage.allergy.title}
                   fill
                   style={{ objectFit: "cover" }}

@@ -103,7 +103,7 @@ export const en = {
             bioBtn: "Read Full Interview",
             imageAlt: "Dr. Manolova-Peneva with patient"
         },
-        heroImageAlt: "Clinical Consultation with Dr. Manolova-Peneva",
+        heroImageAlt: "The practice waiting room — tree wall, bench and children's artwork",
         partnerImageAlt: "Partner Hospital Logos"
     },
     booking: {
@@ -140,7 +140,7 @@ export const en = {
         email: "Email",
         admin: {
             title: "Administration & Payments",
-            text: "For administrative or payment related enquiries, please contact our central office between 09:00 - 17:00."
+            text: "For administrative questions, call during consultation days (Tuesday, Thursday and Saturday) or message Dr. Manolova-Peneva through your account."
         },
         form: {
             title: "Inquiry Form",

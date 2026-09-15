@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Педиатрични услуги в Пловдив — Д-р Манолова-Пенева",
       description: "Детска алергология, спешна педиатрия, грижа за новородени и профилактични прегледи в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "Педиатрични услуги Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "Педиатрични услуги Пловдив" }],
     },
   };
 }
@@ -50,7 +50,7 @@ export default async function ServicesPage() {
           <article className="service-row">
             <div className="service-media">
               <Image
-                src="/service_general_paediatrics_1769272814052.png"
+                src="/photo-consulting-room.jpg"
                 alt={dict.servicesPage.general.title}
                 fill
                 style={{ objectFit: "cover" }}
@@ -87,7 +87,7 @@ export default async function ServicesPage() {
             </div>
             <div className="service-media order-2-mobile">
               <Image
-                src="/service_allergy_consultation_1769272828650.png"
+                src="/photo-exam-couch.jpg"
                 alt={dict.servicesPage.allergy.title}
                 fill
                 style={{ objectFit: "cover" }}

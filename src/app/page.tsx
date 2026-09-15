@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Детски лекар Пловдив — Д-р Манолова-Пенева",
       description: "Педиатър в Пловдив. Прегледи, детска алергология, новородени, съвети за ваксини.",
       locale: "bg_BG",
-      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "Д-р Манолова-Пенева — Детски лекар Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "Д-р Манолова-Пенева — Детски лекар Пловдив" }],
     },
   };
 }
@@ -36,7 +36,7 @@ export default async function Home() {
     <div>
       <section className="hero-section">
         <Image
-          src="/hero_premium.png"
+          src="/photo-waiting-room.jpg"
           alt={dict.home.heroImageAlt}
           fill
           style={{ objectFit: "cover", opacity: 0.52 }}
@@ -117,7 +117,7 @@ export default async function Home() {
             <article className="premium-card reveal delay-1">
               <div className="service-media" style={{ minHeight: "240px" }}>
                 <Image
-                  src="/service_general_paediatrics_1769272814052.png"
+                  src="/photo-consulting-room.jpg"
                   alt={dict.home.services.general.title}
                   fill
                   style={{ objectFit: "cover" }}
@@ -136,7 +136,7 @@ export default async function Home() {
             <article className="premium-card reveal delay-2">
               <div className="service-media" style={{ minHeight: "240px" }}>
                 <Image
-                  src="/service_allergy_consultation_1769272828650.png"
+                  src="/photo-exam-couch.jpg"
                   alt={dict.home.services.allergy.title}
                   fill
                   style={{ objectFit: "cover" }}

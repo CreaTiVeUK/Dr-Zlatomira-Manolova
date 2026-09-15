@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import ContactFormClient from "@/components/ContactFormClient";
@@ -15,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Контакти — Педиатър Пловдив Д-р Манолова-Пенева",
       description: "Адрес, телефон и форма за контакт с педиатъра в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/og-default.jpg", width: 1024, height: 536, alt: "АИПСМП Д-р Манолова-Пенева — Пловдив" }],
+      images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "АИПСМП Д-р Манолова-Пенева — Пловдив" }],
     },
   };
 }
@@ -129,6 +130,17 @@ export default async function ContactPage() {
                   {dict.header.nav.book}
                 </Link>
               </div>
+            </div>
+
+            {/* Real photos of the entrance: the frosted door with her name, and the
+                covered, step-free approach — what a parent looks for on arrival. */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
+              <figure style={{ position: "relative", margin: 0, aspectRatio: "3 / 4", borderRadius: "20px", overflow: "hidden" }}>
+                <Image src="/photo-entrance.jpg" alt={lang === "bg" ? "Входът на кабинета — витрина с името на д-р Манолова-Пенева" : "Practice entrance — frosted door with Dr. Manolova-Peneva's name"} fill sizes="(max-width: 640px) 100vw, 50vw" style={{ objectFit: "cover" }} />
+              </figure>
+              <figure style={{ position: "relative", margin: 0, aspectRatio: "3 / 4", borderRadius: "20px", overflow: "hidden" }}>
+                <Image src="/photo-access.jpg" alt={lang === "bg" ? "Достъп до кабинета — навес и равен вход без стъпала" : "Access to the practice — covered, step-free entrance"} fill sizes="(max-width: 640px) 100vw, 50vw" style={{ objectFit: "cover" }} />
+              </figure>
             </div>
 
             <div className="map-card">

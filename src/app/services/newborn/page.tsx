@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Грижа за новородени в Пловдив — Д-р Манолова-Пенева",
       description: "Жълтеница, колики, хранене и ранно развитие — грижа за новородени в Пловдив.",
       locale: "bg_BG",
-      images: [{ url: "/service_general_paediatrics_1769272814052.png", width: 1024, height: 1024, alt: "Грижа за новородено Пловдив" }],
+      images: [{ url: "/photo-height-chart.jpg", width: 1086, height: 1448, alt: "Грижа за новородено Пловдив" }],
     },
   };
 }
@@ -170,10 +170,10 @@ export default async function NewbornPage() {
             {/* Image */}
             <div style={{ position: "relative", height: "320px", borderRadius: "1rem", overflow: "hidden" }}>
               <Image
-                src="/service_general_paediatrics_1769272814052.png"
-                alt={lang === "bg" ? "Грижа за новородено" : "Newborn care"}
+                src="/photo-height-chart.jpg"
+                alt={lang === "bg" ? "Ростомер на вратата на кабинета — проследяване на растежа" : "Growth chart on the practice door — tracking development"}
                 fill
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "cover", objectPosition: "68% 60%" }}
               />
             </div>
 
