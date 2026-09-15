@@ -85,14 +85,12 @@ interface Props {
 
 /**
  * Client island for the homepage:
- * - Fetches live trust stats (rating, reviews, testimonials) from /api/trust-stats
+ * - Fetches live testimonials from /api/trust-stats
  * - Renders the trust bar with ReviewCarousel
  * - Sets up IntersectionObserver for .reveal scroll animations
  */
 export default function HomeClient({ dict, lang }: Props) {
   const [trustStats, setTrustStats] = useState<{
-    rating: string;
-    reviewsCount: string;
     testimonials: Testimonial[];
   } | null>(null);
 
@@ -108,8 +106,6 @@ export default function HomeClient({ dict, lang }: Props) {
             }),
           );
           setTrustStats({
-            rating: data.rating || dict.home.trust.rating,
-            reviewsCount: data.reviewsCount || dict.home.trust.reviewsCount,
             testimonials,
           });
         }
@@ -126,11 +122,9 @@ export default function HomeClient({ dict, lang }: Props) {
     );
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [dict.home.trust.rating, dict.home.trust.reviewsCount, lang]);
+  }, [lang]);
 
   const stats = trustStats || {
-    rating: dict.home.trust.rating,
-    reviewsCount: dict.home.trust.reviewsCount,
     testimonials: dict.home.trust.testimonials,
   };
 

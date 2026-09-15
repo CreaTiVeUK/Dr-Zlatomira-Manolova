@@ -54,12 +54,8 @@ export const en = {
             servicesBtn: "View Services",
         },
         trust: {
-            rating: "5.0/5",
-            reviewsCount: "14",
-            reviewsLabel: "VERIFIED REVIEWS",
             partners: "PARTNERSHIP WITH LEADING CLINICS",
             superdocTitle: "Patient reviews",
-            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
             testimonials: [
                 { text: "Wonderful attitude and professionalism! The examination proceeded with attention and ended with adequate advice.", author: "Verified Patient" },
                 { text: "Great specialist! Dr. Manolova-Peneva answered all our questions in detail and gave us valuable advice with great warmth.", author: "Verified Patient" },

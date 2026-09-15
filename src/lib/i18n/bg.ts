@@ -54,12 +54,8 @@ export const bg: Dictionary = {
             servicesBtn: "Вижте услугите",
         },
         trust: {
-            rating: "5.0/5",
-            reviewsCount: "14",
-            reviewsLabel: "ПРОВЕРЕНИ ОТЗИВА",
             partners: "ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ",
             superdocTitle: "Отзиви от пациенти",
-            superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
             testimonials: [
                 { text: "Прекрасно отношение и професионализъм! Прегледът протече с внимание и завърши с адекватни съвети и лечение.", author: "Потвърден пациент" },
                 { text: "Страхотен специалист! Д-р Манолова-Пенева отговори подробно на всичките ни въпроси и ни даде ценни съвети!", author: "Потвърден пациент" },
