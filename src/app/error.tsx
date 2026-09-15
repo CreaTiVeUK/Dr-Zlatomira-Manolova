@@ -23,7 +23,7 @@ export default function Error({
                     <EmptyState
                         icon={AlertTriangle}
                         title="System Offline"
-                        description="We encountered an unexpected technical issue. Our clinical team has been notified."
+                        description="We encountered an unexpected technical issue. Please try again, or call the practice if it persists."
                         tone="warning"
                         action={
                             <div className="btn-group" style={{ justifyContent: 'center' }}>
