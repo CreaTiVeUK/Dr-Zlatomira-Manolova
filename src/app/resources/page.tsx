@@ -21,12 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ResourcesPage() {
   const { dict, lang } = await getDictionary();
 
-  const introMetrics = [
-    { value: `${dict.resources.articles.length}`, label: dict.resources.latest },
-    { value: `${dict.resources.faq.items.length}`, label: dict.resources.faq.title },
-    { value: "24/7", label: dict.resources.cta.title },
-  ];
-
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -62,16 +56,6 @@ export default async function ResourcesPage() {
             eyebrow={dict.header.nav.resources}
             title={dict.resources.title}
             subtitle={dict.resources.subtitle}
-            actions={
-              <div className="meta-grid" style={{ width: "100%" }}>
-                {introMetrics.map((item) => (
-                  <div key={item.label} className="meta-card">
-                    <strong>{item.value}</strong>
-                    <span>{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            }
           />
 
           <div className="resource-layout">
