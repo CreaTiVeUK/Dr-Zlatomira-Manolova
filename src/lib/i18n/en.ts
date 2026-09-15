@@ -234,6 +234,7 @@ export const en = {
             email: "EMAIL ADDRESS",
             password: "PASSWORD",
             btn: "Login",
+            submitting: "Signing in…",
             or: "or",
             continueWith: "Continue with",
             noAccount: "Don't have an account?",

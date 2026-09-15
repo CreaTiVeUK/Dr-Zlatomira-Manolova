@@ -256,7 +256,6 @@ export default function LoginPage() {
                 href="/forgot-password"
                 className="inline-link"
                 style={{ fontSize: "0.8rem", color: "var(--primary-teal)", fontWeight: 600 }}
-                tabIndex={-1}
               >
                 {dict.auth.login.forgotPassword}
               </Link>
@@ -298,7 +297,7 @@ export default function LoginPage() {
             </div>
           )}
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "…" : dict.auth.login.btn}
+            {loading ? dict.auth.login.submitting : dict.auth.login.btn}
           </button>
         </form>
 

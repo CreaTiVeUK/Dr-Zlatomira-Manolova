@@ -339,11 +339,16 @@
     overflow-wrap: anywhere;
   }
 
+  /* Floor is 0.75rem (12px), never lower, and the label wraps rather than
+     ellipsising. At 320-360px the old clamp bottomed out at 9.92px and the
+     96px container clipped "ПЕДИАТЪР СПЕЦИАЛИСТ" (132px of text) away
+     completely. Vertical growth in the header is free; horizontal is not. */
   .logo-subtext {
-    font-size: clamp(0.62rem, 2.8vw, 0.74rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: clamp(0.75rem, 2.8vw, 0.8rem);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.25;
   }
 
   .hero-section {

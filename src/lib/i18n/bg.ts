@@ -231,6 +231,7 @@ export const bg: Dictionary = {
             email: "ИМЕЙЛ АДРЕС",
             password: "ПАРОЛА",
             btn: "Вход",
+            submitting: "Влизане…",
             or: "или",
             continueWith: "Продължете с",
             noAccount: "Нямате профил?",

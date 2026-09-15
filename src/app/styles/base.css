@@ -61,6 +61,15 @@ button:disabled {
   box-shadow: var(--focus-ring);
 }
 
+/* Windows High Contrast / forced-colors mode drops box-shadows entirely, which
+   would leave keyboard users with no visible focus indicator at all. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
 ::selection {
   background: rgba(59, 130, 246, 0.22);
   color: var(--text-charcoal);
