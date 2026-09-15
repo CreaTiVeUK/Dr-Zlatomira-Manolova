@@ -152,13 +152,13 @@ export default async function ContactPage() {
 
             <div className="map-card">
               <iframe
-                src="https://maps.google.com/maps?q=42.136959,24.790681&z=15&output=embed"
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d554.7573179751803!2d24.790733567012644!3d42.13684288262581!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd1d75a275eaf%3A0x72238a6c53395303!2z0JDQmNCf0KHQnNCfINC_0L4g0J_QtdC00LjQsNGC0YDQuNGPIOKAntCULdGAINCX0LvQsNGC0L7QvNC40YDQsCDQnNCw0L3QvtC70L7QstCwLdCf0LXQvdC10LLQsOKAnA!5e0!3m2!1sen!2sus!4v1789462438393!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                referrerPolicy="strict-origin-when-cross-origin"
                 title={dict.contact.clinics}
               ></iframe>
             </div>
