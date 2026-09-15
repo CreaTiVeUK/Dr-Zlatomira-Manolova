@@ -54,7 +54,7 @@ export default function UserMenu({ user, inline = false }: UserMenuProps) {
 
     if (!user) {
         return (
-            <Link href="/login" className="btn btn-primary">
+            <Link href="/login" className={inline ? undefined : "header-login-link"}>
                 {dict.userMenu.login}
             </Link>
         );

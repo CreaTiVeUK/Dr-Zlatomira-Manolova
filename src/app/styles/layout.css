@@ -1004,3 +1004,98 @@
   color: var(--text-muted);
 }
 
+
+/* ── Hero legibility (WCAG AA over a photograph) ────────────────────────── */
+/* Body copy sits on a photo: force light text and a scrim dark enough that
+   the ratio no longer depends on what the picture happens to show. */
+.hero-section::before {
+  background:
+    linear-gradient(180deg, rgba(6, 18, 31, 0.6), rgba(6, 18, 31, 0.82)),
+    radial-gradient(circle at 50% 16%, rgba(158, 211, 255, 0.12), transparent 34%);
+}
+.hero-content p,
+.hero-copy-block p {
+  color: rgba(255, 255, 255, 0.94);
+}
+.hero-content .clinical-badge {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0f4c81; /* 8.6:1 on the near-white pill */
+}
+.hero-actions .btn-outline {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Emergency line: compact, dismissible ───────────────────────────────── */
+.emergency-banner__inner {
+  gap: 0.6rem;
+  padding: 0;
+  justify-content: flex-start;
+  text-align: left;
+}
+.emergency-banner__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.8rem;
+}
+.emergency-banner__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  margin: 0;
+}
+.emergency-banner__title a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* tap target; the bar stays one line because the text is one line */
+  color: inherit;
+  font-weight: 800;
+  text-decoration: none;
+}
+.emergency-banner__subtitle {
+  font-weight: 400;
+  opacity: 0.85;
+}
+.emergency-banner__close {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-emergency);
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .emergency-banner__subtitle { display: none; }
+}
+
+/* ── Contact: long strings wrap, the phone number is the big target ─────── */
+.contact-item__layout > * {
+  min-width: 0;
+}
+.contact-item p,
+.contact-item address {
+  overflow-wrap: anywhere;
+}
+.contact-phone {
+  width: 100%;
+  justify-content: center;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  min-height: 56px;
+  margin: 0.25rem 0 0.5rem;
+}
+
+/* ── 44px targets in the footer ─────────────────────────────────────────── */
+.footer-list a,
+.footer-bottom__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

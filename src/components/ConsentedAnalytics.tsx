@@ -42,6 +42,7 @@ function eventFor(href: string): string | null {
     if (href.startsWith("mailto:")) return "email_click";
     if (href === "/book" || href.startsWith("/book?")) return "booking_cta_click";
     if (href.includes("google.com/maps/dir")) return "directions_click";
+    if (href === "/contact") return "contact_click";
     return null;
 }
 

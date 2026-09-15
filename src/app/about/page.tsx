@@ -121,7 +121,7 @@ export default async function AboutPage() {
               </div>
 
               <div className="btn-group">
-                <Link href="/book" className="btn btn-primary">
+                <Link href="/contact" className="btn btn-primary">
                   {dict.home.hero.bookBtn}
                 </Link>
                 <Link href="/contact" className="btn btn-outline">
@@ -166,7 +166,7 @@ export default async function AboutPage() {
                 ? "Прегледи за деца 0–18 г. в Пловдив и Пазарджик."
                 : "Consultations for children aged 0–18 in Plovdiv and Pazardzhik."}
             </p>
-            <Link href="/book" className="btn btn-primary">
+            <Link href="/contact" className="btn btn-primary">
               {dict.home.hero.bookBtn}
             </Link>
           </div>

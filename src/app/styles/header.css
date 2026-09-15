@@ -297,3 +297,42 @@
 .mobile-nav {
   display: none;
 }
+
+/* ── Mobile-first header actions ─────────────────────────────────────────── */
+/* Login is a text link: it serves returning account-holders, not first-time
+   visitors, and must not out-shout call or book. */
+.header-login-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-charcoal);
+  text-decoration: none;
+}
+.header-login-link:hover {
+  color: var(--primary-teal);
+  background: color-mix(in srgb, var(--primary-teal) 9%, transparent 91%);
+}
+/* Tap-to-call is the dominant header action on phones only; desktop has the
+   number in the utility bar. */
+.header-call {
+  display: none;
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
+  gap: 0.4rem;
+}
+.nav-center a {
+  min-height: 44px;
+}
+.mobile-menu-btn {
+  min-width: 44px;
+  flex: 0 0 44px;
+}
+@media (max-width: 1024px) {
+  .header-call { display: inline-flex; }
+  .header-user { display: none; }
+}

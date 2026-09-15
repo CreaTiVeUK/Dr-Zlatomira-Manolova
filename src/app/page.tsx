@@ -62,7 +62,7 @@ export default async function Home() {
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 
               <div className="hero-actions">
-                <Link href="/book" className="btn btn-primary">
+                <Link href="/contact" className="btn btn-primary">
                   {dict.home.hero.bookBtn}
                 </Link>
                 <Link
@@ -81,9 +81,11 @@ export default async function Home() {
 
             <div className="hero-trust-grid">
               <div className="hero-trust-card">
+                {/* The Superdoc rating this tile used to show has no verifiable
+                    source (her profile URL is dead), so it states a fact instead. */}
                 <ShieldCheck size={18} color="white" />
-                <strong>{dict.home.trust.rating}</strong>
-                <span>{dict.home.trust.reviewsCount} {lang === "bg" ? "потвърдени отзива" : "verified reviews"}</span>
+                <strong>{lang === "bg" ? "Вт · Чт · Сб" : "Tue · Thu · Sat"}</strong>
+                <span>{lang === "bg" ? "приемни дни · деца 0–18 г." : "consultation days · ages 0–18"}</span>
               </div>
               <div className="hero-trust-card">
                 <Stethoscope size={18} color="white" />
@@ -205,7 +207,7 @@ export default async function Home() {
               <Link href="/about" className="btn btn-primary">
                 {dict.home.about.bioBtn}
               </Link>
-              <Link href="/book" className="btn btn-outline">
+              <Link href="/contact" className="btn btn-outline">
                 {dict.home.hero.bookBtn}
               </Link>
             </div>

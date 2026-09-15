@@ -6,7 +6,7 @@ import UserMenu from "@/components/UserMenu";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import ThemeToggle from "./ThemeToggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 
 interface HeaderProps {
     user: {
@@ -29,7 +29,9 @@ export default function Header({ user }: HeaderProps) {
         { href: "/services", label: dict.header.nav.services },
         { href: "/conditions", label: dict.header.nav.conditions },
         { href: "/resources", label: dict.header.nav.resources },
-        { href: "/book", label: dict.header.nav.book },
+        // Anonymous visitors cannot use /book (it redirects to login); send them to
+        // the page with the phone number and the form. Account holders get the tool.
+        { href: user ? "/book" : "/contact", label: dict.header.nav.book },
         { href: "/contact", label: dict.header.nav.contact },
     ];
 
@@ -40,9 +42,6 @@ export default function Header({ user }: HeaderProps) {
                     <div className="contact-info">
                         <a href="tel:+359885557110">
                             <span style={{ opacity: 0.7 }}>{dict.header.contact.tel}:</span> +359 88 5557110
-                        </a>
-                        <a href="mailto:zlatomira.manolova@gmail.com">
-                            <span style={{ opacity: 0.7 }}>{dict.header.contact.email}:</span> zlatomira.manolova@gmail.com
                         </a>
                         <div className="clinical-badge">
                             {dict.header.ageGroup}
@@ -91,7 +90,15 @@ export default function Header({ user }: HeaderProps) {
                     </nav>
 
                     <div className="header-actions">
-                        <UserMenu user={user} />
+                        {/* On a phone the one action a parent needs is to call. Login lives
+                            in the menu; it serves returning account-holders only. */}
+                        <a href="tel:+359885557110" className="btn btn-primary header-call">
+                            <Phone size={16} aria-hidden="true" />
+                            {language === "bg" ? "Обади се" : "Call"}
+                        </a>
+                        <div className="header-user">
+                            <UserMenu user={user} />
+                        </div>
                     </div>
 
                     <button

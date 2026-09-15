@@ -81,7 +81,7 @@ export default async function ResourcesPage() {
                   <h2>{dict.resources.latest}</h2>
                   <p>{dict.resources.subtitle}</p>
                 </div>
-                <Link href="/book" className="btn btn-primary">
+                <Link href="/contact" className="btn btn-primary">
                   {dict.header.nav.book}
                 </Link>
               </div>

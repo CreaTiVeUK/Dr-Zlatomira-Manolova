@@ -325,11 +325,15 @@
     flex: 1 1 auto;
   }
 
+  /* The doctor's name is the trust signal on a medical site — it wraps to a
+     second line rather than truncating. */
   .logo-text {
-    font-size: clamp(0.92rem, 4.1vw, 1.12rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: clamp(0.95rem, 4vw, 1.1rem);
+    line-height: 1.15;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
   }
 
   .logo-subtext {

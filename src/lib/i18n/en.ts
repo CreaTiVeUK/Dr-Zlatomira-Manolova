@@ -58,7 +58,7 @@ export const en = {
             reviewsCount: "14",
             reviewsLabel: "VERIFIED REVIEWS",
             partners: "PARTNERSHIP WITH LEADING CLINICS",
-            superdocTitle: "View all reviews on Superdoc",
+            superdocTitle: "Patient reviews",
             superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
             testimonials: [
                 { text: "Wonderful attitude and professionalism! The examination proceeded with attention and ended with adequate advice.", author: "Verified Patient" },

@@ -149,7 +149,7 @@ export default async function NewbornPage() {
                     <li key={i}>{item}</li>
                   ))}
                 </ul>
-                <Link href="/book" className="btn btn-primary">
+                <Link href="/contact" className="btn btn-primary">
                   {dict.home.hero.bookBtn}
                 </Link>
               </div>
@@ -199,7 +199,7 @@ export default async function NewbornPage() {
             <Link href="/services" className="btn btn-outline">
               ← {lang === "bg" ? "Всички услуги" : "All services"}
             </Link>
-            <Link href="/book" className="btn btn-primary">
+            <Link href="/contact" className="btn btn-primary">
               {dict.home.hero.bookBtn}
             </Link>
           </nav>

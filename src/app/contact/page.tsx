@@ -5,6 +5,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import ContactFormClient from "@/components/ContactFormClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSession } from "@/lib/auth";
 import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,19 +23,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const { dict, lang } = await getDictionary();
+  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
 
   const introCards =
     lang === "bg"
       ? [
-          { value: "24ч", label: "обичаен отговор" },
-          { value: "2", label: "локации за преглед" },
-          { value: "6 дни", label: "седмично обслужване" },
+          { value: "Вт · Чт · Сб", label: "приемни дни" },
+          { value: "0–18 г.", label: "възраст на пациентите" },
+          { value: "кв. Тракия", label: "Пловдив" },
         ]
       : [
-          { value: "24h", label: "typical response" },
-          { value: "2", label: "clinic locations" },
-          { value: "6 days", label: "weekly coverage" },
+          { value: "Tue · Thu · Sat", label: "consultation days" },
+          { value: "0–18", label: "patient age range" },
+          { value: "Trakiya", label: "Plovdiv" },
         ];
 
   return (
@@ -71,20 +72,19 @@ export default async function ContactPage() {
                       </span>
                       <p>
                         {dict.contact.addressMain}
-                        <br />
-                        <strong>{dict.contact.tel}:</strong> {dict.footer.phone}
-                        <br />
-                        <strong>{dict.contact.email}:</strong> zlatomira.manolova@gmail.com
                       </p>
+                      {/* A parent with a sick child phones: the number itself is the
+                          primary, full-width tap target. Email goes through the form,
+                          so no mailbox address sits on the page. */}
+                      <a href="tel:+359885557110" className="btn btn-primary contact-phone">
+                        <Phone size={20} aria-hidden="true" />
+                        {dict.footer.phone}
+                      </a>
                       <div className="contact-item__actions">
-                        <Link href={`tel:${dict.footer.phone}`} className="btn btn-outline">
-                          <Phone size={16} />
-                          {dict.contact.tel}
-                        </Link>
-                        <Link href="mailto:zlatomira.manolova@gmail.com" className="btn btn-primary">
+                        <a href="#contact-form" className="btn btn-outline">
                           <Mail size={16} />
-                          {dict.contact.email}
-                        </Link>
+                          {lang === "bg" ? "Пишете ни" : "Write to us"}
+                        </a>
                         {/* The map below is an embed, so this is the only way a
                             parent can open turn-by-turn navigation — and the
                             only way a directions click can be measured. */}
@@ -100,7 +100,7 @@ export default async function ContactPage() {
                       </div>
                     </div>
                     <span className="contact-item__icon" aria-hidden="true">
-                      <Mail size={18} />
+                      <Phone size={18} />
                     </span>
                   </div>
                 </div>
@@ -126,9 +126,16 @@ export default async function ContactPage() {
               <h3 style={{ marginBottom: "0.65rem" }}>{dict.contact.admin.title}</h3>
               <p>{dict.contact.admin.text}</p>
               <div className="contact-item__actions">
-                <Link href="/book" className="btn btn-primary">
-                  {dict.header.nav.book}
-                </Link>
+                {/* /book needs an account; never send an anonymous visitor into a redirect. */}
+                {session?.user ? (
+                  <Link href="/book" className="btn btn-primary">
+                    {lang === "bg" ? "Онлайн записване" : "Book online"}
+                  </Link>
+                ) : (
+                  <Link href="/login?callbackUrl=%2Fbook" className="btn btn-outline">
+                    {lang === "bg" ? "Вход за онлайн записване" : "Sign in to book online"}
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -157,7 +164,9 @@ export default async function ContactPage() {
             </div>
           </div>
 
-          <ContactFormClient dict={dict} lang={lang} />
+          <div id="contact-form">
+            <ContactFormClient dict={dict} lang={lang} />
+          </div>
         </div>
       </div>
     </div>

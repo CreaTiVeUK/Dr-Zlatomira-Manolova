@@ -65,7 +65,7 @@ export default async function ServicesPage() {
                   <li key={i}>{stripLeadingBullet(item)}</li>
                 ))}
               </ul>
-              <Link href="/book" className="btn btn-primary">
+              <Link href="/contact" className="btn btn-primary">
                 {dict.servicesPage.general.btn}
               </Link>
             </div>

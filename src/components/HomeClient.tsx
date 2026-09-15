@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
+import {} from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/en";
 
 interface Testimonial {
@@ -138,26 +138,15 @@ export default function HomeClient({ dict, lang }: Props) {
     <section className="trust-bar reveal">
       <div className="container">
         <div className="trust-panel">
-          <a
-            href={dict.home.trust.superdocLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="trust-panel__cell"
-            title={dict.home.trust.superdocTitle}
-          >
+          <div className="trust-panel__cell">
             <div>
-              <div className="trust-rating">{stats.rating}</div>
-              <div className="trust-stars" aria-hidden="true">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} size={16} fill="currentColor" />
-                ))}
-              </div>
+              <div className="trust-rating">{lang === "bg" ? "Вт · Чт · Сб" : "Tue · Thu · Sat"}</div>
             </div>
             <div>
-              <div className="trust-label">{dict.home.trust.reviewsLabel}</div>
-              <p style={{ marginTop: "0.35rem" }}>{stats.reviewsCount} Superdoc</p>
+              <div className="trust-label">{lang === "bg" ? "Приемни дни" : "Consultation days"}</div>
+              <p style={{ marginTop: "0.35rem" }}>{lang === "bg" ? "0–18 години · Пловдив, кв. Тракия" : "Ages 0–18 · Plovdiv, Trakiya"}</p>
             </div>
-          </a>
+          </div>
 
           <div className="trust-panel__cell trust-panel__cell--column">
             <div className="trust-label">{dict.home.trust.superdocTitle}</div>
@@ -169,9 +158,6 @@ export default function HomeClient({ dict, lang }: Props) {
             <div className="partner-logo-grid">
               <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
                 <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={120} height={44} style={{ objectFit: "contain" }} />
-              </a>
-              <a href="https://superdoc.bg/lekar/zlatomira-manolova" target="_blank" rel="noopener noreferrer" className="partner-logo">
-                <Image src="/superdoc_logo.svg" alt="Superdoc" width={120} height={44} style={{ objectFit: "contain" }} />
               </a>
             </div>
           </div>

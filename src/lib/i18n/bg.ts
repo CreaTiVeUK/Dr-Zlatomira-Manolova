@@ -58,7 +58,7 @@ export const bg: Dictionary = {
             reviewsCount: "14",
             reviewsLabel: "ПРОВЕРЕНИ ОТЗИВА",
             partners: "ПАРТНЬОРСТВО С ВОДЕЩИ КЛИНИКИ",
-            superdocTitle: "Вижте всички отзиви в Superdoc",
+            superdocTitle: "Отзиви от пациенти",
             superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
             testimonials: [
                 { text: "Прекрасно отношение и професионализъм! Прегледът протече с внимание и завърши с адекватни съвети и лечение.", author: "Потвърден пациент" },

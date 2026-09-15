@@ -75,7 +75,6 @@ const structuredData = {
       "image": [`${SITE_URL}/og-default.jpg`, `${SITE_URL}/photo-entrance.jpg`, `${SITE_URL}/photo-consulting-room.jpg`],
       "description": "Частна педиатрична практика в Пловдив. Специализирана помощ за деца от 0 до 18 години — обща и спешна педиатрия, грижа за новородени, профилактични прегледи.",
       "telephone": "+359885557110",
-      "email": "zlatomira.manolova@gmail.com",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "А11, кв. „Захари Зограф“, ж.к. Тракия",
@@ -102,7 +101,6 @@ const structuredData = {
         { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "14:00" },
       ],
       "hasMap": "https://maps.google.com/maps?q=42.136959,24.790681",
-      "sameAs": ["https://superdoc.bg/lekar/zlatomira-manolova"],
       "employee": { "@id": DOCTOR_ID },
     },
     {
@@ -134,10 +132,7 @@ const structuredData = {
         { "@type": "Organization", "name": "Българска педиатрична асоциация" },
         { "@type": "Organization", "name": "Български лекарски съюз" },
       ],
-      "sameAs": [
-        "https://superdoc.bg/lekar/zlatomira-manolova",
-        "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/",
-      ],
+      "sameAs": ["https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/"],
     },
   ],
 };
