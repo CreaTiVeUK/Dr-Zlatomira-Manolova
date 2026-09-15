@@ -12,6 +12,7 @@
  *   npm run create-admin -- --list                 # read-only: every account, role and sign-in method
  *   ADMIN_EMAIL=… npm run create-admin -- --check   # read-only: does this account exist?
  *   ADMIN_EMAIL=… npm run create-admin -- --promote # promote an existing account, no password
+ *   ADMIN_EMAIL=… npm run create-admin -- --delete  # remove an account (hard-delete only if nothing references it)
  *   ADMIN_EMAIL=… npm run create-admin -- --force   # overwrite an existing account
  *
  * Set DATABASE_URL (or POSTGRES_PRISMA_URL) in your environment before running.
@@ -75,6 +76,53 @@ async function promoteExisting(email: string) {
     console.log("\n⚠️  Enable 2FA on this account from /admin/security.\n");
 }
 
+/**
+ * Remove an account. Appointments, messages, audit logs and uploaded
+ * documents reference User without cascade — and audit history must never
+ * be destroyed — so a row with any of those is not deleted but neutralised:
+ * demoted, password removed, email anonymised, sign-in impossible. A row
+ * with no dependents (a test fixture, typically) is hard-deleted; children
+ * and own documents cascade.
+ */
+async function deleteAccount(email: string) {
+    const user = await prisma.user.findUnique({ where: { email }, select: { id: true, role: true } });
+    if (!user) throw new Error(`${email} does not exist.`);
+
+    const [appointments, sent, received, audits, uploads] = await Promise.all([
+        prisma.appointment.count({ where: { userId: user.id } }),
+        prisma.message.count({ where: { fromId: user.id } }),
+        prisma.message.count({ where: { toId: user.id } }),
+        prisma.auditLog.count({ where: { userId: user.id } }),
+        prisma.patientDocument.count({ where: { uploadedById: user.id } }),
+    ]);
+    const dependents = appointments + sent + received + audits + uploads;
+
+    if (dependents === 0) {
+        await prisma.user.delete({ where: { id: user.id } });
+        console.log(`\n✅ ${email} (${user.role}) hard-deleted — no dependent rows.\n`);
+        return;
+    }
+
+    await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            role: "PATIENT",
+            password: null,
+            email: `deleted-${user.id}@anonymised.invalid`,
+            name: "Deleted account",
+            phone: null,
+            image: null,
+            emailVerified: null,
+            totpSecret: null,
+            totpEnabledAt: null,
+            totpBackupCodes: null,
+            lockedUntil: new Date("2999-01-01"),
+        },
+    });
+    console.log(`\n✅ ${email} neutralised (not deleted — ${appointments} appointment(s), ${sent + received} message(s), ${audits} audit row(s), ${uploads} upload(s) reference it).`);
+    console.log("   Now PATIENT, no password, anonymised email, locked. Audit history preserved.\n");
+}
+
 async function main() {
     const force = process.argv.includes("--force");
     const promote = process.argv.includes("--promote");
@@ -117,6 +165,11 @@ async function main() {
             console.log(`   verified:  ${user.emailVerified ? "yes" : "no"}`);
             console.log(`   created:   ${user.createdAt.toISOString()}\n`);
         }
+        return;
+    }
+
+    if (process.argv.includes("--delete")) {
+        await deleteAccount(email);
         return;
     }
 
