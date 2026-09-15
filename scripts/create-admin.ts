@@ -9,6 +9,7 @@
  * Usage:
  *   ADMIN_EMAIL=you@example.com npm run create-admin
  *   ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='…' npm run create-admin
+ *   npm run create-admin -- --list                 # read-only: every account, role and sign-in method
  *   ADMIN_EMAIL=… npm run create-admin -- --check   # read-only: does this account exist?
  *   ADMIN_EMAIL=… npm run create-admin -- --promote # promote an existing account, no password
  *   ADMIN_EMAIL=… npm run create-admin -- --force   # overwrite an existing account
@@ -78,6 +79,20 @@ async function main() {
     const force = process.argv.includes("--force");
     const promote = process.argv.includes("--promote");
     const check = process.argv.includes("--check");
+
+    if (process.argv.includes("--list")) {
+        const users = await prisma.user.findMany({
+            select: { email: true, role: true, password: true, emailVerified: true, createdAt: true },
+            orderBy: { createdAt: "asc" },
+        });
+        console.log(`\n${users.length} account(s):\n`);
+        for (const u of users) {
+            console.log(`  ${u.role.padEnd(8)} ${u.email.padEnd(40)} ${u.password ? "password" : "OAuth   "}  ${u.emailVerified ? "verified  " : "unverified"}  ${u.createdAt.toISOString().slice(0, 10)}`);
+        }
+        console.log();
+        return;
+    }
+
     const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
     const name = process.env.ADMIN_NAME?.trim() || "Administrator";
 
