@@ -157,19 +157,6 @@
   text-align: center;
 }
 
-.trust-rating {
-  font-family: var(--font-heading);
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: var(--text-charcoal);
-}
-
-.trust-stars {
-  display: flex;
-  gap: 0.15rem;
-  color: var(--accent-gold);
-}
-
 .trust-label {
   font-family: var(--font-heading);
   font-size: 0.76rem;
@@ -177,6 +164,29 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-soft);
+}
+
+.trust-days {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.trust-day-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--primary-teal) 10%, var(--surface-card-strong) 90%);
+  border: 1px solid color-mix(in srgb, var(--primary-teal) 20%, transparent 80%);
+  color: var(--primary-teal);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .partner-logo-grid {

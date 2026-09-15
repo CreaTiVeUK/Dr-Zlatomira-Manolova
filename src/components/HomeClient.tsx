@@ -204,14 +204,14 @@ export default function HomeClient({ dict, lang }: Props) {
     <section className="trust-bar reveal">
       <div className="container">
         <div className="trust-panel">
-          <div className="trust-panel__cell">
-            <div>
-              <div className="trust-rating">{lang === "bg" ? "Вт · Чт · Сб" : "Tue · Thu · Sat"}</div>
+          <div className="trust-panel__cell trust-panel__cell--column">
+            <div className="trust-label">{lang === "bg" ? "Приемни дни" : "Consultation days"}</div>
+            <div className="trust-days">
+              {(lang === "bg" ? ["Вт", "Чт", "Сб"] : ["Tue", "Thu", "Sat"]).map((day) => (
+                <span key={day} className="trust-day-chip">{day}</span>
+              ))}
             </div>
-            <div>
-              <div className="trust-label">{lang === "bg" ? "Приемни дни" : "Consultation days"}</div>
-              <p style={{ marginTop: "0.35rem" }}>{lang === "bg" ? "0–18 години · Пловдив, кв. Тракия" : "Ages 0–18 · Plovdiv, Trakiya"}</p>
-            </div>
+            <p style={{ marginTop: "0.15rem" }}>{lang === "bg" ? "0–18 години · Пловдив, кв. Тракия" : "Ages 0–18 · Plovdiv, Trakiya"}</p>
           </div>
 
           <div className="trust-panel__cell trust-panel__cell--column">
