@@ -1,0 +1,62 @@
+# .github/workflows/prune-deployments.yml
+#
+# Vercel bills Deployment/Functions Storage in GB-months: it sums the maximum
+# stored bytes per project per day across the billing period. Every retained
+# deployment therefore costs a little every day it continues to exist, and on
+# Hobby there is no Deployment Retention Policy to do this automatically.
+#
+# Setup (one-off):
+#   1. Create a token at https://vercel.com/account/tokens (scope: your team)
+#   2. Repo -> Settings -> Secrets and variables -> Actions -> New repository secret
+#      Name: VERCEL_TOKEN
+#   3. Commit this file plus scripts/prune-deployments.sh
+#
+# The first scheduled run will delete things. If you would rather watch it once
+# before trusting it, run it manually from the Actions tab with "Dry run" left
+# ticked, read the log, then let the schedule take over.
+
+name: Prune old Vercel deployments
+
+on:
+  schedule:
+    # 04:00 UTC every Monday
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      keep:
+        description: "How many of the most recent deployments to keep"
+        required: false
+        default: "5"
+      dry_run:
+        description: "Dry run (list only, delete nothing)"
+        type: boolean
+        required: false
+        default: true
+
+concurrency:
+  group: prune-vercel-deployments
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Prune
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT: drzlatomiramanolova-
+          VERCEL_TEAM_SLUG: creativeuks-projects
+          KEEP: ${{ github.event.inputs.keep || '5' }}
+          # Scheduled runs delete for real; manual runs honour the checkbox.
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' && '1' || '0' }}
+        run: bash scripts/prune-deployments.sh
