@@ -153,7 +153,7 @@ export default async function Home() {
               </div>
               <h3>{dict.home.services.newborn.title}</h3>
               <p>{dict.home.services.newborn.desc}</p>
-              <Link href="/services" className="btn btn-primary">
+              <Link href="/services#newborn" className="btn btn-primary">
                 {dict.home.services.newborn.btn}
               </Link>
             </article>

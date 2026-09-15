@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     return [
       // Allergy care is not offered; the page was removed on 2026-09-15.
       { source: "/services/allergy", destination: "/services", permanent: true },
+      // Newborn care merged into the main services page as its own section
+      // on 2026-09-15, rather than living on its own route.
+      { source: "/services/newborn", destination: "/services#newborn", permanent: true },
     ];
   },
   experimental: {
