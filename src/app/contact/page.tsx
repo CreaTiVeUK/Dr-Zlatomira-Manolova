@@ -25,20 +25,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
 
-  // Consultation days used to have their own card here too — dropped as a
-  // duplicate of the footer's Working Hours card, which already covers it
-  // (with the actual times, not just the day abbreviations).
-  const introCards =
-    lang === "bg"
-      ? [
-          { value: "0–18 г.", label: "възраст на пациентите" },
-          { value: "кв. Тракия", label: "Пловдив" },
-        ]
-      : [
-          { value: "0–18", label: "patient age range" },
-          { value: "Trakiya", label: "Plovdiv" },
-        ];
-
   return (
     <div className="page-shell page-shell--soft">
       <div className="container">
@@ -46,16 +32,6 @@ export default async function ContactPage() {
           eyebrow={dict.contact.clinics}
           title={dict.contact.title}
           subtitle={dict.contact.subtitle}
-          actions={
-            <div className="meta-grid" style={{ width: "100%" }}>
-              {introCards.map((item) => (
-                <div key={item.label} className="meta-card">
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          }
         />
 
         <div className="contact-layout">
