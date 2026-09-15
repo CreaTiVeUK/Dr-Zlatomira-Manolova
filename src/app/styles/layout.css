@@ -919,6 +919,35 @@
   color: white;
 }
 
+.footer-card--link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.footer-card--link:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.footer-location-link {
+  display: block;
+  line-height: 1.6;
+}
+
+.footer-location-link__icon {
+  display: inline;
+  vertical-align: middle;
+  margin-left: 0.35rem;
+  opacity: 0.7;
+}
+
+.footer-location-link:hover .footer-location-link__icon {
+  opacity: 1;
+}
+
 .footer-list a:hover {
   color: white;
 }

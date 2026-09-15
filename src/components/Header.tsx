@@ -126,7 +126,7 @@ export default function Header({ user }: HeaderProps) {
                     <nav className="nav-center" aria-label="Primary navigation">
                         {navItems.map((item) => (
                             <Link
-                                key={item.href}
+                                key={item.label}
                                 href={item.href}
                                 aria-current={pathname === item.href ? "page" : undefined}
                             >
@@ -162,7 +162,7 @@ export default function Header({ user }: HeaderProps) {
                     {/* inert removes the closed panel from the tab order and the accessibility tree. */}
                     <nav ref={menuRef} id="mobile-primary-nav" className={`mobile-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Mobile navigation" inert={!isMenuOpen}>
                         {navItems.map((item) => (
-                            <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)}>
+                            <Link key={item.label} href={item.href} onClick={() => setIsMenuOpen(false)}>
                                 {item.label}
                             </Link>
                         ))}
