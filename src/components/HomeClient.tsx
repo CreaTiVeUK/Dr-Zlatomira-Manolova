@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play, Star } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/en";
 
 interface Testimonial {
@@ -157,12 +157,14 @@ interface Props {
 
 /**
  * Client island for the homepage:
- * - Fetches live testimonials from /api/trust-stats
+ * - Fetches live trust stats (rating, reviews, testimonials) from /api/trust-stats
  * - Renders the trust bar with ReviewCarousel
  * - Sets up IntersectionObserver for .reveal scroll animations
  */
 export default function HomeClient({ dict, lang }: Props) {
   const [trustStats, setTrustStats] = useState<{
+    rating: string;
+    reviewsCount: string;
     testimonials: Testimonial[];
   } | null>(null);
 
@@ -178,6 +180,8 @@ export default function HomeClient({ dict, lang }: Props) {
             }),
           );
           setTrustStats({
+            rating: data.rating || dict.home.trust.rating,
+            reviewsCount: data.reviewsCount || dict.home.trust.reviewsCount,
             testimonials,
           });
         }
@@ -194,9 +198,11 @@ export default function HomeClient({ dict, lang }: Props) {
     );
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [lang]);
+  }, [dict.home.trust.rating, dict.home.trust.reviewsCount, lang]);
 
   const stats = trustStats || {
+    rating: dict.home.trust.rating,
+    reviewsCount: dict.home.trust.reviewsCount,
     testimonials: dict.home.trust.testimonials,
   };
 
@@ -204,15 +210,26 @@ export default function HomeClient({ dict, lang }: Props) {
     <section className="trust-bar reveal">
       <div className="container">
         <div className="trust-panel">
-          <div className="trust-panel__cell trust-panel__cell--column">
-            <div className="trust-label">{lang === "bg" ? "Приемни дни" : "Consultation days"}</div>
-            <div className="trust-days">
-              {(lang === "bg" ? ["Вт", "Чт", "Сб"] : ["Tue", "Thu", "Sat"]).map((day) => (
-                <span key={day} className="trust-day-chip">{day}</span>
-              ))}
+          <a
+            href={dict.home.trust.superdocLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="trust-panel__cell"
+            title={dict.home.trust.superdocTitle}
+          >
+            <div>
+              <div className="trust-rating">{stats.rating}</div>
+              <div className="trust-stars" aria-hidden="true">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star key={s} size={16} fill="currentColor" />
+                ))}
+              </div>
             </div>
-            <p style={{ marginTop: "0.15rem" }}>{lang === "bg" ? "0–18 години · Пловдив, кв. Тракия" : "Ages 0–18 · Plovdiv, Trakiya"}</p>
-          </div>
+            <div>
+              <div className="trust-label">{dict.home.trust.reviewsLabel}</div>
+              <p style={{ marginTop: "0.35rem" }}>{stats.reviewsCount} Superdoc</p>
+            </div>
+          </a>
 
           <div className="trust-panel__cell trust-panel__cell--column">
             <div className="trust-label">{dict.home.trust.superdocTitle}</div>
@@ -224,6 +241,9 @@ export default function HomeClient({ dict, lang }: Props) {
             <div className="partner-logo-grid">
               <a href="https://www.mbal-pz.com" target="_blank" rel="noopener noreferrer" className="partner-logo">
                 <Image src="/mbal_logo.png" alt="MBAL Pazardzhik" width={120} height={44} style={{ objectFit: "contain" }} />
+              </a>
+              <a href={dict.home.trust.superdocLink} target="_blank" rel="noopener noreferrer" className="partner-logo">
+                <Image src="/superdoc_logo.svg" alt="Superdoc" width={120} height={44} style={{ objectFit: "contain" }} />
               </a>
             </div>
           </div>

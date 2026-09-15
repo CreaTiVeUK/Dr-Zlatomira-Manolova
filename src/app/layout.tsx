@@ -101,6 +101,7 @@ const structuredData = {
         { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "14:00" },
       ],
       "hasMap": "https://maps.google.com/maps?q=42.136959,24.790681",
+      "sameAs": ["https://superdoc.bg/lekar/zlatomira-manolova"],
       "employee": { "@id": DOCTOR_ID },
     },
     {
@@ -132,7 +133,10 @@ const structuredData = {
         { "@type": "Organization", "name": "Българска педиатрична асоциация" },
         { "@type": "Organization", "name": "Български лекарски съюз" },
       ],
-      "sameAs": ["https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/"],
+      "sameAs": [
+        "https://superdoc.bg/lekar/zlatomira-manolova",
+        "https://pediatria-bg.eu/д-р-златомира-манолова-пенева-педиа/",
+      ],
     },
   ],
 };
