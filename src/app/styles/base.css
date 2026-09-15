@@ -725,3 +725,17 @@ textarea.input-focus {
   white-space: nowrap;
   border: 0;
 }
+
+/* Inline text links reach the WCAG 2.2 minimum target (24px) without
+   changing their appearance; card actions reach the 44px comfort size. */
+.inline-link,
+.legal-prose a {
+  display: inline-block;
+  min-height: 24px;
+  padding-block: 4px;
+}
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

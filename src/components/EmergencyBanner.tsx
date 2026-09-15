@@ -41,7 +41,7 @@ export default function EmergencyBanner() {
                     <a href="tel:112">{dict.header.emergency.text}</a>
                     <span className="emergency-banner__subtitle"> · {dict.header.emergency.sub}</span>
                 </p>
-                <button type="button" className="emergency-banner__close" onClick={dismiss} aria-label={dict.header.closeMenu}>
+                <button type="button" className="emergency-banner__close" onClick={dismiss} aria-label={dict.header.closeBanner}>
                     <X size={16} aria-hidden="true" />
                 </button>
             </div>

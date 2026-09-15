@@ -177,6 +177,8 @@
     opacity: 0;
     pointer-events: none;
     transform: translateY(-12px);
+    visibility: hidden;
+    z-index: 60; /* below the header, above anything main may stack */
     max-height: min(80vh, 640px);
     overflow-y: auto;
     backdrop-filter: blur(18px);
@@ -186,6 +188,7 @@
     opacity: 1;
     pointer-events: all;
     transform: translateY(0);
+    visibility: visible;
   }
 
   .mobile-nav a {

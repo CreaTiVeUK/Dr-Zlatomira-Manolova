@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import UserMenu from "@/components/UserMenu";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import ThemeToggle from "./ThemeToggle";
 import { Menu, X, Phone } from "lucide-react";
@@ -19,6 +19,52 @@ interface HeaderProps {
 
 export default function Header({ user }: HeaderProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLElement>(null);
+    const menuBtnRef = useRef<HTMLButtonElement>(null);
+    const swallowNextClick = useRef(false);
+
+    // Standard disclosure behaviour: Escape closes and returns focus to the
+    // button; a pointer-down outside closes (captured, so the tap does not
+    // also activate whatever is underneath); focus moves into the panel.
+    useEffect(() => {
+        if (!isMenuOpen) return;
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsMenuOpen(false);
+                menuBtnRef.current?.focus();
+            }
+        };
+        const onPointerDown = (e: PointerEvent) => {
+            const t = e.target as Node;
+            if (!menuRef.current?.contains(t) && !menuBtnRef.current?.contains(t)) {
+                // The click that follows this pointer-down must not reach the
+                // page underneath; the persistent listener below swallows it.
+                swallowNextClick.current = true;
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener("keydown", onKeyDown);
+        document.addEventListener("pointerdown", onPointerDown, true);
+        menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+        return () => {
+            document.removeEventListener("keydown", onKeyDown);
+            document.removeEventListener("pointerdown", onPointerDown, true);
+        };
+    }, [isMenuOpen]);
+
+    // Registered once, independent of the menu's open/closed effect: closing
+    // the menu re-runs that effect's cleanup before the click event fires, so
+    // a listener owned by it would be gone by the time it was needed.
+    useEffect(() => {
+        const onClick = (e: MouseEvent) => {
+            if (!swallowNextClick.current) return;
+            swallowNextClick.current = false;
+            e.preventDefault();
+            e.stopPropagation();
+        };
+        document.addEventListener("click", onClick, true);
+        return () => document.removeEventListener("click", onClick, true);
+    }, []);
     const { language, toggleLanguage, dict } = useLanguage();
     const pathname = usePathname();
 
@@ -102,6 +148,7 @@ export default function Header({ user }: HeaderProps) {
                     </div>
 
                     <button
+                        ref={menuBtnRef}
                         className="mobile-menu-btn"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         aria-controls="mobile-primary-nav"
@@ -112,7 +159,8 @@ export default function Header({ user }: HeaderProps) {
                         {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
 
-                    <nav id="mobile-primary-nav" className={`mobile-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Mobile navigation">
+                    {/* inert removes the closed panel from the tab order and the accessibility tree. */}
+                    <nav ref={menuRef} id="mobile-primary-nav" className={`mobile-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Mobile navigation" inert={!isMenuOpen}>
                         {navItems.map((item) => (
                             <Link key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)}>
                                 {item.label}

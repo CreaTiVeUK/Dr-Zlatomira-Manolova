@@ -96,6 +96,7 @@ export default async function ResourcesPage() {
                         href={resource.link || "/resources/article"}
                         target={resource.link ? "_blank" : "_self"}
                         rel={resource.link ? "noopener noreferrer" : undefined}
+                        className="card-link"
                         style={{ color: "var(--primary-teal)", fontWeight: 700 }}
                       >
                         {dict.resources.readArticle}

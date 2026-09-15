@@ -146,6 +146,7 @@ export default async function AboutPage() {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="card-link"
                       style={{ color: "var(--primary-teal)", fontWeight: 700 }}
                     >
                       {lang === "bg" ? "ПРОЧЕТЕТЕ →" : "READ →"}

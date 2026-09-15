@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+
+export const metadata: Metadata = { title: "Страницата не е намерена" };
 
 export default async function NotFound() {
   await cookies(); // opt into dynamic rendering

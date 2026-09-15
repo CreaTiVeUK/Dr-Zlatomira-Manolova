@@ -332,7 +332,9 @@
   min-width: 44px;
   flex: 0 0 44px;
 }
-@media (max-width: 1024px) {
+/* Must match the width at which responsive.css hides .nav-center — a gap
+   between the two leaves laptops with no nav and no call button. */
+@media (max-width: 1280px) {
   .header-call { display: inline-flex; }
   .header-user { display: none; }
 }

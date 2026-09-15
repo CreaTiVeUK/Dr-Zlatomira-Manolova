@@ -199,7 +199,7 @@ export default function LoginPage() {
                   ? `Опитайте отново след ${formatDuration(lockoutRemainingMs, language)}.`
                   : `Try again in ${formatDuration(lockoutRemainingMs, language)}.`}
                 {" "}
-                <Link href="/forgot-password" style={{ color: "inherit", textDecoration: "underline" }}>
+                <Link href="/forgot-password" className="inline-link" style={{ color: "inherit", textDecoration: "underline" }}>
                   {language === "bg" ? "Или нулирайте паролата си." : "Or reset your password."}
                 </Link>
               </span>
@@ -254,6 +254,7 @@ export default function LoginPage() {
               <label htmlFor="login-password">{dict.auth.login.password}</label>
               <Link
                 href="/forgot-password"
+                className="inline-link"
                 style={{ fontSize: "0.8rem", color: "var(--primary-teal)", fontWeight: 600 }}
                 tabIndex={-1}
               >
@@ -314,7 +315,7 @@ export default function LoginPage() {
 
         <p className="text-muted">
           {dict.auth.login.noAccount}{" "}
-          <Link href="/register" style={{ color: "var(--primary-teal)", fontWeight: 700 }}>
+          <Link href="/register" className="inline-link" style={{ color: "var(--primary-teal)", fontWeight: 700 }}>
             {dict.auth.login.registerLink}
           </Link>
         </p>

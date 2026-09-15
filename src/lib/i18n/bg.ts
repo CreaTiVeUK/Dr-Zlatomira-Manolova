@@ -20,6 +20,7 @@ export const bg: Dictionary = {
         switchTitle: "Switch to English",
         openMenu: "Отвори навигационното меню",
         closeMenu: "Затвори навигационното меню",
+        closeBanner: "Скрий съобщението за спешни случаи",
         emergency: {
             text: "ЗА СПЕШНИ СЛУЧАИ ЗВЪНЕТЕ НА 112",
             sub: "Тази услуга е само за специализирана педиатрична помощ и прегледи."
