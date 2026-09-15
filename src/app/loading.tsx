@@ -6,10 +6,11 @@ export default function Loading() {
     const { dict } = useLanguage();
 
     return (
-        <div className="state-shell">
+        <div className="state-shell" role="status" aria-live="polite">
             <div className="state-shell__panel">
                 <div className="spinner" aria-hidden="true" />
-                <p>{dict.loading.preparingClinicData}</p>
+                {/* Announced to screen readers only; sighted visitors just see the spinner. */}
+                <span className="sr-only">{dict.loading.label}</span>
             </div>
         </div>
     );

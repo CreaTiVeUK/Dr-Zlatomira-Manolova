@@ -542,7 +542,7 @@ export const en = {
         reject: "Decline"
     },
     loading: {
-        preparingClinicData: "Preparing clinic data...",
+        label: "Loading…",
     },
     theme: {
         toggle: "Toggle theme",

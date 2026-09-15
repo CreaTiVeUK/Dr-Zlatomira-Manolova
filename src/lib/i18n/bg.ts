@@ -539,7 +539,7 @@ export const bg: Dictionary = {
         reject: "Отказ"
     },
     loading: {
-        preparingClinicData: "Подготвяме данните на клиниката...",
+        label: "Зареждане…",
     },
     theme: {
         toggle: "Смени темата",
