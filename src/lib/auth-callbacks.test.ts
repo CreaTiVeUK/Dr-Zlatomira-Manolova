@@ -15,6 +15,7 @@ vi.mock("@/lib/prisma", () => ({
             update: vi.fn(),
             create: vi.fn(),
         },
+        $queryRaw: vi.fn(),
     },
 }));
 
@@ -29,6 +30,7 @@ vi.mock("@/lib/encryption", () => ({
 }));
 
 import { prisma } from "@/lib/prisma";
+import { gmailCanonicalLocal } from "@/lib/gmail-alias";
 import { rateLimit } from "@/lib/rate-limit";
 import { generateSecret, generateCode } from "@/lib/totp";
 import {
@@ -329,5 +331,52 @@ describe("signInCallback", () => {
     it("rejects OAuth sign-ins without an email", async () => {
         const ok = await signInCallback({ user: {}, account: { provider: "google" } });
         expect(ok).toBe(false);
+    });
+});
+
+describe("Gmail dot-aliases on OAuth sign-in", () => {
+    const queryRaw = prisma.$queryRaw as unknown as ReturnType<typeof vi.fn>;
+
+    it("gmailCanonicalLocal strips dots for Gmail only", () => {
+        expect(gmailCanonicalLocal("Zlatomira.Manolova@gmail.com")).toBe("zlatomiramanolova");
+        expect(gmailCanonicalLocal("a.b.c@googlemail.com")).toBe("abc");
+        expect(gmailCanonicalLocal("first.last@example.com")).toBeNull();
+        expect(gmailCanonicalLocal("nodomain")).toBeNull();
+    });
+
+    it("signs a dotted Gmail spelling into the existing undotted account", async () => {
+        findUnique
+            .mockResolvedValueOnce(null) // exact spelling not stored
+            .mockResolvedValueOnce(makeUser({ id: "doc-1", email: "zlatomiramanolova@gmail.com", password: null, role: "ADMIN" }));
+        queryRaw.mockResolvedValue([{ id: "doc-1" }]);
+
+        const user = { email: "zlatomira.manolova@gmail.com" } as { id?: string; email: string; role?: string };
+        const ok = await signInCallback({ user, account: { provider: "google" } });
+
+        expect(ok).toBe(true);
+        expect(user.id).toBe("doc-1");
+        expect(user.role).toBe("ADMIN");
+        expect(create).not.toHaveBeenCalled();
+    });
+
+    it("never guesses between two colliding Gmail accounts", async () => {
+        findUnique.mockResolvedValueOnce(null);
+        queryRaw.mockResolvedValue([{ id: "a" }, { id: "b" }]);
+        create.mockResolvedValue({ id: "new-id", role: "PATIENT" });
+
+        const user = { email: "some.one@gmail.com" } as { id?: string; email: string };
+        await signInCallback({ user, account: { provider: "google" } });
+
+        expect(create).toHaveBeenCalled();
+        expect(user.id).toBe("new-id");
+    });
+
+    it("does not run the alias query for non-Gmail domains", async () => {
+        findUnique.mockResolvedValueOnce(null);
+        create.mockResolvedValue({ id: "new-id", role: "PATIENT" });
+
+        await signInCallback({ user: { email: "first.last@example.com" }, account: { provider: "google" } });
+
+        expect(queryRaw).not.toHaveBeenCalled();
     });
 });

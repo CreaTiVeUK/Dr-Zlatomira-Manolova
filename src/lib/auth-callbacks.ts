@@ -27,6 +27,7 @@ import { sanitizeString } from "@/lib/sanitize";
 import { decrypt, encrypt } from "@/lib/encryption";
 import { verifyCodeWithCounter } from "@/lib/totp";
 import { claimOnce } from "@/lib/session-blocklist";
+import { gmailCanonicalLocal } from "@/lib/gmail-alias";
 import { rateLimit } from "@/lib/rate-limit";
 
 export const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
@@ -254,6 +255,25 @@ export function sessionCallback({ session, token }: { session: SessionShape; tok
     return session;
 }
 
+// ─── Gmail dot-aliases ────────────────────────────────────────────────────────
+
+/**
+ * Find the account a Gmail address belongs to when the exact spelling is not
+ * stored — see gmail-alias.ts. Two matches means two accounts already collide
+ * on the same mailbox; that is never resolved by guessing.
+ */
+async function findGmailAlias(email: string) {
+    const local = gmailCanonicalLocal(email);
+    if (!local) return null;
+    const rows = await prisma.$queryRaw<{ id: string }[]>`
+        SELECT id FROM "User"
+        WHERE lower(split_part(email, '@', 2)) IN ('gmail.com', 'googlemail.com')
+          AND replace(lower(split_part(email, '@', 1)), '.', '') = ${local}
+        LIMIT 2`;
+    if (rows.length !== 1) return null;
+    return prisma.user.findUnique({ where: { id: rows[0].id } });
+}
+
 // ─── signIn callback (OAuth upsert) ──────────────────────────────────────────
 
 interface SignInParams {
@@ -269,7 +289,8 @@ export async function signInCallback({ user, account, profile }: SignInParams): 
         if (!email) return false;
 
         try {
-            const existing = await prisma.user.findUnique({ where: { email } });
+            const existing =
+                (await prisma.user.findUnique({ where: { email } })) ?? (await findGmailAlias(email));
 
             if (!existing) {
                 const created = await prisma.user.create({

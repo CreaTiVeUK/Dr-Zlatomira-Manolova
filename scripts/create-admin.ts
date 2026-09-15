@@ -23,6 +23,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { checkPasswordStrength } from "../src/lib/password-strength";
+import { gmailCanonicalLocal } from "../src/lib/gmail-alias";
 
 const prisma = new PrismaClient();
 
@@ -157,7 +158,16 @@ async function main() {
             select: { id: true, role: true, password: true, emailVerified: true, createdAt: true },
         });
         if (!user) {
-            console.log(`\n${email}: does not exist\n`);
+            console.log(`\n${email}: does not exist`);
+            const local = gmailCanonicalLocal(email);
+            const aliases = local
+                ? await prisma.$queryRaw<{ email: string; role: string }[]>`
+                    SELECT email, role FROM "User"
+                    WHERE lower(split_part(email, '@', 2)) IN ('gmail.com', 'googlemail.com')
+                      AND replace(lower(split_part(email, '@', 1)), '.', '') = ${local}`
+                : [];
+            for (const a of aliases) console.log(`   → Gmail dot-alias of ${a.email} (${a.role}); a Google sign-in resolves there`);
+            console.log();
         } else {
             console.log(`\n${email}: EXISTS`);
             console.log(`   role:      ${user.role}`);
