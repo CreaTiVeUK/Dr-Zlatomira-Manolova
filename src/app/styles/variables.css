@@ -41,9 +41,6 @@
   --bg-placeholder: #e7eef6;
   --bg-footer: #091626;
   --text-footer-muted: rgba(219, 229, 242, 0.7);
-  --bg-emergency: rgba(211, 47, 47, 0.08);
-  --border-emergency: rgba(211, 47, 47, 0.18);
-  --text-emergency: #b42318;
   --bg-card-hover: #ffffff;
   --border-card: var(--border);
   --bg-success: rgba(17, 121, 91, 0.12);
@@ -94,9 +91,6 @@
   --bg-placeholder: #14253b;
   --bg-footer: #040b14;
   --text-footer-muted: rgba(168, 184, 202, 0.72);
-  --bg-emergency: rgba(251, 113, 133, 0.12);
-  --border-emergency: rgba(251, 113, 133, 0.24);
-  --text-emergency: #fecdd3;
   --bg-card-hover: #15263b;
   --border-card: rgba(201, 220, 239, 0.14);
   --bg-success: rgba(74, 222, 128, 0.14);

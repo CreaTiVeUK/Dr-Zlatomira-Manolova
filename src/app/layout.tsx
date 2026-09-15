@@ -143,7 +143,6 @@ const structuredData = {
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import EmergencyBanner from "@/components/EmergencyBanner";
 import CookieConsent from "@/components/CookieConsent";
 import ConsentedAnalytics from "@/components/ConsentedAnalytics";
 import GoogleConsentDefaults from "@/components/GoogleConsentDefaults";
@@ -176,7 +175,6 @@ export default async function RootLayout({
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>
-          <EmergencyBanner />
           <Header user={user} />
           <main id="main-content" className="site-main">
             {children}

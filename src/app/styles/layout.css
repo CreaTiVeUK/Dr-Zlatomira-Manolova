@@ -1025,53 +1025,6 @@
   z-index: 95;
 }
 
-.emergency-banner {
-  background: var(--bg-emergency);
-  border-bottom: 1px solid var(--border-emergency);
-}
-
-.emergency-banner__inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 0.7rem 0;
-  text-align: center;
-}
-
-.emergency-banner__icon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(180, 35, 24, 0.1);
-  color: var(--text-emergency);
-  flex-shrink: 0;
-}
-
-.emergency-banner__copy {
-  display: grid;
-  gap: 0.1rem;
-}
-
-.emergency-banner__title {
-  font-family: var(--font-heading);
-  /* Safety-critical text (readable-font-size): was 0.8rem/12.8px. */
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-emergency);
-}
-
-.emergency-banner__subtitle {
-  font-size: 1rem;
-  color: var(--text-muted);
-}
-
-
 /* ── Hero legibility (WCAG AA over a photograph) ────────────────────────── */
 /* Body copy sits on a photo: force light text and a scrim dark enough that
    the ratio no longer depends on what the picture happens to show. Measured
@@ -1095,58 +1048,6 @@
   color: #fff;
   border-color: rgba(255, 255, 255, 0.55);
   background: rgba(255, 255, 255, 0.12);
-}
-
-/* ── Emergency line: compact, dismissible ───────────────────────────────── */
-.emergency-banner__inner {
-  gap: 0.6rem;
-  padding: 0;
-  justify-content: flex-start;
-  text-align: left;
-}
-.emergency-banner__icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.8rem;
-}
-.emergency-banner__title {
-  flex: 1 1 auto;
-  min-width: 0;
-  /* Overrides the 1rem base above back down — was 0.78rem/12.5px, below the
-     16px minimum for this safety-critical line (readable-font-size). */
-  font-size: 1rem;
-  line-height: 1.3;
-  margin: 0;
-}
-.emergency-banner__title a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px; /* tap target; the bar stays one line because the text is one line */
-  color: inherit;
-  font-weight: 800;
-  text-decoration: none;
-}
-.emergency-banner__subtitle {
-  font-weight: 400;
-  /* var(--text-muted) alone measured borderline (~4.1-4.3:1, need 4.5:1) over
-     this banner's light pink tint; darkened for a clear margin. */
-  color: color-mix(in srgb, var(--text-muted) 75%, black 25%);
-}
-.emergency-banner__close {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--text-emergency);
-  cursor: pointer;
-}
-@media (max-width: 768px) {
-  .emergency-banner__subtitle { display: none; }
 }
 
 /* ── Contact: long strings wrap, the phone number is the big target ─────── */

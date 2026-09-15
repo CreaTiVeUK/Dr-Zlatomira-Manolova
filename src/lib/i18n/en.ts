@@ -20,11 +20,6 @@ export const en = {
         switchTitle: "Switch to Bulgarian",
         openMenu: "Open navigation menu",
         closeMenu: "Close navigation menu",
-        closeBanner: "Dismiss emergency notice",
-        emergency: {
-            text: "FOR EMERGENCIES CALL 112",
-            sub: "This service is for specialized pediatric care and checkups only."
-        }
     },
     footer: {
         title: "Manolova-Peneva Pediatrics",
