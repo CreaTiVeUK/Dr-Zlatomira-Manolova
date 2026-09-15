@@ -234,7 +234,20 @@ export const en = {
             continueWith: "Continue with",
             noAccount: "Don't have an account?",
             registerLink: "Sign up",
-            forgotPassword: "Forgot password?"
+            forgotPassword: "Forgot password?",
+            errors: {
+                credentialsSignin: "Invalid email or password.",
+                accountNotLinked: "This email already has a password-protected account. Please sign in with your email and password instead.",
+                accessDenied: "Sign-in was cancelled or declined. Please try again, or use email and password.",
+                oauthCallbackError: "Sign-in failed. Please try again or use email/password.",
+                emailNotVerified: "Please verify your email before signing in.",
+                accountLocked: "Account locked due to multiple failed attempts.",
+                totpRequired: "Enter the 6-digit code from your authenticator app.",
+                totpInvalid: "Invalid authentication code. Try again.",
+                rateLimited: "Too many sign-in attempts. Please wait a minute and try again.",
+                unexpected: "An error occurred during login.",
+                generic: "Sign-in failed. Please try again.",
+            },
         },
         register: {
             title: "Registration",

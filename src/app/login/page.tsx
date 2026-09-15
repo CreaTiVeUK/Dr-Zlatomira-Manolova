@@ -56,19 +56,38 @@ function SocialLoginButton({ provider, label, dict, callbackUrl }: { provider: s
   );
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  CredentialsSignin: "Invalid email or password.",
-  AccountNotLinked: "This email is linked to a different sign-in method.",
-  AccessDenied: "Access denied. The OAuth provider rejected the request — check that the app is published (not in testing mode) and redirect URIs are correct in the provider's console.",
-  OAuthCallbackError: "OAuth sign-in failed. Please try again or use email/password.",
-  EmailNotVerified: "Please verify your email before signing in.",
-  email_not_verified: "Please verify your email before signing in.",
-  AccountLocked: "Account locked due to multiple failed attempts.",
-  account_locked: "Account locked due to multiple failed attempts.",
-  totp_required: "Enter the 6-digit code from your authenticator app.",
-  totp_invalid: "Invalid authentication code. Try again.",
-  rate_limited: "Too many sign-in attempts. Please wait a minute and try again.",
+// Maps the raw error identifier NextAuth/our credentials callback returns
+// (mixed casing: PascalCase for OAuth errors, snake_case for our own
+// CredentialsSignin sub-codes) to a key in dict.auth.login.errors — so the
+// displayed message is always in the user's language, not hardcoded English.
+const ERROR_CODE_TO_KEY: Record<string, keyof Dictionary["auth"]["login"]["errors"]> = {
+  CredentialsSignin: "credentialsSignin",
+  // NextAuth v5's own CredentialsSignin error sets code to the literal
+  // "credentials" (not the class name) when authorize() just returns null —
+  // our subclasses (AccountLockedError etc.) override it with a specific
+  // code instead, which is why those still match their own keys below.
+  credentials: "credentialsSignin",
+  AccountNotLinked: "accountNotLinked",
+  AccessDenied: "accessDenied",
+  OAuthCallbackError: "oauthCallbackError",
+  EmailNotVerified: "emailNotVerified",
+  email_not_verified: "emailNotVerified",
+  AccountLocked: "accountLocked",
+  account_locked: "accountLocked",
+  totp_required: "totpRequired",
+  totp_invalid: "totpInvalid",
+  rate_limited: "rateLimited",
+  unexpected: "unexpected",
 };
+
+function errorMessageFor(code: string, dict: Dictionary): string {
+  const key = ERROR_CODE_TO_KEY[code];
+  return dict.auth.login.errors[key ?? "generic"];
+}
+
+function isEmailNotVerified(code: string): boolean {
+  return code === "EmailNotVerified" || code === "email_not_verified";
+}
 
 function formatDuration(ms: number, lang: string): string {
   const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
@@ -93,11 +112,12 @@ export default function LoginPage() {
   const [totp, setTotp] = useState("");
   const [totpRequired, setTotpRequired] = useState(false);
   const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
-  const [error, setError] = useState(
-    searchParams.get("error")
-      ? (ERROR_MESSAGES[searchParams.get("error")!] ?? "Sign-in failed. Please try again.")
-      : ""
-  );
+  // The raw code, not the display string — so the message re-resolves in the
+  // right language if the user switches languages while it's showing, and so
+  // the "resend verification" UI below can check the code instead of
+  // comparing translated text against a hardcoded English reference.
+  const [errorCode, setErrorCode] = useState(searchParams.get("error") ?? "");
+  const error = errorCode ? errorMessageFor(errorCode, dict) : "";
   const [loading, setLoading] = useState(false);
   const [lockoutRemainingMs, setLockoutRemainingMs] = useState<number | null>(null);
   const router = useRouter();
@@ -119,7 +139,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setErrorCode("");
     setLoading(true);
 
     try {
@@ -135,11 +155,8 @@ export default function LoginPage() {
         // (email_not_verified, totp_required, account_locked, …) in
         // result.code; result.error is the generic "CredentialsSignin".
         // Prefer the specific code so the user sees the right guidance.
-        const reason = (result as { code?: string }).code || result.error;
-        setError(
-          ERROR_MESSAGES[reason] ??
-          (language === "bg" ? "Невалиден имейл или парола." : "Invalid email or password.")
-        );
+        const reason = (result as { code?: string }).code || result.error || "CredentialsSignin";
+        setErrorCode(reason);
         setResendState("idle");
 
         // Server told us a TOTP is required or the one we sent was wrong.
@@ -173,7 +190,7 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch {
-      setError(language === "bg" ? "Възникна грешка при вход." : "An error occurred during login.");
+      setErrorCode("unexpected");
     } finally {
       setLoading(false);
     }
@@ -204,7 +221,7 @@ export default function LoginPage() {
                 </Link>
               </span>
             )}
-            {error === ERROR_MESSAGES.EmailNotVerified && (
+            {isEmailNotVerified(errorCode) && (
               resendState === "sent" ? (
                 <span style={{ fontSize: "0.875rem" }}>
                   {language === "bg" ? "Нова връзка е изпратена. Проверете пощата си." : "A new verification link has been sent. Check your inbox."}
