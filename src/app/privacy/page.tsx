@@ -50,7 +50,14 @@ export default async function PrivacyPage() {
           cookiesButton: "Промяна на избора за бисквитки",
           rightsTitle: "6. Вашите права по GDPR",
           rightsText: "Ако сте жител на Европейското икономическо пространство или Обединеното кралство, имате право на достъп, корекция, изтриване, ограничаване на обработката и преносимост на данните, когато това е приложимо.",
-          contactTitle: "7. Контакт",
+          deletionTitle: "7. Изтриване на данни",
+          deletionText: "За да поискате изтриване на профила си и свързаните с него лични данни — включително ако сте влезли през Google, Facebook или друг доставчик — изпратете имейл на zlatomira.manolova@gmail.com с искане за изтриване, като посочите имейл адреса, свързан с профила Ви.",
+          deletionList: [
+            "Обработваме искания за изтриване в рамките на 30 дни.",
+            "Изтриваме профила Ви, записаните предпочитания и данните за вход, свързани с него.",
+            "Медицински досиета и записи за часове може да бъдат запазени за законово изисквания срок съгласно българското законодателство за здравна документация, дори след заличаване на профила Ви.",
+          ],
+          contactTitle: "8. Контакт",
           contactText: "При въпроси или коментари относно тази политика, пишете ни на zlatomira.manolova@gmail.com.",
         },
       }
@@ -97,7 +104,14 @@ export default async function PrivacyPage() {
           cookiesButton: "Change cookie settings",
           rightsTitle: "6. Your Privacy Rights (GDPR)",
           rightsText: "If you are located in the European Economic Area or the United Kingdom, you may have rights to access, correct, erase, restrict processing of, or port your personal data where applicable.",
-          contactTitle: "7. Contact Us",
+          deletionTitle: "7. Data Deletion Instructions",
+          deletionText: "To request deletion of your account and the personal data attached to it — including if you signed in via Google, Facebook, or another provider — email zlatomira.manolova@gmail.com with a deletion request, stating the email address linked to your account.",
+          deletionList: [
+            "We process deletion requests within 30 days.",
+            "We delete your account, its saved preferences, and the associated sign-in data.",
+            "Medical records and appointment history may be retained for the period required under Bulgarian healthcare record-keeping law, even after your account is deleted.",
+          ],
+          contactTitle: "8. Contact Us",
           contactText: "If you have questions or comments about this policy, email us at zlatomira.manolova@gmail.com.",
         },
       };
@@ -170,6 +184,16 @@ export default async function PrivacyPage() {
             <section>
               <h2>{copy.sections.rightsTitle}</h2>
               <p>{copy.sections.rightsText}</p>
+            </section>
+
+            {/* Anchor for Facebook Login's required "Data Deletion Instructions URL"
+                (App Settings → Data Deletion): https://www.drmanolova.bg/privacy#data-deletion */}
+            <section id="data-deletion" style={{ scrollMarginTop: "7rem" }}>
+              <h2>{copy.sections.deletionTitle}</h2>
+              <p>{copy.sections.deletionText}</p>
+              <ul>
+                {copy.sections.deletionList.map((item) => <li key={item}>{item}</li>)}
+              </ul>
             </section>
 
             <section>
