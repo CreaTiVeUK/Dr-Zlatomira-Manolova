@@ -86,15 +86,15 @@ export default function BookClient({ session }: BookClientProps) {
     for (let hour = hours.open; hour < hours.close; hour += 1) {
       const onTheHour = new Date(selectedDate);
       onTheHour.setHours(hour, 0, 0, 0);
-      generatedSlots.push(onTheHour);
+      if (hour * 60 + selectedService.duration <= hours.close * 60) generatedSlots.push(onTheHour);
 
       const halfPast = new Date(selectedDate);
       halfPast.setHours(hour, 30, 0, 0);
-      generatedSlots.push(halfPast);
+      if (hour * 60 + 30 + selectedService.duration <= hours.close * 60) generatedSlots.push(halfPast);
     }
 
     setSlots(generatedSlots);
-  }, [selectedDate]);
+  }, [selectedDate, selectedService.duration]);
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
 
@@ -117,7 +117,7 @@ export default function BookClient({ session }: BookClientProps) {
       const data = await res.json();
 
       if (res.ok) {
-        window.location.href = "/book/success";
+        router.push("/book/success");
       } else {
         setMessage(data.error || dict.booking.error);
       }

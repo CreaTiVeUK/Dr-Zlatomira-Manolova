@@ -91,7 +91,7 @@ jobs:
           AUTH_TRUST_HOST: true
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Run E2E Tests
         run: npx playwright test

@@ -67,6 +67,13 @@ describe("isWithinBusinessHours (clinic time = Europe/Sofia)", () => {
         expect(isWithinBusinessHours(new Date("2026-06-16T14:15:00+03:00"))).toBe(false);
     });
 
+    it("requires the full appointment to fit before closing", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T17:00:00+03:00"), 60)).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-16T17:30:00+03:00"), 60)).toBe(false);
+        expect(isWithinBusinessHours(new Date("2026-06-20T13:30:00+03:00"), 60)).toBe(false);
+        expect(isWithinBusinessHours(new Date("2026-01-15T17:30:00+02:00"), 60)).toBe(false);
+    });
+
     it("rejects non-zero seconds", () => {
         expect(isWithinBusinessHours(new Date("2026-06-16T14:00:30+03:00"))).toBe(false);
     });

@@ -24,7 +24,8 @@ interface Message {
 }
 
 export default function AdminMessagesClient({ adminId }: { adminId: string }) {
-    const { language } = useLanguage();
+    const { language, dict } = useLanguage();
+    const copy = dict.messages;
     const [threads, setThreads] = useState<Thread[]>([]);
     const [activeId, setActiveId] = useState<string | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -32,14 +33,17 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [draft, setDraft] = useState("");
     const [sending, setSending] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState<"" | "loadError" | "sendError">("");
     const listRef = useRef<HTMLDivElement | null>(null);
 
     const loadThreads = async () => {
         try {
             const res = await fetch("/api/admin/messages");
+            if (!res.ok) throw new Error("Load failed");
             const data = await res.json();
             if (Array.isArray(data.threads)) setThreads(data.threads);
+        } catch {
+            setError("loadError");
         } finally {
             setLoadingThreads(false);
         }
@@ -51,17 +55,26 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
 
     useEffect(() => {
         if (!activeId) return;
+        const controller = new AbortController();
         setLoadingMessages(true);
-        fetch(`/api/admin/messages?patientId=${activeId}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data.messages)) setMessages(data.messages);
+        setMessages([]);
+        setDraft("");
+        setError("");
+        fetch(`/api/admin/messages?patientId=${encodeURIComponent(activeId)}`, { signal: controller.signal })
+            .then((res) => {
+                if (!res.ok) throw new Error("Load failed");
+                return res.json();
             })
-            .finally(() => setLoadingMessages(false));
+            .then((data) => {
+                if (!controller.signal.aborted && Array.isArray(data.messages)) setMessages(data.messages);
+            })
+            .catch(() => { if (!controller.signal.aborted) setError("loadError"); })
+            .finally(() => { if (!controller.signal.aborted) setLoadingMessages(false); });
+        return () => controller.abort();
     }, [activeId]);
 
     useEffect(() => {
-        listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+        listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
     }, [messages]);
 
     async function handleSend(e: React.FormEvent) {
@@ -81,8 +94,8 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
             setMessages((m) => [...m, data]);
             setDraft("");
             loadThreads();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Send failed");
+        } catch {
+            setError("sendError");
         } finally {
             setSending(false);
         }
@@ -90,23 +103,25 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
 
     return (
         <div className="container" style={{ padding: "1.25rem", display: "grid", gap: "1rem" }}>
-            <h1 className="section-title">{language === "bg" ? "Съобщения" : "Messages"}</h1>
+            <h1 className="section-title">{copy.title}</h1>
 
-            <div style={{ display: "grid", gridTemplateColumns: "minmax(240px, 320px) 1fr", gap: "1rem", minHeight: 520 }}>
+            <div className="admin-messages-layout">
                 <aside className="profile-card" style={{ padding: "0.5rem", overflowY: "auto" }}>
                     {loadingThreads ? (
-                        <div style={{ padding: "1rem", color: "var(--text-muted)" }}>{language === "bg" ? "Зареждане..." : "Loading..."}</div>
+                        <div style={{ padding: "1rem", color: "var(--text-muted)" }}>{copy.loading}</div>
                     ) : threads.length === 0 ? (
                         <div style={{ padding: "1rem", display: "grid", placeItems: "center", gap: "0.5rem", color: "var(--text-muted)" }}>
                             <MessageCircle size={20} />
-                            <span>{language === "bg" ? "Няма разговори." : "No conversations."}</span>
+                            <span>{copy.noConversations}</span>
                         </div>
                     ) : (
                         threads.map((t) => (
                             <button
                                 key={t.patientId}
                                 type="button"
-                                onClick={() => setActiveId(t.patientId)}
+                                onClick={() => { if (!sending) setActiveId(t.patientId); }}
+                                disabled={sending}
+                                aria-pressed={activeId === t.patientId}
                                 style={{
                                     display: "grid",
                                     gap: "0.2rem",
@@ -131,7 +146,7 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
                                     {t.lastMessage}
                                 </span>
                                 <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                                    {new Date(t.lastAt).toLocaleString(language === "bg" ? "bg-BG" : undefined)}
+                                    {new Date(t.lastAt).toLocaleString(language === "bg" ? "bg-BG" : "en-GB")}
                                 </span>
                             </button>
                         ))
@@ -141,13 +156,13 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
                 <section className="profile-card" style={{ padding: 0, display: "grid", gridTemplateRows: "1fr auto", overflow: "hidden" }}>
                     {!activeId ? (
                         <div style={{ display: "grid", placeItems: "center", color: "var(--text-muted)" }}>
-                            {language === "bg" ? "Изберете разговор." : "Select a conversation."}
+                            {copy.selectConversation}
                         </div>
                     ) : (
                         <>
-                            <div ref={listRef} style={{ padding: "1.25rem", overflowY: "auto", display: "grid", gap: "0.6rem", alignContent: "start" }}>
+                            <div role="log" aria-label={copy.conversation} aria-live="polite" aria-busy={loadingMessages} ref={listRef} style={{ padding: "1.25rem", overflowY: "auto", display: "grid", gap: "0.6rem", alignContent: "start" }}>
                                 {loadingMessages ? (
-                                    <div style={{ color: "var(--text-muted)" }}>{language === "bg" ? "Зареждане..." : "Loading..."}</div>
+                                    <div style={{ color: "var(--text-muted)" }}>{copy.loading}</div>
                                 ) : (
                                     messages.map((m) => {
                                         const mine = m.fromId === adminId;
@@ -168,7 +183,7 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
                                             >
                                                 <div>{m.content}</div>
                                                 <div style={{ fontSize: "0.72rem", opacity: 0.75, marginTop: "0.35rem" }}>
-                                                    {new Date(m.timestamp).toLocaleString(language === "bg" ? "bg-BG" : undefined)}
+                                                    {new Date(m.timestamp).toLocaleString(language === "bg" ? "bg-BG" : "en-GB")}
                                                 </div>
                                             </div>
                                         );
@@ -176,18 +191,20 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
                                 )}
                             </div>
 
-                            <form onSubmit={handleSend} style={{ borderTop: "1px solid var(--border-card)", padding: "0.9rem", display: "grid", gridTemplateColumns: "1fr auto", gap: "0.6rem" }}>
+                            <form onSubmit={handleSend} style={{ borderTop: "1px solid var(--border-card)", padding: "0.9rem", display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "0.6rem" }}>
                                 <textarea
                                     value={draft}
                                     onChange={(e) => setDraft(e.target.value)}
-                                    placeholder={language === "bg" ? "Напишете отговор..." : "Write a reply..."}
+                                    placeholder={copy.replyPlaceholder}
                                     rows={2}
                                     maxLength={2000}
-                                    style={{ resize: "vertical", minHeight: 44 }}
+                                    style={{ resize: "vertical", minHeight: 44, minWidth: 0, width: "100%" }}
+                                    disabled={sending || loadingMessages}
+                                    aria-label={copy.reply}
                                 />
-                                <button type="submit" disabled={sending || draft.trim().length === 0} className="btn btn-primary" style={{ alignSelf: "end" }}>
-                                    <Send size={16} />
-                                    {sending ? (language === "bg" ? "Изпращане..." : "Sending...") : (language === "bg" ? "Изпрати" : "Send")}
+                                <button type="submit" disabled={sending || loadingMessages || draft.trim().length === 0} className="btn btn-primary" style={{ alignSelf: "end" }}>
+                                    <Send size={16} aria-hidden="true" />
+                                    {sending ? copy.sending : copy.send}
                                 </button>
                             </form>
                         </>
@@ -197,7 +214,7 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
 
             {error ? (
                 <StatusBanner variant="error" focus>
-                    <strong>{error}</strong>
+                    <strong>{copy[error]}</strong>
                 </StatusBanner>
             ) : null}
         </div>

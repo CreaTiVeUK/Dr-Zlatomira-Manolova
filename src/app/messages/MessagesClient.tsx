@@ -17,26 +17,32 @@ interface Message {
 }
 
 export default function MessagesClient({ currentUserId }: { currentUserId: string }) {
-    const { language } = useLanguage();
+    const { language, dict } = useLanguage();
+    const copy = dict.messages;
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [draft, setDraft] = useState("");
     const [sending, setSending] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState<"" | "loadError" | "sendError">("");
     const listRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        fetch("/api/user/messages")
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data.messages)) setMessages(data.messages);
+        const controller = new AbortController();
+        fetch("/api/user/messages", { signal: controller.signal })
+            .then((res) => {
+                if (!res.ok) throw new Error("Load failed");
+                return res.json();
             })
-            .catch(() => setError(language === "bg" ? "Неуспешно зареждане." : "Failed to load messages."))
-            .finally(() => setLoading(false));
-    }, [language]);
+            .then((data) => {
+                if (!controller.signal.aborted && Array.isArray(data.messages)) setMessages(data.messages);
+            })
+            .catch(() => { if (!controller.signal.aborted) setError("loadError"); })
+            .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+        return () => controller.abort();
+    }, []);
 
     useEffect(() => {
-        listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+        listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
     }, [messages]);
 
     async function handleSend(e: React.FormEvent) {
@@ -55,8 +61,8 @@ export default function MessagesClient({ currentUserId }: { currentUserId: strin
             if (!res.ok) throw new Error(data.error || "Send failed");
             setMessages((m) => [...m, data]);
             setDraft("");
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Send failed");
+        } catch {
+            setError("sendError");
         } finally {
             setSending(false);
         }
@@ -66,20 +72,20 @@ export default function MessagesClient({ currentUserId }: { currentUserId: strin
         <div className="page-shell page-shell--soft">
             <div className="container" style={{ maxWidth: 820 }}>
                 <PageIntro
-                    eyebrow={language === "bg" ? "Съобщения" : "Messages"}
-                    title={language === "bg" ? "Разговор с клиниката" : "Clinic conversation"}
-                    subtitle={language === "bg" ? "Задавайте въпроси или споделяйте промени. Отговорите могат да отнемат до 24 часа в работни дни." : "Ask questions or share updates. Replies may take up to 24 hours on business days."}
+                    eyebrow={copy.title}
+                    title={copy.conversation}
+                    subtitle={copy.description}
                 />
 
                 <div className="profile-card" style={{ padding: 0, overflow: "hidden", display: "grid", gridTemplateRows: "1fr auto", minHeight: 520 }}>
-                    <div ref={listRef} style={{ padding: "1.25rem", overflowY: "auto", display: "grid", gap: "0.6rem", alignContent: "start" }}>
+                    <div role="log" aria-label={copy.conversation} aria-live="polite" aria-busy={loading} ref={listRef} style={{ padding: "1.25rem", overflowY: "auto", display: "grid", gap: "0.6rem", alignContent: "start" }}>
                         {loading ? (
-                            <div style={{ color: "var(--text-muted)" }}>{language === "bg" ? "Зареждане..." : "Loading..."}</div>
-                        ) : messages.length === 0 ? (
+                            <div style={{ color: "var(--text-muted)" }}>{copy.loading}</div>
+                        ) : error === "loadError" ? null : messages.length === 0 ? (
                             <EmptyState
                                 icon={MessageCircle}
-                                title={language === "bg" ? "Няма съобщения." : "No messages yet."}
-                                description={language === "bg" ? "Напишете съобщение по-долу, за да започнете разговор." : "Write a message below to start the conversation."}
+                                title={copy.empty}
+                                description={copy.emptyDescription}
                                 compact
                             />
                         ) : (
@@ -102,7 +108,7 @@ export default function MessagesClient({ currentUserId }: { currentUserId: strin
                                     >
                                         <div>{m.content}</div>
                                         <div style={{ fontSize: "0.72rem", opacity: 0.75, marginTop: "0.35rem" }}>
-                                            {new Date(m.timestamp).toLocaleString(language === "bg" ? "bg-BG" : undefined)}
+                                            {new Date(m.timestamp).toLocaleString(language === "bg" ? "bg-BG" : "en-GB")}
                                         </div>
                                     </div>
                                 );
@@ -110,25 +116,27 @@ export default function MessagesClient({ currentUserId }: { currentUserId: strin
                         )}
                     </div>
 
-                    <form onSubmit={handleSend} style={{ borderTop: "1px solid var(--border-card)", padding: "0.9rem", display: "grid", gridTemplateColumns: "1fr auto", gap: "0.6rem" }}>
+                    <form onSubmit={handleSend} style={{ borderTop: "1px solid var(--border-card)", padding: "0.9rem", display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "0.6rem" }}>
                         <textarea
                             value={draft}
                             onChange={(e) => setDraft(e.target.value)}
-                            placeholder={language === "bg" ? "Напишете съобщение..." : "Write a message..."}
+                            placeholder={copy.messagePlaceholder}
                             rows={2}
                             maxLength={2000}
-                            style={{ resize: "vertical", minHeight: 44 }}
+                            style={{ resize: "vertical", minHeight: 44, minWidth: 0, width: "100%" }}
+                            disabled={sending || loading}
+                            aria-label={copy.message}
                         />
-                        <button type="submit" disabled={sending || draft.trim().length === 0} className="btn btn-primary" style={{ alignSelf: "end" }}>
-                            <Send size={16} />
-                            {sending ? (language === "bg" ? "Изпращане..." : "Sending...") : (language === "bg" ? "Изпрати" : "Send")}
+                        <button type="submit" disabled={sending || loading || draft.trim().length === 0} className="btn btn-primary" style={{ alignSelf: "end" }}>
+                            <Send size={16} aria-hidden="true" />
+                            {sending ? copy.sending : copy.send}
                         </button>
                     </form>
                 </div>
 
                 {error ? (
                     <StatusBanner variant="error" focus style={{ marginTop: "1rem" }}>
-                        <strong>{error}</strong>
+                        <strong>{copy[error]}</strong>
                     </StatusBanner>
                 ) : null}
             </div>

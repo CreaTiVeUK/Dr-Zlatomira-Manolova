@@ -15,3 +15,14 @@
 
 /* ─── Responsive breakpoints ─────────────────────────────────── */
 @import "./styles/responsive.css";
+
+.admin-messages-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    min-height: 520px;
+}
+.admin-messages-layout > * { min-width: 0; }
+@media (min-width: 768px) {
+    .admin-messages-layout { grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); }
+}

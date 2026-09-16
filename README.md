@@ -79,7 +79,7 @@ This project features a fully automated DevOps pipeline using GitHub Actions:
 - **Automated Release**: Semantic Release automatically versions the project (v1.0.0 -> v1.0.1) and generates a CHANGELOG based on commit messages.
 
 ### 3. Reliability
-- **Automated Backups**: A sidecar container dumps the PostgreSQL database daily to `./backups`.
+- **Automated Backups**: A sidecar container dumps the PostgreSQL database daily to the Compose `backups` named volume. See [operations and recovery](docs/operations.md) for restore drills, Vercel backup requirements, and reminder monitoring.
 
 ## 📚 Documentation
 

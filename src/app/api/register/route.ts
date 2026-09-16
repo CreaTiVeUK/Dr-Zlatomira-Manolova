@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         // Full strength check — catches weak passwords that pass regex rules
         const strength = checkPasswordStrength(password, [name, email]);
         if (!strength.valid) {
-            return NextResponse.json({ error: strength.reason }, { status: 400 });
+            return NextResponse.json({ error: strength.reason, code: "WEAK_PASSWORD" }, { status: 400 });
         }
 
         // Generic error prevents email enumeration

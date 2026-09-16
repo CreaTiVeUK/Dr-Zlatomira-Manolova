@@ -39,11 +39,11 @@ services:
       - POSTGRES_DB=zlati_pediatrics
       - POSTGRES_HOST=db
     volumes:
-      - ./scripts:/scripts
+      - ./scripts:/scripts:ro
       - backups:/backups
     depends_on:
       - db
-    command: sh -c "chmod +x /scripts/backup.sh && while true; do /scripts/backup.sh; sleep 86400; done"
+    command: sh -c "while true; do if sh /scripts/backup.sh; then sleep 86400; else echo 'Backup failed; retrying in 5 minutes' >&2; sleep 300; fi; done"
 
 volumes:
   postgres_data:

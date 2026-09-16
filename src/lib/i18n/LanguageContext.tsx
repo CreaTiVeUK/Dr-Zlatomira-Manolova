@@ -55,12 +55,8 @@ export function LanguageProvider({
     // Both dictionaries are imported statically so the initial render is
     // already in the right language — the previous lazy import made every
     // page flash English before settling on Bulgarian.
-    const [dict, setDict] = useState<Dictionary>(() => dictFor(initialLanguage ?? getClientLanguage() ?? "bg"));
+    const dict = dictFor(language);
     const router = useRouter();
-
-    useEffect(() => {
-        setDict(dictFor(language));
-    }, [language]);
 
     // Legacy visitors who chose a language before the cookie existed have it
     // only in localStorage — honour it once and persist the cookie.

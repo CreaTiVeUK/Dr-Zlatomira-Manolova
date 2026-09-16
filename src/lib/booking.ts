@@ -46,13 +46,15 @@ function clinicLocal(date: Date): { weekday: number; hour: number; minute: numbe
  * within that day's hours, in clinic time. Mirrors the slot grid generated
  * by BookClient.tsx — both read CLINIC_SCHEDULE.
  */
-export function isWithinBusinessHours(start: Date): boolean {
+export function isWithinBusinessHours(start: Date, duration = 30): boolean {
+    if (!Number.isFinite(start.getTime()) || !Number.isInteger(duration) || duration <= 0) return false;
     if (start.getUTCSeconds() !== 0 || start.getUTCMilliseconds() !== 0) return false;
     const { weekday, hour, minute } = clinicLocal(start);
     if (minute !== 0 && minute !== 30) return false;
     const hours = hoursForDay(weekday);
     if (!hours) return false;
-    return hour >= hours.open && hour < hours.close;
+    const startMinutes = hour * 60 + minute;
+    return startMinutes >= hours.open * 60 && startMinutes + duration <= hours.close * 60;
 }
 
 interface BookedSlot {

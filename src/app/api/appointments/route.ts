@@ -97,9 +97,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Booking for others is restricted" }, { status: 403 });
         }
 
-        if (!isWithinBusinessHours(bookingDate)) {
+        if (!isWithinBusinessHours(bookingDate, duration)) {
             return NextResponse.json(
-                { error: "Appointments start on the half hour between 09:00 and 16:30" },
+                { error: "Appointments must start on the half hour and finish within clinic opening hours" },
                 { status: 400 }
             );
         }
@@ -198,9 +198,9 @@ export async function PATCH(request: NextRequest) {
         if ("dateTime" in validation.data) {
             const newDate = new Date(validation.data.dateTime);
 
-            if (!isWithinBusinessHours(newDate)) {
+            if (!isWithinBusinessHours(newDate, appointment.duration)) {
                 return NextResponse.json(
-                    { error: "Appointments start on the half hour between 09:00 and 16:30" },
+                    { error: "Appointments must start on the half hour and finish within clinic opening hours" },
                     { status: 400 }
                 );
             }

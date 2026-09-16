@@ -1,5 +1,23 @@
 
 export const en = {
+    messages: {
+        title: "Messages",
+        conversation: "Clinic conversation",
+        description: "Ask questions or share updates. Replies may take up to 24 hours on business days.",
+        loading: "Loading...",
+        empty: "No messages yet.",
+        emptyDescription: "Write a message below to start the conversation.",
+        noConversations: "No conversations.",
+        selectConversation: "Select a conversation.",
+        message: "Message",
+        reply: "Reply",
+        messagePlaceholder: "Write a message...",
+        replyPlaceholder: "Write a reply...",
+        send: "Send",
+        sending: "Sending...",
+        loadError: "Failed to load messages. Please reload the page to try again.",
+        sendError: "Your message was not sent. Please try again."
+    },
     emergency: "In an emergency, call 112",
     header: {
         utility: "Specialized pediatric care in Plovdiv",
@@ -252,6 +270,10 @@ export const en = {
             },
         },
         register: {
+            namePlaceholder: "John Doe",
+            passwordHelp: "At least 12 characters. Use a long, unpredictable password.",
+            error: "Registration failed. Please check your details and try again.",
+            rateLimit: "Too many attempts. Please wait and try again.",
             title: "Registration",
             name: "FULL NAME",
             email: "EMAIL ADDRESS",

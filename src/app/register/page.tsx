@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<"" | "error" | "passwordHelp" | "rateLimit">("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -34,10 +34,10 @@ export default function RegisterPage() {
       if (res.ok) {
         router.push("/login?registered=true");
       } else {
-        setError(data.error || "Registration failed");
+        setError(res.status === 429 ? "rateLimit" : data.code === "WEAK_PASSWORD" ? "passwordHelp" : "error");
       }
     } catch {
-      setError(language === "bg" ? "Възникна грешка при регистрация." : "An error occurred during registration");
+      setError("error");
     } finally {
       setLoading(false);
     }
@@ -56,26 +56,27 @@ export default function RegisterPage() {
 
         {error ? (
           <StatusBanner variant="error" focus>
-            <strong>{error}</strong>
+            <strong>{dict.auth.register[error]}</strong>
           </StatusBanner>
         ) : null}
 
         <form onSubmit={handleSubmit} className="form-grid">
           <div className="field">
             <label htmlFor="register-name">{dict.auth.register.name}</label>
-            <input id="register-name" type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="John Doe" />
+            <input id="register-name" type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder={dict.auth.register.namePlaceholder} minLength={2} name="name" autoComplete="name" />
           </div>
           <div className="field">
             <label htmlFor="register-email">{dict.auth.register.email}</label>
-            <input id="register-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="email@example.com" />
+            <input id="register-email" name="email" autoComplete="email" spellCheck={false} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="email@example.com" />
           </div>
           <div className="field">
             <label htmlFor="register-phone">{dict.auth.register.phone}</label>
-            <input id="register-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+359 88..." />
+            <input id="register-phone" name="phone" autoComplete="tel" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+359 88..." />
           </div>
           <div className="field">
             <label htmlFor="register-password">{dict.auth.register.password}</label>
-            <input id="register-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="Minimum 8 characters" />
+            <input id="register-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={12} maxLength={128} name="password" autoComplete="new-password" aria-describedby="register-password-help" />
+            <p id="register-password-help" className="text-muted">{dict.auth.register.passwordHelp}</p>
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? dict.auth.register.loading : dict.auth.register.btn}

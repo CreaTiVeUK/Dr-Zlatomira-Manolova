@@ -5,11 +5,13 @@
  * next 48 hours that hasn't been reminded yet. Vercel Hobby caps cron
  * frequency at once-per-day (with ±59 min precision), so we sweep a
  * full 48h horizon on each run and let `reminderSentAt` keep things
- * idempotent — every appointment gets exactly one reminder.
+ * from sending again after success. Provider idempotency covers overlapping
+ * runs and retries for 24 hours; see docs/operations.md for recovery limits.
  *
  * Protected by CRON_SECRET (fail-closed).
  */
 
+import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
@@ -43,6 +45,7 @@ export async function GET(request: NextRequest) {
                 reminderSentAt: null,
                 dateTime: { gte: windowStart, lte: windowEnd },
             },
+            orderBy: { dateTime: "asc" },
             include: {
                 user: { select: { id: true, name: true, email: true } },
             },
@@ -54,18 +57,19 @@ export async function GET(request: NextRequest) {
         for (const appt of appointments) {
             if (!appt.user?.email) continue;
 
-            const date = appt.dateTime.toLocaleDateString("en-GB");
-            const time = appt.dateTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+            const idempotencyKey = `reminder/${createHash("sha256").update(`${appt.id}/${appt.dateTime.toISOString()}`).digest("hex")}`;
 
             try {
                 const result = await sendEmail(
                     appt.user.email,
-                    EMAIL_TEMPLATES.REMINDER_24H(appt.user.name ?? appt.user.email, date, time)
+                    EMAIL_TEMPLATES.APPOINTMENT_REMINDER(appt.dateTime),
+                    idempotencyKey
                 );
 
                 if (result.success) {
-                    await prisma.appointment.update({
-                        where: { id: appt.id },
+                    await prisma.appointment.updateMany({
+                        // Never mark a newly rescheduled appointment as reminded.
+                        where: { id: appt.id, dateTime: appt.dateTime, status: "BOOKED", reminderSentAt: null },
                         data: { reminderSentAt: new Date() },
                     });
                     sent++;
@@ -80,12 +84,12 @@ export async function GET(request: NextRequest) {
         }
 
         return NextResponse.json({
-            success: true,
+            success: failed === 0,
             candidates: appointments.length,
             sent,
             failed,
             window: { start: windowStart.toISOString(), end: windowEnd.toISOString() },
-        });
+        }, { status: failed > 0 ? 503 : 200 });
     } catch (error) {
         console.error("[send-reminders] Error:", error);
         return NextResponse.json({ error: "Reminder job failed" }, { status: 500 });

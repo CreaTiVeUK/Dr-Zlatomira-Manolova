@@ -18,7 +18,7 @@ export function getBaseUrl(): string {
     return getSiteUrl();
 }
 
-export async function sendEmail(to: string, template: EmailTemplate) {
+export async function sendEmail(to: string, template: EmailTemplate, idempotencyKey?: string) {
     const isProd = process.env.NODE_ENV === 'production';
     // Must be an address on a domain verified in Resend — Resend cannot send
     // from *.vercel.app, which silently broke ALL production email before.
@@ -38,7 +38,7 @@ export async function sendEmail(to: string, template: EmailTemplate) {
             to: [to],
             subject: template.subject,
             text: template.body
-        });
+        }, idempotencyKey ? { idempotencyKey } : undefined);
 
         if (error) {
             console.error('[EMAIL ERROR]:', error);
@@ -73,10 +73,15 @@ export const EMAIL_TEMPLATES = {
         subject: `Verify your email — Dr. Manolova-Peneva Pediatrics`,
         body: `Dear ${patientName},\n\nThank you for registering with Dr. Manolova-Peneva Pediatrics.\n\nPlease verify your email address by clicking the link below (valid for 24 hours):\n\n${verifyUrl}\n\nIf you did not create an account, you can safely ignore this email.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
-    REMINDER_24H: (patientName: string, date: string, time: string) => ({
-        subject: `Reminder: Your appointment tomorrow with Dr. Manolova-Peneva`,
-        body: `Dear ${patientName},\n\nThis is a friendly reminder of your appointment with Dr. Zlatomira Manolova-Peneva tomorrow.\n\nDate: ${date}\nTime: ${time}\n\nPlease arrive 10 minutes before your scheduled slot. If you need to cancel or reschedule, please do so at least 24 hours in advance through your patient portal.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
-    }),
+    APPOINTMENT_REMINDER: (dateTime: Date) => {
+        const date = new Intl.DateTimeFormat("bg-BG", { timeZone: "Europe/Sofia", day: "2-digit", month: "2-digit", year: "numeric" }).format(dateTime);
+        const time = new Intl.DateTimeFormat("bg-BG", { timeZone: "Europe/Sofia", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(dateTime);
+        return {
+            subject: "Напомняне за преглед / Appointment reminder — Dr. Manolova-Peneva",
+            // Keep the payload stable across retries for the provider's idempotency key.
+            body: `Напомняме Ви за предстоящия преглед при д-р Златомира Манолова-Пенева.\n\nДата: ${date}\nЧас: ${time} (местно време в България)\n\nМоля, пристигнете 10 минути по-рано. Можете да прегледате или промените часа си в пациентския портал: ${getBaseUrl()}/my-appointments\n\n---\n\nA reminder of your upcoming appointment with Dr. Zlatomira Manolova-Peneva.\n\nDate: ${date} (DD.MM.YYYY)\nTime: ${time} (Europe/Sofia, Bulgarian local time)\n\nPlease arrive 10 minutes early. View or manage your appointment in the patient portal: ${getBaseUrl()}/my-appointments`,
+        };
+    },
     PASSWORD_RESET: (resetUrl: string) => ({
         subject: `Reset your password — Dr. Manolova-Peneva Pediatrics`,
         body: `Hello,\n\nWe received a request to reset the password for your Dr. Manolova-Peneva Pediatrics account.\n\nClick the link below to set a new password (valid for 1 hour):\n\n${resetUrl}\n\nIf you did not request a password reset, you can safely ignore this email. Your password will not be changed.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`

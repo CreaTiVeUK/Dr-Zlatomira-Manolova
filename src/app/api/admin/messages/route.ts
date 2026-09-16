@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
-import { sanitizeString } from "@/lib/sanitize";
+import { messageContentSchema } from "@/lib/message-content";
 import { AuditAction, createAuditLog } from "@/lib/audit";
 import { logger } from "@/lib/logger";
 
@@ -17,7 +17,7 @@ async function requireAdmin() {
 
 const sendSchema = z.object({
     patientId: z.string().uuid(),
-    content: z.string().min(1).max(2000).transform((v) => sanitizeString(v)),
+    content: messageContentSchema,
 });
 
 export async function GET(req: Request) {
