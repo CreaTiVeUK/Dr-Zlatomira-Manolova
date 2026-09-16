@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
+import { createPrismaClient } from '../src/lib/prisma-client'
 import bcrypt from 'bcryptjs'
 
-const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL })
-const prisma = new PrismaClient({ adapter })
+const prisma = createPrismaClient()
 
 /**
  * DEV/CI SEED ONLY. This upserts well-known accounts with the shared password

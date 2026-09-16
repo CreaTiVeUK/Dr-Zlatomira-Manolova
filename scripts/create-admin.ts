@@ -19,15 +19,13 @@
  * On Vercel: `vercel env pull .env.local && npx tsx scripts/create-admin.ts`
  */
 
-import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { createPrismaClient } from "../src/lib/prisma-client";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { checkPasswordStrength } from "../src/lib/password-strength";
 import { gmailCanonicalLocal } from "../src/lib/gmail-alias";
 
-const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = createPrismaClient();
 
 /** Random, URL-safe, and comfortably past the zxcvbn-3 policy. */
 function generatePassword(): string {

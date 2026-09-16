@@ -56,10 +56,8 @@ test('Patient sends a message, sees it after reload, and cannot use the admin in
         await expect(page.getByRole('log').getByText(content, { exact: true })).toBeVisible();
     } finally {
         // This suite runs against the disposable development/CI database.
-        const { PrismaClient } = await import('@prisma/client');
-        const { PrismaNeon } = await import('@prisma/adapter-neon');
-        const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL });
-        const prisma = new PrismaClient({ adapter });
+        const { createPrismaClient } = await import('../src/lib/prisma-client');
+        const prisma = createPrismaClient();
         try { await prisma.message.delete({ where: { id: message.id } }); }
         finally { await prisma.$disconnect(); }
     }

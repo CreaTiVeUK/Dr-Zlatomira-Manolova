@@ -98,3 +98,27 @@ console. Repository configuration does not establish that those backups exist.
   schemas blindly; none of this change requires a schema migration.
 - Confirm backups, delivery monitoring, and alert routing with the service owner;
   local tests cannot verify these account-level settings.
+
+## Prisma 7 and clean builds
+
+Use Node 24 for CI and Docker. The dependency tree is verified with Node 24.20.0
+and npm 11.19.0; older local Node 24 versions may not meet the updated tooling's
+engine requirements. Run `npm ci` to validate the committed lockfile, including
+optional platform dependencies required by Linux runners.
+
+`src/lib/prisma-client.ts` creates clients for the app, administrative scripts,
+seeding, and browser-test cleanup. Neon hosts (`*.neon.tech`) retain the Neon
+adapter; other PostgreSQL hosts use the TCP adapter, including local and Compose
+PostgreSQL. Runtime connections use `POSTGRES_PRISMA_URL`; schema commands use
+`POSTGRES_URL_NON_POOLING`. `prisma generate` works without a database URL and
+never needs production credentials in Docker's build context.
+
+Prisma 7 reads the seed command from `migrations.seed` in `prisma.config.ts`.
+For a **new disposable database**, run `prisma db push` and then `prisma db seed`.
+Do not use production credentials for tests or seeding.
+
+The package overrides patch Prisma 7.10.0's transitive `deepmerge-ts` and `mysql2`
+dependencies. See the [deepmerge-ts advisory](https://github.com/advisories/GHSA-ggr8-5vv4-36mx)
+and [mysql2 advisories](https://github.com/sidorares/node-mysql2/security/advisories).
+Reassess these overrides when Prisma itself ships patched dependencies. Keep the
+security audit enabled; do not suppress audit failures to get a green build.

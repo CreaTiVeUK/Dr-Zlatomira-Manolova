@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { PrismaClient } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
+import { createPrismaClient } from '../src/lib/prisma-client';
 
 /**
  * End-to-end registration funnel: register → login blocked until verified →
@@ -19,8 +18,7 @@ test.describe('Registration funnel', () => {
     test.skip(!process.env.CI, 'requires direct DB access to read the verification token (CI only)');
 
     test('register → unverified login blocked → verify → login works', async ({ page }) => {
-        const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL });
-        const prisma = new PrismaClient({ adapter });
+        const prisma = createPrismaClient();
         const email = `e2e-reg-${Date.now()}@example.com`;
         const password = 'Sup3r#Secure!42x';
 
