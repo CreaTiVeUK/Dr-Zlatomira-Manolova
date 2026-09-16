@@ -12,9 +12,14 @@ type Status = "loading" | "success" | "error" | "expired";
 export default function VerifyEmailPage() {
     const { language } = useLanguage();
     const searchParams = useSearchParams();
-    const [status, setStatus] = useState<Status>("loading");
-    const [message, setMessage] = useState("");
-    const [email, setEmailState] = useState("");
+    // token/email are read from the URL, available synchronously at mount —
+    // deriving the missing-params case here avoids a spurious "loading" flash.
+    const hasParams = Boolean(searchParams.get("token") && searchParams.get("email"));
+    const [status, setStatus] = useState<Status>(hasParams ? "loading" : "error");
+    const [message, setMessage] = useState(() =>
+        hasParams ? "" : (language === "bg" ? "Липсват параметри за потвърждение." : "Missing verification parameters.")
+    );
+    const email = searchParams.get("email") ?? "";
     const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
 
     const copy = {
@@ -36,13 +41,7 @@ export default function VerifyEmailPage() {
         const token = searchParams.get("token");
         const emailParam = searchParams.get("email");
 
-        if (!token || !emailParam) {
-            setStatus("error");
-            setMessage(language === "bg" ? "Липсват параметри за потвърждение." : "Missing verification parameters.");
-            return;
-        }
-
-        setEmailState(emailParam);
+        if (!token || !emailParam) return;
 
         fetch(`/api/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(emailParam)}`)
             .then((res) => res.json())

@@ -34,7 +34,7 @@ interface AppointmentsClientProps {
 export default function AppointmentsClient({ session }: AppointmentsClientProps) {
   const { dict, language } = useLanguage();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!session);
   const [message, setMessage] = useState("");
   const [rescheduleId, setRescheduleId] = useState<string | null>(null);
   const [rescheduleValue, setRescheduleValue] = useState("");
@@ -43,8 +43,6 @@ export default function AppointmentsClient({ session }: AppointmentsClientProps)
   useEffect(() => {
     if (session) {
       fetchAppointments();
-    } else {
-      setLoading(false);
     }
   }, [session]);
 

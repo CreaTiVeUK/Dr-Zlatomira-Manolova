@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play, Star } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/en";
 
@@ -10,11 +10,21 @@ interface Testimonial {
   author: string;
 }
 
+function getReducedMotionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function subscribeReducedMotion(callback: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
 function ReviewCarousel({ testimonials, lang }: { testimonials: Testimonial[]; lang: "en" | "bg" }) {
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,14 +32,6 @@ function ReviewCarousel({ testimonials, lang }: { testimonials: Testimonial[]; l
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
   }, []);
 
   const step = isMobile ? 1 : 2;

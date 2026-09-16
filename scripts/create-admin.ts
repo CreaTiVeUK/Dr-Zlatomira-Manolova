@@ -20,12 +20,14 @@
  */
 
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import { checkPasswordStrength } from "../src/lib/password-strength";
 import { gmailCanonicalLocal } from "../src/lib/gmail-alias";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL });
+const prisma = new PrismaClient({ adapter });
 
 /** Random, URL-safe, and comfortably past the zxcvbn-3 policy. */
 function generatePassword(): string {

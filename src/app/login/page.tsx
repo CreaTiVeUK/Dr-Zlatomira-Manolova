@@ -126,13 +126,16 @@ export default function LoginPage() {
     fetch("/api/available-providers").then(r => r.json()).then(setAvailableProviders).catch(() => {});
   }, []);
 
+  // Reached zero — bail out during render rather than in an effect. The
+  // guard checks the exact state being reset, so it self-terminates after
+  // one corrective render instead of looping.
+  if (lockoutRemainingMs !== null && lockoutRemainingMs <= 0) {
+    setLockoutRemainingMs(null);
+  }
+
   // Tick the lockout countdown every second
   useEffect(() => {
-    if (lockoutRemainingMs === null) return;
-    if (lockoutRemainingMs <= 0) {
-      setLockoutRemainingMs(null);
-      return;
-    }
+    if (lockoutRemainingMs === null || lockoutRemainingMs <= 0) return;
     const id = setTimeout(() => setLockoutRemainingMs((ms) => (ms ?? 0) - 1000), 1000);
     return () => clearTimeout(id);
   }, [lockoutRemainingMs]);

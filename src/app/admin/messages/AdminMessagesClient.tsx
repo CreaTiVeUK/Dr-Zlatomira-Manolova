@@ -35,6 +35,19 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
     const [sending, setSending] = useState(false);
     const [error, setError] = useState<"" | "loadError" | "sendError">("");
     const listRef = useRef<HTMLDivElement | null>(null);
+    const [prevActiveId, setPrevActiveId] = useState(activeId);
+
+    // Reset the conversation panel during render when the selected thread
+    // changes, instead of in the effect below — this is a derived reset,
+    // not an external synchronization, and the guard is self-terminating
+    // (it compares against the tracked previous value).
+    if (activeId !== prevActiveId) {
+        setPrevActiveId(activeId);
+        setMessages([]);
+        setDraft("");
+        setError("");
+        if (activeId) setLoadingMessages(true);
+    }
 
     const loadThreads = async () => {
         try {
@@ -50,16 +63,14 @@ export default function AdminMessagesClient({ adminId }: { adminId: string }) {
     };
 
     useEffect(() => {
-        loadThreads();
+        (async () => {
+            await loadThreads();
+        })();
     }, []);
 
     useEffect(() => {
         if (!activeId) return;
         const controller = new AbortController();
-        setLoadingMessages(true);
-        setMessages([]);
-        setDraft("");
-        setError("");
         fetch(`/api/admin/messages?patientId=${encodeURIComponent(activeId)}`, { signal: controller.signal })
             .then((res) => {
                 if (!res.ok) throw new Error("Load failed");

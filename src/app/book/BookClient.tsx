@@ -44,15 +44,20 @@ export default function BookClient({ session }: BookClientProps) {
     return startOfDay(new Date());
   });
   const [selectedService, setSelectedService] = useState(services[0]);
-  const [slots, setSlots] = useState<Date[]>([]);
   const [bookedSlots, setBookedSlots] = useState<{ dateTime: string; duration: number }[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [tempSelectedSlot, setTempSelectedSlot] = useState<Date | null>(null);
 
-  useEffect(() => {
+  // services is recreated (new translated names) whenever the language
+  // toggles — reset the selection during render rather than in an effect;
+  // the guard is self-terminating since it compares against the tracked
+  // previous array.
+  const [prevServices, setPrevServices] = useState(services);
+  if (services !== prevServices) {
+    setPrevServices(services);
     setSelectedService(services[0]);
-  }, [services]);
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -74,14 +79,20 @@ export default function BookClient({ session }: BookClientProps) {
     }
   }, [session]);
 
-  useEffect(() => {
+  // Selecting a new date/service invalidates any temporarily-held slot —
+  // reset it during render (self-terminating: the guard tracks the exact
+  // key being compared), then let the effect below regenerate the slot list.
+  const slotsKey = `${selectedDate.getTime()}-${selectedService.duration}`;
+  const [prevSlotsKey, setPrevSlotsKey] = useState(slotsKey);
+  if (slotsKey !== prevSlotsKey) {
+    setPrevSlotsKey(slotsKey);
     setTempSelectedSlot(null);
-    const generatedSlots = [];
+  }
+
+  const slots = useMemo(() => {
+    const generatedSlots: Date[] = [];
     const hours = hoursForDay(selectedDate.getDay());
-    if (!hours) {
-      setSlots([]);
-      return;
-    }
+    if (!hours) return generatedSlots;
 
     for (let hour = hours.open; hour < hours.close; hour += 1) {
       const onTheHour = new Date(selectedDate);
@@ -93,7 +104,7 @@ export default function BookClient({ session }: BookClientProps) {
       if (hour * 60 + 30 + selectedService.duration <= hours.close * 60) generatedSlots.push(halfPast);
     }
 
-    setSlots(generatedSlots);
+    return generatedSlots;
   }, [selectedDate, selectedService.duration]);
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));

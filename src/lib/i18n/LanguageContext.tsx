@@ -59,10 +59,14 @@ export function LanguageProvider({
     const router = useRouter();
 
     // Legacy visitors who chose a language before the cookie existed have it
-    // only in localStorage — honour it once and persist the cookie.
+    // only in localStorage — honour it once and persist the cookie. This is
+    // a one-time migration with real side effects (cookie write, router
+    // refresh), not a derivable render value, so set-state-in-effect doesn't
+    // apply here.
     useEffect(() => {
         const clientPref = getClientLanguage();
         if (clientPref && clientPref !== language) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLanguageState(clientPref);
             persist(clientPref);
             router.refresh();

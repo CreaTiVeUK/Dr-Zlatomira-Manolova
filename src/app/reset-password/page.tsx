@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
@@ -19,14 +19,10 @@ export default function ResetPasswordPage() {
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-  const [error, setError] = useState("");
-
-  // Validate that we at least have the required params on mount
-  useEffect(() => {
-    if (!token || !email) {
-      setError(copy.errorInvalid);
-    }
-  }, [token, email, copy.errorInvalid]);
+  // token/email come from the URL and don't change during the page's
+  // lifetime, so the missing-params case can be computed once at init
+  // instead of round-tripping through an effect.
+  const [error, setError] = useState(() => (!token || !email ? copy.errorInvalid : ""));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
