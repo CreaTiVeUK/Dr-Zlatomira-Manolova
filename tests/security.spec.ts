@@ -31,27 +31,33 @@ test.describe('Session revocation', () => {
 
         // Capture the session cookies, then log out (blocklists the jti)
         const stolenCookies = await context.cookies();
+        // Force a cookie refresh: revocation must cover both token versions.
+        await page.request.get('/api/auth/session');
+        const refreshedCookies = await context.cookies();
         const logoutStatus = await page.evaluate(() =>
             fetch('/api/logout', { method: 'POST' }).then((r) => r.status)
         );
         expect(logoutStatus).toBe(200);
 
         // An attacker replaying the pre-logout cookie must be rejected
-        const replayContext = await browser.newContext();
-        await replayContext.addCookies(stolenCookies);
-        const replayResponse = await replayContext.request.get('/api/user/profile');
-        expect(replayResponse.status()).toBe(401);
-
-        await replayContext.close();
+        for (const cookies of [stolenCookies, refreshedCookies]) {
+            const replayContext = await browser.newContext();
+            await replayContext.addCookies(cookies);
+            const replayResponse = await replayContext.request.get('/api/user/profile');
+            expect(replayResponse.status()).toBe(401);
+            await replayContext.close();
+        }
         await context.close();
     });
 });
 
 test.describe('Booking integrity', () => {
-    // 10:00 UTC = 12:00/13:00 Sofia — inside clinic hours year-round.
-    function futureSlot(daysAhead: number): string {
+    // Separate weeks prevent collisions between tests/retries. Thursday at
+    // 10:00 UTC is inside consultation hours in Sofia in both DST seasons.
+    function futureSlot(weeksAhead: number): string {
         const d = new Date();
-        d.setUTCDate(d.getUTCDate() + daysAhead);
+        d.setUTCDate(d.getUTCDate() + weeksAhead * 7);
+        d.setUTCDate(d.getUTCDate() + (4 - d.getUTCDay() + 7) % 7);
         d.setUTCHours(10, 0, 0, 0);
         return d.toISOString();
     }
@@ -73,9 +79,9 @@ test.describe('Booking integrity', () => {
         );
     }
 
-    test('a cancelled slot can be rebooked (no permanent slot poisoning)', async ({ page }) => {
+    test('a cancelled slot can be rebooked (no permanent slot poisoning)', async ({ page }, testInfo) => {
         await login(page, 'patient@example.com');
-        const slot = futureSlot(25);
+        const slot = futureSlot(4 + testInfo.retry * 4);
 
         const first = await bookViaApi(page, slot);
         expect(first.status).toBe(200);
@@ -96,9 +102,9 @@ test.describe('Booking integrity', () => {
         expect(rebook.status).toBe(200);
     });
 
-    test('patients cannot mark their own appointment COMPLETED', async ({ page }) => {
+    test('patients cannot mark their own appointment COMPLETED', async ({ page }, testInfo) => {
         await login(page, 'patient@example.com');
-        const created = await bookViaApi(page, futureSlot(26));
+        const created = await bookViaApi(page, futureSlot(5 + testInfo.retry * 4));
         expect(created.status).toBe(200);
 
         const complete = await page.evaluate(async (id: string) => {
@@ -112,10 +118,10 @@ test.describe('Booking integrity', () => {
         expect(complete).toBe(403);
     });
 
-    test('client-supplied price is ignored — server derives it from duration', async ({ page }) => {
+    test('client-supplied price is ignored — server derives it from duration', async ({ page }, testInfo) => {
         await login(page, 'patient@example.com');
 
-        const result = await bookViaApi(page, futureSlot(27), { price: 1 });
+        const result = await bookViaApi(page, futureSlot(6 + testInfo.retry * 4), { price: 1 });
         expect(result.status).toBe(200);
         expect(result.body.appointment.price).toBe(25); // 30-minute standard visit
     });

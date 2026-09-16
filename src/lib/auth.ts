@@ -12,7 +12,7 @@ interface Session {
     };
     expires: Date;
     lastActivity: number;
-    /** JWT ID — handle for per-token revocation on logout. */
+    /** Stable session ID (legacy property name) for revocation on logout. */
     jti?: string;
     /** Token issue time (ms) — compared against per-user revocation cutoffs. */
     issuedAt?: number;

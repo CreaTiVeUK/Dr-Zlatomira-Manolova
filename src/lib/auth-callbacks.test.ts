@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import bcrypt from "bcryptjs";
 
@@ -225,33 +226,55 @@ describe("authorizeUser", () => {
 // ─── jwtCallback ─────────────────────────────────────────────────────────────
 
 describe("jwtCallback", () => {
-    it("stamps id/role/jti/lastActivity on sign-in", async () => {
+    it("stamps id/role/sessionId/lastActivity on sign-in", async () => {
         const token = await jwtCallback({ token: {}, user: { id: "u1", role: "PATIENT" } });
         expect(token.id).toBe("u1");
         expect(token.role).toBe("PATIENT");
-        expect(token.jti).toMatch(/[0-9a-f-]{36}/);
+        expect(token.sessionId).toMatch(/[0-9a-f-]{36}/);
         expect(token.lastActivity).toBeGreaterThan(Date.now() - 1000);
     });
 
     it("refreshes lastActivity for an active session", async () => {
         const before = Date.now() - 60_000;
-        const token = await jwtCallback({ token: { lastActivity: before } });
+        const token = await jwtCallback({ token: { sessionId: "sid", sessionStartedAt: 1, lastActivity: before } });
         expect(token.invalidated).toBeUndefined();
         expect(token.lastActivity).toBeGreaterThan(before);
     });
 
     it("invalidates a token idle past the limit WITHOUT refreshing it", async () => {
         const stale = Date.now() - INACTIVITY_LIMIT_MS - 1000;
-        const token = await jwtCallback({ token: { lastActivity: stale } });
+        const token = await jwtCallback({ token: { sessionId: "sid", sessionStartedAt: 1, lastActivity: stale } });
         expect(token.invalidated).toBe("inactivity");
         expect(token.lastActivity).toBe(stale);
     });
 
     it("keeps an invalidated token invalidated", async () => {
         const stale = Date.now() - INACTIVITY_LIMIT_MS - 1000;
-        const token = await jwtCallback({ token: { lastActivity: stale, invalidated: "inactivity" } });
+        const token = await jwtCallback({ token: { sessionId: "sid", sessionStartedAt: 1, lastActivity: stale, invalidated: "inactivity" } });
         expect(token.invalidated).toBe("inactivity");
         expect(token.lastActivity).toBe(stale);
+    });
+
+    it("rejects legacy tokens without a stable session identifier", async () => {
+        const token = await jwtCallback({ token: { jti: "old-jti", lastActivity: Date.now() } });
+        expect(token.invalidated).toBe("session-upgrade");
+    });
+
+    it("keeps revocation identity across real Auth.js JWT refreshes", async () => {
+        const { encode, decode } = await import("@auth/core/jwt");
+        const { blockSession, isSessionBlocked } = await import("./session-blocklist");
+        const options = { secret: "unit-test-secret-at-least-32-characters", salt: "authjs.session-token" };
+        const original = await jwtCallback({ token: {}, user: { id: "u1" } });
+        const first = (await decode({ ...options, token: await encode({ ...options, token: original }) }))!;
+        const refreshed = await jwtCallback({ token: first });
+        const second = (await decode({ ...options, token: await encode({ ...options, token: refreshed }) }))!;
+        expect(second.jti).not.toBe(first.jti);
+        const originalSession = sessionCallback({ session: { user: {} }, token: first });
+        const refreshedSession = sessionCallback({ session: { user: {} }, token: second });
+        expect(refreshedSession.jti).toBe(originalSession.jti);
+        expect(refreshedSession.issuedAt).toBe(originalSession.issuedAt);
+        await blockSession(refreshedSession.jti!);
+        expect(await isSessionBlocked(originalSession.jti!)).toBe(true);
     });
 
     it("clears invalidation on a fresh sign-in", async () => {
@@ -270,7 +293,9 @@ describe("sessionCallback", () => {
         const token: TokenShape = {
             id: "u1",
             role: "ADMIN",
-            jti: "jti-123",
+            sessionId: "sid-123",
+            sessionStartedAt: 1_700_000_000_000,
+            jti: "rotating-jti",
             iat: 1_700_000_000,
             lastActivity: 42,
             invalidated: "inactivity",
@@ -279,7 +304,7 @@ describe("sessionCallback", () => {
 
         expect(session.user?.id).toBe("u1");
         expect(session.user?.role).toBe("ADMIN");
-        expect(session.jti).toBe("jti-123");
+        expect(session.jti).toBe("sid-123");
         expect(session.issuedAt).toBe(1_700_000_000_000);
         expect(session.invalidated).toBe("inactivity");
     });

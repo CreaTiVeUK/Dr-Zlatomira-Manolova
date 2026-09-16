@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
 
     if (session?.user?.id) {
-        // Blocklist the current jti so the token can't be replayed after logout.
+        // Blocklist the stable session ID so even older cookies cannot be replayed.
         // TTL defaults to the maximum session lifetime, so the entry outlives
         // any token it needs to block.
         if (session.jti) {

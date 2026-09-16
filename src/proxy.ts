@@ -99,7 +99,7 @@ export const proxy = auth(async function proxy(request) {
     // Per-token revocation (logout) and per-user revocation (account deletion,
     // password reset — kills sessions on all devices).
     const reason = flags.invalidated
-      ? "inactivity"
+      ? (flags.invalidated === "inactivity" ? "inactivity" : "revoked")
       : (flags.jti && (await isSessionBlocked(flags.jti))) ||
           (userId && flags.issuedAt && (await isUserRevoked(userId, flags.issuedAt)))
         ? "revoked"

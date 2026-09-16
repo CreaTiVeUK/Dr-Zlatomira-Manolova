@@ -194,6 +194,8 @@ export interface TokenShape {
     role?: string;
     jti?: string;
     iat?: number;
+    sessionId?: string;
+    sessionStartedAt?: number;
     lastActivity?: number;
     invalidated?: string;
     [key: string]: unknown;
@@ -204,12 +206,19 @@ export async function jwtCallback({ token, user }: { token: TokenShape; user?: {
         // Fresh sign-in
         token.id = user.id;
         token.role = user.role ?? "PATIENT";
-        // Assign a stable jti on first issue so it can be blocklisted on logout
-        if (!token.jti) {
-            token.jti = crypto.randomUUID();
-        }
+        // Auth.js overwrites jti/iat on every encode. Keep separate, stable
+        // claims so logout and all-device revocation cover refreshed cookies.
+        token.sessionId = crypto.randomUUID();
+        token.sessionStartedAt = Date.now();
         token.lastActivity = Date.now();
         delete token.invalidated;
+        return token;
+    }
+
+    // Legacy cookies lack a stable revocation handle. Require a new sign-in
+    // rather than accepting an older cookie that can evade logout revocation.
+    if (!token.sessionId || typeof token.sessionStartedAt !== "number") {
+        token.invalidated = "session-upgrade";
         return token;
     }
 
@@ -249,8 +258,8 @@ export function sessionCallback({ session, token }: { session: SessionShape; tok
     }
     // Expose revocation handles — without these on the session object the
     // blocklist checks in the proxy and logout route read `undefined`.
-    session.jti = token.jti;
-    session.issuedAt = typeof token.iat === "number" ? token.iat * 1000 : undefined;
+    session.jti = token.sessionId;
+    session.issuedAt = token.sessionStartedAt;
     session.invalidated = token.invalidated;
     return session;
 }
