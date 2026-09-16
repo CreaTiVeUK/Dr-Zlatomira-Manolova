@@ -75,6 +75,13 @@ function applySecurityHeaders(res: NextResponse): NextResponse {
   res.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   // microphone=(self) — allows the admin AudioRecorder component (same-origin only)
   res.headers.set("Permissions-Policy", "camera=(), microphone=(self), geolocation=(), payment=(), usb=()");
+  // Preview deployments are byte-identical to production and answer on their
+  // own *.vercel.app hostname, so without this a crawler can index a preview
+  // and compete with the real domain. Production's own vercel.app hostname is
+  // handled harder, by the 308 in next.config.ts; this covers everything else.
+  if (process.env.VERCEL_ENV === "preview") {
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
   return res;
 }
 
