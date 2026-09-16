@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.2.0...v1.3.0) (2026-09-16)
+
+
+### Features
+
+* patient messaging polish, reminder-email hardening, backup script fixes ([6e58f21](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/6e58f21ca0149f5aa8573ecf19aaba22982756fa))
+
 # [1.2.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.5...v1.2.0) (2026-09-16)
 
 
