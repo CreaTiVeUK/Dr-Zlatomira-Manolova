@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.1...v1.3.2) (2026-09-16)
+
+
+### Bug Fixes
+
+* **seo:** collapse *.vercel.app onto the canonical domain ([9cdc1a2](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/9cdc1a28328c7c0920640029421102e82ea5207a))
+
 ## [1.3.1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.0...v1.3.1) (2026-09-16)
 
 
