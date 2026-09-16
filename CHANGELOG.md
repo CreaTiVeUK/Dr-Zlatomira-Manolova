@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.0...v1.3.1) (2026-09-16)
+
+
+### Bug Fixes
+
+* **ci:** generate Prisma client before running tests in release.yml ([37ebcea](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/37ebcea9b7250348917abd73953f5106dbbb4452))
+* restore CI and PostgreSQL support after Prisma upgrade ([4d6074d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/4d6074d6f1a822168a99341cfba4225a10deb964))
+* route footer's book-appointment link like the header, schedule sync-reviews cron ([e62d71d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/e62d71d16e8399ec59c5aa3ed32603a2ac0f3db7))
+
 # [1.3.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.2.0...v1.3.0) (2026-09-16)
 
 
