@@ -1,3 +1,67 @@
+# [1.2.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.5...v1.2.0) (2026-09-16)
+
+
+### Bug Fixes
+
+* **a11y:** announce form status banners to screen readers, add AVIF images ([256220f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/256220fd5fc35aaf5a1b301fa5b289347bad00e8))
+* **a11y:** close out the remaining audit findings ([0bba7f6](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/0bba7f6f9680cdd4dc09c39c70fc778580186eae))
+* **a11y:** resolve cookie-banner occlusion, clipped heading, and contrast failures ([cc27beb](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/cc27bebe17e618f3ec2afdd7b8e10dba21c2a88d)), closes [hi#severity](https://github.com/hi/issues/severity)
+* **admin:** readable brand title on dark surfaces; tablet metric grid ([8f920f9](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/8f920f9b9566f2e3979c0d309e4b9ece5a294e5c))
+* **admin:** session recorder works on Safari/iOS; charts stop logging -1 size ([953aefb](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/953aefb3e54b26da6124099211b8ce3c7d9b2845))
+* **auth:** fix the social login button styling and focus ring ([51b9d28](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/51b9d2879706236c9f2ff60ddd86a0faaf93b882))
+* **auth:** Google sign-in resolves Gmail dot-aliases to the existing account ([16a8a44](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/16a8a4428bb8424f472af46dff645c3641643017))
+* **auth:** localize login error messages, rewrite two user-hostile ones ([654e9c4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/654e9c44a01c4961f552be94037890853c68b250))
+* **auth:** revoke all refreshed cookies on logout ([678557c](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/678557c8dbf651973f421736c44d54ea669b8300))
+* **calendar:** escape and fold ICS text per RFC 5545 ([343ac52](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/343ac5250319aad85f8180981b7559b7760421e1))
+* **contact:** drop the remaining age-range and district meta-cards ([a812ef9](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/a812ef9b2a6f2953c56968d4dee9284015e2ed49))
+* **contact:** map embed points at the named Business Profile pin ([f022a80](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/f022a80b4ba1a3edae7291b00f06881e22d2d3ad))
+* **content:** apply the doctor's correction notes ([fe20f30](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/fe20f30d30bea5c46c9bbd8fedbeaf1bcef1cfbb))
+* **content:** correct the doctor's surname to Манолова-Пенева site-wide ([d0b41ec](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d0b41eca4950bb3534f59687bc312ef8f8f7e717))
+* **content:** error page no longer claims a clinical team was notified ([7205326](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/7205326145f4f184f08dccdedd1f167345c35841))
+* **content:** loading state no longer says the clinic's data is being prepared ([061552f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/061552ff5ccabf0eed80f5b04e69d0a0003e212a))
+* **content:** no video consultations, no staff; real share image; README ([6ee1f48](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/6ee1f489d57ce4ffa95f03382822c72e399f62df))
+* **content:** owner-confirmed hours, address and memberships; remove false FAQ claims ([da7bd53](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/da7bd534cff156809a14c9d7e83642320a3edf0b))
+* **content:** practice name matches the Google Business Profile exactly ([75e8cb1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/75e8cb11ae73941108241848c705d096ecb2b4d5))
+* **content:** proper quote typography and two missed all-caps names ([1efd035](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/1efd035a4c773bae7139433a0e4b15ee349ff42f))
+* **content:** remove allergy care — not a service the practice offers ([621888b](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/621888bb8f33d72faae9c1c9baad8d71932db1c3))
+* **content:** remove fabricated UK medical credentials from the homepage hero ([5857690](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/58576909b1a85f6358c747c9a9dab1dd08274ae0))
+* **content:** the practice is an АИПСМП, not a medical centre ([8ed68e7](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/8ed68e7d2b4f16201c867eb0bf1ab75315d93055))
+* **content:** vaccinations are advised on, not administered ([fcbfbf5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/fcbfbf537286135be2a5ddc54ce4d75c182b8e21))
+* **deps:** patch production security vulnerabilities ([e449987](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/e449987db1fb0d6211503e1a2cd15007aee353e1))
+* **footer:** remove duplicate hours card, make footer boxes clickable ([9428e20](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/9428e20b94322839185fff98594ceb30c960342e))
+* **header:** keep ЗАПАЗЕТЕ ЧАС on one line in the desktop nav ([d353886](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d353886edda9674de815af5b9aa7e23484445102))
+* **header:** phone header controls no longer pushed off-screen ([a54477f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/a54477f76fbaa38eb6c89ddb23b0a894c4ffb178))
+* **home:** redesign the consultation-days trust-panel cell ([2a1c880](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/2a1c8802144898c469d46213de46e3b16c3f348e))
+* **home:** remove the emergency banner ([5318668](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/531866854f6ac0d3350478055ff125be8e5139cf))
+* **home:** replace the empty schedule chip in the hero trust bar ([3d4b3a6](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/3d4b3a6b9f12d65a915468fb0701f165841aa453))
+* **redis:** degrade instead of 500 when Upstash is unreachable ([a6521fb](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/a6521fbbf00ae73ca33aa19cce13553ba6ed43c8))
+* **resources:** drop the intro metric cards ([15d5d5a](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/15d5d5a9b4fd92b0cf2db588fd814f0b8b7607b7))
+* restore localized emergency call links ([d7353e6](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d7353e65ee0acf03c8270c2a0f7170e26d8c2ff5))
+* **scripts:** remove hardcoded admin credential from create-admin ([f157646](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/f157646aa75c8840eab4c51f361c7aa3efa5559b))
+* **seo:** contact OG image declares its true 500x500 size ([b29f5cc](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/b29f5cccdcf4282385ad0def2e344904951abcd2))
+* **seo:** correct practice phone in structured data ([8e0082c](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/8e0082cb24b8def62f74facbc9f3429f72c3df8c))
+* **seo:** derive canonical origin from APP_URL instead of a dead domain ([41c734d](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/41c734df895ebe9ee7c1e70e3357592283bc4d84))
+* **seo:** drop login-gated /book from sitemap, disallow it in robots ([c7d868f](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/c7d868fefefcfa630f3542b3b610b1630f753bf9))
+* **seo:** remaining Open Graph images declare their true dimensions ([665d309](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/665d30989371f2c2650706d1eaab7643a96784bb))
+* **ux:** laptop header dead zone, accessible mobile menu, target sizes, 404 title ([5f5db02](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/5f5db022565e50a1dafd5fdfd06dae00bdd640d0))
+
+
+### Features
+
+* **consent:** Google tag behind cookie consent with Consent Mode v2 ([d8e1b30](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d8e1b30784d68a8d11bd5a7f6f355639870faeea))
+* **content:** real photographs of the practice replace the AI images ([a5f989b](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/a5f989b11ffad063392fec1d419439859b67ee3a))
+* **cron:** daily Redis heartbeat so Upstash never reclaims the database ([1d2a16e](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/1d2a16e2183565808fc99f74ba07c7fac3786796))
+* **privacy:** add Data Deletion Instructions section for Facebook Login ([4ea4ea0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/4ea4ea060b374185338a3ee59d4fdee0714d037e)), closes [privacy#data-deletion](https://github.com/privacy/issues/data-deletion)
+* **scripts:** --delete mode that never destroys audit history ([dfb72ee](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/dfb72ee8ef811bb79a5bbf8ae4378d1d62be43da))
+* **scripts:** read-only --list mode for create-admin ([9fd0f94](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/9fd0f9453dc5362d23fceaf021e37308953e1178))
+* **seo:** accurate entity graph, honest titles, noindex for account pages, consent-gated analytics ([39eb08c](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/39eb08c3c9cb30cca77f295baad4fce02687739e))
+* **ux:** mobile-first pass — call first, full name, legible hero, honest CTAs ([78921db](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/78921db6cc4e77762502fe5c61d603bc7c725bd5))
+
+
+### Reverts
+
+* **home:** restore the Superdoc rating card and profile links ([7714a2b](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/7714a2bdd51f8a26dba753ca426bc0c3cb4cae50))
+
 ## [1.1.5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.1.4...v1.1.5) (2026-06-12)
 
 
