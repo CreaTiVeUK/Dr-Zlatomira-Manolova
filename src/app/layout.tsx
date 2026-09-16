@@ -179,7 +179,7 @@ export default async function RootLayout({
           <main id="main-content" className="site-main">
             {children}
           </main>
-          <Footer />
+          <Footer user={user} />
           <CookieConsent />
           <ConsentedAnalytics />
           <GoogleTag />

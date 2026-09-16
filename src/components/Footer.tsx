@@ -7,11 +7,24 @@ import { usePathname } from "next/navigation";
 
 const MAIN_PRACTICE_MAPS_URL = "https://www.google.com/maps/dir/?api=1&destination=42.136959,24.790681";
 
-export default function Footer() {
+interface FooterProps {
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+    } | null;
+}
+
+export default function Footer({ user }: FooterProps) {
     const { dict, language } = useLanguage();
     const pathname = usePathname();
 
     if (pathname.startsWith('/admin')) return null;
+
+    // Anonymous visitors cannot use /book (it redirects to login); send them to
+    // the page with the phone number and the form. Account holders get the tool.
+    const bookHref = user ? "/book" : "/contact";
 
     const partnerHospitalMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${dict.footer.partnerHospital}, ${dict.footer.addressSecond}`)}`;
     const newTabHint = language === "bg" ? "отваря се в нов раздел" : "opens in a new tab";
@@ -26,7 +39,7 @@ export default function Footer() {
                             {dict.footer.desc}
                         </p>
                         <div className="btn-group" style={{ marginTop: "1rem" }}>
-                            <Link href="/contact" className="btn btn-primary">
+                            <Link href={bookHref} className="btn btn-primary">
                                 {dict.header.nav.book}
                             </Link>
                             <Link href="/contact" className="btn btn-outline">
@@ -39,7 +52,7 @@ export default function Footer() {
                         <ul className="footer-list" style={{ listStyle: 'none' }}>
                             <li><Link href="/">{dict.header.nav.home}</Link></li>
                             <li><Link href="/services">{dict.header.nav.services}</Link></li>
-                            <li><Link href="/contact">{dict.header.nav.book}</Link></li>
+                            <li><Link href={bookHref}>{dict.header.nav.book}</Link></li>
                             <li><Link href="/contact">{dict.header.nav.contact}</Link></li>
                         </ul>
                     </div>
