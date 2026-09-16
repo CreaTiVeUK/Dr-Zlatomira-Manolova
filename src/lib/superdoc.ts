@@ -52,16 +52,15 @@ export async function syncSuperdocReviews() {
         const html = await response.text();
 
         // ── Global rating ────────────────────────────────────────────────────
-        const ratingMatch =
-            html.match(/<div[^>]*fontSize:\s*2\.2rem[^>]*>([\d.]+)\/5<\/div>/) ||
-            html.match(/<span[^>]*class="rating-value"[^>]*>([\d.]+)<\/span>/) ||
-            html.match(/([\d.]+)\s*\/\s*5/);
-        const reviewsCountMatch =
-            html.match(/(\d+)\s*проверени отзива/) ||
-            html.match(/(\d+)\s*verified reviews/);
+        // Superdoc marks this up as schema.org AggregateRating microdata (their
+        // previous layout used a plain "X/5" div, which this page no longer has
+        // at all — the site was redesigned since this scraper was written).
+        const aggregateBlock = html.match(/itemtype="http:\/\/schema\.org\/AggregateRating">([\s\S]*?)<\/div>/)?.[1];
+        const ratingValueMatch = aggregateBlock?.match(/itemprop="ratingValue"\s+content="([\d.]+)"/);
+        const ratingCountMatch = aggregateBlock?.match(/itemprop="ratingCount"\s+content="(\d+)"/);
 
-        const rating = ratingMatch ? `${ratingMatch[1]}/5` : undefined;
-        const reviewsCount = reviewsCountMatch ? reviewsCountMatch[1] : undefined;
+        const rating = ratingValueMatch ? `${ratingValueMatch[1]}/5` : undefined;
+        const reviewsCount = ratingCountMatch ? ratingCountMatch[1] : undefined;
 
         if (rating || reviewsCount) {
             await prisma.superdocStat.upsert({
@@ -79,23 +78,26 @@ export async function syncSuperdocReviews() {
         }
 
         // ── Individual reviews ───────────────────────────────────────────────
-        // Try to match review blocks; some Superdoc layouts include a rating
-        // per review in a sibling element. We extract what we can; unparseable
-        // fields are stored as null rather than fabricated.
-        const reviewBlocks = html.match(/<div class="comment-text">([\s\S]*?)<\/div>/g) ?? [];
+        // Each review is schema.org Review microdata: splitting on its opening
+        // tag gives one chunk per review, each starting right after that tag —
+        // exactly what a plain regex needs, since the review's own fields (name,
+        // rating, content) all appear before the next review's opening tag.
+        const reviewChunks = html.split('<div class="review" itemprop="reviews"').slice(1);
         let translated = 0;
         let skipped = 0;
 
-        for (const block of reviewBlocks) {
-            const textBg = block.replace(/<[^>]*>/g, "").trim();
+        for (const chunk of reviewChunks) {
+            const contentMatch = chunk.match(/<div class="content">([\s\S]*?)<\/div>/);
+            const textBg = contentMatch?.[1].replace(/<[^>]*>/g, "").trim() ?? "";
             if (!textBg || textBg.length < 10) continue;
 
             const existing = await prisma.superdocReview.findUnique({ where: { textBg } });
             if (existing) { skipped++; continue; }
 
-            // Try to extract a per-review star rating from nearby HTML
-            // (e.g. aria-label="4 stars" or data-rating="4")
-            const ratingAttrMatch = block.match(/(?:aria-label|data-rating)="(\d)\s*(?:stars?)?"/i);
+            // The single itemprop="ratingValue" meta in a review chunk is its
+            // overall score; the per-category breakdown (punctuality, manner)
+            // is star icons only, with no machine-readable value.
+            const ratingAttrMatch = chunk.match(/itemprop="ratingValue"\s+content="(\d)"/);
             const reviewRating = ratingAttrMatch ? parseInt(ratingAttrMatch[1], 10) : null;
 
             const textEn = await translateToEnglish(textBg);
@@ -105,9 +107,9 @@ export async function syncSuperdocReviews() {
                 data: {
                     textBg,
                     textEn,
-                    // Author name is not reliably extractable from the current
-                    // Superdoc HTML without a real parser. Use the verified badge
-                    // text that Superdoc itself displays.
+                    // Superdoc's own display already anonymizes to first name +
+                    // last initial; still generic here rather than plumbing
+                    // patient-identifying text through onto the public site.
                     authorBg: "Потвърден пациент",
                     authorEn: "Verified Patient",
                     // Use scraped rating if found; null otherwise (don't fabricate 5-star)
