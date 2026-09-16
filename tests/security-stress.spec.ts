@@ -50,11 +50,12 @@ test.describe('Security & Stress Testing', () => {
         expect(attackResult).toBeGreaterThanOrEqual(400);
     });
 
-    test('Concurrency: Prevent double-booking (Race Condition)', async ({ browser }) => {
+    test('Concurrency: Prevent double-booking (Race Condition)', async ({ browser }, testInfo) => {
         test.setTimeout(60000);
         const slotDate = new Date();
-        slotDate.setHours(12, 0, 0, 0);
-        slotDate.setDate(slotDate.getDate() + 15);
+        slotDate.setUTCDate(slotDate.getUTCDate() + (16 + testInfo.retry) * 7);
+        slotDate.setUTCDate(slotDate.getUTCDate() + (4 - slotDate.getUTCDay() + 7) % 7);
+        slotDate.setUTCHours(10, 0, 0, 0);
         const isoDate = slotDate.toISOString();
 
         const context1 = await browser.newContext();
@@ -100,7 +101,8 @@ test.describe('Security & Stress Testing', () => {
         const successes = results.filter((s: number) => s === 200 || s === 201).length;
         console.log(`Race Results (Atomic):`, results);
 
-        expect(successes).toBeLessThanOrEqual(1);
+        expect(successes).toBe(1);
+        expect(results).toContain(409);
 
         await context1.close();
         await context2.close();

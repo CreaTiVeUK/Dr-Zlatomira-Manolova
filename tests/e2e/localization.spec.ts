@@ -16,14 +16,14 @@ test.describe('Default language (no cookie)', () => {
         await page.goto('/');
 
         await expect(page.locator('html')).toHaveAttribute('lang', 'bg');
-        await expect(page.locator('h1').first()).toContainText('Детски лекар в Пловдив');
+        await expect(page.locator('h1').first()).toContainText('Грижа за детското здраве в Пловдив');
 
         // The header settles in Bulgarian — and must not be left in English
         // by a late-arriving client dictionary
         await expect(page.locator('.logo-text').first()).toContainText('Д-р Златомира Манолова-Пенева');
 
         const bodyText = await page.evaluate(() => document.body.innerText);
-        expect(bodyText).not.toContain('Paediatrician in Plovdiv');
+        expect(bodyText).not.toContain("Children's health care in Plovdiv");
     });
 
     test('switches to English via the header toggle', async ({ page }) => {
@@ -33,7 +33,7 @@ test.describe('Default language (no cookie)', () => {
         await page.getByTitle('Switch to English').click();
         await expect(page.getByTitle('Switch to Bulgarian')).toBeVisible();
 
-        await expect(page.locator('h1').first()).toContainText('Paediatrician in Plovdiv');
+        await expect(page.locator('h1').first()).toContainText("Children's health care in Plovdiv");
         await expect(page.locator('.logo-text').first()).toContainText('Dr. Zlatomira Manolova-Peneva');
     });
 
@@ -42,7 +42,7 @@ test.describe('Default language (no cookie)', () => {
         await page.getByTitle('Switch to English').click();
         await expect(page.getByTitle('Switch to Bulgarian')).toBeVisible();
 
-        const servicesLink = page.locator('.nav-center a[href="/services"]');
+        const servicesLink = page.locator('footer a[href="/services"]');
         await expect(servicesLink).toContainText('SERVICES');
         await servicesLink.click();
 

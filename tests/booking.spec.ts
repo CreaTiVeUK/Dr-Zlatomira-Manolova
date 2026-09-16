@@ -17,9 +17,8 @@ test.describe('Booking Flow', () => {
         // Select Specialized Consultation
         await page.click('button:has-text("Specialized Consultation")');
 
-        // Select Tomorrow to ensure slots are available regardless of CI run time
-        // (date pills live in the .date-strip container)
-        const nextDay = page.locator('.date-strip button').nth(1);
+        // Pick a future consultation day; tomorrow may be closed.
+        const nextDay = page.locator('.date-strip button:not([disabled])').nth(1);
         await nextDay.click();
 
         // Pick first available slot by time pattern (HH:mm)
@@ -33,13 +32,6 @@ test.describe('Booking Flow', () => {
         // Final Confirmation
         await page.getByRole('button', { name: 'CONFIRM APPOINTMENT' }).click();
 
-        // Wait for results
-        const response = page.waitForURL(/\/book\/success/, { timeout: 15000 }).catch(() => null);
-        const error = page.getByText(/payment could not be initiated|Invalid data format|Database operation failed/).first();
-
-        await Promise.race([
-            response,
-            expect(error).toBeVisible({ timeout: 15000 })
-        ]);
+        await expect(page).toHaveURL(/\/book\/success/, { timeout: 15000 });
     });
 });
