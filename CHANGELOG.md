@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.3...v1.3.4) (2026-09-17)
+
+
+### Bug Fixes
+
+* send anonymous "book appointment" clicks straight to login ([47ad5cf](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/47ad5cf2229f4ef47559ee8ff11f9c9306396111))
+
 ## [1.3.3](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.2...v1.3.3) (2026-09-17)
 
 
