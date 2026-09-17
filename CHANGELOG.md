@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.5...v1.3.6) (2026-09-17)
+
+
+### Bug Fixes
+
+* correct Terms page entity/contact, remove resources page header block ([b003058](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/b0030580ca7bda4559dd48b26388d960085c7a80))
+
 ## [1.3.5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.4...v1.3.5) (2026-09-17)
 
 
