@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.2...v1.3.3) (2026-09-17)
+
+
+### Bug Fixes
+
+* repair Superdoc review scraper for the site's current markup ([6386ab5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/6386ab5eef8dec2acf1a0afa8e24637cb6a5430e))
+
 ## [1.3.2](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.1...v1.3.2) (2026-09-16)
 
 
