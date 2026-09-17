@@ -1,3 +1,10 @@
+## [1.3.8](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.7...v1.3.8) (2026-09-17)
+
+
+### Bug Fixes
+
+* reduce excessive whitespace between homepage sections ([0022000](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/00220009ffe3e4b82a1e5ac7a9d7bb1e25fb8b58))
+
 ## [1.3.7](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.6...v1.3.7) (2026-09-17)
 
 
