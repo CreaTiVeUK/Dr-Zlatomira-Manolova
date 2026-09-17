@@ -107,7 +107,7 @@ export const en = {
             bio3: "In 2025, Dr. Manolova-Peneva won an open competitive appointment to become Head of the Second Pediatric Department at MHAT Pazardzhik. Her vision includes fully renovating the environment for young patients — an initiative that began with the transformation of the ward by young artists, to turn children's tears into smiles.",
             bio4: "She is a holder of the prestigious \"You are our future\" (2023) nomination from the Bulgarian Medical Association. Dr. Manolova-Peneva views medicine not just as a profession, but as a cause, driven by the belief that every child deserves not just treatment, but understanding and warmth.",
             qualifications: "QUALIFICATIONS & HONORS",
-            qualList: ["• Specialty in Pediatrics (2023)", "• Head of Department (2025)", "• 'You are our future' Award (BMA)", "• Member of the Bulgarian Paediatric Association", "• Member of the Bulgarian Medical Association"],
+            qualList: ["• Member of the Bulgarian Medical Association and the Bulgarian Paediatric Association", "• 'You are our future 2023' nomination (BMA)", "• Participation in national congresses and seminars in the specialty", "• ALS (Advanced Life Support) course", "• Certificate - Fundamentals of Ultrasound Diagnostics, Level I", "• Certificate - Abdominal Ultrasound Diagnostics, Level II"],
             specialties: "EXPERTISE",
             specList: ["• Experience in paediatric intensive care and emergency conditions in children", "• Diagnosis and treatment of acute upper and lower respiratory tract illnesses", "• Preventive check-ups and monitoring of physical and neuro-psychological development"],
             bioBtn: "Read Full Interview",
