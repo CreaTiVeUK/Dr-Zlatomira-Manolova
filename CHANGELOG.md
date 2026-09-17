@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.4.0...v1.4.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* restore previous homepage design ([beac5b9](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/beac5b950683f4d31d6b544dbffb860cfadc5a17))
+
 # [1.4.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.8...v1.4.0) (2026-09-17)
 
 
