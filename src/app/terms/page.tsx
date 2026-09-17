@@ -17,7 +17,7 @@ export default async function TermsPage() {
         ],
         sections: {
           agreementTitle: "1. Приемане на условията",
-          agreementText1: "Тези условия представляват правно обвързващо споразумение между Вас и Zlati Pediatrics относно достъпа до сайта и свързаните с него услуги.",
+          agreementText1: "Тези условия представляват правно обвързващо споразумение между Вас и АИПСМП по Педиатрия „Д-р Златомира Манолова-Пенева“ относно достъпа до сайта и свързаните с него услуги.",
           agreementText2: "С достъпа до сайта потвърждавате, че сте прочели, разбрали и приемате настоящите условия. Ако не сте съгласни с тях, трябва да прекратите използването на сайта.",
           medicalTitle: "2. Медицински отказ от отговорност",
           medicalText1: "Сайтът предоставя информация за педиатричните услуги и позволява онлайн записване. Съдържанието е само с информационна цел и не замества професионален медицински съвет, диагноза или лечение.",
@@ -34,7 +34,7 @@ export default async function TermsPage() {
           userTitle: "5. Регистрация на потребител",
           userText: "Може да се изисква регистрация за достъп до определени функции. Вие носите отговорност за поверителността на паролата си и за всяка активност през профила си.",
           contactTitle: "6. Контакт",
-          contactText: "За жалби, въпроси или допълнителна информация относно използването на сайта, пишете ни на terms@zlati-pediatrics.com.",
+          contactText: "За жалби, въпроси или допълнителна информация относно използването на сайта, пишете ни на zlatomira.manolova@gmail.com.",
         },
       }
     : {
@@ -48,7 +48,7 @@ export default async function TermsPage() {
         ],
         sections: {
           agreementTitle: "1. Agreement to Terms",
-          agreementText1: "These Terms of Use form a legally binding agreement between you and Zlati Pediatrics regarding access to this website and its related services.",
+          agreementText1: "These Terms of Use form a legally binding agreement between you and Dr. Zlatomira Manolova-Peneva — Paediatric Practice regarding access to this website and its related services.",
           agreementText2: "By accessing the site, you confirm that you have read, understood, and agree to these terms. If you do not agree, you must stop using the site immediately.",
           medicalTitle: "2. Medical Disclaimer",
           medicalText1: "The site provides information about pediatric services and supports appointment booking. Its content is informational only and does not replace professional medical advice, diagnosis, or treatment.",
@@ -65,7 +65,7 @@ export default async function TermsPage() {
           userTitle: "5. User Registration",
           userText: "You may need to register to access certain features. You are responsible for keeping your password confidential and for all activity under your account.",
           contactTitle: "6. Contact Us",
-          contactText: "To resolve a complaint or request further information regarding use of the site, email us at terms@zlati-pediatrics.com.",
+          contactText: "To resolve a complaint or request further information regarding use of the site, email us at zlatomira.manolova@gmail.com.",
         },
       };
 

@@ -3,7 +3,6 @@ import Link from "next/link";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
-import { getSession } from "@/lib/auth";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -20,9 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ResourcesPage() {
-  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
-  // /book needs an account; never send an anonymous visitor into a redirect.
-  const bookHref = session?.user ? "/book" : "/login?callbackUrl=%2Fbook";
+  const { dict, lang } = await getDictionary();
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -63,15 +60,6 @@ export default async function ResourcesPage() {
 
           <div className="resource-layout">
             <div>
-              <div className="resource-panel-header">
-                <div>
-                  <h2>{dict.resources.latest}</h2>
-                  <p>{dict.resources.subtitle}</p>
-                </div>
-                <Link href={bookHref} className="btn btn-primary">
-                  {dict.header.nav.book}
-                </Link>
-              </div>
               <div className="article-list">
                 {dict.resources.articles.map((resource, i) => (
                   <article key={i} className="article-card">

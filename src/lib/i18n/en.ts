@@ -185,7 +185,6 @@ export const en = {
     resources: {
         title: "Knowledge Base",
         subtitle: "Expert medical insights and practical advice for parents, prepared by Dr. Manolova-Peneva.",
-        latest: "LATEST RESOURCES",
         readArticle: "READ ARTICLE →",
         faq: {
             title: "FREQUENTLY ASKED QUESTIONS",
