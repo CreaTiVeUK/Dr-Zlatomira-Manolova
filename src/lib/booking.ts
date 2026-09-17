@@ -48,7 +48,7 @@ function clinicLocal(date: Date): { weekday: number; hour: number; minute: numbe
 }
 
 /**
- * A bookable slot starts on a half-hour boundary on a consultation day,
+ * A bookable slot starts on a quarter-hour boundary on a consultation day,
  * within that day's hours, in clinic time. Mirrors the slot grid generated
  * by BookClient.tsx — both read CLINIC_SCHEDULE.
  */
@@ -56,7 +56,7 @@ export function isWithinBusinessHours(start: Date, duration = 15): boolean {
     if (!Number.isFinite(start.getTime()) || !Number.isInteger(duration) || duration <= 0) return false;
     if (start.getUTCSeconds() !== 0 || start.getUTCMilliseconds() !== 0) return false;
     const { weekday, hour, minute } = clinicLocal(start);
-    if (minute !== 0 && minute !== 30) return false;
+    if (minute % 15 !== 0) return false;
     const hours = hoursForDay(weekday);
     if (!hours) return false;
     const startMinutes = hour * 60 + minute;

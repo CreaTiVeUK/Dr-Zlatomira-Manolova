@@ -93,13 +93,12 @@ export default function BookClient({ session }: BookClientProps) {
     if (!hours) return generatedSlots;
 
     for (let hour = hours.open; hour < hours.close; hour += 1) {
-      const onTheHour = new Date(selectedDate);
-      onTheHour.setHours(hour, 0, 0, 0);
-      if (hour * 60 + selectedService.duration <= hours.close * 60) generatedSlots.push(onTheHour);
-
-      const halfPast = new Date(selectedDate);
-      halfPast.setHours(hour, 30, 0, 0);
-      if (hour * 60 + 30 + selectedService.duration <= hours.close * 60) generatedSlots.push(halfPast);
+      for (const minute of [0, 15, 30, 45]) {
+        if (hour * 60 + minute + selectedService.duration > hours.close * 60) continue;
+        const slot = new Date(selectedDate);
+        slot.setHours(hour, minute, 0, 0);
+        generatedSlots.push(slot);
+      }
     }
 
     return generatedSlots;

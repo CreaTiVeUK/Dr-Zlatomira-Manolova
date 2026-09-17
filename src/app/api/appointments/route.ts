@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
 
         if (!isWithinBusinessHours(bookingDate, duration)) {
             return NextResponse.json(
-                { error: "Appointments must start on the half hour and finish within clinic opening hours" },
+                { error: "Appointments must start on the quarter hour and finish within clinic opening hours" },
                 { status: 400 }
             );
         }
@@ -205,7 +205,7 @@ export async function PATCH(request: NextRequest) {
 
             if (!isWithinBusinessHours(newDate, appointment.duration)) {
                 return NextResponse.json(
-                    { error: "Appointments must start on the half hour and finish within clinic opening hours" },
+                    { error: "Appointments must start on the quarter hour and finish within clinic opening hours" },
                     { status: 400 }
                 );
             }

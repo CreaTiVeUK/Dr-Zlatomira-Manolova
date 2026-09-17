@@ -31,8 +31,9 @@ describe("isWithinBusinessHours (clinic time = Europe/Sofia)", () => {
         expect(isWithinBusinessHours(new Date("2026-06-16T13:30:00+03:00"))).toBe(false);
     });
 
-    it("accepts the last Tuesday slot, 17:30, and rejects 18:00", () => {
+    it("accepts the last Tuesday slot, 17:45, and rejects 18:00", () => {
         expect(isWithinBusinessHours(new Date("2026-06-16T17:30:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-16T17:45:00+03:00"))).toBe(true);
         expect(isWithinBusinessHours(new Date("2026-06-16T18:00:00+03:00"))).toBe(false);
     });
 
@@ -45,8 +46,9 @@ describe("isWithinBusinessHours (clinic time = Europe/Sofia)", () => {
         expect(isWithinBusinessHours(new Date("2026-06-18T08:30:00+03:00"))).toBe(false);
     });
 
-    it("accepts Saturday 13:30 (last slot) and rejects 14:00", () => {
+    it("accepts the last Saturday slot, 13:45, and rejects 14:00", () => {
         expect(isWithinBusinessHours(new Date("2026-06-20T13:30:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-20T13:45:00+03:00"))).toBe(true);
         expect(isWithinBusinessHours(new Date("2026-06-20T14:00:00+03:00"))).toBe(false);
     });
 
@@ -62,8 +64,11 @@ describe("isWithinBusinessHours (clinic time = Europe/Sofia)", () => {
         expect(isWithinBusinessHours(new Date("2026-06-16T21:00:00Z"))).toBe(false);
     });
 
-    it("rejects off-grid minutes (14:15)", () => {
-        expect(isWithinBusinessHours(new Date("2026-06-16T14:15:00+03:00"))).toBe(false);
+    it("accepts every quarter-hour mark and rejects everything else", () => {
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:15:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:45:00+03:00"))).toBe(true);
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:05:00+03:00"))).toBe(false);
+        expect(isWithinBusinessHours(new Date("2026-06-16T14:10:00+03:00"))).toBe(false);
     });
 
     it("requires the full appointment to fit before closing", () => {

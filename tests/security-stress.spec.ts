@@ -83,7 +83,7 @@ test.describe('Security & Stress Testing', () => {
                         },
                         body: JSON.stringify({
                             dateTime: date,
-                            duration: 30,
+                            duration: 15,
                             price: 100,
                             notes: 'Race Test'
                         })

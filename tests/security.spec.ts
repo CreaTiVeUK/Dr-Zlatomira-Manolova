@@ -71,7 +71,7 @@ test.describe('Booking integrity', () => {
                         'Content-Type': 'application/json',
                         'x-forwarded-for': Math.random().toString(), // per-IP rate-limit bypass for tests
                     },
-                    body: JSON.stringify({ dateTime, duration: 30, notes: 'security spec', ...extra }),
+                    body: JSON.stringify({ dateTime, duration: 15, notes: 'security spec', ...extra }),
                 });
                 return { status: res.status, body: await res.json() };
             },
@@ -123,7 +123,7 @@ test.describe('Booking integrity', () => {
 
         const result = await bookViaApi(page, futureSlot(6 + testInfo.retry * 4), { price: 1 });
         expect(result.status).toBe(200);
-        expect(result.body.appointment.price).toBe(25); // 30-minute standard visit
+        expect(result.body.appointment.price).toBe(35); // 15-minute standard visit
     });
 });
 
