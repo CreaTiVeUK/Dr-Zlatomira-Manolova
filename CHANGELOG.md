@@ -1,3 +1,11 @@
+## [1.3.5](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.4...v1.3.5) (2026-09-17)
+
+
+### Bug Fixes
+
+* footer location card alignment, remove hours disclaimer ([6e4a2d7](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/6e4a2d7140a1ac84062b779ceb8ad53815e36135))
+* remove duration/price stat cards from the booking page ([d8a7a18](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/d8a7a180cb2fab0e312391e524fb964c1284c6a3))
+
 ## [1.3.4](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.3...v1.3.4) (2026-09-17)
 
 
