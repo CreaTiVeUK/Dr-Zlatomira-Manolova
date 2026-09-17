@@ -22,9 +22,10 @@ export default function Footer({ user }: FooterProps) {
 
     if (pathname.startsWith('/admin')) return null;
 
-    // Anonymous visitors cannot use /book (it redirects to login); send them to
-    // the page with the phone number and the form. Account holders get the tool.
-    const bookHref = user ? "/book" : "/contact";
+    // Anonymous visitors cannot use /book (it redirects to login) — send them
+    // straight there instead, with callbackUrl so they land on /book right
+    // after signing in. Account holders get the booking tool directly.
+    const bookHref = user ? "/book" : "/login?callbackUrl=%2Fbook";
 
     const partnerHospitalMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${dict.footer.partnerHospital}, ${dict.footer.addressSecond}`)}`;
     const newTabHint = language === "bg" ? "отваря се в нов раздел" : "opens in a new tab";

@@ -4,6 +4,7 @@ import Image from "next/image";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
+import { getSession } from "@/lib/auth";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,7 +25,9 @@ function stripLeadingBullet(value: string) {
 }
 
 export default async function AboutPage() {
-  const { dict, lang } = await getDictionary();
+  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
+  // /book needs an account; never send an anonymous visitor into a redirect.
+  const bookHref = session?.user ? "/book" : "/login?callbackUrl=%2Fbook";
 
   const profileSchema = {
     "@context": "https://schema.org",
@@ -121,7 +124,7 @@ export default async function AboutPage() {
               </div>
 
               <div className="btn-group">
-                <Link href="/contact" className="btn btn-primary">
+                <Link href={bookHref} className="btn btn-primary">
                   {dict.home.hero.bookBtn}
                 </Link>
                 <Link href="/contact" className="btn btn-outline">
@@ -167,7 +170,7 @@ export default async function AboutPage() {
                 ? "Прегледи за деца 0–18 г. в Пловдив и Пазарджик."
                 : "Consultations for children aged 0–18 in Plovdiv and Pazardzhik."}
             </p>
-            <Link href="/contact" className="btn btn-primary">
+            <Link href={bookHref} className="btn btn-primary">
               {dict.home.hero.bookBtn}
             </Link>
           </div>

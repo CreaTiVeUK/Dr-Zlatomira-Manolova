@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getSession } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Страницата не е намерена" };
 
 export default async function NotFound() {
   await cookies(); // opt into dynamic rendering
-  const { dict, lang } = await getDictionary();
+  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
+  // /book needs an account; never send an anonymous visitor into a redirect.
+  const bookHref = session?.user ? "/book" : "/login?callbackUrl=%2Fbook";
 
   const copy = lang === "bg"
     ? {
@@ -39,7 +42,7 @@ export default async function NotFound() {
         </p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/" className="btn btn-outline">{copy.home}</Link>
-          <Link href="/contact" className="btn btn-primary">{copy.book}</Link>
+          <Link href={bookHref} className="btn btn-primary">{copy.book}</Link>
         </div>
         <p className="text-muted" style={{ marginTop: "3rem", fontSize: "1rem" }}>
           {dict.footer.phone}

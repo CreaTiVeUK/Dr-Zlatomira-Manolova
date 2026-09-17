@@ -5,6 +5,7 @@ import { Award, Baby, HeartPulse, MapPin, Stethoscope } from "lucide-react";
 import HomeClient from "@/components/HomeClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
+import { getSession } from "@/lib/auth";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -30,7 +31,9 @@ const servicesLead = {
 };
 
 export default async function Home() {
-  const { dict, lang } = await getDictionary();
+  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
+  // /book needs an account; never send an anonymous visitor into a redirect.
+  const bookHref = session?.user ? "/book" : "/login?callbackUrl=%2Fbook";
 
   return (
     <div>
@@ -62,7 +65,7 @@ export default async function Home() {
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 
               <div className="hero-actions">
-                <Link href="/contact" className="btn btn-primary">
+                <Link href={bookHref} className="btn btn-primary">
                   {dict.home.hero.bookBtn}
                 </Link>
                 <Link
@@ -208,7 +211,7 @@ export default async function Home() {
               <Link href="/about" className="btn btn-primary">
                 {dict.home.about.bioBtn}
               </Link>
-              <Link href="/contact" className="btn btn-outline">
+              <Link href={bookHref} className="btn btn-outline">
                 {dict.home.hero.bookBtn}
               </Link>
             </div>

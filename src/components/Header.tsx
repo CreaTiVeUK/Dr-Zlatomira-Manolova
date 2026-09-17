@@ -75,9 +75,10 @@ export default function Header({ user }: HeaderProps) {
         { href: "/services", label: dict.header.nav.services },
         { href: "/conditions", label: dict.header.nav.conditions },
         { href: "/resources", label: dict.header.nav.resources },
-        // Anonymous visitors cannot use /book (it redirects to login); send them to
-        // the page with the phone number and the form. Account holders get the tool.
-        { href: user ? "/book" : "/contact", label: dict.header.nav.book },
+        // Anonymous visitors cannot use /book (it redirects to login) — send them
+        // straight there instead, with callbackUrl so they land on /book right
+        // after signing in. Account holders get the booking tool directly.
+        { href: user ? "/book" : "/login?callbackUrl=%2Fbook", label: dict.header.nav.book },
         { href: "/contact", label: dict.header.nav.contact },
     ];
 
