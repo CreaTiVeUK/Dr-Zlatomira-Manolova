@@ -53,8 +53,7 @@ export const bg: Dictionary = {
         hours: "РАБОТНО ВРЕМЕ",
         // Must match CLINIC_SCHEDULE in src/lib/clinic-hours.ts and the JSON-LD in layout.tsx.
         hoursDetails: {
-            lines: ["Вт: 14:00 – 18:00", "Чт: 09:00 – 18:00", "Сб: 09:00 – 14:00"],
-            note: "Работното време може да варира — моля, потвърдете при записване."
+            lines: ["Вт: 14:00 – 18:00", "Чт: 09:00 – 18:00", "Сб: 09:00 – 14:00"]
         },
         rights: "Д-р Златомира Манолова-Пенева. Всички права запазени.",
         privacy: "Политика за поверителност",

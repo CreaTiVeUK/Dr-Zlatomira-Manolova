@@ -84,7 +84,6 @@ export default function Footer({ user }: FooterProps) {
                             {dict.footer.hoursDetails.lines.map((line) => (
                                 <span key={line}>{line}<br /></span>
                             ))}
-                            <small style={{ opacity: 0.8 }}>{dict.footer.hoursDetails.note}</small>
                         </div>
                     </Link>
                 </div>

@@ -1100,7 +1100,12 @@
 }
 
 /* ── 44px targets in the footer ─────────────────────────────────────────── */
-.footer-list a,
+/* :not(.footer-location-link) matters — that link wraps a bold heading plus
+   an address across several lines, and inline-flex turns each of its text
+   runs into a separate flex item (a "columns" split, heading in one, address
+   in another) instead of letting it flow as one block. Its own multi-line
+   content already clears 44px without this rule. */
+.footer-list a:not(.footer-location-link),
 .footer-bottom__links a {
   display: inline-flex;
   align-items: center;

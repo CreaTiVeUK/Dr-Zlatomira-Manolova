@@ -53,8 +53,7 @@ export const en = {
         hours: "OPENING HOURS",
         // Must match CLINIC_SCHEDULE in src/lib/clinic-hours.ts and the JSON-LD in layout.tsx.
         hoursDetails: {
-            lines: ["Tue: 14:00 – 18:00", "Thu: 09:00 – 18:00", "Sat: 09:00 – 14:00"],
-            note: "Hours can vary — please confirm when booking."
+            lines: ["Tue: 14:00 – 18:00", "Thu: 09:00 – 18:00", "Sat: 09:00 – 14:00"]
         },
         rights: "Dr. Zlatomira Manolova-Peneva. All rights reserved.",
         privacy: "Privacy Policy",
