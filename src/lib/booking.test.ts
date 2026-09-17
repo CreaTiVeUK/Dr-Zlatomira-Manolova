@@ -13,9 +13,8 @@ import {
 } from "./booking";
 
 describe("SERVICE_PRICES", () => {
-    it("matches the services offered in the booking UI", () => {
-        expect(SERVICE_PRICES[30]).toBe(25);
-        expect(SERVICE_PRICES[60]).toBe(50);
+    it("matches the service offered in the booking UI", () => {
+        expect(SERVICE_PRICES[15]).toBe(35);
     });
 });
 

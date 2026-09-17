@@ -243,10 +243,12 @@ export default async function AdminDashboard() {
         monthlyVisits.push({ name: monthName, visits: count });
     }
 
+    // 15 min is the current standard length; 30/60 min buckets catch older
+    // bookings made under the previous Standard/Specialized pricing.
     const appointmentTypes = [
-        { name: "30 min", value: appointments.filter((appointment) => appointment.duration <= 30).length },
-        { name: "60 min", value: appointments.filter((appointment) => appointment.duration > 30 && appointment.duration <= 60).length },
-        { name: copy.extended, value: appointments.filter((appointment) => appointment.duration > 60).length }
+        { name: "15 min", value: appointments.filter((appointment) => appointment.duration <= 15).length },
+        { name: "30 min", value: appointments.filter((appointment) => appointment.duration > 15 && appointment.duration <= 30).length },
+        { name: copy.extended, value: appointments.filter((appointment) => appointment.duration > 30).length }
     ].filter((entry) => entry.value > 0);
 
     return (

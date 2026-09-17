@@ -27,8 +27,7 @@ export default function BookClient({ session }: BookClientProps) {
 
   const services = useMemo(
     () => [
-      { name: dict.booking.services.standard, duration: 30, price: 25 },
-      { name: dict.booking.services.specialized, duration: 60, price: 50 },
+      { name: dict.booking.services.visit, duration: 15, price: 35 },
     ],
     [dict],
   );
@@ -205,6 +204,9 @@ export default function BookClient({ session }: BookClientProps) {
                 );
               })}
             </div>
+            <p className="text-muted" style={{ marginTop: "0.75rem", fontSize: "0.92rem" }}>
+              {dict.booking.followUpNote}
+            </p>
           </div>
 
           <div className="booking-step">

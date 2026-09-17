@@ -9,6 +9,7 @@ import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import {
+    ALLOWED_DURATIONS,
     SERVICE_PRICES,
     hasConflict,
     isBookingConflictError,
@@ -21,7 +22,11 @@ const bookingSchema = z.object({
         message: "Booking must be in the future"
     }),
     // Only the offered services — the price is derived from this server-side.
-    duration: z.union([z.literal(30), z.literal(60)]),
+    // Derived from ALLOWED_DURATIONS (not hardcoded) so this can't drift out
+    // of sync with SERVICE_PRICES the way a duplicated literal union would.
+    duration: z.number().int().refine(d => ALLOWED_DURATIONS.includes(d), {
+        message: "Invalid service duration",
+    }),
     notes: z.string().max(500).transform(v => sanitizeString(v)).optional(),
     userId: z.string().uuid().optional(),
 });

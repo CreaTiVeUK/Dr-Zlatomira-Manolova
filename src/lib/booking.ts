@@ -13,10 +13,16 @@ import { prisma } from "@/lib/prisma";
 import { CLINIC_TIMEZONE, hoursForDay } from "@/lib/clinic-hours";
 
 /** Service price (EUR) by appointment duration in minutes. Must mirror the
- *  services offered in BookClient.tsx. */
+ *  services offered in BookClient.tsx.
+ *
+ *  35€ is the standard per-query price. A patient returning for the same
+ *  complaint may be charged a 20€ follow-up rate, but that distinction is
+ *  informational only — decided and applied by staff at the visit, not
+ *  tracked or enforced anywhere in the booking system (there is no concept
+ *  of "same query" in the data model). Online booking always charges the
+ *  standard 35€. */
 export const SERVICE_PRICES: Record<number, number> = {
-    30: 25,
-    60: 50,
+    15: 35,
 };
 
 export const ALLOWED_DURATIONS = Object.keys(SERVICE_PRICES).map(Number);
@@ -46,7 +52,7 @@ function clinicLocal(date: Date): { weekday: number; hour: number; minute: numbe
  * within that day's hours, in clinic time. Mirrors the slot grid generated
  * by BookClient.tsx — both read CLINIC_SCHEDULE.
  */
-export function isWithinBusinessHours(start: Date, duration = 30): boolean {
+export function isWithinBusinessHours(start: Date, duration = 15): boolean {
     if (!Number.isFinite(start.getTime()) || !Number.isInteger(duration) || duration <= 0) return false;
     if (start.getUTCSeconds() !== 0 || start.getUTCMilliseconds() !== 0) return false;
     const { weekday, hour, minute } = clinicLocal(start);

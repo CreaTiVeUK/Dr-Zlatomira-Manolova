@@ -121,9 +121,9 @@ export const en = {
         step2: "2. Select Date",
         step3: "3. Available Slots",
         services: {
-            standard: "Standard Consultation",
-            specialized: "Specialized Consultation"
+            visit: "Consultation"
         },
+        followUpNote: "35 € for a visit about a new issue. If you're returning for the same issue, a 20 € follow-up rate may apply, confirmed at the visit.",
         confirm: {
             title: "Confirm Booking",
             text: "Confirm %s for %s?", // Keep placeholders generally adaptable
