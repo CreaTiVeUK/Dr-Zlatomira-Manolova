@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { addDays, endOfDay, format, startOfDay } from "date-fns";
-import { CalendarDays, Clock3, LockKeyhole, ShieldCheck } from "lucide-react";
+import { CalendarDays, LockKeyhole } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import PageIntro from "@/components/PageIntro";
 import StatusBanner from "@/components/StatusBanner";
@@ -189,16 +189,6 @@ export default function BookClient({ session }: BookClientProps) {
                 <CalendarDays size={18} color="var(--primary-teal)" />
                 <strong>7</strong>
                 <span>{language === "bg" ? "дни за избор" : "days ahead"}</span>
-              </div>
-              <div className="meta-card">
-                <Clock3 size={18} color="var(--primary-teal)" />
-                <strong>{selectedService.duration} min</strong>
-                <span>{language === "bg" ? "продължителност" : "duration"}</span>
-              </div>
-              <div className="meta-card">
-                <ShieldCheck size={18} color="var(--primary-teal)" />
-                <strong>{selectedService.price} €</strong>
-                <span>{language === "bg" ? "стандартна цена" : "standard fee"}</span>
               </div>
             </div>
           }
