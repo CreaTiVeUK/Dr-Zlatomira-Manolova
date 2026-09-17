@@ -161,7 +161,7 @@ export default async function RootLayout({
   const lang = cookieStore.get("language")?.value === "en" ? "en" : "bg";
 
   return (
-    <html suppressHydrationWarning lang={lang} className={`${montserrat.variable} ${openSans.variable}`}>
+    <html lang={lang} className={`${montserrat.variable} ${openSans.variable}`}>
       <head>
         {/* Consent Mode defaults must precede everything else that could load a tag. */}
         <GoogleConsentDefaults />

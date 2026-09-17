@@ -25,33 +25,43 @@ function stripLeadingBullet(value: string) {
   return value.replace(/^[•\-\s]+/, "").trim();
 }
 
+const servicesLead = {
+  bg: "От профилактични прегледи до специализирана диагностика и неонатална подкрепа.",
+  en: "From preventive checkups to specialized diagnostics and newborn support.",
+};
+
 export default async function Home() {
   const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
   // /book needs an account; never send an anonymous visitor into a redirect.
   const bookHref = session?.user ? "/book" : "/login?callbackUrl=%2Fbook";
 
   return (
-    <div className="home-page">
+    <div>
       <section className="hero-section">
         <Image
           src="/photo-waiting-room.jpg"
           alt={dict.home.heroImageAlt}
           fill
           style={{ objectFit: "cover", opacity: 0.52 }}
-          sizes="100vw"
-          preload
+          priority
         />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <div className="hero-content">
+          <div className="hero-content reveal">
             {/* Only credentials she holds. The template's UK letters (MBBS,
                 MRCPCH, FRCP…) sat here on the live site until 2026-09-09. */}
             <div className="clinical-badge">
-              <Award aria-hidden="true" size={14} />
-              {dict.home.hero.credential}
+              <Award size={14} />
+              {lang === "bg"
+                ? "Специалист по педиатрия · Началник отделение"
+                : "Paediatric specialist · Head of department"}
             </div>
 
             <div className="hero-copy-block">
-              <h1 className="home-hero-title">{dict.home.hero.headline}</h1>
+              <h1 className="hero-subtitle">
+                {lang === "bg"
+                  ? "Грижа за детското здраве в Пловдив – от първите дни до юношеството"
+                  : "Children's health care in Plovdiv – from the first days to adolescence"}
+              </h1>
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 
               <div className="hero-actions">
@@ -77,17 +87,17 @@ export default async function Home() {
                 {/* A schedule chip sat here — logistics, not a trust signal, and
                     thin next to the other two cards' credentials. This is her
                     one verified award not yet represented in the trust bar. */}
-                <Award aria-hidden="true" size={18} color="white" />
-                <strong>{dict.home.hero.award}</strong>
-                <span>{dict.home.hero.awardDetail}</span>
+                <Award size={18} color="white" />
+                <strong>{lang === "bg" ? "„Ти си нашето бъдеще“" : "“You are our future”"}</strong>
+                <span>{lang === "bg" ? "Номинация от Българския лекарски съюз (2023)" : "Bulgarian Medical Association nomination (2023)"}</span>
               </div>
               <div className="hero-trust-card">
-                <Stethoscope aria-hidden="true" size={18} color="white" />
+                <Stethoscope size={18} color="white" />
                 <strong>{dict.home.about.role}</strong>
                 <span>{dict.home.about.badge}</span>
               </div>
               <div className="hero-trust-card">
-                <MapPin aria-hidden="true" size={18} color="white" />
+                <MapPin size={18} color="white" />
                 <strong>{dict.contact.medicalCenter}</strong>
                 <span>{dict.footer.addressMain}</span>
               </div>
@@ -96,11 +106,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="section-padding bg-soft site-section" id="about">
+      <section className="section-padding bg-soft site-section reveal" id="about">
         <div className="container about-grid">
           <div className="about-image">
             <Image
-              sizes="(max-width: 1024px) 100vw, 420px"
               src="/dr_manolova.jpg"
               alt={dict.home.about.imageAlt}
               fill
@@ -123,7 +132,7 @@ export default async function Home() {
 
             <div className="qual-grid">
               <div className="qual-card">
-                <h3>{dict.home.about.qualifications}</h3>
+                <h4>{dict.home.about.qualifications}</h4>
                 <ul className="list-checked">
                   {dict.home.about.qualList.map((item, i) => (
                     <li key={i}>{stripLeadingBullet(item)}</li>
@@ -131,7 +140,7 @@ export default async function Home() {
                 </ul>
               </div>
               <div className="qual-card">
-                <h3>{dict.home.about.specialties}</h3>
+                <h4>{dict.home.about.specialties}</h4>
                 <ul className="list-checked">
                   {dict.home.about.specList.map((item, i) => (
                     <li key={i}>{stripLeadingBullet(item)}</li>
@@ -154,17 +163,17 @@ export default async function Home() {
 
       <section className="section-padding site-section">
         <div className="container stack-lg">
-          <div className="page-intro page-intro--center">
+          <div className="page-intro page-intro--center reveal">
             <div className="page-intro__copy">
               <h2 className="page-intro__title">{dict.home.services.title}</h2>
+              <p className="page-intro__subtitle">{servicesLead[lang]}</p>
             </div>
           </div>
 
           <div className="card-grid">
-            <article className="premium-card">
+            <article className="premium-card reveal delay-1">
               <div className="service-media" style={{ minHeight: "240px" }}>
                 <Image
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 560px"
                   src="/photo-consulting-room.jpg"
                   alt={dict.home.services.general.title}
                   fill
@@ -172,7 +181,7 @@ export default async function Home() {
                 />
               </div>
               <div className="icon-badge">
-                <HeartPulse aria-hidden="true" size={18} />
+                <HeartPulse size={18} />
               </div>
               <h3>{dict.home.services.general.title}</h3>
               <p>{dict.home.services.general.desc}</p>
@@ -181,7 +190,7 @@ export default async function Home() {
               </Link>
             </article>
 
-            <article className="premium-card">
+            <article className="premium-card reveal delay-3">
               <div
                 className="service-media"
                 style={{
@@ -191,10 +200,10 @@ export default async function Home() {
                   background: "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
                 }}
               >
-                <Baby aria-hidden="true" size={76} color="var(--primary-teal)" />
+                <Baby size={76} color="var(--primary-teal)" />
               </div>
               <div className="icon-badge">
-                <Baby aria-hidden="true" size={18} />
+                <Baby size={18} />
               </div>
               <h3>{dict.home.services.newborn.title}</h3>
               <p>{dict.home.services.newborn.desc}</p>
@@ -206,8 +215,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Only review copy crosses the server/client boundary. */}
-      <HomeClient copy={dict.home.trust} lang={lang} />
+      {/* Client island: live trust stats + ReviewCarousel + IntersectionObserver */}
+      <HomeClient dict={dict} lang={lang} />
     </div>
   );
 }

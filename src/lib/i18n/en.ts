@@ -61,27 +61,27 @@ export const en = {
     },
     home: {
         hero: {
-            headline: "Children's health care in Plovdiv – from the first days to adolescence",
-            credential: "Paediatric specialist · Head of department",
-            award: "“You are our future”",
-            awardDetail: "Bulgarian Medical Association nomination (2023)",
             title: "Elite Medical Care",
             titleHighlight: "A Mission for Children.",
-            subtitle: "Paediatric consultations, preventive check-ups and development monitoring, from birth to 18 years.",
+            subtitle: "I see the youngest patients from the neonatal period and follow their health through infancy, childhood and adolescence. I diagnose and treat acute respiratory infections and other common childhood illnesses, and provide preventive check-ups, consultations and monitoring of the child's physical and neuro-psychological development.",
             bookBtn: "Book Consultation",
             servicesBtn: "View Services",
         },
         trust: {
+            rating: "5.0/5",
+            reviewsCount: "14",
             reviewsLabel: "VERIFIED REVIEWS",
-            partners: "PARTNERS AND PROFILES",
+            partners: "PARTNERSHIP WITH LEADING CLINICS",
             superdocTitle: "Patient reviews",
             superdocLink: "https://superdoc.bg/lekar/zlatomira-manolova",
-            prev: "Previous review",
-            next: "Next review",
-            position: "Review {current} of {total}",
-            readReviews: "Read reviews on Superdoc",
-            external: "Opens in a new tab",
-            hospital: "MHAT Pazardzhik",
+            testimonials: [
+                { text: "Wonderful attitude and professionalism! The examination proceeded with attention and ended with adequate advice.", author: "Verified Patient" },
+                { text: "Great specialist! Dr. Manolova-Peneva answered all our questions in detail and gave us valuable advice with great warmth.", author: "Verified Patient" },
+                { text: "A great professional! She always manages to approach my daughter so she doesn't experience unnecessary stress.", author: "Verified Patient" },
+                { text: "Wonderful attitude, competence and professionalism! I am always calm when I turn to Dr. Manolova-Peneva.", author: "Verified Patient" },
+                { text: "Great attitude and high professionalism! We are very grateful for the attention.", author: "Verified Patient" },
+                { text: "Wonderful attitude. Competence and adequate treatment. I highly recommend her!", author: "Verified Patient" }
+            ]
         },
         services: {
             title: "Clinical Experience",
@@ -108,8 +108,8 @@ export const en = {
             qualList: ["• Member of the Bulgarian Medical Association and the Bulgarian Paediatric Association", "• 'You are our future 2023' nomination (BMA)", "• Participation in national congresses and seminars in the specialty", "• ALS (Advanced Life Support) course", "• Certificate - Fundamentals of Ultrasound Diagnostics, Level I", "• Certificate - Abdominal Ultrasound Diagnostics, Level II"],
             specialties: "EXPERTISE",
             specList: ["• Experience in paediatric intensive care and emergency conditions in children", "• Diagnosis and treatment of acute upper and lower respiratory tract illnesses", "• Preventive check-ups and monitoring of physical and neuro-psychological development"],
-            bioBtn: "More about Dr. Manolova-Peneva",
-            imageAlt: "Dr. Zlatomira Manolova-Peneva"
+            bioBtn: "Read Full Interview",
+            imageAlt: "Dr. Manolova-Peneva with patient"
         },
         heroImageAlt: "The practice waiting room — tree wall, bench and children's artwork",
         partnerImageAlt: "Partner Hospital Logos"
