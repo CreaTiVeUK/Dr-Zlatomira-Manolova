@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.8...v1.4.0) (2026-09-17)
+
+
+### Bug Fixes
+
+* improve homepage accessibility and review reliability ([e5c35b0](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/e5c35b012099daf953692422b2044b590193717c))
+
+
+### Features
+
+* change bookable time grid from 30-minute to 15-minute increments ([e6737cf](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/e6737cfd00238111bb6d25c341da27a78b55f8fa))
+* replace two-tier service pricing with single 35€/15min visit ([7afc223](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/7afc223dc40895b457c56d4acf818bf66d831652))
+
 ## [1.3.8](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.7...v1.3.8) (2026-09-17)
 
 
