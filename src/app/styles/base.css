@@ -150,15 +150,11 @@ main.site-main {
 }
 
 .section-padding {
-  padding: 5.5rem 0;
+  padding: 4rem 0;
 }
 
 .site-section {
   position: relative;
-}
-
-.site-section + .site-section {
-  margin-top: 1.75rem;
 }
 
 .bg-soft {
