@@ -247,6 +247,7 @@
   background: color-mix(in srgb, var(--surface-card-strong) 76%, transparent 24%);
 }
 
+.qual-card h3,
 .qual-card h4 {
   margin-bottom: 0.8rem;
   font-size: 0.82rem;
@@ -1111,3 +1112,32 @@
   align-items: center;
   min-height: 44px;
 }
+
+/* Home content is visible in server-rendered HTML, including without JS. */
+.home-hero-title {
+  color: white;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.2;
+  font-weight: 700;
+  text-wrap: balance;
+  margin: 0;
+}
+.review-carousel { display: grid; gap: 1rem; width: 100%; min-width: 0; }
+.review-carousel blockquote { margin: 0; overflow-wrap: anywhere; }
+.review-carousel blockquote p { color: var(--text-charcoal); line-height: 1.7; }
+.review-carousel cite { display: block; margin-top: .75rem; color: var(--primary-teal); font-style: normal; font-weight: 600; }
+.review-carousel__controls { display: flex; align-items: center; justify-content: center; gap: .75rem; }
+.review-carousel__position { color: var(--text-muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.review-carousel__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 44px; width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface-card-strong);
+  color: var(--text-charcoal); cursor: pointer;
+}
+.review-carousel__btn:hover { color: var(--primary-teal); border-color: currentColor; }
+.review-carousel__btn:focus-visible { outline: 3px solid var(--primary-teal); outline-offset: 3px; }
+.trust-panel__cell { min-width: 0; overflow-wrap: anywhere; }
+
+.home-page .about-grid { align-items: center; }
+.home-page .about-image { min-height: 0; aspect-ratio: 4 / 5; width: 100%; }
+.home-page .clinical-badge svg { flex-shrink: 0; }

@@ -13,8 +13,8 @@ export async function GET() {
         ]);
 
         const body = {
-            rating: stats?.rating || "5.0/5",
-            reviewsCount: stats?.reviewsCount || "14",
+            rating: stats?.rating ?? null,
+            reviewsCount: stats?.reviewsCount ?? null,
             testimonials: reviews.map(r => ({
                 textEn: r.textEn,
                 textBg: r.textBg,

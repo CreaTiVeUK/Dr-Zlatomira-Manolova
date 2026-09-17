@@ -57,6 +57,18 @@ afterEach(() => {
 });
 
 describe("syncSuperdocReviews", () => {
+    it.each(["ratingValue", "ratingCount"])("preserves stored metrics when %s is missing", async (missing) => {
+        const html = page(review({ content: "Много добър лекар, препоръчвам!" }))
+            .replace(new RegExp(`<meta itemprop="${missing}" content="[^\"]+">`), "");
+        vi.mocked(fetch).mockResolvedValue(new Response(html, { status: 200 }));
+
+        const result = await syncSuperdocReviews();
+
+        expect(result.success).toBe(true);
+        expect(mocks.statUpsert).not.toHaveBeenCalled();
+        expect(mocks.reviewCreate).toHaveBeenCalledTimes(1);
+    });
+
     it("extracts the aggregate rating and review text from schema.org microdata", async () => {
         const html = page(
             review({ content: "Много добър лекар, препоръчвам!" }) +
