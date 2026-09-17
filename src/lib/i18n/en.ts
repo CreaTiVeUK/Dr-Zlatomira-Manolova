@@ -86,7 +86,6 @@ export const en = {
         },
         services: {
             title: "Clinical Experience",
-            subtitle: "From routine checkups to specialized diagnostic clinics, we provide a full spectrum of pediatric care.",
             general: {
                 title: "General Pediatrics",
                 desc: "Expert management of acute childhood illnesses and routine health checks.",

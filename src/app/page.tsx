@@ -112,9 +112,8 @@ export default async function Home() {
       <section className="section-padding site-section">
         <div className="container stack-lg">
           <div className="page-intro page-intro--center reveal">
-            <span className="page-intro__eyebrow">{dict.home.services.title}</span>
             <div className="page-intro__copy">
-              <h2 className="page-intro__title">{dict.home.services.subtitle}</h2>
+              <h2 className="page-intro__title">{dict.home.services.title}</h2>
               <p className="page-intro__subtitle">{servicesLead[lang]}</p>
             </div>
           </div>
