@@ -14,8 +14,10 @@ test.describe('Booking Flow', () => {
         // Ensure page is ready and authenticated (wait for step 1 to appear)
         await expect(page.getByText('1. Select Service')).toBeVisible({ timeout: 15000 });
 
-        // Select Specialized Consultation
-        await page.click('button:has-text("Specialized Consultation")');
+        // The practice now offers a single 15-minute, 35 € visit.
+        const consultation = page.getByRole('button', { name: /Consultation.*15 min.*35 €/ });
+        await expect(consultation).toBeVisible();
+        await consultation.click();
 
         // Pick a future consultation day; tomorrow may be closed.
         const nextDay = page.locator('.date-strip button:not([disabled])').nth(1);
@@ -27,7 +29,7 @@ test.describe('Booking Flow', () => {
         await slot.click();
 
         // New Flow: Confirm Appointment section appears
-        await expect(page.getByText(/Confirm Specialized Consultation/)).toBeVisible();
+        await expect(page.getByText(/Confirm Consultation for/)).toBeVisible();
 
         // Final Confirmation
         await page.getByRole('button', { name: 'CONFIRM APPOINTMENT' }).click();
