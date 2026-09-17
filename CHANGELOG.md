@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.6...v1.3.7) (2026-09-17)
+
+
+### Bug Fixes
+
+* remove crossed-out booking intro, reorder homepage About before Services ([ac2f89e](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/commit/ac2f89ee106af038a959142ce6c0ae9597ab853c))
+
 ## [1.3.6](https://github.com/CreaTiVeUK/Dr-Zlatomira-Manolova/compare/v1.3.5...v1.3.6) (2026-09-17)
 
 
