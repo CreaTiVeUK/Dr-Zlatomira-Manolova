@@ -4,9 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { addDays, endOfDay, format, startOfDay } from "date-fns";
-import { CalendarDays, LockKeyhole } from "lucide-react";
+import { LockKeyhole } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
-import PageIntro from "@/components/PageIntro";
 import StatusBanner from "@/components/StatusBanner";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { hoursForDay } from "@/lib/clinic-hours";
@@ -179,20 +178,7 @@ export default function BookClient({ session }: BookClientProps) {
   return (
     <div className="page-shell page-shell--soft">
       <div className="container">
-        <PageIntro
-          eyebrow={dict.booking.title}
-          title={dict.booking.title}
-          subtitle={dict.booking.subtitle}
-          actions={
-            <div className="meta-grid" style={{ width: "100%" }}>
-              <div className="meta-card">
-                <CalendarDays size={18} color="var(--primary-teal)" />
-                <strong>7</strong>
-                <span>{language === "bg" ? "дни за избор" : "days ahead"}</span>
-              </div>
-            </div>
-          }
-        />
+        <h1 className="sr-only">{dict.booking.title}</h1>
 
         <div className="booking-card">
           <div className="booking-step">

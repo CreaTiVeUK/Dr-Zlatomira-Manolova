@@ -106,8 +106,60 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Client island: live trust stats + ReviewCarousel + IntersectionObserver */}
-      <HomeClient dict={dict} lang={lang} />
+      <section className="section-padding bg-soft site-section reveal" id="about">
+        <div className="container about-grid">
+          <div className="about-image">
+            <Image
+              src="/dr_manolova.jpg"
+              alt={dict.home.about.imageAlt}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+
+          <div className="surface-card surface-card--elevated about-copy">
+            <span className="page-intro__eyebrow">{dict.home.about.badge}</span>
+            <h2 className="page-intro__title" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
+              {dict.home.about.name}
+            </h2>
+            <p style={{ fontSize: "1.05rem", color: "var(--text-charcoal)", fontWeight: 600 }}>
+              {dict.home.about.role}
+            </p>
+            <p>{dict.home.about.bio1}</p>
+            <p>{dict.home.about.bio2}</p>
+            <p>{dict.home.about.bio3}</p>
+            <p>{dict.home.about.bio4}</p>
+
+            <div className="qual-grid">
+              <div className="qual-card">
+                <h4>{dict.home.about.qualifications}</h4>
+                <ul className="list-checked">
+                  {dict.home.about.qualList.map((item, i) => (
+                    <li key={i}>{stripLeadingBullet(item)}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="qual-card">
+                <h4>{dict.home.about.specialties}</h4>
+                <ul className="list-checked">
+                  {dict.home.about.specList.map((item, i) => (
+                    <li key={i}>{stripLeadingBullet(item)}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="btn-group">
+              <Link href="/about" className="btn btn-primary">
+                {dict.home.about.bioBtn}
+              </Link>
+              <Link href={bookHref} className="btn btn-outline">
+                {dict.home.hero.bookBtn}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="section-padding site-section">
         <div className="container stack-lg">
@@ -163,60 +215,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="section-padding bg-soft site-section reveal" id="about">
-        <div className="container about-grid">
-          <div className="about-image">
-            <Image
-              src="/dr_manolova.jpg"
-              alt={dict.home.about.imageAlt}
-              fill
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-
-          <div className="surface-card surface-card--elevated about-copy">
-            <span className="page-intro__eyebrow">{dict.home.about.badge}</span>
-            <h2 className="page-intro__title" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
-              {dict.home.about.name}
-            </h2>
-            <p style={{ fontSize: "1.05rem", color: "var(--text-charcoal)", fontWeight: 600 }}>
-              {dict.home.about.role}
-            </p>
-            <p>{dict.home.about.bio1}</p>
-            <p>{dict.home.about.bio2}</p>
-            <p>{dict.home.about.bio3}</p>
-            <p>{dict.home.about.bio4}</p>
-
-            <div className="qual-grid">
-              <div className="qual-card">
-                <h4>{dict.home.about.qualifications}</h4>
-                <ul className="list-checked">
-                  {dict.home.about.qualList.map((item, i) => (
-                    <li key={i}>{stripLeadingBullet(item)}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="qual-card">
-                <h4>{dict.home.about.specialties}</h4>
-                <ul className="list-checked">
-                  {dict.home.about.specList.map((item, i) => (
-                    <li key={i}>{stripLeadingBullet(item)}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="btn-group">
-              <Link href="/about" className="btn btn-primary">
-                {dict.home.about.bioBtn}
-              </Link>
-              <Link href={bookHref} className="btn btn-outline">
-                {dict.home.hero.bookBtn}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Client island: live trust stats + ReviewCarousel + IntersectionObserver */}
+      <HomeClient dict={dict} lang={lang} />
     </div>
   );
 }
