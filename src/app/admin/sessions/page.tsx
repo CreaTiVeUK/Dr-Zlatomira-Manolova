@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { ChevronRight, FileText, Filter, MessageSquare, Mic, Plus, Sparkles } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import EmptyState from "@/components/EmptyState";
@@ -7,6 +7,7 @@ import StatusBanner from "@/components/StatusBanner";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
+import { CLINIC_TIMEZONE } from "@/lib/clinic-hours";
 import PatientFilter from "./PatientFilter";
 import { bg, enUS } from "date-fns/locale";
 
@@ -116,7 +117,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                         <Link href={`/admin/users/${sessionLog.userId}`} style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>
                           {sessionLog.user?.name || copy.unknownPatient}
                         </Link>
-                        <span className="helper-text">{copy.recorded} {format(new Date(sessionLog.uploadedAt), "MMM d, h:mm a", { locale: dateLocale })}</span>
+                        <span className="helper-text">{copy.recorded} {formatInTimeZone(new Date(sessionLog.uploadedAt), CLINIC_TIMEZONE, "MMM d, h:mm a", { locale: dateLocale })}</span>
                       </div>
                       <p>{sessionLog.name}</p>
                     </div>
@@ -152,7 +153,7 @@ export default async function AdminSessionsLog({ searchParams }: { searchParams:
                       {lastApt ? (
                         <>
                           <p style={{ fontStyle: "italic" }}>&quot;{lastApt.notes || copy.noVisitNotes}&quot;</p>
-                          <span className="helper-text">{copy.fromVisitOn} {format(new Date(lastApt.dateTime), "MMM d, yyyy", { locale: dateLocale })}</span>
+                          <span className="helper-text">{copy.fromVisitOn} {formatInTimeZone(new Date(lastApt.dateTime), CLINIC_TIMEZONE, "MMM d, yyyy", { locale: dateLocale })}</span>
                         </>
                       ) : (
                         <p className="helper-text">{copy.noRecentNotes}</p>

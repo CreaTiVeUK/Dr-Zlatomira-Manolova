@@ -13,6 +13,8 @@ import {
     subMonths
 } from "date-fns";
 import { bg, enUS } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
+import { CLINIC_TIMEZONE, inClinicTz } from "@/lib/clinic-hours";
 
 export default async function AdminDashboard() {
     // Middleware guarantees an authenticated ADMIN session reaches this page
@@ -116,10 +118,11 @@ export default async function AdminDashboard() {
     ]);
 
     const now = new Date();
-    const todayStart = startOfDay(now);
+    const nowInClinicTz = inClinicTz(now);
+    const todayStart = startOfDay(nowInClinicTz);
     const inSevenDays = addDays(now, 7);
 
-    const todayAppointments = appointments.filter((appointment) => isSameDay(new Date(appointment.dateTime), now));
+    const todayAppointments = appointments.filter((appointment) => isSameDay(inClinicTz(new Date(appointment.dateTime)), nowInClinicTz));
     const upcomingAppointments = appointments.filter((appointment) => new Date(appointment.dateTime) >= now && appointment.status === "BOOKED");
     const unpaidAppointments = appointments.filter((appointment) => appointment.status === "BOOKED" && appointment.paymentStatus !== "PAID");
     const monthRevenue = appointments
@@ -142,7 +145,7 @@ export default async function AdminDashboard() {
             userId: appointment.userId,
             patient: appointment.user.name || copy.unknownPatient,
             email: appointment.user.email || "",
-            time: format(new Date(appointment.dateTime), "HH:mm"),
+            time: formatInTimeZone(new Date(appointment.dateTime), CLINIC_TIMEZONE, "HH:mm"),
             status: appointment.status,
             paymentStatus: appointment.paymentStatus,
             duration: appointment.duration,
@@ -153,8 +156,8 @@ export default async function AdminDashboard() {
         id: appointment.id,
         userId: appointment.userId,
         patient: appointment.user.name || copy.unknownPatient,
-        dateLabel: format(new Date(appointment.dateTime), "EEE, MMM d", { locale: dateLocale }),
-        timeLabel: format(new Date(appointment.dateTime), "HH:mm"),
+        dateLabel: formatInTimeZone(new Date(appointment.dateTime), CLINIC_TIMEZONE, "EEE, MMM d", { locale: dateLocale }),
+        timeLabel: formatInTimeZone(new Date(appointment.dateTime), CLINIC_TIMEZONE, "HH:mm"),
         status: appointment.status,
         paymentStatus: appointment.paymentStatus,
         notes: appointment.notes || "",
@@ -167,7 +170,7 @@ export default async function AdminDashboard() {
         .map((patient) => ({
             id: patient.id,
             name: patient.name || copy.unknownPatient,
-            joinedLabel: format(new Date(patient.createdAt), "MMM d, yyyy", { locale: dateLocale }),
+            joinedLabel: formatInTimeZone(new Date(patient.createdAt), CLINIC_TIMEZONE, "MMM d, yyyy", { locale: dateLocale }),
             appointmentsCount: appointments.filter((appointment) => appointment.userId === patient.id).length,
             documentsCount: (patient as { _count?: { documents?: number } })._count?.documents ?? 0,
             childrenCount: (patient as { _count?: { children?: number } })._count?.children ?? 0,
@@ -183,7 +186,7 @@ export default async function AdminDashboard() {
             userId: appointment.userId,
             patient: appointment.user.name || copy.unknownPatient,
             eventLabel: appointment.status === "CANCELLED" ? copy.cancelledAppointment : appointment.status === "COMPLETED" ? copy.completedAppointment : copy.scheduledAppointment,
-            timestampLabel: format(new Date(appointment.createdAt), "MMM d, yyyy • HH:mm", { locale: dateLocale }),
+            timestampLabel: formatInTimeZone(new Date(appointment.createdAt), CLINIC_TIMEZONE, "MMM d, yyyy • HH:mm", { locale: dateLocale }),
             status: appointment.status
         }));
 
@@ -220,7 +223,7 @@ export default async function AdminDashboard() {
         {
             id: "new-patients",
             tone: "info",
-            title: copy.alerts.joinedTitle(patients.filter((patient) => patient.createdAt >= todayStart).length),
+            title: copy.alerts.joinedTitle(patients.filter((patient) => inClinicTz(patient.createdAt) >= todayStart).length),
             description: copy.alerts.joinedDesc(patients.filter((patient) => patient.createdAt >= subMonths(now, 1)).length),
             href: "/admin/users",
             cta: copy.alerts.openPatients

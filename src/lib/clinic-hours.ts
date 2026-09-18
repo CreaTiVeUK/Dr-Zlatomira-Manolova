@@ -10,6 +10,8 @@
  * but this is the schedule the booking engine offers.
  */
 
+import { toZonedTime } from "date-fns-tz";
+
 export const CLINIC_TIMEZONE = "Europe/Sofia";
 
 export interface DayHours {
@@ -28,4 +30,17 @@ export const CLINIC_SCHEDULE: Readonly<Partial<Record<number, DayHours>>> = {
 
 export function hoursForDay(weekday: number): DayHours | null {
     return CLINIC_SCHEDULE[weekday] ?? null;
+}
+
+/**
+ * Converts a UTC instant into a Date whose local-timezone getters (and thus
+ * plain date-fns calls like isSameDay/startOfDay) read the clinic's
+ * wall-clock values instead of the server process's timezone (UTC on
+ * Vercel). Use this before any "is this today / this month" comparison
+ * involving an appointment's dateTime — the server's own timezone is not
+ * Europe/Sofia, so comparing raw Date instants misclassifies appointments
+ * within a few hours of midnight.
+ */
+export function inClinicTz(date: Date): Date {
+    return toZonedTime(date, CLINIC_TIMEZONE);
 }

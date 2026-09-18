@@ -1,7 +1,9 @@
 import { getServerLanguage } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
-import { format, isSameDay, startOfDay } from "date-fns";
+import { isSameDay, startOfDay } from "date-fns";
 import { bg, enUS } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
+import { CLINIC_TIMEZONE, inClinicTz } from "@/lib/clinic-hours";
 import AdminAppointmentsClient from "./AdminAppointmentsClient";
 
 export default async function AdminAppointmentsPage({
@@ -34,13 +36,14 @@ export default async function AdminAppointmentsPage({
     });
 
     const now = new Date();
-    const todayStart = startOfDay(now);
+    const nowInClinicTz = inClinicTz(now);
+    const todayStart = startOfDay(nowInClinicTz);
 
     const summary = {
-        today: appointments.filter((appointment) => isSameDay(new Date(appointment.dateTime), now) && appointment.status !== "CANCELLED").length,
+        today: appointments.filter((appointment) => isSameDay(inClinicTz(new Date(appointment.dateTime)), nowInClinicTz) && appointment.status !== "CANCELLED").length,
         upcoming: appointments.filter((appointment) => new Date(appointment.dateTime) >= now && appointment.status === "BOOKED").length,
         unpaid: appointments.filter((appointment) => appointment.status === "BOOKED" && appointment.paymentStatus !== "PAID").length,
-        cancelledToday: appointments.filter((appointment) => isSameDay(new Date(appointment.dateTime), now) && appointment.status === "CANCELLED").length
+        cancelledToday: appointments.filter((appointment) => isSameDay(inClinicTz(new Date(appointment.dateTime)), nowInClinicTz) && appointment.status === "CANCELLED").length
     };
 
     const serializedAppointments = appointments.map((appointment) => ({
@@ -48,16 +51,16 @@ export default async function AdminAppointmentsPage({
         userId: appointment.userId,
         patient: appointment.user.name || unknownPatient,
         email: appointment.user.email || "",
-        dateLabel: format(new Date(appointment.dateTime), "EEE, MMM d, yyyy", { locale: dateLocale }),
-        timeLabel: format(new Date(appointment.dateTime), "HH:mm"),
+        dateLabel: formatInTimeZone(new Date(appointment.dateTime), CLINIC_TIMEZONE, "EEE, MMM d, yyyy", { locale: dateLocale }),
+        timeLabel: formatInTimeZone(new Date(appointment.dateTime), CLINIC_TIMEZONE, "HH:mm"),
         isoDate: new Date(appointment.dateTime).toISOString(),
         duration: appointment.duration,
         price: appointment.price,
         status: appointment.status,
         paymentStatus: appointment.paymentStatus,
         notes: appointment.notes || "",
-        isToday: isSameDay(new Date(appointment.dateTime), now),
-        isPast: new Date(appointment.dateTime) < todayStart
+        isToday: isSameDay(inClinicTz(new Date(appointment.dateTime)), nowInClinicTz),
+        isPast: inClinicTz(new Date(appointment.dateTime)) < todayStart
     }));
 
     return <AdminAppointmentsClient appointments={serializedAppointments} summary={summary} initialFilters={initialFilters} />;
