@@ -141,9 +141,7 @@ export const en = {
         subtitle: "Contact Dr. Manolova-Peneva for expert pediatric care and clinical diagnostics.",
         clinics: "Our Locations",
         medicalCenter: "Dr. Zlatomira Manolova-Peneva — Paediatric Practice",
-        partnerHospital: "MHAT Pazardzhik",
         addressMain: "A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv, Bulgaria",
-        addressSecond: "Pazardzhik, Bulgaria",
         tel: "Tel",
         email: "Email",
         admin: {

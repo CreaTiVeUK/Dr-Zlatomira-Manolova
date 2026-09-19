@@ -84,21 +84,6 @@ export default async function ContactPage() {
                     </span>
                   </div>
                 </div>
-
-                <div className="contact-item">
-                  <div className="contact-item__layout">
-                    <div className="stack-md" style={{ gap: "0.5rem" }}>
-                      <span className="clinical-badge">
-                        <MapPin size={14} />
-                        {dict.contact.partnerHospital}
-                      </span>
-                      <p>{dict.contact.addressSecond}</p>
-                    </div>
-                    <span className="contact-item__icon" aria-hidden="true">
-                      <MapPin size={18} />
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
 
