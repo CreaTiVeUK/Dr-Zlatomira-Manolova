@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { sendEmail, EMAIL_TEMPLATES } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { createAuditLog, AuditAction } from "@/lib/audit";
+import { CLINIC_TIMEZONE } from "@/lib/clinic-hours";
 import {
     ALLOWED_DURATIONS,
     SERVICE_PRICES,
@@ -16,6 +17,16 @@ import {
     isWithinBusinessHours,
     runSerializableBooking,
 } from "@/lib/booking";
+
+// date-fns's PPP/p tokens formatted server-side (Vercel runs UTC) without a
+// timezone silently showed patients and the clinic the wrong time — see
+// isWithinBusinessHours doc comment for the same underlying gotcha.
+function clinicDate(date: Date): string {
+    return formatInTimeZone(date, CLINIC_TIMEZONE, "PPP");
+}
+function clinicTime(date: Date): string {
+    return formatInTimeZone(date, CLINIC_TIMEZONE, "p");
+}
 
 const bookingSchema = z.object({
     dateTime: z.string().datetime().refine(val => new Date(val) > new Date(), {
@@ -145,13 +156,30 @@ export async function POST(request: NextRequest) {
                 newAppointment.user.email,
                 EMAIL_TEMPLATES.CONFIRMATION(
                     newAppointment.user.name || "Patient",
-                    format(bookingDate, "PPP"),
-                    format(bookingDate, "p")
+                    clinicDate(bookingDate),
+                    clinicTime(bookingDate)
                 )
             ).catch((err: unknown) => {
                 logger.error("Failed to send confirmation email", err, { appointmentId: newAppointment.id });
             });
         }
+
+        // Notify the clinic of every new booking (non-blocking, same as the
+        // patient confirmation above).
+        const clinicRecipient = process.env.CONTACT_EMAIL ?? "zlatomira.manolova@gmail.com";
+        sendEmail(
+            clinicRecipient,
+            EMAIL_TEMPLATES.NEW_BOOKING_ADMIN(
+                newAppointment.user?.name || "Patient",
+                newAppointment.user?.email || "—",
+                clinicDate(bookingDate),
+                clinicTime(bookingDate),
+                newAppointment.duration,
+                newAppointment.notes ?? undefined
+            )
+        ).catch((err: unknown) => {
+            logger.error("Failed to send admin booking notification", err, { appointmentId: newAppointment.id });
+        });
 
         return NextResponse.json({ success: true, appointment: newAppointment });
 
@@ -238,9 +266,9 @@ export async function PATCH(request: NextRequest) {
                     appointment.user.email,
                     EMAIL_TEMPLATES.RESCHEDULE(
                         appointment.user.name || "Patient",
-                        format(oldDate, "PPP"),
-                        format(newDate, "PPP"),
-                        format(newDate, "p"),
+                        clinicDate(oldDate),
+                        clinicDate(newDate),
+                        clinicTime(newDate),
                     ),
                 ).catch((err: unknown) => logger.error("Failed to send reschedule email", err, { appointmentId: appointment.id }));
             }
@@ -269,7 +297,7 @@ export async function PATCH(request: NextRequest) {
         if (status === 'CANCELLED' && appointment.user?.email) {
             sendEmail(
                 appointment.user.email,
-                EMAIL_TEMPLATES.CANCELLATION(appointment.user.name || "Patient", format(new Date(appointment.dateTime), "PPP"))
+                EMAIL_TEMPLATES.CANCELLATION(appointment.user.name || "Patient", clinicDate(new Date(appointment.dateTime)))
             ).catch((err: unknown) => logger.error("Failed to send cancellation email", err, { appointmentId: appointment.id }));
         }
 
