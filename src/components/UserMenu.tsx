@@ -14,9 +14,13 @@ interface UserMenuProps {
     } | null;
     /** Flat list of links instead of a dropdown — used inside the mobile nav panel. */
     inline?: boolean;
+    /** Inline mode only: let the containing mobile panel close itself when an
+     *  account option is chosen. Without this the panel stays open on top of
+     *  the page the user just navigated to. */
+    onNavigate?: () => void;
 }
 
-export default function UserMenu({ user, inline = false }: UserMenuProps) {
+export default function UserMenu({ user, inline = false, onNavigate }: UserMenuProps) {
     const [isPending, startTransition] = useTransition();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -54,7 +58,11 @@ export default function UserMenu({ user, inline = false }: UserMenuProps) {
 
     if (!user) {
         return (
-            <Link href="/login" className={inline ? undefined : "header-login-link"}>
+            <Link
+                href="/login"
+                className={inline ? undefined : "header-login-link"}
+                onClick={inline ? onNavigate : undefined}
+            >
                 {dict.userMenu.login}
             </Link>
         );
@@ -74,12 +82,15 @@ export default function UserMenu({ user, inline = false }: UserMenuProps) {
         return (
             <div className="user-menu user-menu--inline">
                 {accountLinks.map((link) => (
-                    <Link key={link.href} href={link.href}>
+                    <Link key={link.href} href={link.href} onClick={onNavigate}>
                         {link.label}
                     </Link>
                 ))}
                 <button
-                    onClick={handleLogout}
+                    onClick={() => {
+                        onNavigate?.();
+                        handleLogout();
+                    }}
                     disabled={isPending}
                     className="user-menu__logout hover-text-primary"
                     type="button"

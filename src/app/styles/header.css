@@ -265,18 +265,31 @@
   color: var(--text-charcoal);
 }
 
+/* Only rendered inside the mobile nav panel, so it has to match the rows
+   around it: the panel's links are 46px tall, borderless, and inset 0.95rem.
+   This previously carried the desktop dropdown's bordered-pill styling, which
+   left the logout row a different height and text inset from every link above
+   it — the menu visibly changed shape once a user signed in. */
 .user-menu__logout {
-  min-height: 44px;
-  padding: 0.65rem 1rem;
-  border-radius: 14px;
-  border: 1px solid var(--border);
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  border: none;
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  /* Inherit rather than the dropdown's 0.82rem: a smaller font makes this row
+     compute shorter than the links above it even at the same min-height. The
+     muted colour and letter-spacing still set it apart as the exit action. */
+  font-size: inherit;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
 }
 
 .user-menu__logout:hover:not(:disabled) {

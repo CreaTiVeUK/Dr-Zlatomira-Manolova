@@ -173,7 +173,7 @@ export default function Header({ user }: HeaderProps) {
                             </button>
                             <ThemeToggle />
                         </div>
-                        <UserMenu user={user} inline />
+                        <UserMenu user={user} inline onNavigate={() => setIsMenuOpen(false)} />
                     </nav>
                 </div>
             </header>
