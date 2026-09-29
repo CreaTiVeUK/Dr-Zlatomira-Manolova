@@ -29,6 +29,7 @@ import { verifyCodeWithCounter } from "@/lib/totp";
 import { claimOnce } from "@/lib/session-blocklist";
 import { gmailCanonicalLocal } from "@/lib/gmail-alias";
 import { rateLimit } from "@/lib/rate-limit";
+import { emailRateLimitKey } from "@/lib/rate-limit-key";
 
 export const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -101,7 +102,7 @@ export async function authorizeUser(credentials: unknown): Promise<AuthorizedUse
 
     const { email, password, totp } = parsed.data;
 
-    const limiter = await rateLimit(`login:${email}`, LOGIN_RATE_LIMIT, 60_000);
+    const limiter = await rateLimit(emailRateLimitKey("login", email), LOGIN_RATE_LIMIT, 60_000);
     if (!limiter.success) throw new RateLimitedError();
 
     const user = await prisma.user.findUnique({ where: { email } });

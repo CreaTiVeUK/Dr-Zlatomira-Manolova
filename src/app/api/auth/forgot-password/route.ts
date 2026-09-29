@@ -13,6 +13,7 @@ import { prisma } from "@/lib/prisma";
 import { randomBytes } from "crypto";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
+import { emailRateLimitKey } from "@/lib/rate-limit-key";
 import { sanitizeString } from "@/lib/sanitize";
 import { sendEmail, getBaseUrl, EMAIL_TEMPLATES } from "@/lib/email";
 import { createAuditLog, AuditAction } from "@/lib/audit";
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
         // reset-link email quota for a single account across rotating IPs.
         // Still returns the generic response to avoid leaking account
         // existence, but the side-effect (sending an email) is suppressed.
-        const emailLimiter = await rateLimit(`forgot:email:${email}`, 5, 60 * 60_000);
+        const emailLimiter = await rateLimit(emailRateLimitKey("forgot:email", email), 5, 60 * 60_000);
         if (!emailLimiter.success) return GENERIC_RESPONSE;
 
         const user = await prisma.user.findUnique({

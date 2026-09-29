@@ -13,6 +13,7 @@ import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
+import { emailRateLimitKey } from "@/lib/rate-limit-key";
 import { sanitizeString } from "@/lib/sanitize";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 import { checkPasswordStrength } from "@/lib/password-strength";
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
 
         // Per-email bucket (10/hour) — protects against a botnet brute-forcing
         // token guesses for a single victim account across rotating IPs.
-        const emailLimiter = await rateLimit(`reset:email:${email}`, 10, 60 * 60_000);
+        const emailLimiter = await rateLimit(emailRateLimitKey("reset:email", email), 10, 60 * 60_000);
         if (!emailLimiter.success) {
             return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
         }
