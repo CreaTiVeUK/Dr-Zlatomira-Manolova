@@ -59,11 +59,24 @@ export async function GET(request: NextRequest) {
             }
         }
 
+        // Expired verification / password-reset rows carry an email address and
+        // were previously only cleared when the same address happened to retry,
+        // so abandoned registrations accumulated indefinitely (GDPR Art. 5(1)(e)
+        // storage limitation). Folded in here rather than added as a sixth cron
+        // because Vercel's Hobby plan caps the number of cron jobs.
+        const now = new Date();
+        const [verificationTokens, resetTokens] = await Promise.all([
+            prisma.verificationToken.deleteMany({ where: { expires: { lt: now } } }),
+            prisma.passwordResetToken.deleteMany({ where: { expires: { lt: now } } }),
+        ]);
+
         return NextResponse.json({
             success: true,
             candidates: candidates.length,
             filesDeleted,
             rowsDeleted,
+            expiredVerificationTokensDeleted: verificationTokens.count,
+            expiredResetTokensDeleted: resetTokens.count,
             cutoff: cutoff.toISOString(),
         });
     } catch (error) {

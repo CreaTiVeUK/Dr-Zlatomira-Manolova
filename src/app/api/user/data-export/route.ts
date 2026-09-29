@@ -10,6 +10,7 @@
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { tryDecrypt } from "@/lib/encryption";
+import { rateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { createAuditLog, AuditAction } from "@/lib/audit";
 
@@ -18,6 +19,17 @@ export async function GET(req: Request) {
 
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Five queries, decryption of every document, and up to 500 audit rows —
+    // by far the heaviest authenticated endpoint. A genuine Art. 15 request is
+    // a once-in-a-while action, so a low ceiling costs users nothing.
+    const limiter = await rateLimit(`data-export:${session.user.id}`, 5, 60 * 60_000);
+    if (!limiter.success) {
+        return NextResponse.json(
+            { error: "Too many export requests. Please try again later." },
+            { status: 429 }
+        );
     }
 
     const ip = (req as { headers: { get: (k: string) => string | null } }).headers.get("x-forwarded-for") ?? "unknown";
