@@ -59,8 +59,8 @@ export default async function Home() {
             <div className="hero-copy-block">
               <h1 className="hero-subtitle">
                 {lang === "bg"
-                  ? "Грижа за детското здраве в Пловдив – от първите дни до юношеството"
-                  : "Children's health care in Plovdiv – from the first days to adolescence"}
+                  ? "Педиатър в Пловдив – грижа за детското здраве от първите дни до юношеството"
+                  : "Paediatrician in Plovdiv – children's health care from the first days to adolescence"}
               </h1>
               <p style={{ marginTop: "0.5rem", opacity: 0.9 }}>{dict.home.hero.subtitle}</p>
 

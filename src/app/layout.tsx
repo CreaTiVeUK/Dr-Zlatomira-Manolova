@@ -54,6 +54,8 @@ export const metadata: Metadata = {
 // and the old fallback fabricated "5.0 / 14" whenever the database was down.
 
 const PRACTICE_ID = `${SITE_URL}/#practice`;
+// hasMap/sameAs point at the Maps listing itself, which is how Google ties
+// the site's entity to the Business Profile it ranks in local results.
 const DOCTOR_ID = `${SITE_URL}/#doctor`;
 
 const structuredData = {
@@ -73,7 +75,7 @@ const structuredData = {
       "url": SITE_URL,
       "logo": `${SITE_URL}/logo.jpg`,
       "image": [`${SITE_URL}/og-default.jpg`, `${SITE_URL}/photo-entrance.jpg`, `${SITE_URL}/photo-consulting-room.jpg`],
-      "description": "Частна педиатрична практика в Пловдив. Специализирана помощ за деца от 0 до 18 години — обща и спешна педиатрия, грижа за новородени, профилактични прегледи.",
+      "description": "Педиатър в Пловдив, ж.к. Тракия — частна педиатрична практика. Специализирана помощ за деца от 0 до 18 години — обща и спешна педиатрия, грижа за новородени, профилактични прегледи.",
       "telephone": "+359885557110",
       "address": {
         "@type": "PostalAddress",
@@ -100,8 +102,8 @@ const structuredData = {
         { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "18:00" },
         { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "14:00" },
       ],
-      "hasMap": "https://maps.google.com/maps?q=42.136959,24.790681",
-      "sameAs": ["https://superdoc.bg/lekar/zlatomira-manolova"],
+      "hasMap": GOOGLE_BUSINESS_PROFILE_URL,
+      "sameAs": [GOOGLE_BUSINESS_PROFILE_URL, "https://superdoc.bg/lekar/zlatomira-manolova"],
       "employee": { "@id": DOCTOR_ID },
     },
     {
@@ -150,6 +152,7 @@ import GoogleTag from "@/components/GoogleTag";
 import { getSession } from "@/lib/auth";
 import { Providers } from "@/components/Providers";
 import { getSiteUrl } from "@/lib/site-url";
+import { GOOGLE_BUSINESS_PROFILE_URL } from "@/lib/google-business";
 
 export default async function RootLayout({
   children,

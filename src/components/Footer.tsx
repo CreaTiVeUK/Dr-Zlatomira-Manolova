@@ -4,8 +4,9 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { usePathname } from "next/navigation";
+import { DIRECTIONS_URL } from "@/lib/google-business";
 
-const MAIN_PRACTICE_MAPS_URL = "https://www.google.com/maps/dir/?api=1&destination=42.136959,24.790681";
+const MAIN_PRACTICE_MAPS_URL = DIRECTIONS_URL;
 
 interface FooterProps {
     user: {

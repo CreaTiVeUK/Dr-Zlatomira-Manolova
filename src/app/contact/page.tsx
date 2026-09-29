@@ -7,6 +7,7 @@ import ContactFormClient from "@/components/ContactFormClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSession } from "@/lib/auth";
 import { getSiteUrl } from "@/lib/site-url";
+import { DIRECTIONS_URL } from "@/lib/google-business";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -69,7 +70,7 @@ export default async function ContactPage() {
                             parent can open turn-by-turn navigation — and the
                             only way a directions click can be measured. */}
                         <a
-                          href="https://www.google.com/maps/dir/?api=1&destination=42.136959,24.790681"
+                          href={DIRECTIONS_URL}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-outline"
