@@ -164,7 +164,7 @@ export default async function PrivacyPage() {
               <p>{copy.sections.superdocText}</p>
               <p>
                 {copy.sections.superdocLinkPrefix}
-                <a href="https://superdoc.bg/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary-teal)", textDecoration: "underline" }}>
+                <a href="https://superdoc.bg/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary-teal)", textDecoration: "underline" }}>
                   {copy.sections.superdocLink}
                 </a>
                 .
