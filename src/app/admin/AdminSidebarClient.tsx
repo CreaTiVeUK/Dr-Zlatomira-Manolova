@@ -66,7 +66,10 @@ export default function AdminSidebarClient() {
 
         <div className="admin-sidebar__user">
           <div style={{ position: "relative", width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.14)" }}>
-            <Image src="/dr-manolova-avatar.png" alt="Dr. Manolova-Peneva" fill style={{ objectFit: "cover" }} />
+            {/* The source is a seated full-length portrait, so a centre crop
+                puts her face in the top third and leaves a 48px circle showing
+                mostly coat. Bias upward so the avatar reads as a face. */}
+            <Image src="/dr-manolova-avatar.png" alt="Dr. Manolova-Peneva" fill style={{ objectFit: "cover", objectPosition: "50% 18%" }} />
           </div>
           <div>
             <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700 }}>Dr. Manolova-Peneva</div>
