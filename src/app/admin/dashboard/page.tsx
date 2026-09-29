@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/admin-guard";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
@@ -17,8 +17,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { CLINIC_TIMEZONE, inClinicTz } from "@/lib/clinic-hours";
 
 export default async function AdminDashboard() {
-    // Middleware guarantees an authenticated ADMIN session reaches this page
-    const session = (await getSession())!;
+    const session = await requireAdmin("/admin/dashboard");
     const language = await getServerLanguage();
     const dateLocale = language === "bg" ? bg : enUS;
     const copy = language === "bg"

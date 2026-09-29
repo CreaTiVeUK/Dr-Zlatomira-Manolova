@@ -2,6 +2,7 @@ import { subMonths } from "date-fns";
 import { TrendingUp } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getServerDictionary } from "@/lib/i18n/server";
+import { requireAdmin } from "@/lib/admin-guard";
 import AnalyticsCharts from "./AnalyticsCharts";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,8 @@ function monthKey(d: Date): string {
 }
 
 export default async function AdminAnalyticsPage() {
+  await requireAdmin("/admin/analytics");
+
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.analyticsPage;
 

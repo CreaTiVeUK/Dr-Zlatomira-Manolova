@@ -5,6 +5,7 @@ import { FileText, Filter } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/admin-guard";
 import { AuditAction } from "@/lib/audit";
 
 const PAGE_SIZE = 50;
@@ -16,6 +17,8 @@ type SearchParams = Promise<{
 }>;
 
 export default async function AdminAuditLogs({ searchParams }: { searchParams: SearchParams }) {
+  await requireAdmin("/admin/audit-logs");
+
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.auditLogsPage;
   const dateLocale = language === "bg" ? bg : enUS;

@@ -4,10 +4,13 @@ import { Download, Mic } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/admin-guard";
 import { isMissingTableError } from "@/lib/prisma-errors";
 import { bg, enUS } from "date-fns/locale";
 
 export default async function AdminUserList() {
+  await requireAdmin("/admin/users");
+
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.usersPage;
   const dateLocale = language === "bg" ? bg : enUS;

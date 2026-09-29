@@ -6,15 +6,18 @@ import DeleteDocumentButton from "./DeleteDocumentButton";
 import EmptyState from "@/components/EmptyState";
 import StatusBanner from "@/components/StatusBanner";
 import { getServerDictionary } from "@/lib/i18n/server";
+import { requireAdmin } from "@/lib/admin-guard";
 import { tryDecrypt } from "@/lib/encryption";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
 
 export default async function AdminUserDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
+  await requireAdmin(`/admin/users/${id}`);
+
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.userDetailPage;
-
-  const { id } = await params;
 
   const user = await prisma.user.findUnique({
     where: { id },

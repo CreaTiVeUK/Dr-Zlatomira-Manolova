@@ -149,6 +149,33 @@ test.describe('Role escalation', () => {
             expect(status, `expected 403 from ${url}`).toBe(403);
         }
     });
+
+    // The API probes above do not cover the admin PAGES, which render the most
+    // sensitive data in the product (decrypted phone, children's notes,
+    // consultation transcripts). Those pages carried no role check of their
+    // own until src/lib/admin-guard.ts — the proxy matcher was the only thing
+    // standing between a patient session and every patient's record. This
+    // asserts the page-level guard, so removing it fails CI rather than
+    // quietly shipping.
+    test('patient sessions cannot render admin pages', async ({ page }) => {
+        await login(page, 'patient@example.com');
+
+        const adminPages = [
+            '/admin/dashboard',
+            '/admin/users',
+            '/admin/appointments',
+            '/admin/audit-logs',
+            '/admin/sessions',
+            '/admin/analytics',
+        ];
+
+        for (const path of adminPages) {
+            await page.goto(path);
+            // Guard redirects a non-admin to "/". Assert on the landing URL
+            // rather than the status, since a redirected navigation still 200s.
+            await expect(page, `expected ${path} to redirect a patient away`).not.toHaveURL(new RegExp(`${path}$`));
+        }
+    });
 });
 
 test.describe('Upload validation', () => {

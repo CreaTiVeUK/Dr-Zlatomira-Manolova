@@ -7,6 +7,7 @@ import StatusBanner from "@/components/StatusBanner";
 import { getServerDictionary } from "@/lib/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { isMissingTableError } from "@/lib/prisma-errors";
+import { requireAdmin } from "@/lib/admin-guard";
 import { CLINIC_TIMEZONE } from "@/lib/clinic-hours";
 import PatientFilter from "./PatientFilter";
 import { bg, enUS } from "date-fns/locale";
@@ -28,6 +29,8 @@ const sessionLogArgs = Prisma.validator<Prisma.PatientDocumentDefaultArgs>()({
 type SessionLog = Prisma.PatientDocumentGetPayload<typeof sessionLogArgs>;
 
 export default async function AdminSessionsLog({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
+  await requireAdmin("/admin/sessions");
+
   const { dict, language } = await getServerDictionary();
   const copy = dict.admin.sessionLogsPage;
   const dateLocale = language === "bg" ? bg : enUS;

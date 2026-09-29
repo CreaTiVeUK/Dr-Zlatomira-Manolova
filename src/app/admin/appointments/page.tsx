@@ -4,6 +4,7 @@ import { isSameDay, startOfDay } from "date-fns";
 import { bg, enUS } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 import { CLINIC_TIMEZONE, inClinicTz } from "@/lib/clinic-hours";
+import { requireAdmin } from "@/lib/admin-guard";
 import AdminAppointmentsClient from "./AdminAppointmentsClient";
 
 export default async function AdminAppointmentsPage({
@@ -16,6 +17,8 @@ export default async function AdminAppointmentsPage({
         query?: string;
     }>;
 }) {
+    await requireAdmin("/admin/appointments");
+
     const language = await getServerLanguage();
     const dateLocale = language === "bg" ? bg : enUS;
     const unknownPatient = language === "bg" ? "Неизвестен пациент" : "Unknown Patient";
