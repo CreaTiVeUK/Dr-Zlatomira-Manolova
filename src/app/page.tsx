@@ -172,7 +172,7 @@ export default async function Home() {
 
           <div className="card-grid">
             <article className="premium-card reveal delay-1">
-              <div className="service-media" style={{ minHeight: "240px" }}>
+              <div className="service-media">
                 <Image
                   src="/photo-consulting-room.jpg"
                   alt={dict.home.services.general.title}
@@ -191,7 +191,7 @@ export default async function Home() {
             </article>
 
             <article className="premium-card reveal delay-3">
-              <div className="service-media" style={{ minHeight: "240px" }}>
+              <div className="service-media">
                 <Image
                   src="/photo-newborn-exam.jpg"
                   alt={dict.home.services.newborn.title}
