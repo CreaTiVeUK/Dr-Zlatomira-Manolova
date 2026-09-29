@@ -191,16 +191,13 @@ export default async function Home() {
             </article>
 
             <article className="premium-card reveal delay-3">
-              <div
-                className="service-media"
-                style={{
-                  minHeight: "240px",
-                  display: "grid",
-                  placeItems: "center",
-                  background: "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
-                }}
-              >
-                <Baby size={76} color="var(--primary-teal)" />
+              <div className="service-media" style={{ minHeight: "240px" }}>
+                <Image
+                  src="/photo-newborn-exam.jpg"
+                  alt={dict.home.services.newborn.title}
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
               </div>
               <div className="icon-badge">
                 <Baby size={18} />

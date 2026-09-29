@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Baby } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
@@ -164,15 +163,13 @@ export default async function ServicesPage() {
                 {dict.home.hero.bookBtn}
               </Link>
             </div>
-            <div
-              className="order-1-mobile service-media"
-              style={{
-                display: "grid",
-                placeItems: "center",
-                background: "linear-gradient(135deg, rgba(15, 76, 129, 0.12), rgba(59, 130, 246, 0.06))",
-              }}
-            >
-              <Baby size={96} color="var(--primary-teal)" />
+            <div className="order-1-mobile service-media">
+              <Image
+                src="/photo-newborn-exam.jpg"
+                alt={lang === "bg" ? "Преглед на новородено със стетоскоп" : "Newborn examination with a stethoscope"}
+                fill
+                style={{ objectFit: "cover" }}
+              />
             </div>
           </article>
 
