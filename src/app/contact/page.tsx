@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
-import ContactFormClient from "@/components/ContactFormClient";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSession } from "@/lib/auth";
 import { getSiteUrl } from "@/lib/site-url";
@@ -16,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: `${getSiteUrl()}/contact` },
     openGraph: {
       title: "Контакти — Педиатър Пловдив Д-р Манолова-Пенева",
-      description: "Адрес, телефон и форма за контакт с педиатъра в Пловдив.",
+      description: "Адрес, телефон и приемни дни на педиатъра в Пловдив.",
       locale: "bg_BG",
       images: [{ url: "/og-default.jpg", width: 1448, height: 758, alt: "АИПСМП Д-р Манолова-Пенева — Пловдив" }],
     },
@@ -52,8 +51,7 @@ export default async function ContactPage() {
                         {dict.contact.addressMain}
                       </p>
                       {/* A parent with a sick child phones: the number itself is the
-                          primary, full-width tap target. Email goes through the form,
-                          so no mailbox address sits on the page. */}
+                          primary, full-width tap target. */}
                       <a href="tel:+359885557110" className="btn btn-primary contact-phone">
                         <Phone size={20} aria-hidden="true" />
                         {dict.footer.phone}
@@ -62,10 +60,6 @@ export default async function ContactPage() {
                         {dict.emergency}
                       </a>
                       <div className="contact-item__actions">
-                        <a href="#contact-form" className="btn btn-outline">
-                          <Mail size={16} />
-                          {lang === "bg" ? "Пишете ни" : "Write to us"}
-                        </a>
                         {/* The map below is an embed, so this is the only way a
                             parent can open turn-by-turn navigation — and the
                             only way a directions click can be measured. */}
@@ -128,10 +122,6 @@ export default async function ContactPage() {
                 title={dict.contact.clinics}
               ></iframe>
             </div>
-          </div>
-
-          <div id="contact-form">
-            <ContactFormClient dict={dict} lang={lang} />
           </div>
         </div>
       </div>

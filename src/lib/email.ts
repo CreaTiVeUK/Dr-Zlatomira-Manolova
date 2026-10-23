@@ -65,10 +65,6 @@ export const EMAIL_TEMPLATES = {
         subject: `Appointment Rescheduled: Dr. Manolova-Peneva Pediatrics`,
         body: `Dear ${patientName},\n\nYour appointment originally scheduled for ${oldDate} has been rescheduled.\n\nNew date: ${newDate}\nNew time: ${newTime}\n\nIf this change was not requested by you, please contact us immediately.\n\nWarm regards,\nDr. Manolova-Peneva Pediatrics Team`
     }),
-    CONTACT_INQUIRY: (fromName: string, fromEmail: string, message: string) => ({
-        subject: `New Inquiry from ${fromName}`,
-        body: `Name: ${fromName}\nEmail: ${fromEmail}\n\nMessage:\n${message}\n\n--\nSent from your website contact form.`
-    }),
     NEW_BOOKING_ADMIN: (patientName: string, patientEmail: string, date: string, time: string, duration: number, notes?: string) => ({
         subject: `New appointment booked: ${patientName}`,
         body: `A new appointment has been booked.\n\nPatient: ${patientName}\nEmail: ${patientEmail}\nDate: ${date}\nTime: ${time}\nDuration: ${duration} min${notes ? `\nNotes: ${notes}` : ""}\n\nView it in the admin dashboard: ${getBaseUrl()}/admin/appointments`

@@ -147,14 +147,6 @@ export const en = {
         admin: {
             title: "Administration & Payments",
             text: "For administrative questions, call during consultation days (Tuesday, Thursday and Saturday) or message Dr. Manolova-Peneva through your account."
-        },
-        form: {
-            helper: "Use the form for administrative and scheduling questions.",
-            title: "Inquiry Form",
-            name: "FULL NAME",
-            email: "EMAIL ADDRESS",
-            msg: "MESSAGE",
-            btn: "SEND INQUIRY" // Placeholder UI
         }
     },
     servicesPage: {
