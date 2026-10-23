@@ -143,11 +143,7 @@ export const en = {
         medicalCenter: "Dr. Zlatomira Manolova-Peneva — Paediatric Practice",
         addressMain: "A11, Zahari Zograf Neighbourhood, Trakiya, 4000 Plovdiv, Bulgaria",
         tel: "Tel",
-        email: "Email",
-        admin: {
-            title: "Administration & Payments",
-            text: "For administrative questions, call during consultation days (Tuesday, Thursday and Saturday) or message Dr. Manolova-Peneva through your account."
-        }
+        email: "Email"
     },
     servicesPage: {
         title: "Our Pediatric Services",

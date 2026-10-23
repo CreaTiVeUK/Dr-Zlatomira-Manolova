@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
-import { getSession } from "@/lib/auth";
 import { getSiteUrl } from "@/lib/site-url";
 import { DIRECTIONS_URL } from "@/lib/google-business";
 
@@ -23,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const [{ dict, lang }, session] = await Promise.all([getDictionary(), getSession()]);
+  const { dict, lang } = await getDictionary();
 
   return (
     <div className="page-shell page-shell--soft">
@@ -79,23 +77,6 @@ export default async function ContactPage() {
                     </span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="surface-card surface-card--accent">
-              <h3 style={{ marginBottom: "0.65rem" }}>{dict.contact.admin.title}</h3>
-              <p>{dict.contact.admin.text}</p>
-              <div className="contact-item__actions">
-                {/* /book needs an account; never send an anonymous visitor into a redirect. */}
-                {session?.user ? (
-                  <Link href="/book" className="btn btn-primary">
-                    {lang === "bg" ? "Онлайн записване" : "Book online"}
-                  </Link>
-                ) : (
-                  <Link href="/login?callbackUrl=%2Fbook" className="btn btn-outline">
-                    {lang === "bg" ? "Вход за онлайн записване" : "Sign in to book online"}
-                  </Link>
-                )}
               </div>
             </div>
 
