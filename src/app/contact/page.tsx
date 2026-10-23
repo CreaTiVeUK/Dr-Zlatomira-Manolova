@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/PageIntro";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getSiteUrl } from "@/lib/site-url";
-import { DIRECTIONS_URL } from "@/lib/google-business";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -34,52 +32,6 @@ export default async function ContactPage() {
 
         <div className="contact-layout">
           <div className="stack-lg">
-            <div className="contact-panel stack-md">
-              <h2>{dict.contact.clinics}</h2>
-
-              <div className="contact-list">
-                <div className="contact-item">
-                  <div className="contact-item__layout">
-                    <div className="stack-md" style={{ gap: "0.5rem" }}>
-                      <span className="clinical-badge">
-                        <MapPin size={14} />
-                        {dict.contact.medicalCenter}
-                      </span>
-                      <p>
-                        {dict.contact.addressMain}
-                      </p>
-                      {/* A parent with a sick child phones: the number itself is the
-                          primary, full-width tap target. */}
-                      <a href="tel:+359885557110" className="btn btn-primary contact-phone">
-                        <Phone size={20} aria-hidden="true" />
-                        {dict.footer.phone}
-                      </a>
-                      <a href="tel:112" className="emergency-link emergency-link--contact">
-                        {dict.emergency}
-                      </a>
-                      <div className="contact-item__actions">
-                        {/* The map below is an embed, so this is the only way a
-                            parent can open turn-by-turn navigation — and the
-                            only way a directions click can be measured. */}
-                        <a
-                          href={DIRECTIONS_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-outline"
-                        >
-                          <MapPin size={16} />
-                          {lang === "bg" ? "Навигация" : "Directions"}
-                        </a>
-                      </div>
-                    </div>
-                    <span className="contact-item__icon" aria-hidden="true">
-                      <Phone size={18} />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Real photos of the entrance: the frosted door with her name, and the
                 covered, step-free approach — what a parent looks for on arrival. */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
